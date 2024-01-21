@@ -19,7 +19,7 @@ This project has been developed on the Nodejs v16.17.0 so if you faced any issue
 
 Copy `example.env` to `.env` then set the backend api address:
 
-    VITE_BASE_API=https://somewhere.com/api
+    VITE_BASE_API=https://somewhere.com/someapi
 
 #### Environment variables
 
