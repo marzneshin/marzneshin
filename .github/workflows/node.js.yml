@@ -26,6 +26,7 @@ jobs:
       with:
         node-version: '21.0'
         cache: 'npm'
+        cache-dependency-path: 'app/dashboard/package-lock.json'
     - run: npm ci
     - run: npm run build --if-present -- --outDir build --base '/dashboard/'
     - run: npm test
