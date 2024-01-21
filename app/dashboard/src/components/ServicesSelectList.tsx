@@ -2,20 +2,17 @@
 import {
     Box,
     chakra,
-    ChakraComponent,
     Flex,
     Spacer,
     Stack,
     Text,
 } from "@chakra-ui/react";
 import { ServerStackIcon, UsersIcon } from "@heroicons/react/24/outline";
-import {
-    useDashboard,
-} from "contexts/DashboardContext";
-import { FC, forwardRef, PropsWithChildren, useEffect, useState } from "react";
+import { FC, forwardRef, Ref, useState } from "react";
 import {
     useFormContext,
 } from "react-hook-form";
+import { ChakraIcon } from "types/ChakraIcon";
 import { Service } from "types/Service";
 
 const ServiceIconBaseStyle = {
@@ -34,7 +31,7 @@ const InboundsServiceIcon = chakra(ServerStackIcon, ServiceIconBaseStyle);
 
 type ServicePropertyStatusProps = {
     value: number;
-    StatusIcon: ChakraComponent;
+    StatusIcon: ChakraIcon;
 }
 
 const ServicePropertyStatus: FC<ServicePropertyStatusProps> = ({ value, StatusIcon }) => {
