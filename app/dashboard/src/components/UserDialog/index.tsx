@@ -4,24 +4,18 @@ import {
     Box,
     Collapse,
     Flex,
-    FormControl,
-    FormErrorMessage,
-    FormHelperText,
-    FormLabel,
     Grid,
     GridItem,
     ModalBody,
     ModalCloseButton,
     ModalContent,
     Modal,
-    Textarea,
     VStack,
     useColorMode,
     useToast,
     ModalOverlay,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { resetStrategy } from "constants/UserSettings";
 import { FilterUsageType, useDashboard } from "contexts/DashboardContext";
 import dayjs from "dayjs";
 import { FC, useEffect, useState } from "react";
@@ -34,7 +28,6 @@ import {
 } from "types/User";
 import { UsageFilter, createUsageConfig } from "../UsageFilter";
 import { AddUserIcon, EditUserIcon } from "./UserDialogIcons";
-import { DevTool } from "@hookform/devtools";
 import { UserDialogModalHeader } from "./ModalHeader";
 import { UserDialogModalFooter } from "./ModalFooter";
 import { getDefaultValues } from "./DefaultValues";
@@ -307,7 +300,6 @@ export const UserDialog: FC<UserDialogProps> = () => {
                             loading={loading}
                         />
                     </form>
-                    <DevTool control={form.control} />
                 </ModalContent>
             </FormProvider>
         </Modal >
