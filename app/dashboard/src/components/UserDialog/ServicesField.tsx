@@ -1,4 +1,4 @@
-import { FormControl, FormLabel, FormErrorMessage, } from '@chakra-ui/react';
+import { FormControl, FormLabel, FormErrorMessage, Center, Spinner } from '@chakra-ui/react';
 import { TFunction } from 'i18next';
 import { Controller } from 'react-hook-form';
 import { Service } from 'types/Service';
@@ -12,8 +12,9 @@ interface ServicesFieldProps {
 }
 
 export const ServicesField = ({ form, disabled, t, services }: ServicesFieldProps) => {
-    return (
-
+    return services.length === 0 ? (
+        <Center><Spinner /></Center>
+    ) : (
         <FormControl
             isInvalid={
                 !!form.formState.errors.services?.message

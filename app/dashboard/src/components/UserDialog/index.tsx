@@ -336,11 +336,7 @@ export const UserDialog: FC<UserDialogProps> = () => {
                                 </GridItem>
 
                                 <GridItem>
-                                    {services.length === 0 ? (
-                                        <Center><Spinner /></Center>
-                                    ) :
-                                        <ServicesField t={t} services={services} form={form} disabled={disabled} />
-                                    }
+                                    <ServicesField t={t} services={services} form={form} disabled={disabled} />
                                 </GridItem>
 
                                 {isEditing && usageVisible && (
