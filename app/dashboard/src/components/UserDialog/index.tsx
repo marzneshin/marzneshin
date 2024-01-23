@@ -289,30 +289,7 @@ export const UserDialog: FC<UserDialogProps> = () => {
                                                 animateOpacity
                                                 style={{ width: "100%" }}
                                             >
-                                                <FormControl height="66px">
-                                                    <FormLabel>
-                                                        {t("userDialog.periodicUsageReset")}
-                                                    </FormLabel>
-                                                    <Controller
-                                                        control={form.control}
-                                                        name="data_limit_reset_strategy"
-                                                        render={({ field }) => {
-                                                            return (
-                                                                <Select size="sm" {...field}>
-                                                                    {resetStrategy.map((s) => {
-                                                                        return (
-                                                                            <option key={s.value} value={s.value}>
-                                                                                {t(
-                                                                                    "userDialog.resetStrategy" + s.title
-                                                                                )}
-                                                                            </option>
-                                                                        );
-                                                                    })}
-                                                                </Select>
-                                                            );
-                                                        }}
-                                                    />
-                                                </FormControl>
+                                                <PeriodicUsageReset form={form} t={t} />
                                             </Collapse>
                                             <FormControl mb={"10px"}>
                                                 <FormLabel>{t("userDialog.expiryDate")}</FormLabel>
