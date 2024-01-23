@@ -50,7 +50,7 @@ def get_inbounds(db: Session = Depends(get_db), admin: Admin = Depends(Admin.get
     return resp
 
 
-@app.get('/api/hosts', tags=["System"], response_model=Dict[str, List[InboundHost]])
+@app.get('/api/hosts', tags=["System"], response_model=Dict[int, List[InboundHost]])
 def get_hosts(db: Session = Depends(get_db), admin: Admin = Depends(Admin.get_current)):
     if not admin.is_sudo:
         raise HTTPException(status_code=403, detail="You're not allowed")

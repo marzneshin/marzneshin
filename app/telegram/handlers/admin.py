@@ -17,11 +17,10 @@ from app import xray
 from app.db import GetDB, crud
 from app.models.user import (UserCreate, UserModify, UserResponse, UserStatus,
                              UserStatusModify)
-# from app.models.user_template import UserTemplateResponse
 from app.models.proxy import ProxyTypes
 from app.telegram import bot
-from app.telegram.utils.custom_filters import (cb_query_equals,
-                                               cb_query_startswith)
+from app.telegram.utils.custom_filters import (query_equals,
+                                               query_startswith)
 from app.telegram.utils.keyboard import BotKeyboard
 from app.utils.store import MemoryStorage
 from app.utils.system import cpu_usage, memory_usage, readable_size
@@ -42,7 +41,7 @@ class botStates(StatesGroup):
     edit_user_data_limit = State()
     edit_user_expire = State()
     edit_note = State()
-    add_user_from_template = State()
+    # add_user_from_template = State()
     add_user_username = State()
     add_user_data_limit = State()
     add_user_expire = State()
@@ -119,7 +118,7 @@ To get started, use the buttons below.
     ), parse_mode="html", reply_markup=BotKeyboard.main_menu())
 
 
-@bot.callback_query_handler(cb_query_equals('system'), is_admin=True)
+@bot.callback_query_handler(query_equals('system'), is_admin=True)
 async def system_command(call: types.CallbackQuery):
     return await bot.edit_message_text(
         get_system_info(),
@@ -130,17 +129,17 @@ async def system_command(call: types.CallbackQuery):
     )
 
 
-@bot.callback_query_handler(cb_query_equals('restart'), is_admin=True)
+@bot.callback_query_handler(query_equals('restart'), is_admin=True)
 async def restart_command(call: types.CallbackQuery):
     await bot.edit_message_text(
         '⚠️ Are you sure? This will restart Xray core.',
         call.message.chat.id,
         call.message.message_id,
-        reply_markup=BotKeyboard.confirm_action(action='restart')
+        reply_markup=BotKeyboard.confirm_action(action='do_restart')
     )
 
 
-@bot.callback_query_handler(cb_query_startswith('delete:'), is_admin=True)
+@bot.callback_query_handler(query_startswith('delete:'), is_admin=True)
 async def delete_user_command(call: types.CallbackQuery):
     username = call.data.split(':')[1]
     await bot.edit_message_text(
@@ -149,11 +148,11 @@ async def delete_user_command(call: types.CallbackQuery):
         call.message.message_id,
         parse_mode="markdown",
         reply_markup=BotKeyboard.confirm_action(
-            action='delete', username=username)
+            action='do_delete', username=username)
     )
 
 
-@bot.callback_query_handler(cb_query_startswith("suspend:"), is_admin=True)
+@bot.callback_query_handler(query_startswith("suspend:"), is_admin=True)
 async def suspend_user_command(call: types.CallbackQuery):
     username = call.data.split(":")[1]
     await bot.edit_message_text(
@@ -162,11 +161,11 @@ async def suspend_user_command(call: types.CallbackQuery):
         call.message.message_id,
         parse_mode="markdown",
         reply_markup=BotKeyboard.confirm_action(
-            action="suspend", username=username),
+            action="do_suspend", username=username),
     )
 
 
-@bot.callback_query_handler(cb_query_startswith("activate:"), is_admin=True)
+@bot.callback_query_handler(query_startswith("activate:"), is_admin=True)
 async def activate_user_command(call: types.CallbackQuery):
     username = call.data.split(":")[1]
     await bot.edit_message_text(
@@ -175,11 +174,11 @@ async def activate_user_command(call: types.CallbackQuery):
         call.message.message_id,
         parse_mode="markdown",
         reply_markup=BotKeyboard.confirm_action(
-            action="activate", username=username),
+            action="do_activate", username=username),
     )
 
 
-@bot.callback_query_handler(cb_query_startswith("reset_usage:"), is_admin=True)
+@bot.callback_query_handler(query_startswith("reset_usage:"), is_admin=True)
 async def reset_usage_user_command(call: types.CallbackQuery):
     username = call.data.split(":")[1]
     await bot.edit_message_text(
@@ -188,11 +187,11 @@ async def reset_usage_user_command(call: types.CallbackQuery):
         call.message.message_id,
         parse_mode="markdown",
         reply_markup=BotKeyboard.confirm_action(
-            action="reset_usage", username=username),
+            action="do_reset_usage", username=username),
     )
 
 
-@bot.callback_query_handler(cb_query_equals('edit_all'), is_admin=True)
+@bot.callback_query_handler(query_equals('edit_all'), is_admin=True)
 async def edit_all_command(call: types.CallbackQuery):
     with GetDB() as db:
         total_users = crud.get_users_count(db)
@@ -215,27 +214,27 @@ async def edit_all_command(call: types.CallbackQuery):
     )
 
 
-@bot.callback_query_handler(cb_query_equals('delete_expired'), is_admin=True)
+@bot.callback_query_handler(query_equals('delete_expired'), is_admin=True)
 async def delete_expired_command(call: types.CallbackQuery):
     await bot.edit_message_text(
         f"⚠️ Are you sure? This will *DELETE All Expired Users*‼️",
         call.message.chat.id,
         call.message.message_id,
         parse_mode="markdown",
-        reply_markup=BotKeyboard.confirm_action(action="delete_expired"))
+        reply_markup=BotKeyboard.confirm_action(action="do_delete_expired"))
 
 
-@bot.callback_query_handler(cb_query_equals('delete_limited'), is_admin=True)
+@bot.callback_query_handler(query_equals('delete_limited'), is_admin=True)
 async def delete_limited_command(call: types.CallbackQuery):
     await bot.edit_message_text(
         f"⚠️ Are you sure? This will *DELETE All Limited Users*‼️",
         call.message.chat.id,
         call.message.message_id,
         parse_mode="markdown",
-        reply_markup=BotKeyboard.confirm_action(action="delete_limited"))
+        reply_markup=BotKeyboard.confirm_action(action="do_delete_limited"))
 
 
-@bot.callback_query_handler(cb_query_equals('add_data'), is_admin=True)
+@bot.callback_query_handler(query_equals('add_data'), is_admin=True)
 async def add_data_command(call: types.CallbackQuery):
     msg = await bot.edit_message_text(
         f"🔋 Enter Data Limit to increase or decrease (GB):",
@@ -264,13 +263,13 @@ async def add_data_step(message):
         f"⚠️ Are you sure? this will change Data limit of all users according to <b>"
         f"{'+' if data_limit > 0 else '-'}{readable_size(abs(data_limit *1024*1024*1024))}</b>",
         parse_mode="html",
-        reply_markup=BotKeyboard.confirm_action('add_data', data_limit))
+        reply_markup=BotKeyboard.confirm_action('do_add_data', data_limit))
     await bot.delete_state(message.from_user.id, message.chat.id)
     await cleanup_messages(message.chat.id)
     schedule_delete_message(message.chat.id, msg.id)
 
 
-@bot.callback_query_handler(cb_query_equals('add_time'), is_admin=True)
+@bot.callback_query_handler(query_equals('add_time'), is_admin=True)
 async def add_time_command(call: types.CallbackQuery):
     msg = await bot.edit_message_text(
         f"📅 Enter Days to increase or decrease expiry:",
@@ -298,12 +297,12 @@ async def add_time_step(message):
         message.chat.id,
         f"⚠️ Are you sure? this will change Expiry Time of all users according to <b>{days} Days</b>",
         parse_mode="html",
-        reply_markup=BotKeyboard.confirm_action('add_time', days))
+        reply_markup=BotKeyboard.confirm_action('do_add_time', days))
     await cleanup_messages(message.chat.id)
     schedule_delete_message(message.chat.id, msg.id)
 
 
-@bot.callback_query_handler(cb_query_startswith("inbound"), is_admin=True)
+@bot.callback_query_handler(query_startswith("inbound"), is_admin=True)
 async def inbound_command(call: types.CallbackQuery):
     await bot.edit_message_text(
         f"Select inbound to *{call.data[8:].title()}* from all users",
@@ -313,7 +312,7 @@ async def inbound_command(call: types.CallbackQuery):
         reply_markup=BotKeyboard.inbounds_menu(call.data, xray.config.inbounds_by_tag))
 
 
-@bot.callback_query_handler(cb_query_startswith("confirm_inbound"), is_admin=True)
+@bot.callback_query_handler(query_startswith("confirm_inbound"), is_admin=True)
 async def delete_expired_confirm_command(call: types.CallbackQuery):
     await bot.edit_message_text(
         f"⚠️ Are you sure? This will *{call.data[16:].replace(':', ' ')} for All Users*‼️",
@@ -323,7 +322,7 @@ async def delete_expired_confirm_command(call: types.CallbackQuery):
         reply_markup=BotKeyboard.confirm_action(action=call.data[8:]))
 
 
-@bot.callback_query_handler(cb_query_startswith("edit:"), is_admin=True)
+@bot.callback_query_handler(query_startswith("edit:"), is_admin=True)
 async def edit_command(call: types.CallbackQuery):
     # bot.clear_step_handler_by_chat_id(call.message.chat.id)
     await bot.delete_state(call.from_user.id, call.message.chat.id)
@@ -336,18 +335,20 @@ async def edit_command(call: types.CallbackQuery):
                 '❌ User not found.',
                 show_alert=True
             )
+        services = crud.get_services(db)
         user = UserResponse.model_validate(db_user)
     mem_store.set(f'{call.message.chat.id}:username', username)
     mem_store.set(f'{call.message.chat.id}:data_limit', db_user.data_limit)
     mem_store.set(f'{call.message.chat.id}:expire_date', datetime.fromtimestamp(db_user.expire) if db_user.expire else None)
-    mem_store.set(f'{call.message.chat.id}:protocols', {protocol.value: inbounds for protocol, inbounds in db_user.inbounds.items()})
+    mem_store.set(f'{call.message.chat.id}:services', [s.id for s in db_user.services])
     await bot.edit_message_text(
         f"📝 Editing user `{username}`",
         call.message.chat.id,
         call.message.message_id,
         parse_mode="markdown",
-        reply_markup=BotKeyboard.select_protocols(
-            user.inbounds,
+        reply_markup=BotKeyboard.select_services(
+            services,
+            [s.id for s in user.services],
             "edit",
             username=username,
             data_limit=db_user.data_limit,
@@ -356,7 +357,7 @@ async def edit_command(call: types.CallbackQuery):
     )
 
 
-@bot.callback_query_handler(cb_query_equals('help_edit'), is_admin=True)
+@bot.callback_query_handler(query_equals('help_edit'), is_admin=True)
 async def help_edit_command(call: types.CallbackQuery):
     await bot.answer_callback_query(
         call.id,
@@ -365,7 +366,7 @@ async def help_edit_command(call: types.CallbackQuery):
     )
 
 
-@bot.callback_query_handler(cb_query_equals('cancel'), is_admin=True)
+@bot.callback_query_handler(query_equals('cancel'), is_admin=True)
 async def cancel_command(call: types.CallbackQuery):
     # bot.clear_step_handler_by_chat_id(call.message.chat.id)
     await bot.delete_state(call.from_user.id, call.message.chat.id)
@@ -378,7 +379,7 @@ async def cancel_command(call: types.CallbackQuery):
     )
 
 
-@bot.callback_query_handler(cb_query_startswith('edit_user:'), is_admin=True)
+@bot.callback_query_handler(query_startswith('edit_user:'), is_admin=True)
 async def edit_user_command(call: types.CallbackQuery):
     _, username, action = call.data.split(":")
     schedule_delete_message(call.message.chat.id, call.message.id)
@@ -494,7 +495,7 @@ async def edit_user_expire_step(message: types.Message):
     await cleanup_messages(message.chat.id)
 
 
-@bot.callback_query_handler(cb_query_startswith('users:'), is_admin=True)
+@bot.callback_query_handler(query_startswith('users:'), is_admin=True)
 async def users_command(call: types.CallbackQuery):
     page = int(call.data.split(':')[1]) if len(call.data.split(':')) > 1 else 1
     with GetDB() as db:
@@ -541,25 +542,8 @@ def get_user_info_text(
     return text
 
 
-def get_template_info_text(
-        id: int, data_limit: int, expire_duration: int, username_prefix: str, username_suffix: str, inbounds: dict):
-    protocols = ""
-    for p, inbounds in inbounds.items():
-        protocols += f"\n├─ <b>{p.upper()}</b>\n"
-        protocols += "├───" + ", ".join([f"<code>{i}</code>" for i in inbounds])
-    text = f"""
-📊 Template Info:
-┌ ID: <b>{id}</b>
-├ Data Limit: <b>{readable_size(data_limit) if data_limit else 'Unlimited'}</b>
-├ Expire Date: <b>{(datetime.now() + relativedelta(seconds=expire_duration)).strftime('%Y-%m-%d') if expire_duration else 'Never'}</b>
-├ Username Prefix: <b>{username_prefix if username_prefix else '🚫'}</b>
-├ Username Suffix: <b>{username_suffix if username_suffix else '🚫'}</b>
-├ Protocols: {protocols}
-        """
-    return text
 
-
-@bot.callback_query_handler(cb_query_startswith('edit_note:'), is_admin=True)
+@bot.callback_query_handler(query_startswith('edit_note:'), is_admin=True)
 async def edit_note_command(call: types.CallbackQuery):
     username = call.data.split(':')[1]
     with GetDB() as db:
@@ -593,7 +577,7 @@ async def edit_note_step(message: types.Message):
     with GetDB() as db:
         db_user = crud.get_user(db, username)
         last_note = db_user.note
-        db_user = crud.update_user(db, db_user, UserModify(note=note))
+        db_user = crud.update_user(db, db_user, UserModify(username=username, note=note))
         user = UserResponse.model_validate(db_user)
     text = get_user_info_text(
         status=user.status,
@@ -622,7 +606,7 @@ async def edit_note_step(message: types.Message):
 
 
 
-@bot.callback_query_handler(cb_query_startswith('user:'), is_admin=True)
+@bot.callback_query_handler(query_startswith('user:'), is_admin=True)
 async def user_command(call: types.CallbackQuery):
     await bot.delete_state(call.from_user.id, call.message.chat.id)
     # bot.clear_step_handler_by_chat_id(call.message.chat.id)
@@ -648,7 +632,7 @@ async def user_command(call: types.CallbackQuery):
             page=page, note=True))
 
 
-@bot.callback_query_handler(cb_query_startswith("revoke_sub:"), is_admin=True)
+@bot.callback_query_handler(query_startswith("revoke_sub:"), is_admin=True)
 async def revoke_sub_command(call: types.CallbackQuery):
     username = call.data.split(":")[1]
     await bot.edit_message_text(
@@ -656,10 +640,10 @@ async def revoke_sub_command(call: types.CallbackQuery):
         call.message.chat.id,
         call.message.message_id,
         parse_mode="markdown",
-        reply_markup=BotKeyboard.confirm_action(action=call.data))
+        reply_markup=BotKeyboard.confirm_action(action="do_revoke", username=username))
 
 
-@bot.callback_query_handler(cb_query_startswith("links:"), is_admin=True)
+@bot.callback_query_handler(query_startswith("links:"), is_admin=True)
 async def links_command(call: types.CallbackQuery):
     username = call.data.split(":")[1]
 
@@ -683,7 +667,7 @@ async def links_command(call: types.CallbackQuery):
     )
 
 
-@bot.callback_query_handler(cb_query_startswith("genqr:"), is_admin=True)
+@bot.callback_query_handler(query_startswith("genqr:"), is_admin=True)
 async def genqr_command(call: types.CallbackQuery):
     username = call.data.split(":")[1]
 
@@ -743,193 +727,7 @@ async def genqr_command(call: types.CallbackQuery):
         reply_markup=BotKeyboard.show_links(username)
     )
 
-
-@bot.callback_query_handler(cb_query_startswith('template_charge:'), is_admin=True)
-async def template_charge_command(call: types.CallbackQuery):
-    _, template_id, username = call.data.split(":")
-    now = datetime.now()
-    today = datetime(
-        year=now.year,
-        month=now.month,
-        day=now.day,
-        hour=23,
-        minute=59,
-        second=59
-    )
-    with GetDB() as db:
-        template = crud.get_user_template(db, template_id)
-        if not template:
-            return await bot.answer_callback_query(call.id, "Template not found!", show_alert=True)
-        template = UserTemplateResponse.model_validate(template)
-
-        db_user = crud.get_user(db, username)
-        if not db_user:
-            return await bot.answer_callback_query(call.id, "User not found!", show_alert=True)
-        user = UserResponse.model_validate(db_user)
-        if (user.data_limit and not user.expire) or (not user.data_limit and user.expire):
-            text = get_user_info_text(
-                status='active',
-                username=username,
-                sub_url=user.subscription_url,
-                expire=int(((datetime.fromtimestamp(user.expire) if user.expire else today) +
-                            relativedelta(seconds=template.expire_duration)).timestamp()),
-                data_limit=(
-                            user.data_limit - user.used_traffic + template.data_limit) if user.data_limit else template.data_limit,
-                usage=0, note=user.note)
-            await bot.edit_message_text(f'''\
-‼️ <b>If add template <u>Bandwidth</u> and <u>Time</u> to the user, the user will be this</b>:\n\n\
-{text}\n\n\
-<b>Add template <u>Bandwidth</u> and <u>Time</u> to user or Reset to <u>Template default</u></b>⁉️''',
-                call.message.chat.id, call.message.message_id, parse_mode='html',
-                reply_markup=BotKeyboard.charge_add_or_reset(
-                    username=username, template_id=template_id))
-        elif (not user.data_limit and not user.expire) or (user.used_traffic > user.data_limit) or (now > datetime.fromtimestamp(user.expire)):
-            crud.reset_user_data_usage(db, db_user)
-            expire_date = None
-            if template.expire_duration:
-                expire_date = today + relativedelta(seconds=template.expire_duration)
-            modify = UserModify(
-                status=UserStatusModify.active,
-                expire=int(expire_date.timestamp()) if expire_date else 0,
-                data_limit=template.data_limit,
-            )
-            db_user = crud.update_user(db, db_user, modify)
-            await xray.operations.add_user(db_user)
-
-            text = get_user_info_text(
-                status='active',
-                username=username,
-                sub_url=user.subscription_url,
-                expire=int(expire_date.timestamp()),
-                data_limit=template.data_limit,
-                usage=0, note=user.note)
-            await bot.edit_message_text(
-                f'🔋 User Successfully Charged!\n\n{text}',
-                call.message.chat.id,
-                call.message.message_id,
-                parse_mode='html',
-                reply_markup=BotKeyboard.user_menu(user_info={
-                    'status': 'active',
-                    'username': user.username}, note=True))
-            if TELEGRAM_LOGGER_CHANNEL_ID:
-                text = f'''\
-🔋 <b>#Charged #Reset #From_Bot</b>
-➖➖➖➖➖➖➖➖➖
-<b>Template :</b> <code>{template.name}</code>
-<b>Username :</b> <code>{user.username}</code>
-➖➖➖➖➖➖➖➖➖
-<u><b>Last status</b></u>
-<b>├Traffic Limit :</b> <code>{readable_size(user.data_limit) if user.data_limit else "Unlimited"}</code>
-<b>├Expire Date :</b> <code>\
-{datetime.fromtimestamp(user.expire).strftime('%H:%M:%S %Y-%m-%d') if user.expire else "Never"}</code>
-➖➖➖➖➖➖➖➖➖
-<u><b>New status</b></u>
-<b>├Traffic Limit :</b> <code>{readable_size(db_user.data_limit) if db_user.data_limit else "Unlimited"}</code>
-<b>├Expire Date :</b> <code>\
-{datetime.fromtimestamp(db_user.expire).strftime('%H:%M:%S %Y-%m-%d') if db_user.expire else "Never"}</code>
-➖➖➖➖➖➖➖➖➖
-<b>By :</b> <a href="tg://user?id={call.from_user.id}">{call.from_user.full_name}</a>'''
-                try:
-                    await bot.send_message(TELEGRAM_LOGGER_CHANNEL_ID, text, 'HTML')
-                except:
-                    pass
-        else:
-            text = get_user_info_text(
-                status='active',
-                username=username,
-                sub_url=user.subscription_url,
-                expire=int(((datetime.fromtimestamp(user.expire) if user.expire else today) +
-                            relativedelta(seconds=template.expire_duration)).timestamp()),
-                data_limit=(
-                            user.data_limit - user.used_traffic + template.data_limit) if user.data_limit else template.data_limit,
-                usage=0, note=user.note)
-            await bot.edit_message_text(f'''\
-‼️ <b>If add template <u>Bandwidth</u> and <u>Time</u> to the user, the user will be this</b>:\n\n\
-{text}\n\n\
-<b>Add template <u>Bandwidth</u> and <u>Time</u> to user or Reset to <u>Template default</u></b>⁉️''',
-                call.message.chat.id, call.message.message_id, parse_mode='html',
-                reply_markup=BotKeyboard.charge_add_or_reset(
-                    username=username, template_id=template_id))
-
-
-@bot.callback_query_handler(cb_query_startswith('charge:'), is_admin=True)
-async def charge_command(call: types.CallbackQuery):
-    username = call.data.split(":")[1]
-    with GetDB() as db:
-        templates = crud.get_user_templates(db)
-        if not templates:
-            return await bot.answer_callback_query(call.id, "You don't have any User Templates!")
-
-        db_user = crud.get_user(db, username)
-        if not db_user:
-            return await bot.answer_callback_query(call.id, "User not found!", show_alert=True)
-
-    await bot.edit_message_text(
-        f"{call.message.html_text}\n\n🔢 Select <b>User Template</b> to charge:",
-        call.message.chat.id,
-        call.message.message_id,
-        parse_mode='html',
-        reply_markup=BotKeyboard.templates_menu(
-            {template.name: template.id for template in templates},
-            username=username,
-        )
-    )
-
-
-@bot.callback_query_handler(cb_query_equals('template_add_user'), is_admin=True)
-async def add_user_from_template_command(call: types.CallbackQuery):
-    with GetDB() as db:
-        templates = crud.get_user_templates(db)
-        if not templates:
-            return await bot.answer_callback_query(call.id, "You don't have any User Templates!")
-
-    await bot.edit_message_text(
-        "<b>Select a Template to create user from</b>:",
-        call.message.chat.id,
-        call.message.message_id,
-        parse_mode='html',
-        reply_markup=BotKeyboard.templates_menu({template.name: template.id for template in templates})
-    )
-
-
-@bot.callback_query_handler(cb_query_startswith('template_add_user:'), is_admin=True)
-async def add_user_from_template(call: types.CallbackQuery):
-    template_id = int(call.data.split(":")[1])
-    with GetDB() as db:
-        template = crud.get_user_template(db, template_id)
-        if not template:
-            return await bot.answer_callback_query(call.id, "Template not found!", show_alert=True)
-        template = UserTemplateResponse.model_validate(template)
-
-    text = get_template_info_text(
-        template_id, data_limit=template.data_limit, expire_duration=template.expire_duration,
-        username_prefix=template.username_prefix, username_suffix=template.username_suffix,
-        inbounds=template.inbounds)
-    if template.username_prefix:
-        text += f"\n⚠️ Username will be prefixed with <code>{template.username_prefix}</code>"
-    if template.username_suffix:
-        text += f"\n⚠️ Username will be suffixed with <code>{template.username_suffix}</code>"
-
-    mem_store.set(f"{call.message.chat.id}:template_id", template.id)
-    template_msg = await bot.edit_message_text(
-        text,
-        call.message.chat.id,
-        call.message.message_id,
-        parse_mode="HTML"
-    )
-    text = '👤 Enter username:\n⚠️ Username only can be 3 to 32 characters and contain a-z, A-Z, 0-9, and underscores in between.'
-    msg = await bot.send_message(
-        call.message.chat.id,
-        text,
-        parse_mode="HTML",
-        reply_markup=BotKeyboard.random_username(template_id=template.id)
-    )
-    schedule_delete_message(call.message.chat.id, template_msg.message_id, msg.id)
-    await bot.set_state(call.from_user.id, botStates.add_user_from_template, call.message.chat.id)
-    # bot.register_next_step_handler(template_msg, add_user_from_template_username_step)
-
-
-@bot.callback_query_handler(cb_query_startswith('random'), is_admin=True)
+@bot.callback_query_handler(query_startswith('random'), is_admin=True)
 async def random_username(call: types.CallbackQuery):
     # bot.clear_step_handler_by_chat_id(call.message.chat.id)
     await bot.delete_state(call.from_user.id, call.message.chat.id)
@@ -942,141 +740,17 @@ async def random_username(call: types.CallbackQuery):
     schedule_delete_message(call.message.chat.id, call.message.id)
     await cleanup_messages(call.message.chat.id)
 
-    if not template_id:
-        msg = await bot.send_message(call.message.chat.id,
-            '⬆️ Enter Data Limit (GB):\n⚠️ Send 0 for unlimited.',
-            reply_markup=BotKeyboard.inline_cancel_action())
-        schedule_delete_message(call.message.chat.id, msg.id)
-        await bot.set_state(call.from_user.id, botStates.add_user_data_limit, call.message.chat.id)
-        async with bot.retrieve_data(call.from_user.id, call.message.chat.id) as data:
-            data["username"] = username
-        return # bot.register_next_step_handler(call.message, add_user_data_limit_step, username=username)
-
-    with GetDB() as db:
-        template = crud.get_user_template(db, template_id)
-        if template.username_prefix:
-            username = template.username_prefix + username
-        if template.username_suffix:
-            username += template.username_suffix
-
-        template = UserTemplateResponse.model_validate(template)
+    msg = await bot.send_message(call.message.chat.id,
+        '⬆️ Enter Data Limit (GB):\n⚠️ Send 0 for unlimited.',
+        reply_markup=BotKeyboard.inline_cancel_action())
+    schedule_delete_message(call.message.chat.id, msg.id)
     await bot.set_state(call.from_user.id, botStates.add_user_data_limit, call.message.chat.id)
     async with bot.retrieve_data(call.from_user.id, call.message.chat.id) as data:
-        data["username"] = username 
-    mem_store.set(f"{call.message.chat.id}:username", username)
-    mem_store.set(f"{call.message.chat.id}:data_limit", template.data_limit)
-    mem_store.set(f"{call.message.chat.id}:protocols", template.inbounds)
-    now = datetime.now()
-    today = datetime(
-        year=now.year,
-        month=now.month,
-        day=now.day,
-        hour=23,
-        minute=59,
-        second=59)
-    expire_date = None
-    if template.expire_duration:
-        expire_date = today + relativedelta(seconds=template.expire_duration)
-    mem_store.set(f"{call.message.chat.id}:expire_date", expire_date)
-
-    text = f"📝 Creating user <code>{username}</code>\n" + get_template_info_text(
-        id=template.id, data_limit=template.data_limit, expire_duration=template.expire_duration,
-        username_prefix=template.username_prefix, username_suffix=template.username_suffix, inbounds=template.inbounds)
-
-    await bot.send_message(
-        call.message.chat.id,
-        text,
-        parse_mode="HTML",
-        reply_markup=BotKeyboard.select_protocols(
-            template.inbounds,
-            "create_from_template",
-            username=username,
-            data_limit=template.data_limit,
-            expire_date=expire_date,))
-
-@bot.message_handler(state=botStates.add_user_from_template)
-async def add_user_from_template_username_step(message: types.Message):
-    template_id = mem_store.get(f"{message.chat.id}:template_id")
-    if template_id is None:
-        return await bot.send_message(message.chat.id, "An error occured in the process! try again.")
-
-    if not message.text:
-        wait_msg = await bot.send_message(message.chat.id, '❌ Username can not be empty.')
-        schedule_delete_message(message.chat.id, wait_msg.message_id, message.message_id)
-        return # bot.register_next_step_handler(wait_msg, add_user_from_template_username_step)
-
-    with GetDB() as db:
-        username = message.text
-
-        template = crud.get_user_template(db, template_id)
-        if template.username_prefix:
-            username = template.username_prefix + username
-        if template.username_suffix:
-            username += template.username_suffix
-
-        match = re.match(r"^(?=\w{3,32}\b)[a-zA-Z0-9-_@.]+(?:_[a-zA-Z0-9-_@.]+)*$", username)
-        if not match:
-            wait_msg = await bot.send_message(message.chat.id,
-                '❌ Username only can be 3 to 32 characters and contain a-z, A-Z, 0-9, and underscores in between.')
-            schedule_delete_message(message.chat.id, wait_msg.message_id, message.message_id)
-            return # bot.register_next_step_handler(wait_msg, add_user_from_template_username_step)
-
-        if len(username) < 3:
-            wait_msg = await bot.send_message(message.chat.id,
-                f"❌ Username can't be generated because is shorter than 32 characters! username: <code>{username}</code>",
-                parse_mode="HTML")
-            schedule_delete_message(message.chat.id, wait_msg.message_id, message.message_id)
-            return # bot.register_next_step_handler(wait_msg, add_user_from_template_username_step)
-        elif len(username) > 32:
-            wait_msg = await bot.send_message(message.chat.id,
-                f"❌ Username can't be generated because is longer than 32 characters! username: <code>{username}</code>",
-                parse_mode="HTML")
-            schedule_delete_message(message.chat.id, wait_msg.message_id, message.message_id)
-            return # bot.register_next_step_handler(wait_msg, add_user_from_template_username_step)
-
-        if crud.get_user(db, username):
-            wait_msg = await bot.send_message(message.chat.id, '❌ Username already exists.')
-            schedule_delete_message(message.chat.id, wait_msg.message_id, message.message_id)
-            return # bot.register_next_step_handler(wait_msg, add_user_from_template_username_step)
-        template = UserTemplateResponse.model_validate(template)
-    mem_store.set(f"{message.chat.id}:username", username)
-    mem_store.set(f"{message.chat.id}:data_limit", template.data_limit)
-    mem_store.set(f"{message.chat.id}:protocols", template.inbounds)
-    now = datetime.now()
-    today = datetime(
-        year=now.year,
-        month=now.month,
-        day=now.day,
-        hour=23,
-        minute=59,
-        second=59
-    )
-    expire_date = None
-    if template.expire_duration:
-        expire_date = today + relativedelta(seconds=template.expire_duration)
-    mem_store.set(f"{message.chat.id}:expire_date", expire_date)
-
-    text = f"📝 Creating user <code>{username}</code>\n" + get_template_info_text(
-        id=template.id, data_limit=template.data_limit, expire_duration=template.expire_duration,
-        username_prefix=template.username_prefix, username_suffix=template.username_suffix, inbounds=template.inbounds)
-
-    await bot.send_message(
-        message.chat.id,
-        text,
-        parse_mode="HTML",
-        reply_markup=BotKeyboard.select_protocols(
-            template.inbounds,
-            "create_from_template",
-            username=username,
-            data_limit=template.data_limit,
-            expire_date=expire_date,
-        )
-    )
-    schedule_delete_message(message.chat.id, message.id)
-    await cleanup_messages(message.chat.id)
+        data["username"] = username
+    return 
 
 
-@bot.callback_query_handler(cb_query_equals('add_user'), is_admin=True)
+@bot.callback_query_handler(query_equals('add_user'), is_admin=True)
 async def add_user_command(call: types.CallbackQuery):
     try:
         await bot.delete_message(call.message.chat.id, call.message.message_id)
@@ -1192,80 +866,48 @@ async def add_user_expire_step(message: types.Message):
     mem_store.set(f'{message.chat.id}:data_limit', data_limit)
     mem_store.set(f'{message.chat.id}:expire_date', expire_date)
 
+    with GetDB() as db:
+        services = crud.get_services(db)
     schedule_delete_message(message.chat.id, message.id)
     await cleanup_messages(message.chat.id)
     await bot.send_message(
         message.chat.id,
-        'Select Protocols:\nUsernames: {}\nData Limit: {}\nExpiry Date {}'.format(
+        'Select Services:\nUsernames: {}\nData Limit: {}\nExpiry Date {}'.format(
             mem_store.get(f'{message.chat.id}:username'),
             readable_size(mem_store.get(f'{message.chat.id}:data_limit'))
             if mem_store.get(f'{message.chat.id}:data_limit') else "Unlimited",
             mem_store.get(f'{message.chat.id}:expire_date').strftime("%Y-%m-%d")
             if mem_store.get(f'{message.chat.id}:expire_date') else 'Never'
         ),
-        reply_markup=BotKeyboard.select_protocols({}, action="create")
+        reply_markup=BotKeyboard.select_services(services, [], action="create")
     )
 
 
-@bot.callback_query_handler(cb_query_startswith('select_inbound:'), is_admin=True)
-async def select_inbounds(call: types.CallbackQuery):
+@bot.callback_query_handler(query_startswith('switch_service:'), is_admin=True)
+async def switch_service(call: types.CallbackQuery):
     if not (username := mem_store.get(f'{call.message.chat.id}:username')):
         return await bot.answer_callback_query(call.id, '❌ No user selected.', show_alert=True)
-    protocols: dict[str, list[str]] = mem_store.get(f'{call.message.chat.id}:protocols', {})
-    _, inbound, action = call.data.split(':')
-    for protocol, inbounds in xray.config.inbounds_by_protocol.items():
-        for i in inbounds:
-            if i['tag'] != inbound:
-                continue
-            if not inbound in protocols[protocol]:
-                protocols[protocol].append(inbound)
-            else:
-                protocols[protocol].remove(inbound)
-            if len(protocols[protocol]) < 1:
-                del protocols[protocol]
+    selected_services: List[int] = mem_store.get(f'{call.message.chat.id}:services', [])
+    _, service, action = call.data.split(':')
+    service = int(service)
 
-    mem_store.set(f'{call.message.chat.id}:protocols', protocols)
-
-    if action in ["edit", "create_from_template"]:
-        return await bot.edit_message_text(
-            call.message.text,
-            call.message.chat.id,
-            call.message.message_id,
-            reply_markup=BotKeyboard.select_protocols(
-                protocols,
-                "edit",
-                username=username,
-                data_limit=mem_store.get(f"{call.message.chat.id}:data_limit"),
-                expire_date=mem_store.get(f"{call.message.chat.id}:expire_date"))
-        )
-    await bot.edit_message_text(
-        call.message.text,
-        call.message.chat.id,
-        call.message.message_id,
-        reply_markup=BotKeyboard.select_protocols(protocols, "create")
-    )
-
-
-@bot.callback_query_handler(cb_query_startswith('select_protocol:'), is_admin=True)
-async def select_protocols(call: types.CallbackQuery):
-    if not (username := mem_store.get(f'{call.message.chat.id}:username')):
-        return await bot.answer_callback_query(call.id, '❌ No user selected.', show_alert=True)
-    protocols: dict[str, list[str]] = mem_store.get(f'{call.message.chat.id}:protocols', {})
-    _, protocol, action = call.data.split(':')
-    if protocol in protocols:
-        del protocols[protocol]
+    with GetDB() as db:
+        services = crud.get_services(db)
+    if service in selected_services:
+        selected_services.remove(service)
     else:
-        protocols.update(
-            {protocol: [inbound['tag'] for inbound in xray.config.inbounds_by_protocol[protocol]]})
-    mem_store.set(f'{call.message.chat.id}:protocols', protocols)
+        selected_services.append(service)
 
-    if action == ["edit", "create_from_template"]:
+    mem_store.set(f'{call.message.chat.id}:services', selected_services)
+
+    if action in ["edit"]:
         return await bot.edit_message_text(
             call.message.text,
             call.message.chat.id,
             call.message.message_id,
-            reply_markup=BotKeyboard.select_protocols(
-                protocols,
+            reply_markup=BotKeyboard.select_services(
+                services,
+                selected_services,
                 "edit",
                 username=username,
                 data_limit=mem_store.get(f"{call.message.chat.id}:data_limit"),
@@ -1275,11 +917,11 @@ async def select_protocols(call: types.CallbackQuery):
         call.message.text,
         call.message.chat.id,
         call.message.message_id,
-        reply_markup=BotKeyboard.select_protocols(protocols, action="create")
+        reply_markup=BotKeyboard.select_services(services, selected_services, "create")
     )
 
 
-@bot.callback_query_handler(cb_query_startswith('confirm:'), is_admin=True)
+@bot.callback_query_handler(query_startswith('confirm:'), is_admin=True)
 async def confirm_user_command(call: types.CallbackQuery):
     data = call.data.split(':')[1]
     chat_id = call.from_user.id
@@ -1292,21 +934,23 @@ async def confirm_user_command(call: types.CallbackQuery):
         hour=23,
         minute=59,
         second=59)
-    if data == 'delete':
-        username = call.data.split(':')[2]
-        with GetDB() as db:
-            db_user = crud.get_user(db, username)
-            crud.remove_user(db, db_user)
-            await xray.operations.remove_user(db_user)
 
-        await bot.edit_message_text(
-            '✅ User deleted.',
-            call.message.chat.id,
-            call.message.message_id,
-            reply_markup=BotKeyboard.main_menu()
-        )
-        if TELEGRAM_LOGGER_CHANNEL_ID:
-            text = f'''\
+@bot.callback_query_handler(query_startswith("do_delete"), is_admin=True)
+async def delete_user(call: types.CallbackQuery):
+    username = call.data.split(':')[1]
+    with GetDB() as db:
+        db_user = crud.get_user(db, username)
+        crud.remove_user(db, db_user)
+        await xray.operations.remove_user(db_user)
+
+    await bot.edit_message_text(
+        '✅ User deleted.',
+        call.message.chat.id,
+        call.message.message_id,
+        reply_markup=BotKeyboard.main_menu()
+    )
+    if TELEGRAM_LOGGER_CHANNEL_ID:
+        text = f'''\
 🗑 <b>#Deleted #From_Bot</b>
 ➖➖➖➖➖➖➖➖➖
 <b>Username :</b> <code>{db_user.username}</code>
@@ -1314,305 +958,234 @@ async def confirm_user_command(call: types.CallbackQuery):
 <b>Expire Date :</b> <code>\
 {datetime.fromtimestamp(db_user.expire).strftime('%H:%M:%S %Y-%m-%d') if db_user.expire else "Never"}</code>
 ➖➖➖➖➖➖➖➖➖
-<b>By :</b> <a href="tg://user?id={chat_id}">{full_name}</a>'''
-            try:
-                await bot.send_message(TELEGRAM_LOGGER_CHANNEL_ID, text, 'HTML')
-            except:
-                pass
-    elif data == "suspend":
-        username = call.data.split(":")[2]
-        with GetDB() as db:
-            db_user = crud.get_user(db, username)
-            crud.update_user(db, db_user, UserModify(
-                status=UserStatusModify.disabled))
-            await xray.operations.remove_user(db_user)
-            user = UserResponse.model_validate(db_user)
-        await bot.edit_message_text(
-            get_user_info_text(
-                status='disabled',
-                username=username,
-                sub_url=user.subscription_url,
-                data_limit=db_user.data_limit,
-                usage=db_user.used_traffic,
-                expire=db_user.expire,
-                note=user.note
-            ),
-            call.message.chat.id,
-            call.message.message_id,
-            parse_mode='HTML',
-            reply_markup=BotKeyboard.user_menu(user_info={
-                'status': 'disabled',
-                'username': db_user.username
-            }, note=True))
-        if TELEGRAM_LOGGER_CHANNEL_ID:
-            text = f'''\
+<b>By :</b> <a href="tg://user?id={call.from_user.id}">{call.from_user.full_name}</a>'''
+        try:
+            await bot.send_message(TELEGRAM_LOGGER_CHANNEL_ID, text, 'HTML')
+        except:
+            pass
+
+
+@bot.callback_query_handler(query_startswith("do_suspend"), is_admin=True)
+async def disable_user(call: types.CallbackQuery):
+    username = call.data.split(":")[1]
+    with GetDB() as db:
+        db_user = crud.get_user(db, username)
+        crud.update_user(db, db_user, UserModify(
+            username=username,
+            status=UserStatusModify.disabled))
+        await xray.operations.remove_user(db_user)
+        user = UserResponse.model_validate(db_user)
+    await bot.edit_message_text(
+        get_user_info_text(
+            status='disabled',
+            username=username,
+            sub_url=user.subscription_url,
+            data_limit=db_user.data_limit,
+            usage=db_user.used_traffic,
+            expire=db_user.expire,
+            note=user.note
+        ),
+        call.message.chat.id,
+        call.message.message_id,
+        parse_mode='HTML',
+        reply_markup=BotKeyboard.user_menu(user_info={
+            'status': 'disabled',
+            'username': db_user.username
+        }, note=True))
+    if TELEGRAM_LOGGER_CHANNEL_ID:
+        text = f'''\
 ❌ <b>#Disabled  #From_Bot</b>
 ➖➖➖➖➖➖➖➖➖
 <b>Username</b> : <code>{username}</code>
 ➖➖➖➖➖➖➖➖➖
-<b>By :</b> <a href="tg://user?id={chat_id}">{full_name}</a>'''
-            try:
-                await bot.send_message(TELEGRAM_LOGGER_CHANNEL_ID, text, 'HTML')
-            except:
-                pass
-    elif data == "activate":
-        username = call.data.split(":")[2]
-        with GetDB() as db:
-            db_user = crud.get_user(db, username)
-            crud.update_user(db, db_user, UserModify(
-                status=UserStatusModify.active))
-            await xray.operations.add_user(db_user)
-            user = UserResponse.model_validate(db_user)
-        await bot.edit_message_text(
-            get_user_info_text(
-                status='active',
-                username=username,
-                sub_url=user.subscription_url,
-                data_limit=db_user.data_limit,
-                usage=db_user.used_traffic,
-                expire=db_user.expire,
-                note=user.note
-            ),
-            call.message.chat.id,
-            call.message.message_id,
-            parse_mode='HTML',
-            reply_markup=BotKeyboard.user_menu(user_info={
-                'status': 'active',
-                'username': db_user.username
-            }, note=True))
-        if TELEGRAM_LOGGER_CHANNEL_ID:
-            text = f'''\
+<b>By :</b> <a href="tg://user?id={call.from_user.id}">{call.from_user.full_name}</a>'''
+        try:
+            await bot.send_message(TELEGRAM_LOGGER_CHANNEL_ID, text, 'HTML')
+        except:
+            pass
+
+@bot.callback_query_handler(query_startswith("do_activate"), is_admin=True)
+async def activate_user(call: types.CallbackQuery):
+    username = call.data.split(":")[1]
+    with GetDB() as db:
+        db_user = crud.get_user(db, username)
+        crud.update_user(db, db_user, UserModify(
+            username=username,
+            status=UserStatusModify.active))
+        await xray.operations.add_user(db_user)
+        user = UserResponse.model_validate(db_user)
+    await bot.edit_message_text(
+        get_user_info_text(
+            status='active',
+            username=username,
+            sub_url=user.subscription_url,
+            data_limit=db_user.data_limit,
+            usage=db_user.used_traffic,
+            expire=db_user.expire,
+            note=user.note
+        ),
+        call.message.chat.id,
+        call.message.message_id,
+        parse_mode='HTML',
+        reply_markup=BotKeyboard.user_menu(user_info={
+            'status': 'active',
+            'username': db_user.username
+        }, note=True))
+    if TELEGRAM_LOGGER_CHANNEL_ID:
+        text = f'''\
 ✅ <b>#Activated  #From_Bot</b>
 ➖➖➖➖➖➖➖➖➖
 <b>Username</b> : <code>{username}</code>
 ➖➖➖➖➖➖➖➖➖
-<b>By :</b> <a href="tg://user?id={chat_id}">{full_name}</a>'''
-            try:
-                await bot.send_message(TELEGRAM_LOGGER_CHANNEL_ID, text, 'HTML')
-            except:
-                pass
-    elif data == 'reset_usage':
-        username = call.data.split(":")[2]
-        with GetDB() as db:
-            db_user = crud.get_user(db, username)
-            crud.reset_user_data_usage(db, db_user)
-            user = UserResponse.model_validate(db_user)
-        await bot.edit_message_text(
-            get_user_info_text(
-                status=user.status,
-                username=username,
-                sub_url=user.subscription_url,
-                data_limit=user.data_limit,
-                usage=user.used_traffic,
-                expire=user.expire,
-                note=user.note
-            ),
-            call.message.chat.id,
-            call.message.message_id,
-            parse_mode='HTML',
-            reply_markup=BotKeyboard.user_menu(user_info={
-                'status': user.status,
-                'username': user.username
-            }, note=True))
-        if TELEGRAM_LOGGER_CHANNEL_ID:
-            text = f'''\
-🔁 <b>#Reset_usage  #From_Bot</b>
-➖➖➖➖➖➖➖➖➖
-<b>Username</b> : <code>{username}</code>
-➖➖➖➖➖➖➖➖➖
-<b>By :</b> <a href="tg://user?id={chat_id}">{full_name}</a>'''
-            try:
-                await bot.send_message(TELEGRAM_LOGGER_CHANNEL_ID, text, 'HTML')
-            except:
-                pass
-    elif data == 'restart':
-        m = await bot.edit_message_text(
-            '🔄 Restarting XRay core...', call.message.chat.id, call.message.message_id)
-        await xray.core.restart(xray.config.include_db_users())
-        for node_id, node in list(xray.nodes.items()):
-            if await node.is_healthy():
-                await xray.operations.restart_node(node_id, xray.config.include_db_users())
-        await bot.edit_message_text(
-            '✅ XRay core restarted successfully.',
-            m.chat.id, m.message_id,
-            reply_markup=BotKeyboard.main_menu()
-        )
+<b>By :</b> <a href="tg://user?id={call.from_user.id}">{call.from_user.full_name}</a>'''
+        try:
+            await bot.send_message(TELEGRAM_LOGGER_CHANNEL_ID, text, 'HTML')
+        except:
+            pass
 
-    elif data in ['charge_add', 'charge_reset']:
-        _, _, username, template_id = call.data.split(":")
-        with GetDB() as db:
-            template = crud.get_user_template(db, template_id)
-            if not template:
-                return await bot.answer_callback_query(call.id, "Template not found!", show_alert=True)
-            template = UserTemplateResponse.model_validate(template)
-
-            db_user = crud.get_user(db, username)
-            if not db_user:
-                return await bot.answer_callback_query(call.id, "User not found!", show_alert=True)
-            user = UserResponse.model_validate(db_user)
-
-            inbounds = template.inbounds
-            proxies = {p.type.value: p.settings for p in db_user.proxies}
-
-            for protocol in xray.config.inbounds_by_protocol:
-                if protocol in inbounds and protocol not in db_user.inbounds:
-                    proxies.update({protocol: {}})
-                elif protocol in db_user.inbounds and protocol not in inbounds:
-                    del proxies[protocol]
-
-            crud.reset_user_data_usage(db, db_user)
-            if data == 'charge_reset':
-                expire_date = None
-                if template.expire_duration:
-                    expire_date = today + relativedelta(seconds=template.expire_duration)
-                modify = UserModify(
-                    status=UserStatus.active,
-                    expire=int(expire_date.timestamp()) if expire_date else 0,
-                    data_limit=template.data_limit,
-                )
-            else:
-                expire_date = None
-                if template.expire_duration:
-                    expire_date = (datetime.fromtimestamp(user.expire)
-                                   if user.expire else today) + relativedelta(seconds=template.expire_duration)
-                modify = UserModify(
-                    status=UserStatus.active,
-                    expire=int(expire_date.timestamp()) if expire_date else 0,
-                    data_limit=(user.data_limit or 0) - user.used_traffic + template.data_limit,
-                )
-            db_user = crud.update_user(db, db_user, modify)
-            await xray.operations.add_user(db_user)
-
-            text = get_user_info_text(
-                status=db_user.status,
-                username=username,
-                sub_url=user.subscription_url,
-                expire=db_user.expire,
-                data_limit=db_user.data_limit,
-                usage=db_user.used_traffic,
-                note=db_user.note)
-
-            await bot.edit_message_text(
-                f'🔋 User Successfully Charged!\n\n{text}',
-                call.message.chat.id,
-                call.message.message_id,
-                parse_mode='html',
-                reply_markup=BotKeyboard.user_menu(user_info={
-                    'status': user.status,
-                    'username': user.username
-                }, note=True))
-            if TELEGRAM_LOGGER_CHANNEL_ID:
-                text = f'''\
-🔋 <b>#Charged #{data.split('_')[1].title()} #From_Bot</b>
-➖➖➖➖➖➖➖➖➖
-<b>Template :</b> <code>{template.name}</code>
-<b>Username :</b> <code>{user.username}</code>
-➖➖➖➖➖➖➖➖➖
-<u><b>Last status</b></u>
-<b>├Traffic Limit :</b> <code>{readable_size(user.data_limit) if user.data_limit else "Unlimited"}</code>
-<b>├Expire Date :</b> <code>\
-{datetime.fromtimestamp(user.expire).strftime('%H:%M:%S %Y-%m-%d') if user.expire else "Never"}</code>
-➖➖➖➖➖➖➖➖➖
-<u><b>New status</b></u>
-<b>├Traffic Limit :</b> <code>{readable_size(db_user.data_limit) if db_user.data_limit else "Unlimited"}</code>
-<b>├Expire Date :</b> <code>\
-{datetime.fromtimestamp(db_user.expire).strftime('%H:%M:%S %Y-%m-%d') if db_user.expire else "Never"}</code>
-➖➖➖➖➖➖➖➖➖
-<b>By :</b> <a href="tg://user?id={chat_id}">{full_name}</a>\
-'''
-                try:
-                    await bot.send_message(TELEGRAM_LOGGER_CHANNEL_ID, text, 'HTML')
-                except:
-                    pass
-
-    elif data == 'edit_user':
-        if (username := mem_store.get(f'{call.message.chat.id}:username')) is None:
-            try:
-                await bot.delete_message(call.message.chat.id,
-                                   call.message.message_id)
-            except Exception:
-                pass
-            return await bot.send_message(
-                call.message.chat.id,
-                '❌ Bot reload detected. Please start over.',
-                reply_markup=BotKeyboard.main_menu()
-            )
-
-        if not mem_store.get(f'{call.message.chat.id}:protocols'):
-            return await bot.answer_callback_query(
-                call.id,
-                '❌ No inbounds selected.',
-                show_alert=True
-            )
-
-        inbounds: dict[str, list[str]] = {
-            k: v for k, v in mem_store.get(f'{call.message.chat.id}:protocols').items() if v}
-
-        with GetDB() as db:
-            db_user = crud.get_user(db, username)
-            if not db_user:
-                return await bot.answer_callback_query(call.id, text=f"User not found!", show_alert=True)
-
-            proxies = {p.type.value: p.settings for p in db_user.proxies}
-
-            for protocol in xray.config.inbounds_by_protocol:
-                if protocol in inbounds and protocol not in db_user.inbounds:
-                    proxies.update({protocol: {'flow': TELEGRAM_DEFAULT_VLESS_FLOW} if
-                                    TELEGRAM_DEFAULT_VLESS_FLOW and protocol == ProxyTypes.VLESS else {}})
-                elif protocol in db_user.inbounds and protocol not in inbounds:
-                    del proxies[protocol]
-
-            modify = UserModify(
-                expire=int(mem_store.get(f'{call.message.chat.id}:expire_date').timestamp())
-                if mem_store.get(f'{call.message.chat.id}:expire_date') else 0, data_limit=mem_store.get(
-                    f"{call.message.chat.id}:data_limit"),
-                proxies=proxies, inbounds=inbounds)
-            last_user = UserResponse.model_validate(db_user)
-            db_user = crud.update_user(db, db_user, modify)
-
-            user = UserResponse.model_validate(db_user)
-
-        if user.status == UserStatus.active:
-            await xray.operations.update_user(db_user)
-        else:
-            await xray.operations.remove_user(db_user)
-
-        await bot.answer_callback_query(call.id, "✅ User updated successfully.")
-
-        text = get_user_info_text(
+@bot.callback_query_handler(query_startswith("do_reset_usage"), is_admin=True)
+async def reset_all_usages(call: types.CallbackQuery):
+    username = call.data.split(":")[1]
+    with GetDB() as db:
+        db_user = crud.get_user(db, username)
+        crud.reset_user_data_usage(db, db_user)
+        user = UserResponse.model_validate(db_user)
+    await bot.edit_message_text(
+        get_user_info_text(
             status=user.status,
-            username=user.username,
+            username=username,
             sub_url=user.subscription_url,
             data_limit=user.data_limit,
             usage=user.used_traffic,
             expire=user.expire,
             note=user.note
-        )
-        await bot.edit_message_text(
-            text,
+        ),
+        call.message.chat.id,
+        call.message.message_id,
+        parse_mode='HTML',
+        reply_markup=BotKeyboard.user_menu(user_info={
+            'status': user.status,
+            'username': user.username
+        }, note=True))
+    if TELEGRAM_LOGGER_CHANNEL_ID:
+        text = f'''\
+🔁 <b>#Reset_usage  #From_Bot</b>
+➖➖➖➖➖➖➖➖➖
+<b>Username</b> : <code>{username}</code>
+➖➖➖➖➖➖➖➖➖
+<b>By :</b> <a href="tg://user?id={call.from_user.id}">{call.from_user.full_name}</a>'''
+        try:
+            await bot.send_message(TELEGRAM_LOGGER_CHANNEL_ID, text, 'HTML')
+        except:
+            pass
+
+
+@bot.callback_query_handler(query_equals("do_restart"), is_admin=True)
+async def restart_xray(call: types.CallbackQuery):
+    m = await bot.edit_message_text(
+        '🔄 Restarting XRay core...', call.message.chat.id, call.message.message_id)
+    await xray.core.restart(xray.config.include_db_users())
+    for node_id, node in list(xray.nodes.items()):
+        if await node.is_healthy():
+            await xray.operations.restart_node(node_id, xray.config.include_db_users())
+    await bot.edit_message_text(
+        '✅ XRay core restarted successfully.',
+        m.chat.id, m.message_id,
+        reply_markup=BotKeyboard.main_menu()
+    )
+
+@bot.callback_query_handler(query_equals("edit_user_done"), is_admin=True)
+async def edit_user(call: types.CallbackQuery):
+    if (username := mem_store.get(f'{call.message.chat.id}:username')) is None:
+        try:
+            await bot.delete_message(call.message.chat.id,
+                               call.message.message_id)
+        except Exception:
+            pass
+        return await bot.send_message(
             call.message.chat.id,
-            call.message.message_id,
-            parse_mode="HTML",
-            reply_markup=BotKeyboard.user_menu({
-                'username': db_user.username,
-                'status': db_user.status},
-                note=True)
+            '❌ Bot reload detected. Please start over.',
+            reply_markup=BotKeyboard.main_menu()
         )
-        if TELEGRAM_LOGGER_CHANNEL_ID:
-            tag = f'\n➖➖➖➖➖➖➖➖➖ \n<b>By :</b> <a href="tg://user?id={chat_id}">{full_name}</a>'
-            if last_user.data_limit != user.data_limit:
-                text = f'''\
+
+    if not mem_store.get(f'{call.message.chat.id}:services'):
+        return await bot.answer_callback_query(
+            call.id,
+            '❌ No Service selected.',
+            show_alert=True
+        )
+
+    #inbounds: dict[str, list[str]] = {
+    #    k: v for k, v in mem_store.get(f'{call.message.chat.id}:protocols').items() if v}
+    services: List[int] = mem_store.get(f"{call.message.chat.id}:services")
+
+    with GetDB() as db:
+        db_user = crud.get_user(db, username)
+        if not db_user:
+            return await bot.answer_callback_query(call.id, text=f"User not found!", show_alert=True)
+
+        # proxies = {p.type.value: p.settings for p in db_user.proxies}
+
+        """for protocol in xray.config.inbounds_by_protocol:
+            if protocol in inbounds and protocol not in db_user.inbounds:
+                proxies.update({protocol: {'flow': TELEGRAM_DEFAULT_VLESS_FLOW} if
+                                TELEGRAM_DEFAULT_VLESS_FLOW and protocol == ProxyTypes.VLESS else {}})
+            elif protocol in db_user.inbounds and protocol not in inbounds:
+                del proxies[protocol]"""
+
+        modify = UserModify(
+            username=username,
+            # status=db_user.status,
+            expire=int(mem_store.get(f'{call.message.chat.id}:expire_date').timestamp())
+            if mem_store.get(f'{call.message.chat.id}:expire_date') else 0, 
+            data_limit=mem_store.get(f"{call.message.chat.id}:data_limit"),
+            services=services)
+        last_user = UserResponse.model_validate(db_user)
+        db_user = crud.update_user(db, db_user, modify)
+
+        user = UserResponse.model_validate(db_user)
+
+    if user.status == UserStatus.active:
+        await xray.operations.update_user(db_user)
+    else:
+        await xray.operations.remove_user(db_user)
+
+    await bot.answer_callback_query(call.id, "✅ User updated successfully.")
+
+    text = get_user_info_text(
+        status=user.status,
+        username=user.username,
+        sub_url=user.subscription_url,
+        data_limit=user.data_limit,
+        usage=user.used_traffic,
+        expire=user.expire,
+        note=user.note
+    )
+    await bot.edit_message_text(
+        text,
+        call.message.chat.id,
+        call.message.message_id,
+        parse_mode="HTML",
+        reply_markup=BotKeyboard.user_menu({
+            'username': db_user.username,
+            'status': db_user.status},
+            note=True)
+    )
+    if TELEGRAM_LOGGER_CHANNEL_ID:
+        tag = f'\n➖➖➖➖➖➖➖➖➖ \n<b>By :</b> <a href="tg://user?id={call.from_user.id}">{call.from_user.full_name}</a>'
+        if last_user.data_limit != user.data_limit:
+            text = f'''\
 📶 <b>#Traffic_Change #From_Bot</b>
 ➖➖➖➖➖➖➖➖➖
 <b>Username :</b> <code>{user.username}</code>
 <b>Last Traffic Limit :</b> <code>{readable_size(last_user.data_limit) if last_user.data_limit else "Unlimited"}</code>
 <b>New Traffic Limit :</b> <code>{readable_size(user.data_limit) if user.data_limit else "Unlimited"}</code>{tag}'''
-                try:
-                    await bot.send_message(TELEGRAM_LOGGER_CHANNEL_ID, text, 'HTML')
-                except:
-                    pass
-            if last_user.expire != user.expire:
-                text = f'''\
+            try:
+                await bot.send_message(TELEGRAM_LOGGER_CHANNEL_ID, text, 'HTML')
+            except:
+                pass
+        if last_user.expire != user.expire:
+            text = f'''\
 📅 <b>#Expiry_Change #From_Bot</b>
 ➖➖➖➖➖➖➖➖➖
 <b>Username :</b> <code>{user.username}</code>
@@ -1620,343 +1193,278 @@ async def confirm_user_command(call: types.CallbackQuery):
 {datetime.fromtimestamp(last_user.expire).strftime('%H:%M:%S %Y-%m-%d') if last_user.expire else "Never"}</code>
 <b>New Expire Date :</b> <code>\
 {datetime.fromtimestamp(user.expire).strftime('%H:%M:%S %Y-%m-%d') if user.expire else "Never"}</code>{tag}'''
-                try:
-                    await bot.send_message(TELEGRAM_LOGGER_CHANNEL_ID, text, 'HTML')
-                except:
-                    pass
-            if list(last_user.inbounds.values())[0] != list(user.inbounds.values())[0]:
-                text = f'''\
+            try:
+                await bot.send_message(TELEGRAM_LOGGER_CHANNEL_ID, text, 'HTML')
+            except:
+                pass
+        if list(last_user.inbounds.values())[0] != list(user.inbounds.values())[0]:
+            text = f'''\
 ⚙️ <b>#Inbounds_Change #From_Bot</b>
 ➖➖➖➖➖➖➖➖➖
 <b>Username :</b> <code>{user.username}</code>
 <b>Last Proxies :</b> <code>{", ".join(list(last_user.inbounds.values())[0])}</code>
 <b>New Proxies :</b> <code>{", ".join(list(user.inbounds.values())[0])}</code>{tag}'''
-                try:
-                    await bot.send_message(TELEGRAM_LOGGER_CHANNEL_ID, text, 'HTML')
-                except:
-                    pass
-
-    elif data == 'add_user':
-        if mem_store.get(f'{call.message.chat.id}:username') is None:
             try:
-                await bot.delete_message(call.message.chat.id,
-                                   call.message.message_id)
-            except Exception:
+                await bot.send_message(TELEGRAM_LOGGER_CHANNEL_ID, text, 'HTML')
+            except:
                 pass
-            return await bot.send_message(
-                call.message.chat.id,
-                '❌ Bot reload detected. Please start over.',
-                reply_markup=BotKeyboard.main_menu()
-            )
 
-        if not mem_store.get(f'{call.message.chat.id}:protocols'):
-            return await bot.answer_callback_query(
-                call.id,
-                '❌ No inbounds selected.',
-                show_alert=True
-            )
 
-        inbounds: dict[str, list[str]] = {
-            k: v for k, v in mem_store.get(f'{call.message.chat.id}:protocols').items() if v}
-        proxies = {p: ({'flow': TELEGRAM_DEFAULT_VLESS_FLOW} if
-                       TELEGRAM_DEFAULT_VLESS_FLOW and p == ProxyTypes.VLESS else {}) for p in inbounds}
 
-        new_user = UserCreate(
-            username=mem_store.get(f'{call.message.chat.id}:username'),
-            expire=int(mem_store.get(f'{call.message.chat.id}:expire_date').timestamp())
-            if mem_store.get(f'{call.message.chat.id}:expire_date') else None,
-            data_limit=mem_store.get(f'{call.message.chat.id}:data_limit')
-            if mem_store.get(f'{call.message.chat.id}:data_limit') else None,
-            proxies=proxies,
-            inbounds=inbounds)
-
-        for proxy_type in new_user.proxies:
-            if not xray.config.inbounds_by_protocol.get(proxy_type):
-                return await bot.answer_callback_query(
-                    call.id,
-                    f'❌ Protocol {proxy_type} is disabled on your server',
-                    show_alert=True
-                )
-
+@bot.callback_query_handler(query_startswith("add_user_done"), is_admin=True)
+async def delete_limpired(call: types.CallbackQuery):
+    if mem_store.get(f'{call.message.chat.id}:username') is None:
         try:
-            with GetDB() as db:
-                db_user = crud.create_user(db, new_user)
-                proxies = db_user.proxies
-                user = UserResponse.model_validate(db_user)
-        except sqlalchemy.exc.IntegrityError:
-            db.rollback()
-            return await bot.answer_callback_query(
-                call.id,
-                '❌ Username already exists.',
-                show_alert=True
-            )
-
-        await xray.operations.add_user(db_user)
-
-        text = get_user_info_text(
-            status=user.status,
-            username=user.username,
-            sub_url=user.subscription_url,
-            data_limit=user.data_limit,
-            usage=user.used_traffic,
-            expire=user.expire,
-            note=user.note
-        )
-        await bot.edit_message_text(
-            text,
+            await bot.delete_message(call.message.chat.id,
+                               call.message.message_id)
+        except Exception:
+            pass
+        return await bot.send_message(
             call.message.chat.id,
-            call.message.message_id,
-            parse_mode="HTML",
-            reply_markup=BotKeyboard.user_menu(user_info={'status': user.status, 'username': user.username}, note=True))
+            '❌ Bot reload detected. Please start over.',
+            reply_markup=BotKeyboard.main_menu()
+        )
 
-        if TELEGRAM_LOGGER_CHANNEL_ID:
-            text = f'''\
+    if not mem_store.get(f'{call.message.chat.id}:services'):
+        return await bot.answer_callback_query(
+            call.id,
+            '❌ No services selected.',
+            show_alert=True
+        )
+
+    services: List[int] = mem_store.get(f'{call.message.chat.id}:services', [])
+    
+    new_user = UserCreate(
+        username=mem_store.get(f'{call.message.chat.id}:username'),
+        expire=int(mem_store.get(f'{call.message.chat.id}:expire_date').timestamp())
+        if mem_store.get(f'{call.message.chat.id}:expire_date') else None,
+        data_limit=mem_store.get(f'{call.message.chat.id}:data_limit')
+        if mem_store.get(f'{call.message.chat.id}:data_limit') else None,
+        services=services)
+    try:
+        with GetDB() as db:
+            db_user = crud.create_user(db, new_user)
+            services = db_user.services
+            user = UserResponse.model_validate(db_user)
+    except sqlalchemy.exc.IntegrityError:
+        db.rollback()
+        return await bot.answer_callback_query(
+            call.id,
+            '❌ Username already exists.',
+            show_alert=True
+        )
+
+    await xray.operations.add_user(db_user)
+
+    text = get_user_info_text(
+        status=user.status,
+        username=user.username,
+        sub_url=user.subscription_url,
+        data_limit=user.data_limit,
+        usage=user.used_traffic,
+        expire=user.expire,
+        note=user.note
+    )
+    await bot.edit_message_text(
+        text,
+        call.message.chat.id,
+        call.message.message_id,
+        parse_mode="HTML",
+        reply_markup=BotKeyboard.user_menu(user_info={'status': user.status, 'username': user.username}, note=True))
+
+    if TELEGRAM_LOGGER_CHANNEL_ID:
+        text = f'''\
 🆕 <b>#Created #From_Bot</b>
 ➖➖➖➖➖➖➖➖➖
 <b>Username :</b> <code>{user.username}</code>
 <b>Traffic Limit :</b> <code>{readable_size(user.data_limit) if user.data_limit else "Unlimited"}</code>
 <b>Expire Date :</b> <code>\
 {datetime.fromtimestamp(user.expire).strftime('%H:%M:%S %Y-%m-%d') if user.expire else "Never"}</code>
-<b>Proxies :</b> <code>{"" if not proxies else ", ".join([proxy.type for proxy in proxies])}</code>
+<b>Services :</b> <code>{"" if not services else ", ".join([s.name for s in services])}</code>
 ➖➖➖➖➖➖➖➖➖
-<b>By :</b> <a href="tg://user?id={chat_id}">{full_name}</a>'''
-            try:
-                await bot.send_message(TELEGRAM_LOGGER_CHANNEL_ID, text, 'HTML')
-            except:
-                pass
+<b>By :</b> <a href="tg://user?id={call.from_user.id}">{call.from_user.full_name}</a>'''
+        try:
+            await bot.send_message(TELEGRAM_LOGGER_CHANNEL_ID, text, 'HTML')
+        except:
+            pass
 
-    elif data in ['delete_expired', 'delete_limited']:
-        await bot.edit_message_text(
-            '⏳ <b>In Progress...</b>',
-            call.message.chat.id,
-            call.message.message_id,
-            parse_mode="HTML")
-        with GetDB() as db:
-            depleted_users = crud.get_users(
-                db, status=[UserStatus.limited if data == 'delete_limited' else UserStatus.expired])
-            file_name = f'{data[8:]}_users_{int(now.timestamp()*1000)}.txt'
-            with open(file_name, 'w') as f:
-                f.write('USERNAME\tEXIPRY\tUSAGE/LIMIT\tSTATUS\n')
-                deleted = 0
-                for user in depleted_users:
-                    try:
-                        crud.remove_user(db, user)
-                        await xray.operations.remove_user(user)
-                        deleted +=1
-                        f.write(\
+
+@bot.callback_query_handler(query_startswith(['do_delete_expired', 'do_delete_limited']), is_admin=True)
+async def delete_limpired(call: types.CallbackQuery):
+    await bot.edit_message_text(
+        '⏳ <b>In Progress...</b>',
+        call.message.chat.id,
+        call.message.message_id,
+        parse_mode="HTML")
+    with GetDB() as db:
+        depleted_users = crud.get_users(
+            db, status=[UserStatus.limited if data == 'delete_limited' else UserStatus.expired])
+        file_name = f'{data[8:]}_users_{int(now.timestamp()*1000)}.txt'
+        with open(file_name, 'w') as f:
+            f.write('USERNAME\tEXIPRY\tUSAGE/LIMIT\tSTATUS\n')
+            deleted = 0
+            for user in depleted_users:
+                try:
+                    crud.remove_user(db, user)
+                    await xray.operations.remove_user(user)
+                    deleted +=1
+                    f.write(\
 f'{user.username}\
 \t{datetime.fromtimestamp(user.expire) if user.expire else "never"}\
 \t{readable_size(user.used_traffic) if user.used_traffic else 0}\
 /{readable_size(user.data_limit) if user.data_limit else "Unlimited"}\
 \t{user.status}\n')
-                    except:
-                        db.rollback()
-            await bot.edit_message_text(
-                f'✅ <code>{deleted}</code>/<code>{len(depleted_users)}</code> <b>{data[7:].title()} Users Deleted</b>',
-                call.message.chat.id,
-                call.message.message_id,
-                parse_mode="HTML",
-                reply_markup=BotKeyboard.main_menu())
-            if TELEGRAM_LOGGER_CHANNEL_ID:
-                text = f'''\
+                except:
+                    db.rollback()
+        await bot.edit_message_text(
+            f'✅ <code>{deleted}</code>/<code>{len(depleted_users)}</code> <b>{data[7:].title()} Users Deleted</b>',
+            call.message.chat.id,
+            call.message.message_id,
+            parse_mode="HTML",
+            reply_markup=BotKeyboard.main_menu())
+        if TELEGRAM_LOGGER_CHANNEL_ID:
+            text = f'''\
 🗑 <b>#Delete #{data[7:].title()} #From_Bot</b>
 ➖➖➖➖➖➖➖➖➖
 <b>Count:</b> <code>{deleted}</code>
 ➖➖➖➖➖➖➖➖➖
-<b>By :</b> <a href="tg://user?id={chat_id}">{full_name}</a>'''
+<b>By :</b> <a href="tg://user?id={call.from_user.id}">{call.from_user.full_name}</a>'''
+            try:
+                await bot.send_document(TELEGRAM_LOGGER_CHANNEL_ID, open(file_name, 'rb'), caption=text, parse_mode='HTML')
+                os.remove(file_name)
+            except:
+                pass
+
+@bot.callback_query_handler(query_startswith('do_add_data:'), is_admin=True)
+async def add_data_to_all(call: types.CallbackQuery):
+    schedule_delete_message(
+        call.message.chat.id,
+        (await bot.send_message(chat_id, '⏳ <b>In Progress...</b>', 'HTML')).id)
+    data_limit = float(call.data.split(":")[1]) * 1024 * 1024 * 1024
+    with GetDB() as db:
+        users = crud.get_users(db)
+        counter = 0
+        file_name = f'new_data_limit_users_{int(now.timestamp()*1000)}.txt'
+        with open(file_name, 'w') as f:
+            f.write('USERNAME\tEXIPRY\tUSAGE/LIMIT\tSTATUS\n')
+            for user in users:
                 try:
-                    await bot.send_document(TELEGRAM_LOGGER_CHANNEL_ID, open(file_name, 'rb'), caption=text, parse_mode='HTML')
-                    os.remove(file_name)
-                except:
-                    pass
-    elif data == 'add_data':
-        schedule_delete_message(
-            call.message.chat.id,
-            (await bot.send_message(chat_id, '⏳ <b>In Progress...</b>', 'HTML')).id)
-        data_limit = float(call.data.split(":")[2]) * 1024 * 1024 * 1024
-        with GetDB() as db:
-            users = crud.get_users(db)
-            counter = 0
-            file_name = f'new_data_limit_users_{int(now.timestamp()*1000)}.txt'
-            with open(file_name, 'w') as f:
-                f.write('USERNAME\tEXIPRY\tUSAGE/LIMIT\tSTATUS\n')
-                for user in users:
-                    try:
-                        if user.data_limit and user.status not in [UserStatus.limited, UserStatus.expired]:
-                            user = crud.update_user(db, user, UserModify(data_limit=(user.data_limit + data_limit)))
-                            counter += 1
-                            f.write(
-                                f'{user.username}\
+                    if user.data_limit and user.status not in [UserStatus.limited, UserStatus.expired]:
+                        user = crud.update_user(db, user, UserModify(username=user.username, data_limit=(user.data_limit + data_limit)))
+                        counter += 1
+                        f.write(
+                            f'{user.username}\
 \t{datetime.fromtimestamp(user.expire) if user.expire else "never"}\
 \t{readable_size(user.used_traffic) if user.used_traffic else 0}\
 /{readable_size(user.data_limit) if user.data_limit else "Unlimited"}\
 \t{user.status}\n')
-                    except:
-                        db.rollback()
-            await cleanup_messages(chat_id)
-            await bot.send_message(
-                chat_id,
-                f'✅ <b>{counter}/{len(users)} Users</b> Data Limit according to <code>{"+" if data_limit > 0 else "-"}{readable_size(abs(data_limit))}</code>',
-                'HTML',
-                reply_markup=BotKeyboard.main_menu())
-            if TELEGRAM_LOGGER_CHANNEL_ID:
-                text = f'''\
+                except:
+                    db.rollback()
+        await cleanup_messages(chat_id)
+        await bot.send_message(
+            chat_id,
+            f'✅ <b>{counter}/{len(users)} Users</b> Data Limit according to <code>{"+" if data_limit > 0 else "-"}{readable_size(abs(data_limit))}</code>',
+            'HTML',
+            reply_markup=BotKeyboard.main_menu())
+        if TELEGRAM_LOGGER_CHANNEL_ID:
+            text = f'''\
 📶 <b>#Traffic_Change #From_Bot</b>
 ➖➖➖➖➖➖➖➖➖
 <b>According to:</b> <code>{"+" if data_limit > 0 else "-"}{readable_size(abs(data_limit))}</code>
 <b>Count:</b> <code>{counter}</code>
 ➖➖➖➖➖➖➖➖➖
-<b>By :</b> <a href="tg://user?id={chat_id}">{full_name}</a>'''
-                try:
-                    await bot.send_document(TELEGRAM_LOGGER_CHANNEL_ID, open(file_name, 'rb'), caption=text, parse_mode='HTML')
-                    os.remove(file_name)
-                except:
-                    pass
+<b>By :</b> <a href="tg://user?id={call.from_user.id}">{call.from_user.full_name}</a>'''
+            try:
+                await bot.send_document(TELEGRAM_LOGGER_CHANNEL_ID, open(file_name, 'rb'), caption=text, parse_mode='HTML')
+                os.remove(file_name)
+            except:
+                pass
 
-    elif data == 'add_time':
-        schedule_delete_message(
-            call.message.chat.id,
-            (await bot.send_message(chat_id, '⏳ <b>In Progress...</b>', 'HTML')).id)
-        days = int(call.data.split(":")[2])
-        with GetDB() as db:
-            users = crud.get_users(db)
-            counter = 0
-            file_name = f'new_expiry_users_{int(now.timestamp()*1000)}.txt'
-            with open(file_name, 'w') as f:
-                f.write('USERNAME\tEXIPRY\tUSAGE/LIMIT\tSTATUS\n')
-                for user in users:
-                    try:
-                        if user.expire and user.status not in [UserStatus.limited, UserStatus.expired]:
-                            user = crud.update_user(
-                                db, user,
-                                UserModify(
-                                    expire=int(
-                                        (datetime.fromtimestamp(user.expire) + relativedelta(days=days)).timestamp())))
-                            counter += 1
-                            f.write(
-                                f'{user.username}\
+@bot.callback_query_handler(query_startswith('do_add_time:'), is_admin=True)
+async def add_time_to_all(call: types.CallbackQuery):
+    schedule_delete_message(
+        call.message.chat.id,
+        (await bot.send_message(chat_id, '⏳ <b>In Progress...</b>', 'HTML')).id)
+    days = int(call.data.split(":")[1])
+    with GetDB() as db:
+        users = crud.get_users(db)
+        counter = 0
+        file_name = f'new_expiry_users_{int(now.timestamp()*1000)}.txt'
+        with open(file_name, 'w') as f:
+            f.write('USERNAME\tEXIPRY\tUSAGE/LIMIT\tSTATUS\n')
+            for user in users:
+                try:
+                    if user.expire and user.status not in [UserStatus.limited, UserStatus.expired]:
+                        user = crud.update_user(
+                            db, user,
+                            UserModify(
+                                username=user.username,
+                                expire=int(
+                                    (datetime.fromtimestamp(user.expire) + relativedelta(days=days)).timestamp())))
+                        counter += 1
+                        f.write(
+                            f'{user.username}\
 \t{datetime.fromtimestamp(user.expire) if user.expire else "never"}\
 \t{readable_size(user.used_traffic) if user.used_traffic else 0}\
 /{readable_size(user.data_limit) if user.data_limit else "Unlimited"}\
 \t{user.status}\n')
-                    except:
-                        db.rollback()
-            await cleanup_messages(chat_id)
-            await bot.send_message(
-                chat_id,
-                f'✅ <b>{counter}/{len(users)} Users</b> Expiry Changes according to {days} Days',
-                'HTML',
-                reply_markup=BotKeyboard.main_menu())
-            if TELEGRAM_LOGGER_CHANNEL_ID:
-                text = f'''\
+                except:
+                    db.rollback()
+        await cleanup_messages(chat_id)
+        await bot.send_message(
+            chat_id,
+            f'✅ <b>{counter}/{len(users)} Users</b> Expiry Changes according to {days} Days',
+            'HTML',
+            reply_markup=BotKeyboard.main_menu())
+        if TELEGRAM_LOGGER_CHANNEL_ID:
+            text = f'''\
 📅 <b>#Expiry_Change #From_Bot</b>
 ➖➖➖➖➖➖➖➖➖
 <b>According to:</b> <code>{days} Days</code>
 <b>Count:</b> <code>{counter}</code>
 ➖➖➖➖➖➖➖➖➖
-<b>By :</b> <a href="tg://user?id={chat_id}">{full_name}</a>'''
-                try:
-                    await bot.send_document(TELEGRAM_LOGGER_CHANNEL_ID, open(file_name, 'rb'), caption=text, parse_mode='HTML')
-                    os.remove(file_name)
-                except:
-                    pass
-    elif data in ['inbound_add', 'inbound_remove']:
-        await bot.edit_message_text(
-            '⏳ <b>In Progress...</b>',
+<b>By :</b> <a href="tg://user?id={call.from_user.id}">{call.from_user.full_name}</a>'''
+            try:
+                await bot.send_document(TELEGRAM_LOGGER_CHANNEL_ID, open(file_name, 'rb'), caption=text, parse_mode='HTML')
+                os.remove(file_name)
+            except:
+                pass
+
+@bot.callback_query_handler(query_startswith('do_revoke:'), is_admin=True)
+async def revoke_sub(call: types.CallbackQuery):
+    username = call.data.split(":")[1]
+    with GetDB() as db:
+        db_user = crud.get_user(db, username)
+        if not db_user:
+            return await bot.answer_callback_query(call.id, text=f"User not found!", show_alert=True)
+        db_user = crud.revoke_user_sub(db, db_user)
+        user = UserResponse.model_validate(db_user)
+    text = get_user_info_text(
+        status=user.status,
+        username=user.username,
+        sub_url=user.subscription_url,
+        expire=user.expire,
+        data_limit=user.data_limit,
+        usage=user.used_traffic,
+        note=user.note)
+    await bot.edit_message_text(
+            f'✅ Subscription Successfully Revoked!\n\n{text}',
             call.message.chat.id,
             call.message.message_id,
-            parse_mode="HTML")
-        inbound = call.data.split(":")[2]
-        with GetDB() as db:
-            users = crud.get_users(db)
-            unsuccessful = 0
-            for user in users:
-                inbound_tags = [j for i in user.inbounds for j in user.inbounds[i]]
-                protocol = xray.config.inbounds_by_tag[inbound]['protocol']
-                new_inbounds = user.inbounds
-                if data == 'inbound_add':
-                    if inbound not in inbound_tags:
-                        if protocol in list(new_inbounds.keys()):
-                            new_inbounds[protocol].append(inbound)
-                        else:
-                            new_inbounds[protocol] = [inbound]
-                elif data == 'inbound_remove':
-                    if inbound in inbound_tags:
-                        if len(new_inbounds[protocol]) == 1:
-                            del new_inbounds[protocol]
-                        else:
-                            new_inbounds[protocol].remove(inbound)
-                if (data == 'inbound_remove' and inbound in inbound_tags)\
-                        or (data == 'inbound_add' and inbound not in inbound_tags):
-                    proxies = {p.type.value: p.settings for p in user.proxies}
-                    for protocol in xray.config.inbounds_by_protocol:
-                        if protocol in new_inbounds and protocol not in user.inbounds:
-                            proxies.update({protocol: {'flow': TELEGRAM_DEFAULT_VLESS_FLOW} if
-                                            TELEGRAM_DEFAULT_VLESS_FLOW and protocol == ProxyTypes.VLESS else {}})
-                        elif protocol in user.inbounds and protocol not in new_inbounds:
-                            del proxies[protocol]
-                    try:
-                        user = crud.update_user(db, user, UserModify(inbounds=new_inbounds, proxies=proxies))
-                        if user.status == UserStatus.active:
-                            await xray.operations.update_user(user)
-                    except:
-                        db.rollback()
-                        unsuccessful += 1
+            parse_mode="HTML",
+            reply_markup=BotKeyboard.user_menu(user_info={'status': user.status, 'username': user.username}, note=True))
 
-            await bot.edit_message_text(
-                f'✅ <b>{data[8:].title()}</b> <code>{inbound}</code> <b>Users Successfully</b>'+\
-                    (f'\n Unsuccessful: <code>{unsuccessful}</code>' if unsuccessful else ''),
-                call.message.chat.id,
-                call.message.message_id,
-                parse_mode="HTML",
-                reply_markup=BotKeyboard.main_menu())
-
-            if TELEGRAM_LOGGER_CHANNEL_ID:
-                text = f'''\
-✏️ <b>#Modified #Inbound_{data[8:].title()} #From_Bot</b>
-➖➖➖➖➖➖➖➖➖
-<b>Inbound:</b> <code>{inbound}</code>
-➖➖➖➖➖➖➖➖➖
-<b>By :</b> <a href="tg://user?id={chat_id}">{full_name}</a>'''
-                try:
-                    await bot.send_message(TELEGRAM_LOGGER_CHANNEL_ID, text, 'HTML')
-                except:
-                    pass
-
-    elif data == 'revoke_sub':
-        username = call.data.split(":")[2]
-        with GetDB() as db:
-            db_user = crud.get_user(db, username)
-            if not db_user:
-                return await bot.answer_callback_query(call.id, text=f"User not found!", show_alert=True)
-            db_user = crud.revoke_user_sub(db, db_user)
-            user = UserResponse.model_validate(db_user)
-        text = get_user_info_text(
-            status=user.status,
-            username=user.username,
-            sub_url=user.subscription_url,
-            expire=user.expire,
-            data_limit=user.data_limit,
-            usage=user.used_traffic,
-            note=user.note)
-        await bot.edit_message_text(
-                f'✅ Subscription Successfully Revoked!\n\n{text}',
-                call.message.chat.id,
-                call.message.message_id,
-                parse_mode="HTML",
-                reply_markup=BotKeyboard.user_menu(user_info={'status': user.status, 'username': user.username}, note=True))
-
-        if TELEGRAM_LOGGER_CHANNEL_ID:
-            text = f'''\
+    if TELEGRAM_LOGGER_CHANNEL_ID:
+        text = f'''\
 🚫 <b>#Revoke_sub #From_Bot</b>
 ➖➖➖➖➖➖➖➖➖
 <b>Username:</b> <code>{username}</code>
 ➖➖➖➖➖➖➖➖➖
-<b>By :</b> <a href="tg://user?id={chat_id}">{full_name}</a>'''
-            try:
-                await bot.send_message(TELEGRAM_LOGGER_CHANNEL_ID, text, 'HTML')
-            except:
-                pass
+<b>By :</b> <a href="tg://user?id={call.from_user.id}">{call.from_user.full_name}</a>'''
+        try:
+            await bot.send_message(TELEGRAM_LOGGER_CHANNEL_ID, text, 'HTML')
+        except:
+            pass
 
 
 @bot.message_handler(func=lambda message: True, is_admin=True)

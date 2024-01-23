@@ -502,7 +502,7 @@ def create_service(db: Session, service: Service) -> Service:
     return dbservice
 
 
-def get_service(db: Session, service_name) -> Service:
+def get_service(db: Session, service_name: str) -> Service:
     return db.query(Service).filter( Service.name == service_name ).first()
 
 def get_services(db: Session) -> List[Service]:

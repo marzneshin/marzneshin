@@ -139,9 +139,9 @@ class UserCreate(User):
 
 
 class UserModify(User):
-    status: UserStatusModify = None
-    services: List[int] = []
-    data_limit_reset_strategy: UserDataLimitResetStrategy = None
+    status: Optional[UserStatusModify] = Field(None)
+    services: List[int] = Field([])
+    data_limit_reset_strategy: Optional[UserDataLimitResetStrategy] = Field(None)
     model_config = ConfigDict(json_schema_extra={
         "example": {
             "username": "mammad1234",
@@ -179,10 +179,11 @@ class UserResponse(User):
     created_at: datetime
     inbounds: List[InboundBase] = Field([])
     services: List[ServiceBase] = Field([])
+
     # links: List[str] = [] # Field(default_factory=lamba x: )
     # subscription_url: str = ""
     model_config = ConfigDict(from_attributes=True)
-    
+
     @computed_field
     @property
     def links(self) -> List[str]:

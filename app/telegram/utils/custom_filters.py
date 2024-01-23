@@ -1,6 +1,7 @@
 from app.telegram import bot
+from typing import Union
 
-from telebot import types
+from telebot import types, custom_filters
 from telebot.asyncio_filters import AdvancedCustomFilter, StateFilter
 
 from config import TELEGRAM_ADMIN_ID
@@ -18,12 +19,15 @@ class IsAdminFilter(AdvancedCustomFilter):
         return message.chat.id in TELEGRAM_ADMIN_ID
 
 
-def cb_query_equals(text: str):
+def query_equals(text: str):
     return lambda query: query.data == text
 
 
-def cb_query_startswith(text: str):
-    return lambda query: query.data.startswith(text)
+def query_startswith(text: Union[list, str]):
+    if type(text) is str:
+        return lambda query: query.data.startswith(text)
+    else:
+        return lambda query: query.data.startswith(tuple(text))
 
 
 
