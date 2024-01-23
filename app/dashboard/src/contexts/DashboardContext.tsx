@@ -81,6 +81,9 @@ export const fetchUsers = async (query: FilterType): Promise<User[]> => {
   useDashboard.setState({ loading: true });
   return fetch("/users", { query })
     .then((users) => {
+      for (let i = 0; i < users.users.length; i++) {
+        users.users[i].service = users.users[i].service_ids;
+      }
       useDashboard.setState({ users });
       return users;
     })

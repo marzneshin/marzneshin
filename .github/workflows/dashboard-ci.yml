@@ -1,15 +1,14 @@
-name: Node.js CI
+name: Dashboard CI
 
 on:
 
   push:
     paths:
       - 'app/dashboard/**'
-    # branches: [ "master" ]
+    branches: [ "master" ]
   pull_request:
     paths: 
       - 'app/dashboard/**'
-    # branches: [ "master" ]
 
 jobs:
   build:
@@ -20,17 +19,23 @@ jobs:
       run:
         working-directory: ./app/dashboard
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
+
     - name: Use Node.js 
       uses: actions/setup-node@v3
       with:
         node-version: '21.0'
         cache: 'npm'
         cache-dependency-path: 'app/dashboard/package-lock.json'
-    - run: npm ci
-    - run: npm run build --if-present -- --outDir build --base '/dashboard/'
-    - run: npm test
-    
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Lint Dashboard
+      run: npm ci
+
+    - name: Build Dashboard
+      run: npm run build --if-present -- --outDir build --base '/dashboard/'
     
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v4.2.0
