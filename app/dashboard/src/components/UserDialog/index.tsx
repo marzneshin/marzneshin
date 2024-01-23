@@ -311,17 +311,8 @@ export const UserDialog: FC<UserDialogProps> = () => {
                                                     }}
                                                 />
                                             </FormControl>
+                                            <NoteField form={form} t={t} />
 
-                                            <FormControl
-                                                mb={"10px"}
-                                                isInvalid={!!form.formState.errors.note}
-                                            >
-                                                <FormLabel>{t("userDialog.note")}</FormLabel>
-                                                <Textarea {...form.register("note")} />
-                                                <FormErrorMessage>
-                                                    {form.formState.errors?.note?.message}
-                                                </FormErrorMessage>
-                                            </FormControl>
                                         </Flex>
                                         {error && (
                                             <Alert
