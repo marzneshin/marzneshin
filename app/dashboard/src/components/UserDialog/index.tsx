@@ -45,10 +45,15 @@ import { DataLimitField } from "./DataLimitField";
 import { PeriodicUsageReset as PeriodicUsageReset } from "./PeriodicUsageReset";
 import { ExpireDateField } from "./ExpireDateField";
 import { NoteField } from "./NoteField";
+import { Service } from "types/Service";
 
 const formatUser = (user: User): FormType => {
+    const services: number[] = user.services.map((service: number | Service): number => {
+        return (typeof service !== 'number') ? service.id : service;
+    });
     return {
         ...user,
+        services,
         data_limit: user.data_limit
             ? Number((user.data_limit / 1073741824).toFixed(5))
             : user.data_limit,
