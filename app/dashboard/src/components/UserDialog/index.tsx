@@ -282,29 +282,8 @@ export const UserDialog: FC<UserDialogProps> = () => {
                                                     )}
                                                 </HStack>
                                             </FormControl>
-                                            <FormControl mb={"10px"}>
-                                                <FormLabel>{t("userDialog.dataLimit")}</FormLabel>
-                                                <Controller
-                                                    control={form.control}
-                                                    name="data_limit"
-                                                    render={({ field }) => {
-                                                        return (
-                                                            <Input
-                                                                endAdornment="GB"
-                                                                type="number"
-                                                                size="sm"
-                                                                borderRadius="6px"
-                                                                onChange={field.onChange}
-                                                                disabled={disabled}
-                                                                error={
-                                                                    form.formState.errors.data_limit?.message
-                                                                }
-                                                                value={field.value ? String(field.value) : ""}
-                                                            />
-                                                        );
-                                                    }}
-                                                />
                                             </FormControl>
+                                            <DataLimitField form={form} disabled={disabled} t={t} />
                                             <Collapse
                                                 in={!!(dataLimit && dataLimit > 0)}
                                                 animateOpacity
