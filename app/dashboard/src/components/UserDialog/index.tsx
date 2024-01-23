@@ -24,6 +24,7 @@ import {
     useToast,
     Spinner,
     ModalOverlay,
+    Center,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { resetStrategy } from "constants/UserSettings";
@@ -40,7 +41,6 @@ import {
 } from "types/User";
 import { relativeExpiryDate } from "utils/dateFormatter";
 import { Input } from "../Input";
-import { ServicesSelectList } from "../ServicesSelectList";
 import { UsageFilter, createUsageConfig } from "../UsageFilter";
 import { AddUserIcon, EditUserIcon } from "./UserDialogIcons";
 import { DevTool } from "@hookform/devtools";
@@ -48,7 +48,8 @@ import { UserDialogModalHeader } from "./ModalHeader";
 import { UserDialogModalFooter } from "./ModalFooter";
 import { getDefaultValues } from "./DefaultValues";
 import { schema, FormType } from "./FormSchema";
-
+import { ServicesField } from "./ServicesField";
+import { Service } from "types/Service";
 
 const formatUser = (user: User): FormType => {
     return {
@@ -428,34 +429,9 @@ export const UserDialog: FC<UserDialogProps> = () => {
 
                                 <GridItem>
                                     {services.length === 0 ? (
-                                        <Spinner />
+                                        <Center><Spinner /></Center>
                                     ) :
-                                        <FormControl
-                                            isInvalid={
-                                                !!form.formState.errors.services?.message
-                                            }
-                                        >
-                                            <FormLabel>{t("userDialog.services")}</FormLabel>
-                                            <Controller
-                                                control={form.control}
-                                                name="services"
-                                                render={({ field }) => {
-                                                    return (
-                                                        <ServicesSelectList
-                                                            list={services}
-                                                            disabled={disabled}
-                                                            {...field}
-                                                        />
-                                                    );
-                                                }}
-                                            />
-                                            <FormErrorMessage>
-                                                {t(
-                                                    form.formState.errors.services
-                                                        ?.message as string
-                                                )}
-                                            </FormErrorMessage>
-                                        </FormControl>
+                                        <ServicesField t={t} services={services} form={form} disabled={disabled} />
                                     }
                                 </GridItem>
 

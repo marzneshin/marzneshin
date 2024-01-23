@@ -12,8 +12,8 @@ import { FC, forwardRef, Ref, useState } from "react";
 import {
     useFormContext,
 } from "react-hook-form";
-import { ChakraIcon } from "types/ChakraIcon";
 import { Service } from "types/Service";
+import { ServicePropertyStatus } from './ServicePropertyStatus';
 
 const ServiceIconBaseStyle = {
     baseStyle: {
@@ -28,21 +28,6 @@ const ServiceIconBaseStyle = {
 const UsersServiceIcon = chakra(UsersIcon, ServiceIconBaseStyle);
 
 const InboundsServiceIcon = chakra(ServerStackIcon, ServiceIconBaseStyle);
-
-type ServicePropertyStatusProps = {
-    value: number;
-    StatusIcon: ChakraIcon;
-}
-
-const ServicePropertyStatus: FC<ServicePropertyStatusProps> = ({ value, StatusIcon }) => {
-    const [valueState, _] = useState(value);
-    return (
-        <Flex flexDirection="row">
-            <StatusIcon />
-            <span>{valueState}</span>
-        </Flex>
-    );
-};
 
 type CustomCheckboxProps = {
     isChecked: boolean;
