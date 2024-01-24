@@ -24,12 +24,12 @@ jobs:
     - name: Use Node.js 
       uses: actions/setup-node@v3
       with:
-        node-version: '21.0'
+        node-version: '20.0'
         cache: 'npm'
         cache-dependency-path: 'app/dashboard/package-lock.json'
 
     - name: Install dependencies
-      run: npm ci
+      run: npm install
 
     - name: Lint Dashboard
       run: npm run lint
