@@ -5,10 +5,10 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
-} from "@chakra-ui/react";
-import { LanguageIcon } from "@heroicons/react/24/outline";
-import { FC, ReactNode } from "react";
-import { useTranslation } from "react-i18next";
+} from '@chakra-ui/react';
+import { LanguageIcon } from '@heroicons/react/24/outline';
+import { FC, ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
 
 type HeaderProps = {
   actions?: ReactNode;
@@ -21,7 +21,7 @@ const LangIcon = chakra(LanguageIcon, {
   },
 });
 
-export const Language: FC<HeaderProps> = ({ actions }) => {
+export const Language: FC<HeaderProps> = () => {
   const { i18n } = useTranslation();
 
   var changeLanguage = (lang: string) => {
@@ -41,28 +41,28 @@ export const Language: FC<HeaderProps> = ({ actions }) => {
         <MenuItem
           maxW="100px"
           fontSize="sm"
-          onClick={() => changeLanguage("en")}
+          onClick={() => changeLanguage('en')}
         >
           English
         </MenuItem>
         <MenuItem
           maxW="100px"
           fontSize="sm"
-          onClick={() => changeLanguage("fa")}
+          onClick={() => changeLanguage('fa')}
         >
           فارسی
         </MenuItem>
         <MenuItem
           maxW="100px"
           fontSize="sm"
-          onClick={() => changeLanguage("zh-cn")}
+          onClick={() => changeLanguage('zh-cn')}
         >
           简体中文
         </MenuItem>
         <MenuItem
           maxW="100px"
           fontSize="sm"
-          onClick={() => changeLanguage("ru")}
+          onClick={() => changeLanguage('ru')}
         >
           Русский
         </MenuItem>

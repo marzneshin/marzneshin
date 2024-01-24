@@ -1,23 +1,23 @@
 import {
-	chakra,
-	FormControl,
-	FormErrorMessage,
-	FormLabel,
-	Input as ChakraInput,
-	InputGroup,
-	InputLeftAddon,
-	InputProps as ChakraInputProps,
-	InputRightAddon,
-	InputRightElement,
-	NumberDecrementStepper,
-	NumberIncrementStepper,
-	NumberInput,
-	NumberInputField,
-	NumberInputStepper
-} from "@chakra-ui/react";
-import { XMarkIcon } from "@heroicons/react/24/outline";
-import classNames from "classnames";
-import React, { PropsWithChildren, ReactNode } from "react";
+  chakra,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+  Input as ChakraInput,
+  InputGroup,
+  InputLeftAddon,
+  InputProps as ChakraInputProps,
+  InputRightAddon,
+  InputRightElement,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper
+} from '@chakra-ui/react';
+import { XMarkIcon } from '@heroicons/react/24/outline';
+import classNames from 'classnames';
+import React, { PropsWithChildren, ReactNode } from 'react';
 
 const ClearIcon = chakra(XMarkIcon, {
   baseStyle: {
@@ -55,7 +55,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       className,
       startAdornment,
       endAdornment,
-      type = "text",
+      type = 'text',
       placeholder,
       onChange,
       onBlur,
@@ -72,41 +72,41 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       if (onChange)
         onChange({
           target: {
-            value: "",
+            value: '',
             name,
           },
         });
     };
-    const { size = "md" } = props;
-    const Component = type == "number" ? NumberInputField : ChakraInput;
-    const Wrapper = type == "number" ? NumberInput : React.Fragment;
+    const { size = 'md' } = props;
+    const Component = type == 'number' ? NumberInputField : ChakraInput;
+    const Wrapper = type == 'number' ? NumberInput : React.Fragment;
     const wrapperProps =
-      type == "number"
+      type == 'number'
         ? {
-            keepWithinRange: true,
-            precision: 5,
-            format: (value: string | number) => {
-              return isNaN(parseFloat(String(value)))
-                ? value
-                : Number(parseFloat(String(value)).toFixed(5)) === 0
+          keepWithinRange: true,
+          precision: 5,
+          format: (value: string | number) => {
+            return isNaN(parseFloat(String(value)))
+              ? value
+              : Number(parseFloat(String(value)).toFixed(5)) === 0
                 ? value
                 : Number(parseFloat(String(value)).toFixed(5));
-            },
-            min: 0,
-            step,
-            name,
-            type,
-            placeholder,
-            onChange: (v: any) => {
-              if (onChange) onChange(v);
-            },
-            onBlur,
-            value,
-            onClick,
-            disabled,
-            flexGrow: 1,
-            size,
-          }
+          },
+          min: 0,
+          step,
+          name,
+          type,
+          placeholder,
+          onChange: (v: any) => {
+            if (onChange) onChange(v);
+          },
+          onBlur,
+          value,
+          onClick,
+          disabled,
+          flexGrow: 1,
+          size,
+        }
         : {};
     return (
       <FormControl isInvalid={!!error}>
@@ -116,11 +116,11 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           w="full"
           rounded="md"
           _focusWithin={{
-            outline: "2px solid",
-            outlineColor: "primary.200",
+            outline: '2px solid',
+            outlineColor: 'primary.200',
           }}
-          bg={disabled ? "gray.100" : "transparent"}
-          _dark={{ bg: disabled ? "gray.600" : "transparent" }}
+          bg={disabled ? 'gray.100' : 'transparent'}
+          _dark={{ bg: disabled ? 'gray.600' : 'transparent' }}
         >
           {startAdornment && <InputLeftAddon>{startAdornment}</InputLeftAddon>}
           <Wrapper {...wrapperProps}>
@@ -139,19 +139,19 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
               disabled={disabled}
               flexGrow={1}
               _focusVisible={{
-                outline: "none",
-                borderTopColor: "transparent",
-                borderRightColor: "transparent",
-                borderBottomColor: "transparent",
+                outline: 'none',
+                borderTopColor: 'transparent',
+                borderRightColor: 'transparent',
+                borderBottomColor: 'transparent',
               }}
               _disabled={{
-                cursor: "not-allowed",
+                cursor: 'not-allowed',
               }}
               {...props}
-              roundedLeft={startAdornment ? "0" : "md"}
-              roundedRight={endAdornment ? "0" : "md"}
+              roundedLeft={startAdornment ? '0' : 'md'}
+              roundedRight={endAdornment ? '0' : 'md'}
             />
-            {type == "number" && (
+            {type == 'number' && (
               <>
                 <NumberInputStepper>
                   <NumberIncrementStepper />

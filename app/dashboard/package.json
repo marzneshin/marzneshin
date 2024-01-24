@@ -1,5 +1,5 @@
 {
-  "name": "marzban-dashboard",
+  "name": "marzneshin-dashboard",
   "private": true,
   "version": "0.0.0",
   "scripts": {
@@ -7,7 +7,8 @@
     "build": "tsc && vite build",
     "preview": "vite preview --port 3000",
     "gen:theme-typings": "chakra-cli tokens ./chakra.config.ts",
-    "postinstall": "npm run gen:theme-typings"
+    "postinstall": "npm run gen:theme-typings",
+    "lint": "eslint --ignore-path .eslintignore . --ext ts --ext tsx --ext js --ext jsx"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.1.1",
@@ -20,6 +21,8 @@
     "apexcharts": "^3.40.0",
     "classnames": "^2.3.2",
     "dayjs": "^1.11.6",
+    "eslint": "^8.56.0",
+    "eslint-plugin-react": "^7.33.2",
     "framer-motion": "^7.6.6",
     "i18next": "^22.4.14",
     "i18next-browser-languagedetector": "^7.0.1",
@@ -59,8 +62,14 @@
     "@types/react-dom": "^18.0.6",
     "@types/react-json-editor-ajrm": "^2.5.3",
     "@types/react-slick": "^0.23.10",
+    "@typescript-eslint/eslint-plugin": "^6.19.1",
+    "@typescript-eslint/parser": "^6.19.1",
     "@vitejs/plugin-react": "^2.1.0",
     "autoprefixer": "^10.4.12",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-prettier": "^5.1.3",
+    "eslint-plugin-react-hooks": "^4.6.0",
     "sass": "^1.57.1",
     "typescript": "^4.9.5",
     "vite": "^3.1.0",

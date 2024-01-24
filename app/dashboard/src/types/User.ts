@@ -1,13 +1,13 @@
 export type Status =
-  | "active"
-  | "disabled"
-  | "limited"
-  | "expired"
-  | "on_hold"
-  | "error"
-  | "connecting"
-  | "connected";
-export type ProxyKeys = ("vmess" | "vless" | "trojan" | "shadowsocks")[];
+  | 'active'
+  | 'disabled'
+  | 'limited'
+  | 'expired'
+  | 'on_hold'
+  | 'error'
+  | 'connecting'
+  | 'connected';
+export type ProxyKeys = ('vmess' | 'vless' | 'trojan' | 'shadowsocks')[];
 export type ProxyType = {
   vmess?: {
     id?: string;
@@ -26,11 +26,11 @@ export type ProxyType = {
 };
 
 export type DataLimitResetStrategy =
-  | "no_reset"
-  | "day"
-  | "week"
-  | "month"
-  | "year";
+  | 'no_reset'
+  | 'day'
+  | 'week'
+  | 'month'
+  | 'year';
 
 type serviceId = number;
 
@@ -52,11 +52,11 @@ export type User = {
 export type UserCreate = Pick<
 
   User,
-  | "services"
-  | "expire"
-  | "data_limit"
-  | "data_limit_reset_strategy"
-  | "username"
-  | "status"
-  | "note"
+  | 'services'
+  | 'expire'
+  | 'data_limit'
+  | 'data_limit_reset_strategy'
+  | 'username'
+  | 'status'
+  | 'note'
 >;

@@ -1,10 +1,10 @@
-import { Badge, Text } from "@chakra-ui/react";
+import { Badge, Text } from '@chakra-ui/react';
 
-import { statusColors } from "constants/UserSettings";
-import { FC } from "react";
-import { useTranslation } from "react-i18next";
-import { Status as UserStatusType } from "types/User";
-import { relativeExpiryDate } from "utils/dateFormatter";
+import { statusColors } from 'constants/UserSettings';
+import { FC } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Status as UserStatusType } from 'types/User';
+import { relativeExpiryDate } from 'utils/dateFormatter';
 
 type UserStatusProps = {
   expiryDate?: number | null;
@@ -38,8 +38,8 @@ export const StatusBadge: FC<UserStatusProps> = ({
         {showDetail && (
           <Text
             textTransform="capitalize"
-            fontSize={compact ? ".7rem" : ".875rem"}
-            lineHeight={compact ? "1rem" : "1.25rem"}
+            fontSize={compact ? '.7rem' : '.875rem'}
+            lineHeight={compact ? '1rem' : '1.25rem'}
             fontWeight="medium"
             letterSpacing="tighter"
           >
@@ -56,7 +56,7 @@ export const StatusBadge: FC<UserStatusProps> = ({
           ml="2"
           color="gray.600"
           _dark={{
-            color: "gray.400",
+            color: 'gray.400',
           }}
         >
           {t(dateInfo.status, { time: dateInfo.time })}

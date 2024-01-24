@@ -32,7 +32,7 @@ jobs:
       run: npm ci
 
     - name: Lint Dashboard
-      run: npm ci
+      run: npm run lint
 
     - name: Build Dashboard
       run: npm run build --if-present -- --outDir build --base '/dashboard/'

@@ -9,7 +9,7 @@ import {
   MenuList,
   Text,
   useColorMode,
-} from "@chakra-ui/react";
+} from '@chakra-ui/react';
 import {
   ArrowLeftOnRectangleIcon,
   Bars3Icon,
@@ -21,17 +21,17 @@ import {
   MoonIcon,
   SquaresPlusIcon,
   SunIcon,
-} from "@heroicons/react/24/outline";
-import { DONATION_URL, REPO_URL } from "constants/Project";
-import { useDashboard } from "contexts/DashboardContext";
-import differenceInDays from "date-fns/differenceInDays";
-import isValid from "date-fns/isValid";
-import { FC, ReactNode, useState } from "react";
-import GitHubButton from "react-github-btn";
-import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
-import { updateThemeColor } from "utils/themeColor";
-import { Language } from "./Language";
+} from '@heroicons/react/24/outline';
+import { DONATION_URL, REPO_URL } from 'constants/Project';
+import { useDashboard } from 'contexts/DashboardContext';
+import differenceInDays from 'date-fns/differenceInDays';
+import isValid from 'date-fns/isValid';
+import { FC, ReactNode, useState } from 'react';
+import GitHubButton from 'react-github-btn';
+import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
+import { updateThemeColor } from 'utils/themeColor';
+import { Language } from './Language';
 
 type HeaderProps = {
   actions?: ReactNode;
@@ -55,15 +55,15 @@ const NodesUsageIcon = chakra(ChartPieIcon, iconProps);
 const ResetUsageIcon = chakra(DocumentMinusIcon, iconProps);
 const NotificationCircle = chakra(Box, {
   baseStyle: {
-    bg: "yellow.500",
-    w: "2",
-    h: "2",
-    rounded: "full",
-    position: "absolute",
+    bg: 'yellow.500',
+    w: '2',
+    h: '2',
+    rounded: 'full',
+    position: 'absolute',
   },
 });
 
-const NOTIFICATION_KEY = "marzban-menu-notification";
+const NOTIFICATION_KEY = 'marzban-menu-notification';
 
 export const shouldShowDonation = (): boolean => {
   const date = localStorage.getItem(NOTIFICATION_KEY);
@@ -80,7 +80,7 @@ export const shouldShowDonation = (): boolean => {
   }
 };
 
-export const Header: FC<HeaderProps> = ({ actions }) => {
+export const Header: FC<HeaderProps> = () => {
   const {
     onEditingHosts,
     onResetAllUsage,
@@ -92,7 +92,7 @@ export const Header: FC<HeaderProps> = ({ actions }) => {
   const [showDonationNotif, setShowDonationNotif] = useState(
     shouldShowDonation()
   );
-  const gBtnColor = colorMode === "dark" ? "dark_dimmed" : colorMode;
+  const gBtnColor = colorMode === 'dark' ? 'dark_dimmed' : colorMode;
 
   const handleOnClose = () => {
     localStorage.setItem(NOTIFICATION_KEY, new Date().getTime().toString());
@@ -104,19 +104,19 @@ export const Header: FC<HeaderProps> = ({ actions }) => {
       gap={2}
       justifyContent="space-between"
       __css={{
-        "& .menuList": {
-          direction: "ltr",
+        '& .menuList': {
+          direction: 'ltr',
         },
       }}
       position="relative"
     >
       <Text as="h1" fontWeight="semibold" fontSize="2xl">
-        {t("users")}
+        {t('users')}
       </Text>
       {showDonationNotif && (
         <NotificationCircle top="0" right="0" zIndex={9999} />
       )}
-      <Box overflow="auto" css={{ direction: "rtl" }}>
+      <Box overflow="auto" css={{ direction: 'rtl' }}>
         <HStack alignItems="center">
           <Menu>
             <MenuButton
@@ -137,7 +137,7 @@ export const Header: FC<HeaderProps> = ({ actions }) => {
                 icon={<HostsIcon />}
                 onClick={onEditingHosts.bind(null, true)}
               >
-                {t("header.hostSettings")}
+                {t('header.hostSettings')}
               </MenuItem>
               <MenuItem
                 maxW="170px"
@@ -145,7 +145,7 @@ export const Header: FC<HeaderProps> = ({ actions }) => {
                 icon={<NodesIcon />}
                 onClick={onEditingNodes.bind(null, true)}
               >
-                {t("header.nodeSettings")}
+                {t('header.nodeSettings')}
               </MenuItem>
               <MenuItem
                 maxW="170px"
@@ -153,7 +153,7 @@ export const Header: FC<HeaderProps> = ({ actions }) => {
                 icon={<NodesUsageIcon />}
                 onClick={onShowingNodesUsage.bind(null, true)}
               >
-                {t("header.nodesUsage")}
+                {t('header.nodesUsage')}
               </MenuItem>
               <MenuItem
                 maxW="170px"
@@ -161,7 +161,7 @@ export const Header: FC<HeaderProps> = ({ actions }) => {
                 icon={<ResetUsageIcon />}
                 onClick={onResetAllUsage.bind(null, true)}
               >
-                {t("resetAllUsage")}
+                {t('resetAllUsage')}
               </MenuItem>
               <Link to={DONATION_URL} target="_blank">
                 <MenuItem
@@ -171,7 +171,7 @@ export const Header: FC<HeaderProps> = ({ actions }) => {
                   position="relative"
                   onClick={handleOnClose}
                 >
-                  {t("header.donation")}{" "}
+                  {t('header.donation')}{' '}
                   {showDonationNotif && (
                     <NotificationCircle top="3" right="2" />
                   )}
@@ -179,7 +179,7 @@ export const Header: FC<HeaderProps> = ({ actions }) => {
               </Link>
               <Link to="/login">
                 <MenuItem maxW="170px" fontSize="sm" icon={<LogoutIcon />}>
-                  {t("header.logout")}
+                  {t('header.logout')}
                 </MenuItem>
               </Link>
             </MenuList>
@@ -203,21 +203,21 @@ export const Header: FC<HeaderProps> = ({ actions }) => {
             variant="outline"
             aria-label="switch theme"
             onClick={() => {
-              updateThemeColor(colorMode == "dark" ? "light" : "dark");
+              updateThemeColor(colorMode == 'dark' ? 'light' : 'dark');
               toggleColorMode();
             }}
           >
-            {colorMode === "light" ? <DarkIcon /> : <LightIcon />}
+            {colorMode === 'light' ? <DarkIcon /> : <LightIcon />}
           </IconButton>
 
           <Box
-            css={{ direction: "ltr" }}
+            css={{ direction: 'ltr' }}
             display="flex"
             alignItems="center"
             pr="2"
             __css={{
-              "&  span": {
-                display: "inline-flex",
+              '&  span': {
+                display: 'inline-flex',
               },
             }}
           >

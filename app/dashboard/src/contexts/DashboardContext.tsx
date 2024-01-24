@@ -1,20 +1,20 @@
-import { StatisticsQueryKey } from "components/Statistics";
-import { fetch } from "service/http";
-import { User, UserCreate } from "types/User";
-import { Service } from "types/Service";
-import { queryClient } from "utils/react-query";
-import { getUsersPerPageLimitSize } from "utils/userPreferenceStorage";
-import { create } from "zustand";
-import { subscribeWithSelector } from "zustand/middleware";
+import { StatisticsQueryKey } from 'components/Statistics';
+import { fetch } from 'service/http';
+import { User, UserCreate } from 'types/User';
+import { Service } from 'types/Service';
+import { queryClient } from 'utils/react-query';
+import { getUsersPerPageLimitSize } from 'utils/userPreferenceStorage';
+import { create } from 'zustand';
+import { subscribeWithSelector } from 'zustand/middleware';
 
 export type FilterType = {
   username?: string;
   limit?: number;
   offset?: number;
   sort: string;
-  status?: "active" | "disabled" | "limited" | "expired" | "on_hold";
+  status?: 'active' | 'disabled' | 'limited' | 'expired' | 'on_hold';
 };
-export type ProtocolType = "vmess" | "vless" | "trojan" | "shadowsocks";
+export type ProtocolType = 'vmess' | 'vless' | 'trojan' | 'shadowsocks';
 
 export type FilterUsageType = {
   start?: string;
@@ -79,7 +79,7 @@ export const fetchUsers = async (query: FilterType): Promise<User[]> => {
     if (!query[key as keyof FilterType]) delete query[key as keyof FilterType];
   }
   useDashboard.setState({ loading: true });
-  return fetch("/users", { query })
+  return fetch('/users', { query })
     .then((users) => {
       for (let i = 0; i < users.users.length; i++) {
         users.users[i].service = users.users[i].service_ids;
@@ -94,7 +94,7 @@ export const fetchUsers = async (query: FilterType): Promise<User[]> => {
 
 export const fetchServices = async (): Promise<Service[]> => {
   useDashboard.setState({ loading: true });
-  return fetch("/services")
+  return fetch('/services')
     .then((services) => {
       useDashboard.setState({ services });
       return services;
@@ -105,7 +105,7 @@ export const fetchServices = async (): Promise<Service[]> => {
 };
 
 export const fetchInbounds = async () => {
-  return fetch("/inbounds")
+  return fetch('/inbounds')
     .then((inbounds: Inbounds) => {
       useDashboard.setState({
         inbounds: new Map(Object.entries(inbounds)) as Inbounds,
@@ -137,9 +137,9 @@ export const useDashboard = create(
     resetUsageUser: null,
     revokeSubscriptionUser: null,
     filters: {
-      username: "",
+      username: '',
       limit: getUsersPerPageLimitSize(),
-      sort: "-created_at",
+      sort: '-created_at',
     },
     inbounds: new Map(),
     isEditingCore: false,
@@ -150,7 +150,7 @@ export const useDashboard = create(
       fetchUsers(get().filters);
     },
     resetAllUsage: async () => {
-      return fetch(`/users/reset`, { method: "POST" }).then(() => {
+      return fetch('/users/reset', { method: 'POST' }).then(() => {
         get().onResetAllUsage(false);
         get().refetchUsers();
       });
@@ -177,14 +177,14 @@ export const useDashboard = create(
     },
     deleteUser: async (user: User) => {
       set({ editingUser: null });
-      return fetch(`/user/${user.username}`, { method: "DELETE" }).then(() => {
+      return fetch(`/user/${user.username}`, { method: 'DELETE' }).then(() => {
         set({ deletingUser: null });
         get().refetchUsers();
         queryClient.invalidateQueries(StatisticsQueryKey);
       });
     },
     createUser: async (body: UserCreate) => {
-      return fetch(`/user`, { method: "POST", body }).then(() => {
+      return fetch('/user', { method: 'POST', body }).then(() => {
         set({ editingUser: null });
         get().refetchUsers();
         get().refetchServices();
@@ -192,7 +192,7 @@ export const useDashboard = create(
       });
     },
     editUser: async (body: UserCreate) => {
-      return fetch(`/user/${body.username}`, { method: "PUT", body }).then(
+      return fetch(`/user/${body.username}`, { method: 'PUT', body }).then(
         () => {
           get().onEditingUser(null);
           get().refetchUsers();
@@ -204,7 +204,7 @@ export const useDashboard = create(
         if (!query[key as keyof FilterUsageType])
           delete query[key as keyof FilterUsageType];
       }
-      return fetch(`/user/${body.username}/usage`, { method: "GET", query });
+      return fetch(`/user/${body.username}/usage`, { method: 'GET', query });
     },
     onEditingHosts: (isEditingHosts: boolean) => {
       set({ isEditingHosts });
@@ -219,7 +219,7 @@ export const useDashboard = create(
       set({ subscribeUrl });
     },
     resetDataUsage: async (user) => {
-      return fetch(`/user/${user.username}/reset`, { method: "POST" }).then(
+      return fetch(`/user/${user.username}/reset`, { method: 'POST' }).then(
         () => {
           set({ resetUsageUser: null });
           get().refetchUsers();
@@ -228,7 +228,7 @@ export const useDashboard = create(
     },
     revokeSubscription: async (user) => {
       return fetch(`/user/${user.username}/revoke_sub`, {
-        method: "POST",
+        method: 'POST',
       }).then((user) => {
         set({ revokeSubscriptionUser: null, editingUser: user });
         get().refetchUsers();

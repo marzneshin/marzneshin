@@ -1,11 +1,11 @@
-import { createBrowserRouter, createHashRouter } from "react-router-dom";
-import { Dashboard } from "../../pages/Dashboard";
-import { Login } from "../../pages/Login";
-import { fetch } from "../../service/http";
-import { getAuthToken } from "../../utils/authStorage";
+import { createBrowserRouter } from 'react-router-dom';
+import { Dashboard } from '../../pages/Dashboard';
+import { Login } from '../../pages/Login';
+import { fetch } from '../../service/http';
+import { getAuthToken } from '../../utils/authStorage';
 
 const fetchAdminLoader = () => {
-  return fetch("/admin", {
+  return fetch('/admin', {
     headers: {
       Authorization: `Bearer ${getAuthToken()}`,
     },
@@ -15,13 +15,13 @@ const fetchAdminLoader = () => {
 export const router = createBrowserRouter(
   [
     {
-      path: "/",
+      path: '/',
       element: <Dashboard />,
       errorElement: <Login />,
       loader: fetchAdminLoader,
     },
     {
-      path: "/login/",
+      path: '/login/',
       element: <Login />,
     },
   ],

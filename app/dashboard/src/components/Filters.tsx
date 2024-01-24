@@ -11,17 +11,17 @@ import {
   InputLeftElement,
   InputRightElement,
   Spinner,
-} from "@chakra-ui/react";
+} from '@chakra-ui/react';
 import {
   ArrowPathIcon,
   MagnifyingGlassIcon,
   XMarkIcon,
-} from "@heroicons/react/24/outline";
-import classNames from "classnames";
-import { useDashboard } from "contexts/DashboardContext";
-import debounce from "lodash.debounce";
-import React, { FC, useState } from "react";
-import { useTranslation } from "react-i18next";
+} from '@heroicons/react/24/outline';
+import classNames from 'classnames';
+import { useDashboard } from 'contexts/DashboardContext';
+import debounce from 'lodash.debounce';
+import React, { FC, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const iconProps = {
   baseStyle: {
@@ -47,26 +47,26 @@ export const Filters: FC<FilterProps> = ({ ...props }) => {
   const { loading, filters, onFilterChange, refetchUsers, onCreateUser } =
     useDashboard();
   const { t } = useTranslation();
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState('');
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
     setSearchField(e.target.value);
   };
   const clear = () => {
-    setSearch("");
+    setSearch('');
     onFilterChange({
       ...filters,
       offset: 0,
-      username: "",
+      username: '',
     });
   };
   return (
     <Grid
       id="filters"
       templateColumns={{
-        lg: "repeat(3, 1fr)",
-        md: "repeat(4, 1fr)",
-        base: "repeat(1, 1fr)",
+        lg: 'repeat(3, 1fr)',
+        md: 'repeat(4, 1fr)',
+        base: 'repeat(1, 1fr)',
       }}
       position="sticky"
       top={0}
@@ -86,7 +86,7 @@ export const Filters: FC<FilterProps> = ({ ...props }) => {
         <InputGroup>
           <InputLeftElement pointerEvents="none" children={<SearchIcon />} />
           <Input
-            placeholder={t("search")}
+            placeholder={t('search')}
             value={search}
             borderColor="light-border"
             onChange={onChange}
@@ -118,7 +118,7 @@ export const Filters: FC<FilterProps> = ({ ...props }) => {
           >
             <ReloadIcon
               className={classNames({
-                "animate-spin": loading,
+                'animate-spin': loading,
               })}
             />
           </IconButton>
@@ -128,7 +128,7 @@ export const Filters: FC<FilterProps> = ({ ...props }) => {
             onClick={() => onCreateUser(true)}
             px={5}
           >
-            {t("createUser")}
+            {t('createUser')}
           </Button>
         </HStack>
       </GridItem>

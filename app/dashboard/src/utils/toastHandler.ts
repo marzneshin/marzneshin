@@ -1,5 +1,5 @@
-import { CreateToastFnReturn } from "@chakra-ui/react";
-import { UseFormReturn } from "react-hook-form";
+import { CreateToastFnReturn } from '@chakra-ui/react';
+import { UseFormReturn } from 'react-hook-form';
 
 export const generateErrorMessage = (
   e: any,
@@ -7,15 +7,15 @@ export const generateErrorMessage = (
   form?: UseFormReturn<any>
 ) => {
   if (e.response && e.response._data) {
-    if (typeof e.response._data.detail === "string")
+    if (typeof e.response._data.detail === 'string')
       return toast({
         title: e.response._data.detail,
-        status: "error",
+        status: 'error',
         isClosable: true,
-        position: "top",
+        position: 'top',
         duration: 3000,
       });
-    if (typeof e.response._data.detail === "object")
+    if (typeof e.response._data.detail === 'object')
       if (form) {
         Object.keys(e.response._data.detail).forEach((errorKey) =>
           form.setError(errorKey, {
@@ -26,10 +26,10 @@ export const generateErrorMessage = (
       }
   }
   return toast({
-    title: "Something went wrong!",
-    status: "error",
+    title: 'Something went wrong!',
+    status: 'error',
     isClosable: true,
-    position: "top",
+    position: 'top',
     duration: 3000,
   });
 };
@@ -40,9 +40,9 @@ export const generateSuccessMessage = (
 ) => {
   return toast({
     title: message,
-    status: "success",
+    status: 'success',
     isClosable: true,
-    position: "top",
+    position: 'top',
     duration: 3000,
   });
 };

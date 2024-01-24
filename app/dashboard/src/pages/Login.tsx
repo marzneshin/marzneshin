@@ -6,33 +6,32 @@ import {
   Button,
   chakra,
   FormControl,
-  FormLabel,
   HStack,
   Text,
   VStack,
-} from "@chakra-ui/react";
-import { ArrowRightOnRectangleIcon } from "@heroicons/react/24/outline";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { FC, useEffect, useState } from "react";
-import { FieldValues, useForm } from "react-hook-form";
-import { useLocation, useNavigate } from "react-router-dom";
-import { z } from "zod";
-import { Footer } from "components/Footer";
-import { Input } from "components/Input";
-import { fetch } from "service/http";
-import { removeAuthToken, setAuthToken } from "utils/authStorage";
-import { ReactComponent as Logo } from "assets/logo.svg";
-import { useTranslation } from "react-i18next";
-import { Language } from "components/Language";
+} from '@chakra-ui/react';
+import { ArrowRightOnRectangleIcon } from '@heroicons/react/24/outline';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { FC, useEffect, useState } from 'react';
+import { FieldValues, useForm } from 'react-hook-form';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { z } from 'zod';
+import { Footer } from 'components/Footer';
+import { Input } from 'components/Input';
+import { fetch } from 'service/http';
+import { removeAuthToken, setAuthToken } from 'utils/authStorage';
+import { ReactComponent as Logo } from 'assets/logo.svg';
+import { useTranslation } from 'react-i18next';
+import { Language } from 'components/Language';
 
 const schema = z.object({
-  username: z.string().min(1, "login.fieldRequired"),
-  password: z.string().min(1, "login.fieldRequired"),
+  username: z.string().min(1, 'login.fieldRequired'),
+  password: z.string().min(1, 'login.fieldRequired'),
 });
 
 export const LogoIcon = chakra(Logo, {
   baseStyle: {
-    strokeWidth: "10px",
+    strokeWidth: '10px',
     w: 12,
     h: 12,
   },
@@ -42,12 +41,12 @@ const LoginIcon = chakra(ArrowRightOnRectangleIcon, {
   baseStyle: {
     w: 5,
     h: 5,
-    strokeWidth: "2px",
+    strokeWidth: '2px',
   },
 });
 
 export const Login: FC = () => {
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -61,21 +60,21 @@ export const Login: FC = () => {
   });
   useEffect(() => {
     removeAuthToken();
-    if (location.pathname !== "/login") {
-      navigate("/login", { replace: true });
+    if (location.pathname !== '/login') {
+      navigate('/login', { replace: true });
     }
   }, []);
   const login = (values: FieldValues) => {
-    setError("");
+    setError('');
     const formData = new FormData();
-    formData.append("username", values.username);
-    formData.append("password", values.password);
-    formData.append("grant_type", "password");
+    formData.append('username', values.username);
+    formData.append('password', values.password);
+    formData.append('grant_type', 'password');
     setLoading(true);
-    fetch("/admin/token", { method: "post", body: formData })
+    fetch('/admin/token', { method: 'post', body: formData })
       .then(({ access_token: token }) => {
         setAuthToken(token);
-        navigate("/");
+        navigate('/');
       })
       .catch((err) => {
         setError(err.response._data.detail);
@@ -93,10 +92,10 @@ export const Login: FC = () => {
             <VStack alignItems="center" w="full">
               <LogoIcon />
               <Text fontSize="2xl" fontWeight="semibold">
-                {t("login.loginYourAccount")}
+                {t('login.loginYourAccount')}
               </Text>
-              <Text color="gray.600" _dark={{ color: "gray.400" }}>
-                {t("login.welcomeBack")}
+              <Text color="gray.600" _dark={{ color: 'gray.400' }}>
+                {t('login.welcomeBack')}
               </Text>
             </VStack>
             <Box w="full" maxW="300px" m="auto" pt="4">
@@ -105,8 +104,8 @@ export const Login: FC = () => {
                   <FormControl>
                     <Input
                       w="full"
-                      placeholder={t("username")}
-                      {...register("username")}
+                      placeholder={t('username')}
+                      {...register('username')}
                       error={t(errors?.username?.message as string)}
                     />
                   </FormControl>
@@ -114,8 +113,8 @@ export const Login: FC = () => {
                     <Input
                       w="full"
                       type="password"
-                      placeholder={t("password")}
-                      {...register("password")}
+                      placeholder={t('password')}
+                      {...register('password')}
                       error={t(errors?.password?.message as string)}
                     />
                   </FormControl>
@@ -132,7 +131,7 @@ export const Login: FC = () => {
                     colorScheme="primary"
                   >
                     {<LoginIcon marginRight={1} />}
-                    {t("login")}
+                    {t('login')}
                   </Button>
                 </VStack>
               </form>

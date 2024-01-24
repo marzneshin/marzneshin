@@ -11,12 +11,12 @@ import {
   Spinner,
   Text,
   useToast,
-} from "@chakra-ui/react";
-import { ArrowPathIcon } from "@heroicons/react/24/outline";
-import { useDashboard } from "contexts/DashboardContext";
-import { FC, useState } from "react";
-import { Trans, useTranslation } from "react-i18next";
-import { Icon } from "./Icon";
+} from '@chakra-ui/react';
+import { ArrowPathIcon } from '@heroicons/react/24/outline';
+import { useDashboard } from 'contexts/DashboardContext';
+import { FC, useState } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
+import { Icon } from './Icon';
 
 export const ResetIcon = chakra(ArrowPathIcon, {
   baseStyle: {
@@ -41,19 +41,19 @@ export const RevokeSubscriptionModal: FC<RevokeSubscriptionModalProps> = () => {
       revokeSubscription(user)
         .then(() => {
           toast({
-            title: t("revokeUserSub.success", { username: user.username }),
-            status: "success",
+            title: t('revokeUserSub.success', { username: user.username }),
+            status: 'success',
             isClosable: true,
-            position: "top",
+            position: 'top',
             duration: 3000,
           });
         })
         .catch(() => {
           toast({
-            title: t("revokeUserSub.error"),
-            status: "error",
+            title: t('revokeUserSub.error'),
+            status: 'error',
             isClosable: true,
-            position: "top",
+            position: 'top',
             duration: 3000,
           });
         })
@@ -74,24 +74,24 @@ export const RevokeSubscriptionModal: FC<RevokeSubscriptionModalProps> = () => {
         <ModalCloseButton mt={3} />
         <ModalBody>
           <Text fontWeight="semibold" fontSize="lg">
-            {t("revokeUserSub.title")}
+            {t('revokeUserSub.title')}
           </Text>
           {user && (
             <Text
               mt={1}
               fontSize="sm"
-              _dark={{ color: "gray.400" }}
+              _dark={{ color: 'gray.400' }}
               color="gray.600"
             >
               <Trans components={{ b: <b /> }}>
-                {t("revokeUserSub.prompt", { username: user.username })}
+                {t('revokeUserSub.prompt', { username: user.username })}
               </Trans>
             </Text>
           )}
         </ModalBody>
         <ModalFooter display="flex">
           <Button size="sm" onClick={onClose} mr={3} w="full" variant="outline">
-            {t("cancel")}
+            {t('cancel')}
           </Button>
           <Button
             size="sm"
@@ -100,7 +100,7 @@ export const RevokeSubscriptionModal: FC<RevokeSubscriptionModalProps> = () => {
             onClick={onReset}
             leftIcon={loading ? <Spinner size="xs" /> : undefined}
           >
-            {t("revoke")}
+            {t('revoke')}
           </Button>
         </ModalFooter>
       </ModalContent>

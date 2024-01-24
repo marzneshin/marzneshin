@@ -1,5 +1,5 @@
-import { fetch } from "service/http";
-import { create } from "zustand";
+import { fetch } from 'service/http';
+import { create } from 'zustand';
 
 type HostsSchema = Record<
   string,
@@ -26,13 +26,13 @@ export const useHosts = create<HostsStore>((set) => ({
   hosts: {},
   fetchHosts: () => {
     set({ isLoading: true });
-    fetch("/hosts")
+    fetch('/hosts')
       .then((hosts) => set({ hosts }))
       .finally(() => set({ isLoading: false }));
   },
   setHosts: (body) => {
     set({ isPostLoading: true });
-    return fetch("/hosts", { method: "PUT", body }).finally(() => {
+    return fetch('/hosts', { method: 'PUT', body }).finally(() => {
       set({ isPostLoading: false });
     });
   },

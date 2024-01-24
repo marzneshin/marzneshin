@@ -9,10 +9,10 @@ import {
   InputRightElement,
   Textarea as ChakraTextarea,
   TextareaProps as ChakraTextareaProps,
-} from "@chakra-ui/react";
-import { XMarkIcon } from "@heroicons/react/24/outline";
-import classNames from "classnames";
-import React, { PropsWithChildren, ReactNode } from "react";
+} from '@chakra-ui/react';
+import { XMarkIcon } from '@heroicons/react/24/outline';
+import classNames from 'classnames';
+import React, { PropsWithChildren, ReactNode } from 'react';
 
 const ClearIcon = chakra(XMarkIcon, {
   baseStyle: {
@@ -66,12 +66,12 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
       if (onChange)
         onChange({
           target: {
-            value: "",
+            value: '',
             name,
           },
         });
     };
-    const { size = "md" } = props;
+    const { size = 'md' } = props;
 
     return (
       <FormControl isInvalid={!!error}>
@@ -81,11 +81,11 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
           w="full"
           rounded="md"
           _focusWithin={{
-            outline: "2px solid",
-            outlineColor: "primary.200",
+            outline: '2px solid',
+            outlineColor: 'primary.200',
           }}
-          bg={disabled ? "gray.100" : "transparent"}
-          _dark={{ bg: disabled ? "gray.600" : "transparent" }}
+          bg={disabled ? 'gray.100' : 'transparent'}
+          _dark={{ bg: disabled ? 'gray.600' : 'transparent' }}
         >
           {startAdornment && <InputLeftAddon>{startAdornment}</InputLeftAddon>}
           {/* @ts-ignore */}
@@ -102,17 +102,17 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
             disabled={disabled}
             flexGrow={1}
             _focusVisible={{
-              outline: "none",
-              borderTopColor: "transparent",
-              borderRightColor: "transparent",
-              borderBottomColor: "transparent",
+              outline: 'none',
+              borderTopColor: 'transparent',
+              borderRightColor: 'transparent',
+              borderBottomColor: 'transparent',
             }}
             _disabled={{
-              cursor: "not-allowed",
+              cursor: 'not-allowed',
             }}
             {...props}
-            roundedLeft={startAdornment ? "0" : "md"}
-            roundedRight={endAdornment ? "0" : "md"}
+            roundedLeft={startAdornment ? '0' : 'md'}
+            roundedRight={endAdornment ? '0' : 'md'}
           />
           {endAdornment && (
             <InputRightAddon

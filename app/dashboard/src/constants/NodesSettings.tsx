@@ -4,15 +4,15 @@ export const statusColors: {
   };
 } = {
   connected: {
-    statusColor: "green",
+    statusColor: 'green',
   },
   disabled: {
-    statusColor: "gray",
+    statusColor: 'gray',
   },
   connecting: {
-    statusColor: "orange",
+    statusColor: 'orange',
   },
   error: {
-    statusColor: "red",
+    statusColor: 'red',
   },
 };
