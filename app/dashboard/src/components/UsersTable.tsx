@@ -25,7 +25,7 @@ import {
   Tr,
   useBreakpointValue,
   VStack,
-} from "@chakra-ui/react";
+} from '@chakra-ui/react';
 import {
   CheckIcon,
   ChevronDownIcon,
@@ -33,21 +33,21 @@ import {
   LinkIcon,
   PencilIcon,
   QrCodeIcon,
-} from "@heroicons/react/24/outline";
-import { ReactComponent as AddFileIcon } from "assets/add_file.svg";
-import classNames from "classnames";
-import { resetStrategy, statusColors } from "constants/UserSettings";
-import { useDashboard } from "contexts/DashboardContext";
-import { t } from "i18next";
-import { FC, Fragment, useEffect, useState } from "react";
-import CopyToClipboard from "react-copy-to-clipboard";
-import { useTranslation } from "react-i18next";
-import { User } from "types/User";
-import { formatBytes } from "utils/formatByte";
-import { OnlineBadge } from "./OnlineBadge";
-import { OnlineStatus } from "./OnlineStatus";
-import { Pagination } from "./Pagination";
-import { StatusBadge } from "./StatusBadge";
+} from '@heroicons/react/24/outline';
+import { ReactComponent as AddFileIcon } from 'assets/add_file.svg';
+import classNames from 'classnames';
+import { resetStrategy, statusColors } from 'constants/UserSettings';
+import { useDashboard } from 'contexts/DashboardContext';
+import { t } from 'i18next';
+import { FC, Fragment, useEffect, useState } from 'react';
+import CopyToClipboard from 'react-copy-to-clipboard';
+import { useTranslation } from 'react-i18next';
+import { User } from 'types/User';
+import { formatBytes } from 'utils/formatByte';
+import { OnlineBadge } from './OnlineBadge';
+import { OnlineStatus } from './OnlineStatus';
+import { Pagination } from './Pagination';
+import { StatusBadge } from './StatusBadge';
 
 const EmptySectionIcon = chakra(AddFileIcon);
 
@@ -71,8 +71,8 @@ const QRIcon = chakra(QrCodeIcon, iconProps);
 const EditIcon = chakra(PencilIcon, iconProps);
 const SortIcon = chakra(ChevronDownIcon, {
   baseStyle: {
-    width: "15px",
-    height: "15px",
+    width: '15px',
+    height: '15px',
   },
 });
 type UsageSliderProps = {
@@ -89,10 +89,10 @@ const getResetStrategy = (strategy: string): string => {
       return entry.title;
     }
   }
-  return "No";
+  return 'No';
 };
 const UsageSliderCompact: FC<UsageSliderProps> = (props) => {
-  const { used, total, dataLimitResetStrategy, totalUsedTraffic } = props;
+  const { used, total } = props;
   const isUnlimited = total === 0 || total === null;
   return (
     <HStack
@@ -101,11 +101,11 @@ const UsageSliderCompact: FC<UsageSliderProps> = (props) => {
       fontWeight="medium"
       color="gray.600"
       _dark={{
-        color: "gray.400",
+        color: 'gray.400',
       }}
     >
       <Text>
-        {formatBytes(used)} /{" "}
+        {formatBytes(used)} /{' '}
         {isUnlimited ? (
           <Text as="span" fontFamily="system-ui">
             ∞
@@ -132,7 +132,7 @@ const UsageSlider: FC<UsageSliderProps> = (props) => {
       <Slider
         orientation="horizontal"
         value={isUnlimited ? 100 : Math.min((used / total) * 100, 100)}
-        colorScheme={isReached ? "red" : "primary"}
+        colorScheme={isReached ? 'red' : 'primary'}
         {...restOfProps}
       >
         <SliderTrack h="6px" borderRadius="full">
@@ -145,28 +145,28 @@ const UsageSlider: FC<UsageSliderProps> = (props) => {
         fontWeight="medium"
         color="gray.600"
         _dark={{
-          color: "gray.400",
+          color: 'gray.400',
         }}
       >
         <Text>
-          {formatBytes(used)} /{" "}
+          {formatBytes(used)} /{' '}
           {isUnlimited ? (
             <Text as="span" fontFamily="system-ui">
               ∞
             </Text>
           ) : (
             formatBytes(total) +
-            (dataLimitResetStrategy && dataLimitResetStrategy !== "no_reset"
-              ? " " +
-                t(
-                  "userDialog.resetStrategy" +
-                    getResetStrategy(dataLimitResetStrategy)
-                )
-              : "")
+            (dataLimitResetStrategy && dataLimitResetStrategy !== 'no_reset'
+              ? ' ' +
+              t(
+                'userDialog.resetStrategy' +
+                getResetStrategy(dataLimitResetStrategy)
+              )
+              : '')
           )}
         </Text>
         <Text>
-          {t("usersTable.total")}: {formatBytes(totalUsedTraffic)}
+          {t('usersTable.total')}: {formatBytes(totalUsedTraffic)}
         </Text>
       </HStack>
     </>
@@ -180,7 +180,7 @@ export const Sort: FC<SortType> = ({ sort, column }) => {
   if (sort.includes(column))
     return (
       <SortIcon
-        transform={sort.startsWith("-") ? undefined : "rotate(180deg)"}
+        transform={sort.startsWith('-') ? undefined : 'rotate(180deg)'}
       />
     );
   return null;
@@ -205,11 +205,11 @@ export const UsersTable: FC<UsersTableProps> = (props) => {
 
   useEffect(() => {
     const calcTop = () => {
-      const el = document.querySelectorAll("#filters")[0] as HTMLElement;
+      const el = document.querySelectorAll('#filters')[0] as HTMLElement;
       setTop(`${el.offsetHeight}px`);
     };
-    window.addEventListener("scroll", calcTop);
-    () => window.removeEventListener("scroll", calcTop);
+    window.addEventListener('scroll', calcTop);
+    () => window.removeEventListener('scroll', calcTop);
   }, []);
 
   const isFiltered = users.length !== totalUsers.total;
@@ -217,10 +217,10 @@ export const UsersTable: FC<UsersTableProps> = (props) => {
   const handleSort = (column: string) => {
     let newSort = filters.sort;
     if (newSort.includes(column)) {
-      if (newSort.startsWith("-")) {
-        newSort = "-created_at";
+      if (newSort.startsWith('-')) {
+        newSort = '-created_at';
       } else {
-        newSort = "-" + column;
+        newSort = '-' + column;
       }
     } else {
       newSort = column;
@@ -240,10 +240,10 @@ export const UsersTable: FC<UsersTableProps> = (props) => {
   };
 
   return (
-    <Box id="users-table" overflowX={{ base: "unset", md: "unset" }}>
+    <Box id="users-table" overflowX={{ base: 'unset', md: 'unset' }}>
       <Accordion
         allowMultiple
-        display={{ base: "block", md: "none" }}
+        display={{ base: 'block', md: 'none' }}
         index={selectedRow}
       >
         <Table orientation="vertical" zIndex="docked" {...props}>
@@ -255,11 +255,11 @@ export const UsersTable: FC<UsersTableProps> = (props) => {
                 minW="120px"
                 pl={4}
                 pr={4}
-                cursor={"pointer"}
-                onClick={handleSort.bind(null, "username")}
+                cursor={'pointer'}
+                onClick={handleSort.bind(null, 'username')}
               >
                 <HStack>
-                  <span>{t("users")}</span>
+                  <span>{t('users')}</span>
                   <Sort sort={filters.sort} column="username" />
                 </HStack>
               </Th>
@@ -270,24 +270,24 @@ export const UsersTable: FC<UsersTableProps> = (props) => {
                 pl={0}
                 pr={0}
                 w="140px"
-                cursor={"pointer"}
+                cursor={'pointer'}
               >
                 <HStack spacing={0} position="relative">
                   <Text
                     position="absolute"
                     _dark={{
-                      bg: "gray.750",
+                      bg: 'gray.750',
                     }}
                     _light={{
-                      bg: "#F9FAFB",
+                      bg: '#F9FAFB',
                     }}
                     userSelect="none"
                     pointerEvents="none"
                     zIndex={1}
                     w="100%"
                   >
-                    {t("usersTable.status")}
-                    {filters.status ? ": " + filters.status : ""}
+                    {t('usersTable.status')}
+                    {filters.status ? ': ' + filters.status : ''}
                   </Text>
                   <Select
                     value={filters.sort}
@@ -301,7 +301,7 @@ export const UsersTable: FC<UsersTableProps> = (props) => {
                     w="auto"
                     icon={<></>}
                     _focusVisible={{
-                      border: "0 !important",
+                      border: '0 !important',
                     }}
                     onChange={handleStatusFilter}
                   >
@@ -317,12 +317,12 @@ export const UsersTable: FC<UsersTableProps> = (props) => {
                 position="sticky"
                 top={top}
                 minW="100px"
-                cursor={"pointer"}
+                cursor={'pointer'}
                 pr={0}
-                onClick={handleSort.bind(null, "used_traffic")}
+                onClick={handleSort.bind(null, 'used_traffic')}
               >
                 <HStack>
-                  <span>{t("usersTable.dataUsage")}</span>
+                  <span>{t('usersTable.dataUsage')}</span>
                   <Sort sort={filters.sort} column="used_traffic" />
                 </HStack>
               </Th>
@@ -332,7 +332,7 @@ export const UsersTable: FC<UsersTableProps> = (props) => {
                 minW="32px"
                 w="32px"
                 p={0}
-                cursor={"pointer"}
+                cursor={'pointer'}
               ></Th>
             </Tr>
           </Thead>
@@ -374,11 +374,11 @@ export const UsersTable: FC<UsersTableProps> = (props) => {
                         <AccordionArrowIcon
                           color="gray.600"
                           _dark={{
-                            color: "gray.400",
+                            color: 'gray.400',
                           }}
                           transition="transform .2s ease-out"
                           transform={
-                            selectedRow === i ? "rotate(180deg)" : "0deg"
+                            selectedRow === i ? 'rotate(180deg)' : '0deg'
                           }
                         />
                       </Td>
@@ -408,10 +408,10 @@ export const UsersTable: FC<UsersTableProps> = (props) => {
                                   fontWeight="bold"
                                   color="gray.600"
                                   _dark={{
-                                    color: "gray.400",
+                                    color: 'gray.400',
                                   }}
                                 >
-                                  {t("usersTable.dataUsage")}
+                                  {t('usersTable.dataUsage')}
                                 </Text>
                                 <Box width="full" minW="230px">
                                   <UsageSlider
@@ -441,7 +441,7 @@ export const UsersTable: FC<UsersTableProps> = (props) => {
                                 <HStack>
                                   <ActionButtons user={user} />
                                   <Tooltip
-                                    label={t("userDialog.editUser")}
+                                    label={t('userDialog.editUser')}
                                     placement="top"
                                   >
                                     <IconButton
@@ -450,12 +450,12 @@ export const UsersTable: FC<UsersTableProps> = (props) => {
                                       bg="transparent"
                                       _dark={{
                                         _hover: {
-                                          bg: "gray.700",
+                                          bg: 'gray.700',
                                         },
                                       }}
                                       size={{
-                                        base: "sm",
-                                        md: "md",
+                                        base: 'sm',
+                                        md: 'md',
                                       }}
                                       onClick={(e) => {
                                         e.stopPropagation();
@@ -480,46 +480,46 @@ export const UsersTable: FC<UsersTableProps> = (props) => {
       </Accordion>
       <Table
         orientation="vertical"
-        display={{ base: "none", md: "table" }}
+        display={{ base: 'none', md: 'table' }}
         {...props}
       >
         <Thead zIndex="docked" position="relative">
           <Tr>
             <Th
               position="sticky"
-              top={{ base: "unset", md: top }}
+              top={{ base: 'unset', md: top }}
               minW="140px"
-              cursor={"pointer"}
-              onClick={handleSort.bind(null, "username")}
+              cursor={'pointer'}
+              onClick={handleSort.bind(null, 'username')}
             >
               <HStack>
-                <span>{t("username")}</span>
+                <span>{t('username')}</span>
                 <Sort sort={filters.sort} column="username" />
               </HStack>
             </Th>
             <Th
               position="sticky"
-              top={{ base: "unset", md: top }}
+              top={{ base: 'unset', md: top }}
               width="400px"
               minW="150px"
-              cursor={"pointer"}
+              cursor={'pointer'}
             >
               <HStack spacing={0} position="relative">
                 <Text
                   position="absolute"
                   _dark={{
-                    bg: "gray.750",
+                    bg: 'gray.750',
                   }}
                   _light={{
-                    bg: "#F9FAFB",
+                    bg: '#F9FAFB',
                   }}
                   userSelect="none"
                   pointerEvents="none"
                   zIndex={1}
                   w="100%"
                 >
-                  {t("usersTable.status")}
-                  {filters.status ? ": " + filters.status : ""}
+                  {t('usersTable.status')}
+                  {filters.status ? ': ' + filters.status : ''}
                 </Text>
                 <Select
                   fontSize="xs"
@@ -532,7 +532,7 @@ export const UsersTable: FC<UsersTableProps> = (props) => {
                   w="auto"
                   icon={<></>}
                   _focusVisible={{
-                    border: "0 !important",
+                    border: '0 !important',
                   }}
                   value={filters.sort}
                   onChange={handleStatusFilter}
@@ -547,20 +547,20 @@ export const UsersTable: FC<UsersTableProps> = (props) => {
             </Th>
             <Th
               position="sticky"
-              top={{ base: "unset", md: top }}
+              top={{ base: 'unset', md: top }}
               width="350px"
               minW="230px"
-              cursor={"pointer"}
-              onClick={handleSort.bind(null, "used_traffic")}
+              cursor={'pointer'}
+              onClick={handleSort.bind(null, 'used_traffic')}
             >
               <HStack>
-                <span>{t("usersTable.dataUsage")}</span>
+                <span>{t('usersTable.dataUsage')}</span>
                 <Sort sort={filters.sort} column="used_traffic" />
               </HStack>
             </Th>
             <Th
               position="sticky"
-              top={{ base: "unset", md: top }}
+              top={{ base: 'unset', md: top }}
               width="200px"
               minW="180px"
             />
@@ -572,8 +572,8 @@ export const UsersTable: FC<UsersTableProps> = (props) => {
               return (
                 <Tr
                   key={user.username}
-                  className={classNames("interactive", {
-                    "last-row": i === users.length - 1,
+                  className={classNames('interactive', {
+                    'last-row': i === users.length - 1,
                   })}
                   onClick={() => onEditingUser(user)}
                 >
@@ -626,7 +626,7 @@ type ActionButtonsProps = {
 const ActionButtons: FC<ActionButtonsProps> = ({ user }) => {
   const { setQRCode, setSubLink } = useDashboard();
 
-  const proxyLinks = user.links.join("\r\n");
+  const proxyLinks = user.links.join('\r\n');
 
   const [copied, setCopied] = useState([-1, false]);
   useEffect(() => {
@@ -646,7 +646,7 @@ const ActionButtons: FC<ActionButtonsProps> = ({ user }) => {
     >
       <CopyToClipboard
         text={
-          user.subscription_url.startsWith("/")
+          user.subscription_url.startsWith('/')
             ? window.location.origin + user.subscription_url
             : user.subscription_url
         }
@@ -658,8 +658,8 @@ const ActionButtons: FC<ActionButtonsProps> = ({ user }) => {
           <Tooltip
             label={
               copied[0] == 0 && copied[1]
-                ? t("usersTable.copied")
-                : t("usersTable.copyLink")
+                ? t('usersTable.copied')
+                : t('usersTable.copyLink')
             }
             placement="top"
           >
@@ -669,12 +669,12 @@ const ActionButtons: FC<ActionButtonsProps> = ({ user }) => {
               bg="transparent"
               _dark={{
                 _hover: {
-                  bg: "gray.700",
+                  bg: 'gray.700',
                 },
               }}
               size={{
-                base: "sm",
-                md: "md",
+                base: 'sm',
+                md: 'md',
               }}
             >
               {copied[0] == 0 && copied[1] ? (
@@ -696,8 +696,8 @@ const ActionButtons: FC<ActionButtonsProps> = ({ user }) => {
           <Tooltip
             label={
               copied[0] == 1 && copied[1]
-                ? t("usersTable.copied")
-                : t("usersTable.copyConfigs")
+                ? t('usersTable.copied')
+                : t('usersTable.copyConfigs')
             }
             placement="top"
           >
@@ -707,12 +707,12 @@ const ActionButtons: FC<ActionButtonsProps> = ({ user }) => {
               bg="transparent"
               _dark={{
                 _hover: {
-                  bg: "gray.700",
+                  bg: 'gray.700',
                 },
               }}
               size={{
-                base: "sm",
-                md: "md",
+                base: 'sm',
+                md: 'md',
               }}
             >
               {copied[0] == 1 && copied[1] ? <CopiedIcon /> : <CopyIcon />}
@@ -727,12 +727,12 @@ const ActionButtons: FC<ActionButtonsProps> = ({ user }) => {
           bg="transparent"
           _dark={{
             _hover: {
-              bg: "gray.700",
+              bg: 'gray.700',
             },
           }}
           size={{
-            base: "sm",
-            md: "md",
+            base: 'sm',
+            md: 'md',
           }}
           onClick={() => {
             setQRCode(user.links);
@@ -767,26 +767,26 @@ const EmptySection: FC<EmptySectionProps> = ({ isFiltered }) => {
         maxWidth="200px"
         _dark={{
           'path[fill="#fff"]': {
-            fill: "gray.800",
+            fill: 'gray.800',
           },
           'path[fill="#f2f2f2"], path[fill="#e6e6e6"], path[fill="#ccc"]': {
-            fill: "gray.700",
+            fill: 'gray.700',
           },
           'circle[fill="#3182CE"]': {
-            fill: "primary.300",
+            fill: 'primary.300',
           },
         }}
         _light={{
           'path[fill="#f2f2f2"], path[fill="#e6e6e6"], path[fill="#ccc"]': {
-            fill: "gray.300",
+            fill: 'gray.300',
           },
           'circle[fill="#3182CE"]': {
-            fill: "primary.500",
+            fill: 'primary.500',
           },
         }}
       />
-      <Text fontWeight="medium" color="gray.600" _dark={{ color: "gray.400" }}>
-        {isFiltered ? t("usersTable.noUserMatched") : t("usersTable.noUser")}
+      <Text fontWeight="medium" color="gray.600" _dark={{ color: 'gray.400' }}>
+        {isFiltered ? t('usersTable.noUserMatched') : t('usersTable.noUser')}
       </Text>
       {!isFiltered && (
         <Button
@@ -794,7 +794,7 @@ const EmptySection: FC<EmptySectionProps> = ({ isFiltered }) => {
           colorScheme="primary"
           onClick={() => onCreateUser(true)}
         >
-          {t("createUser")}
+          {t('createUser')}
         </Button>
       )}
     </Box>

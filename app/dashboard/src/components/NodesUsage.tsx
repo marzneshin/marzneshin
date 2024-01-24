@@ -13,16 +13,16 @@ import {
   VStack,
   chakra,
   useColorMode,
-} from "@chakra-ui/react";
-import { ChartPieIcon } from "@heroicons/react/24/outline";
-import { FilterUsageType, useDashboard } from "contexts/DashboardContext";
-import { useNodes } from "contexts/NodesContext";
-import dayjs from "dayjs";
-import { FC, Suspense, useEffect, useState } from "react";
-import ReactApexChart from "react-apexcharts";
-import { useTranslation } from "react-i18next";
-import { Icon } from "./Icon";
-import { UsageFilter, createUsageConfig } from "./UsageFilter";
+} from '@chakra-ui/react';
+import { ChartPieIcon } from '@heroicons/react/24/outline';
+import { FilterUsageType, useDashboard } from 'contexts/DashboardContext';
+import { useNodes } from 'contexts/NodesContext';
+import dayjs from 'dayjs';
+import { FC, Suspense, useEffect, useState } from 'react';
+import ReactApexChart from 'react-apexcharts';
+import { useTranslation } from 'react-i18next';
+import { Icon } from './Icon';
+import { UsageFilter, createUsageConfig } from './UsageFilter';
 
 const UsageIcon = chakra(ChartPieIcon, {
   baseStyle: {
@@ -37,12 +37,13 @@ export const NodesUsage: FC<NodesUsageProps> = () => {
   const { isShowingNodesUsage, onShowingNodesUsage } = useDashboard();
   const { fetchNodesUsage } = useNodes();
   const { t } = useTranslation();
-  const [loading, setLoading] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [loading, _] = useState(false);
   const { colorMode } = useColorMode();
 
-  const usageTitle = t("userDialog.total");
+  const usageTitle = t('userDialog.total');
   const [usage, setUsage] = useState(createUsageConfig(colorMode, usageTitle));
-  const [usageFilter, setUsageFilter] = useState("1m");
+  const [usageFilter, setUsageFilter] = useState('1m');
   const fetchUsageWithFilter = (query: FilterUsageType) => {
     fetchNodesUsage(query).then((data: any) => {
       const labels = [];
@@ -59,14 +60,14 @@ export const NodesUsage: FC<NodesUsageProps> = () => {
   useEffect(() => {
     if (isShowingNodesUsage) {
       fetchUsageWithFilter({
-        start: dayjs().utc().subtract(30, "day").format("YYYY-MM-DDTHH:00:00"),
+        start: dayjs().utc().subtract(30, 'day').format('YYYY-MM-DDTHH:00:00'),
       });
     }
   }, [isShowingNodesUsage]);
 
   const onClose = () => {
     onShowingNodesUsage(false);
-    setUsageFilter("1m");
+    setUsageFilter('1m');
   };
 
   const disabled = loading;
@@ -81,7 +82,7 @@ export const NodesUsage: FC<NodesUsageProps> = () => {
               <UsageIcon color="white" />
             </Icon>
             <Text fontWeight="semibold" fontSize="lg">
-              {t("header.nodesUsage")}
+              {t('header.nodesUsage')}
             </Text>
           </HStack>
         </ModalHeader>

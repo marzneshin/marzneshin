@@ -11,12 +11,12 @@ import {
   Spinner,
   Text,
   useToast,
-} from "@chakra-ui/react";
-import { FC, useState } from "react";
-import { DocumentMinusIcon } from "@heroicons/react/24/outline";
-import { Icon } from "./Icon";
-import { useDashboard } from "contexts/DashboardContext";
-import { useTranslation } from "react-i18next";
+} from '@chakra-ui/react';
+import { FC, useState } from 'react';
+import { DocumentMinusIcon } from '@heroicons/react/24/outline';
+import { Icon } from './Icon';
+import { useDashboard } from 'contexts/DashboardContext';
+import { useTranslation } from 'react-i18next';
 
 export const ResetIcon = chakra(DocumentMinusIcon, {
   baseStyle: {
@@ -40,19 +40,19 @@ export const ResetAllUsageModal: FC<DeleteUserModalProps> = () => {
     resetAllUsage()
       .then(() => {
         toast({
-          title: t("resetAllUsage.success"),
-          status: "success",
+          title: t('resetAllUsage.success'),
+          status: 'success',
           isClosable: true,
-          position: "top",
+          position: 'top',
           duration: 3000,
         });
       })
       .catch(() => {
         toast({
-          title: t("resetAllUsage.error"),
-          status: "error",
+          title: t('resetAllUsage.error'),
+          status: 'error',
           isClosable: true,
-          position: "top",
+          position: 'top',
           duration: 3000,
         });
       })
@@ -72,22 +72,22 @@ export const ResetAllUsageModal: FC<DeleteUserModalProps> = () => {
         <ModalCloseButton mt={3} />
         <ModalBody>
           <Text fontWeight="semibold" fontSize="lg">
-            {t("resetAllUsage.title")}
+            {t('resetAllUsage.title')}
           </Text>
           {isResetingAllUsage && (
             <Text
               mt={1}
               fontSize="sm"
-              _dark={{ color: "gray.400" }}
+              _dark={{ color: 'gray.400' }}
               color="gray.600"
             >
-              {t("resetAllUsage.prompt")}
+              {t('resetAllUsage.prompt')}
             </Text>
           )}
         </ModalBody>
         <ModalFooter display="flex">
           <Button size="sm" onClick={onClose} mr={3} w="full" variant="outline">
-            {t("cancel")}
+            {t('cancel')}
           </Button>
           <Button
             size="sm"
@@ -96,7 +96,7 @@ export const ResetAllUsageModal: FC<DeleteUserModalProps> = () => {
             onClick={onReset}
             leftIcon={loading ? <Spinner size="xs" /> : undefined}
           >
-            {t("reset")}
+            {t('reset')}
           </Button>
         </ModalFooter>
       </ModalContent>

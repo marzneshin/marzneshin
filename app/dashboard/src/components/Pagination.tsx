@@ -6,15 +6,15 @@ import {
   HStack,
   Select,
   Text,
-} from "@chakra-ui/react";
+} from '@chakra-ui/react';
 import {
   ArrowLongLeftIcon,
   ArrowLongRightIcon,
-} from "@heroicons/react/24/outline";
-import { useDashboard } from "contexts/DashboardContext";
-import { ChangeEvent, FC } from "react";
-import { useTranslation } from "react-i18next";
-import { setUsersPerPageLimitSize } from "utils/userPreferenceStorage";
+} from '@heroicons/react/24/outline';
+import { useDashboard } from 'contexts/DashboardContext';
+import { ChangeEvent, FC } from 'react';
+import { useTranslation } from 'react-i18next';
+import { setUsersPerPageLimitSize } from 'utils/userPreferenceStorage';
 
 const PrevIcon = chakra(ArrowLongLeftIcon, {
   baseStyle: {
@@ -50,7 +50,7 @@ function generatePageItems(total: number, current: number, width: number) {
     );
   }
   if (width % 2 === 0) {
-    throw new Error(`Must allow odd number of page items`);
+    throw new Error('Must allow odd number of page items');
   }
   if (total < width) {
     return [...new Array(total).keys()];
@@ -66,11 +66,11 @@ function generatePageItems(total: number, current: number, width: number) {
   // replace non-ending items with placeholders
   if (items[0] > 0) {
     items[0] = 0;
-    items[1] = "prev-more";
+    items[1] = 'prev-more';
   }
   if (items[items.length - 1] < total - 1) {
     items[items.length - 1] = total - 1;
-    items[items.length - 2] = "next-more";
+    items[items.length - 2] = 'next-more';
   }
   return items;
 }
@@ -112,7 +112,7 @@ export const Pagination: FC = () => {
       display="flex"
       columnGap={{ lg: 4, md: 0 }}
       rowGap={{ md: 0, base: 4 }}
-      flexDirection={{ md: "row", base: "column" }}
+      flexDirection={{ md: 'row', base: 'column' }}
     >
       <Box order={{ base: 2, md: 1 }}>
         <HStack>
@@ -127,8 +127,8 @@ export const Pagination: FC = () => {
             <option>20</option>
             <option>30</option>
           </Select>
-          <Text whiteSpace={"nowrap"} fontSize="sm">
-            {t("itemsPerPage")}
+          <Text whiteSpace={'nowrap'} fontSize="sm">
+            {t('itemsPerPage')}
           </Text>
         </HStack>
       </Box>
@@ -139,15 +139,15 @@ export const Pagination: FC = () => {
           onClick={changePage.bind(null, page - 1)}
           isDisabled={page === 0 || noPages === 0}
         >
-          {t("previous")}
+          {t('previous')}
         </Button>
         {pages.map((pageIndex) => {
-          if (typeof pageIndex === "string")
+          if (typeof pageIndex === 'string')
             return <Button key={pageIndex}>...</Button>;
           return (
             <Button
               key={pageIndex}
-              variant={(pageIndex as number) === page ? "solid" : "outline"}
+              variant={(pageIndex as number) === page ? 'solid' : 'outline'}
               onClick={changePage.bind(null, pageIndex)}
             >
               {(pageIndex as number) + 1}
@@ -160,7 +160,7 @@ export const Pagination: FC = () => {
           onClick={changePage.bind(null, page + 1)}
           isDisabled={page + 1 === noPages || noPages === 0}
         >
-          {t("next")}
+          {t('next')}
         </Button>
       </ButtonGroup>
     </HStack>

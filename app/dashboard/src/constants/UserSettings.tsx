@@ -1,16 +1,16 @@
-import { chakra, ChakraComponent} from "@chakra-ui/react";
+import { chakra, ChakraComponent} from '@chakra-ui/react';
 import {
   ClockIcon,
   ExclamationCircleIcon,
   NoSymbolIcon,
   WifiIcon,
-} from "@heroicons/react/24/outline";
-import { ForwardRefExoticComponent, SVGProps } from "react";
-import { DataLimitResetStrategy } from "types/User";
+} from '@heroicons/react/24/outline';
+import { ForwardRefExoticComponent, SVGProps } from 'react';
+import { DataLimitResetStrategy } from 'types/User';
 
 const iconProps = {
   baseStyle: {
-    strokeWidth: "2px",
+    strokeWidth: '2px',
     w: 4,
     h: 4,
   },
@@ -24,24 +24,24 @@ const On_holdStatusIcon = chakra(ClockIcon, iconProps);
 export const resetStrategy: { title: string; value: DataLimitResetStrategy }[] =
   [
     {
-      title: "No",
-      value: "no_reset",
+      title: 'No',
+      value: 'no_reset',
     },
     {
-      title: "Daily",
-      value: "day",
+      title: 'Daily',
+      value: 'day',
     },
     {
-      title: "Weekly",
-      value: "week",
+      title: 'Weekly',
+      value: 'week',
     },
     {
-      title: "Monthly",
-      value: "month",
+      title: 'Monthly',
+      value: 'month',
     },
     {
-      title: "Annually",
-      value: "year",
+      title: 'Annually',
+      value: 'year',
     },
   ];
 
@@ -53,43 +53,43 @@ export const statusColors: {
   };
 } = {
   active: {
-    statusColor: "green",
-    bandWidthColor: "primary",
+    statusColor: 'green',
+    bandWidthColor: 'primary',
     icon: ActiveStatusIcon,
   },
   connected: {
-    statusColor: "green",
-    bandWidthColor: "primary",
+    statusColor: 'green',
+    bandWidthColor: 'primary',
     icon: ActiveStatusIcon,
   },
   disabled: {
-    statusColor: "gray",
-    bandWidthColor: "gray",
+    statusColor: 'gray',
+    bandWidthColor: 'gray',
     icon: DisabledStatusIcon,
   },
   expired: {
-    statusColor: "orange",
-    bandWidthColor: "orange",
+    statusColor: 'orange',
+    bandWidthColor: 'orange',
     icon: ExpiredStatusIcon,
   },
   on_hold: {
-    statusColor: "purple",
-    bandWidthColor: "purple",
+    statusColor: 'purple',
+    bandWidthColor: 'purple',
     icon: On_holdStatusIcon,
   },
   connecting: {
-    statusColor: "orange",
-    bandWidthColor: "orange",
+    statusColor: 'orange',
+    bandWidthColor: 'orange',
     icon: ExpiredStatusIcon,
   },
   limited: {
-    statusColor: "red",
-    bandWidthColor: "red",
+    statusColor: 'red',
+    bandWidthColor: 'red',
     icon: LimitedStatusIcon,
   },
   error: {
-    statusColor: "red",
-    bandWidthColor: "red",
+    statusColor: 'red',
+    bandWidthColor: 'red',
     icon: LimitedStatusIcon,
   },
 };

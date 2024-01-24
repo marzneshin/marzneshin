@@ -11,29 +11,29 @@ import {
   ModalOverlay,
   Text,
   VStack,
-} from "@chakra-ui/react";
+} from '@chakra-ui/react';
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
   QrCodeIcon,
-} from "@heroicons/react/24/outline";
-import { QRCodeCanvas } from "qrcode.react";
-import { FC, useState } from "react";
-import { useTranslation } from "react-i18next";
-import Slider from "react-slick";
-import "slick-carousel/slick/slick-theme.css";
-import "slick-carousel/slick/slick.css";
-import { useDashboard } from "../contexts/DashboardContext";
-import { Icon } from "./Icon";
+} from '@heroicons/react/24/outline';
+import { QRCodeCanvas } from 'qrcode.react';
+import { FC, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick-theme.css';
+import 'slick-carousel/slick/slick.css';
+import { useDashboard } from '../contexts/DashboardContext';
+import { Icon } from './Icon';
 
 const QRCode = chakra(QRCodeCanvas);
 const NextIcon = chakra(ChevronRightIcon, {
   baseStyle: {
     w: 6,
     h: 6,
-    color: "gray.600",
+    color: 'gray.600',
     _dark: {
-      color: "white",
+      color: 'white',
     },
   },
 });
@@ -41,9 +41,9 @@ const PrevIcon = chakra(ChevronLeftIcon, {
   baseStyle: {
     w: 6,
     h: 6,
-    color: "gray.600",
+    color: 'gray.600',
     _dark: {
-      color: "white",
+      color: 'white',
     },
   },
 });
@@ -64,7 +64,7 @@ export const QRCodeDialog: FC = () => {
     setSubLink(null);
   };
 
-  const subscribeQrLink = String(subscribeUrl).startsWith("/")
+  const subscribeQrLink = String(subscribeUrl).startsWith('/')
     ? window.location.origin + subscribeUrl
     : String(subscribeUrl);
 
@@ -81,20 +81,20 @@ export const QRCodeDialog: FC = () => {
         {QRcodeLinks && (
           <ModalBody
             gap={{
-              base: "20px",
-              lg: "50px",
+              base: '20px',
+              lg: '50px',
             }}
             pr={{
-              lg: "60px",
+              lg: '60px',
             }}
             px={{
-              base: "50px",
+              base: '50px',
             }}
             display="flex"
             justifyContent="center"
             flexDirection={{
-              base: "column",
-              lg: "row",
+              base: 'column',
+              lg: 'row',
             }}
           >
             {subscribeUrl && (
@@ -103,13 +103,13 @@ export const QRCodeDialog: FC = () => {
                   mx="auto"
                   size={300}
                   p="2"
-                  level={"L"}
+                  level={'L'}
                   includeMargin={false}
                   value={subscribeQrLink}
                   bg="white"
                 />
                 <Text display="block" textAlign="center" pb={3} mt={1}>
-                  {t("qrcodeDialog.sublink")}
+                  {t('qrcodeDialog.sublink')}
                 </Text>
               </VStack>
             )}
@@ -154,7 +154,7 @@ export const QRCodeDialog: FC = () => {
                         mx="auto"
                         size={300}
                         p="2"
-                        level={"L"}
+                        level={'L'}
                         includeMargin={false}
                         value={link}
                         bg="white"

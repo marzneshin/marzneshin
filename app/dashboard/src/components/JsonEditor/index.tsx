@@ -1,9 +1,9 @@
-import { Box, useColorMode } from "@chakra-ui/react";
-import JSONEditor, { JSONEditorMode, JSONEditorOptions } from "jsoneditor";
-import "jsoneditor/dist/jsoneditor.css";
-import { forwardRef, useEffect, useRef } from "react";
-import "./styles.css";
-import "./themes.js";
+import { Box, useColorMode } from '@chakra-ui/react';
+import JSONEditor, { JSONEditorMode, JSONEditorOptions } from 'jsoneditor';
+import 'jsoneditor/dist/jsoneditor.css';
+import { forwardRef, useEffect, useRef } from 'react';
+import './styles.css';
+import './themes.js';
 
 export type JSONEditorProps = {
   onChange: (value: string) => void;
@@ -11,14 +11,14 @@ export type JSONEditorProps = {
   mode?: JSONEditorMode;
 };
 export const JsonEditor = forwardRef<HTMLDivElement, JSONEditorProps>(
-  ({ json, onChange, mode = "code" }, ref) => {
+  ({ json, onChange, mode = 'code' }, ref) => {
     const { colorMode } = useColorMode();
     const options: JSONEditorOptions = {
       mode,
       onChangeText: onChange,
       statusBar: false,
       mainMenuBar: false,
-      theme: colorMode === "dark" ? "ace/theme/nord_dark" : "ace/theme/dawn",
+      theme: colorMode === 'dark' ? 'ace/theme/nord_dark' : 'ace/theme/dawn',
     };
 
     const jsonEditorContainer = useRef<HTMLDivElement>(null);
@@ -45,7 +45,7 @@ export const JsonEditor = forwardRef<HTMLDivElement, JSONEditorProps>(
         border="1px solid"
         borderColor="gray.300"
         _dark={{
-          borderColor: "gray.500",
+          borderColor: 'gray.500',
         }}
         borderRadius={5}
         h="full"

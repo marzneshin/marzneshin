@@ -1,5 +1,5 @@
-import { fetch } from "service/http";
-import { create } from "zustand";
+import { fetch } from 'service/http';
+import { create } from 'zustand';
 
 type CoreSettingsStore = {
   isLoading: boolean;
@@ -19,23 +19,23 @@ export const useCoreSettings = create<CoreSettingsStore>((set) => ({
   version: null,
   started: false,
   logs_websocket: null,
-  config: "",
+  config: '',
   fetchCoreSettings: () => {
     set({ isLoading: true });
     Promise.all([
-      fetch("/core").then(({ version, started, logs_websocket }) =>
+      fetch('/core').then(({ version, started, logs_websocket }) =>
         set({ version, started, logs_websocket })
       ),
-      fetch("/core/config").then((config) => set({ config })),
+      fetch('/core/config').then((config) => set({ config })),
     ]).finally(() => set({ isLoading: false }));
   },
   updateConfig: (body) => {
     set({ isPostLoading: true });
-    return fetch("/core/config", { method: "PUT", body }).finally(() => {
+    return fetch('/core/config', { method: 'PUT', body }).finally(() => {
       set({ isPostLoading: false });
     });
   },
   restartCore: () => {
-    return fetch("/core/restart", { method: "POST" });
+    return fetch('/core/restart', { method: 'POST' });
   },
 }));

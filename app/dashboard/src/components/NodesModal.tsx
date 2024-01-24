@@ -29,14 +29,14 @@ import {
   Tooltip,
   useToast,
   VStack,
-} from "@chakra-ui/react";
+} from '@chakra-ui/react';
 import {
   EyeIcon,
   EyeSlashIcon,
   PlusIcon as HeroIconPlusIcon,
   SquaresPlusIcon,
-} from "@heroicons/react/24/outline";
-import { zodResolver } from "@hookform/resolvers/zod";
+} from '@heroicons/react/24/outline';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
   FetchNodesQueryKey,
   getNodeDefaultValues,
@@ -44,38 +44,38 @@ import {
   NodeType,
   useNodes,
   useNodesQuery,
-} from "contexts/NodesContext";
-import { FC, ReactNode, useState } from "react";
-import { Controller, useForm, UseFormReturn } from "react-hook-form";
-import { useTranslation } from "react-i18next";
+} from 'contexts/NodesContext';
+import { FC, ReactNode, useState } from 'react';
+import { Controller, useForm, UseFormReturn } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import {
   UseMutateFunction,
   useMutation,
   useQuery,
   useQueryClient,
-} from "react-query";
-import "slick-carousel/slick/slick-theme.css";
-import "slick-carousel/slick/slick.css";
-import { Status } from "types/User";
+} from 'react-query';
+import 'slick-carousel/slick/slick-theme.css';
+import 'slick-carousel/slick/slick.css';
+import { Status } from 'types/User';
 import {
   generateErrorMessage,
   generateSuccessMessage,
-} from "utils/toastHandler";
-import { useDashboard } from "../contexts/DashboardContext";
-import { DeleteNodeModal } from "./DeleteNodeModal";
-import { DeleteIcon } from "./DeleteUserModal";
-import { ReloadIcon } from "./Filters";
-import { Icon } from "./Icon";
-import { StatusBadge } from "./StatusBadge";
+} from 'utils/toastHandler';
+import { useDashboard } from '../contexts/DashboardContext';
+import { DeleteNodeModal } from './DeleteNodeModal';
+import { DeleteIcon } from './DeleteUserModal';
+import { ReloadIcon } from './Filters';
+import { Icon } from './Icon';
+import { StatusBadge } from './StatusBadge';
 
-import { fetch } from "service/http";
-import { Input } from "./Input";
+import { fetch } from 'service/http';
+import { Input } from './Input';
 
 const CustomInput = chakra(Input, {
   baseStyle: {
-    bg: "white",
+    bg: 'white',
     _dark: {
-      bg: "gray.700",
+      bg: 'gray.700',
     },
   },
 });
@@ -113,7 +113,7 @@ const NodeAccordion: FC<AccordionInboundType> = ({ toggleAccordion, node }) => {
 
   const { isLoading, mutate } = useMutation(updateNode, {
     onSuccess: () => {
-      generateSuccessMessage("Node updated successfully", toast);
+      generateSuccessMessage('Node updated successfully', toast);
       queryClient.invalidateQueries(FetchNodesQueryKey);
     },
     onError: (e) => {
@@ -131,16 +131,16 @@ const NodeAccordion: FC<AccordionInboundType> = ({ toggleAccordion, node }) => {
   );
 
   const nodeStatus: Status = isReconnecting
-    ? "connecting"
+    ? 'connecting'
     : node.status
-    ? node.status
-    : "error";
+      ? node.status
+      : 'error';
 
   return (
     <AccordionItem
       border="1px solid"
-      _dark={{ borderColor: "gray.600" }}
-      _light={{ borderColor: "gray.200" }}
+      _dark={{ borderColor: 'gray.600' }}
+      _light={{ borderColor: 'gray.200' }}
       borderRadius="4px"
       p={1}
       w="full"
@@ -154,7 +154,7 @@ const NodeAccordion: FC<AccordionInboundType> = ({ toggleAccordion, node }) => {
             flex="1"
             textAlign="left"
             color="gray.700"
-            _dark={{ color: "gray.300" }}
+            _dark={{ color: 'gray.300' }}
           >
             {node.name}
           </Text>
@@ -184,7 +184,7 @@ const NodeAccordion: FC<AccordionInboundType> = ({ toggleAccordion, node }) => {
       </AccordionButton>
       <AccordionPanel px={2} pb={2}>
         <VStack pb={3} alignItems="flex-start">
-          {nodeStatus === "error" && (
+          {nodeStatus === 'error' && (
             <Alert status="error" size="xs">
               <Box>
                 <HStack w="full">
@@ -200,8 +200,8 @@ const NodeAccordion: FC<AccordionInboundType> = ({ toggleAccordion, node }) => {
                     disabled={isReconnecting}
                   >
                     {isReconnecting
-                      ? t("nodes.reconnecting")
-                      : t("nodes.reconnect")}
+                      ? t('nodes.reconnecting')
+                      : t('nodes.reconnect')}
                   </Button>
                 </HStack>
               </Box>
@@ -212,9 +212,9 @@ const NodeAccordion: FC<AccordionInboundType> = ({ toggleAccordion, node }) => {
           form={form}
           mutate={mutate}
           isLoading={isLoading}
-          submitBtnText={t("nodes.editNode")}
+          submitBtnText={t('nodes.editNode')}
           btnLeftAdornment={
-            <Tooltip label={t("delete")} placement="top">
+            <Tooltip label={t('delete')} placement="top">
               <IconButton
                 colorScheme="red"
                 variant="ghost"
@@ -255,7 +255,7 @@ const AddNodeForm: FC<AddNodeFormType> = ({
   const { isLoading, mutate } = useMutation(addNode, {
     onSuccess: () => {
       generateSuccessMessage(
-        t("nodes.addNodeSuccess", { name: form.getValues("name") }),
+        t('nodes.addNodeSuccess', { name: form.getValues('name') }),
         toast
       );
       queryClient.invalidateQueries(FetchNodesQueryKey);
@@ -269,8 +269,8 @@ const AddNodeForm: FC<AddNodeFormType> = ({
   return (
     <AccordionItem
       border="1px solid"
-      _dark={{ borderColor: "gray.600" }}
-      _light={{ borderColor: "gray.200" }}
+      _dark={{ borderColor: 'gray.600' }}
+      _light={{ borderColor: 'gray.200' }}
       borderRadius="4px"
       p={1}
       w="full"
@@ -283,12 +283,12 @@ const AddNodeForm: FC<AddNodeFormType> = ({
           flex="1"
           textAlign="left"
           color="gray.700"
-          _dark={{ color: "gray.300" }}
+          _dark={{ color: 'gray.300' }}
           display="flex"
           gap={1}
         >
-          <PlusIcon display={"inline-block"} />{" "}
-          <span>{t("nodes.addNewMarzbanNode")}</span>
+          <PlusIcon display={'inline-block'} />{' '}
+          <span>{t('nodes.addNewMarzbanNode')}</span>
         </Text>
       </AccordionButton>
       <AccordionPanel px={2} py={4}>
@@ -296,8 +296,8 @@ const AddNodeForm: FC<AddNodeFormType> = ({
           form={form}
           mutate={mutate}
           isLoading={isLoading}
-          submitBtnText={t("nodes.addNode")}
-          btnProps={{ variant: "solid" }}
+          submitBtnText={t('nodes.addNode')}
+          btnProps={{ variant: 'solid' }}
           addAsHost
         />
       </AccordionPanel>
@@ -326,13 +326,13 @@ const NodeForm: NodeFormType = ({
 }) => {
   const { t } = useTranslation();
   const [showCertificate, setShowCertificate] = useState(false);
-  const { data: nodeSettings, isLoading: nodeSettingsLoading } = useQuery({
-    queryKey: "node-settings",
+  const { data: nodeSettings } = useQuery({
+    queryKey: 'node-settings',
     queryFn: () =>
       fetch<{
         min_node_version: string;
         certificate: string;
-      }>("/node/settings"),
+      }>('/node/settings'),
   });
   function selectText(node: HTMLElement) {
     // @ts-ignore
@@ -348,7 +348,7 @@ const NodeForm: NodeFormType = ({
       selection!.removeAllRanges();
       selection!.addRange(range);
     } else {
-      console.warn("Could not select text in node: Unsupported browser.");
+      console.warn('Could not select text in node: Unsupported browser.');
     }
   }
 
@@ -362,7 +362,7 @@ const NodeForm: NodeFormType = ({
               flexDirection="column"
               overflow="hidden"
             >
-              <span>{t("nodes.connection-hint")}</span>
+              <span>{t('nodes.connection-hint')}</span>
               <HStack justify="end" py={2}>
                 <Button
                   as="a"
@@ -370,24 +370,24 @@ const NodeForm: NodeFormType = ({
                   size="xs"
                   download="ssl_client_cert.pem"
                   href={URL.createObjectURL(
-                    new Blob([nodeSettings.certificate], { type: "text/plain" })
+                    new Blob([nodeSettings.certificate], { type: 'text/plain' })
                   )}
                 >
-                  {t("nodes.download-certificate")}
+                  {t('nodes.download-certificate')}
                 </Button>
                 <Tooltip
                   placement="top"
                   label={t(
                     !showCertificate
-                      ? "nodes.show-certificate"
-                      : "nodes.show-certificate"
+                      ? 'nodes.show-certificate'
+                      : 'nodes.show-certificate'
                   )}
                 >
                   <IconButton
                     aria-label={t(
                       !showCertificate
-                        ? "nodes.show-certificate"
-                        : "nodes.show-certificate"
+                        ? 'nodes.show-certificate'
+                        : 'nodes.show-certificate'
                     )}
                     onClick={setShowCertificate.bind(null, !showCertificate)}
                     colorScheme="whiteAlpha"
@@ -406,7 +406,7 @@ const NodeForm: NodeFormType = ({
                 <Text
                   bg="rgba(255,255,255,.5)"
                   _dark={{
-                    bg: "rgba(255,255,255,.2)",
+                    bg: 'rgba(255,255,255,.2)',
                   }}
                   rounded="md"
                   p="2"
@@ -429,10 +429,10 @@ const NodeForm: NodeFormType = ({
         <HStack w="full">
           <FormControl>
             <CustomInput
-              label={t("nodes.nodeName")}
+              label={t('nodes.nodeName')}
               size="sm"
               placeholder="Marzban-S2"
-              {...form.register("name")}
+              {...form.register('name')}
               error={form.formState?.errors?.name?.message}
             />
           </FormControl>
@@ -446,20 +446,20 @@ const NodeForm: NodeFormType = ({
                     key={field.value}
                     placement="top"
                     label={
-                      `${t("usersTable.status")}: ` +
-                      (field.value !== "disabled" ? t("active") : t("disabled"))
+                      `${t('usersTable.status')}: ` +
+                      (field.value !== 'disabled' ? t('active') : t('disabled'))
                     }
                     textTransform="capitalize"
                   >
                     <Box mt="6">
                       <Switch
                         colorScheme="primary"
-                        isChecked={field.value !== "disabled"}
+                        isChecked={field.value !== 'disabled'}
                         onChange={(e) => {
                           if (e.target.checked) {
-                            field.onChange("connecting");
+                            field.onChange('connecting');
                           } else {
-                            field.onChange("disabled");
+                            field.onChange('disabled');
                           }
                         }}
                       />
@@ -473,36 +473,36 @@ const NodeForm: NodeFormType = ({
         <HStack alignItems="flex-start">
           <Box w="50%">
             <CustomInput
-              label={t("nodes.nodeAddress")}
+              label={t('nodes.nodeAddress')}
               size="sm"
               placeholder="51.20.12.13"
-              {...form.register("address")}
+              {...form.register('address')}
               error={form.formState?.errors?.address?.message}
             />
           </Box>
           <Box w="25%">
             <CustomInput
-              label={t("nodes.nodePort")}
+              label={t('nodes.nodePort')}
               size="sm"
               placeholder="62050"
-              {...form.register("port")}
+              {...form.register('port')}
               error={form.formState?.errors?.port?.message}
             />
           </Box>
           <Box w="25%">
             <CustomInput
-              label={t("nodes.nodeAPIPort")}
+              label={t('nodes.nodeAPIPort')}
               size="sm"
               placeholder="62051"
-              {...form.register("api_port")}
+              {...form.register('api_port')}
               error={form.formState?.errors?.api_port?.message}
             />
           </Box>
         </HStack>
         {addAsHost && (
           <FormControl py={1}>
-            <Checkbox {...form.register("add_as_new_host")}>
-              <FormLabel m={0}>{t("nodes.addHostForEveryInbound")}</FormLabel>
+            <Checkbox {...form.register('add_as_new_host')}>
+              <FormLabel m={0}>{t('nodes.addHostForEveryInbound')}</FormLabel>
             </Checkbox>
           </FormControl>
         )}
@@ -558,9 +558,9 @@ export const NodesDialog: FC = () => {
           <ModalCloseButton mt={3} />
           <ModalBody w="440px" pb={6} pt={3}>
             <Text mb={3} opacity={0.8} fontSize="sm">
-              {t("nodes.title")}
+              {t('nodes.title')}
             </Text>
-            {isLoading && "loading..."}
+            {isLoading && 'loading...'}
 
             <Accordion
               w="full"

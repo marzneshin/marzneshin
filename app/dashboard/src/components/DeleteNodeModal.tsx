@@ -10,17 +10,17 @@ import {
   Spinner,
   Text,
   useToast,
-} from "@chakra-ui/react";
-import { FetchNodesQueryKey, useNodes } from "contexts/NodesContext";
-import { FC } from "react";
-import { Trans, useTranslation } from "react-i18next";
-import { useMutation, useQueryClient } from "react-query";
+} from '@chakra-ui/react';
+import { FetchNodesQueryKey, useNodes } from 'contexts/NodesContext';
+import { FC } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
+import { useMutation, useQueryClient } from 'react-query';
 import {
   generateErrorMessage,
   generateSuccessMessage,
-} from "utils/toastHandler";
-import { DeleteIcon, DeleteUserModalProps } from "./DeleteUserModal";
-import { Icon } from "./Icon";
+} from 'utils/toastHandler';
+import { DeleteIcon, DeleteUserModalProps } from './DeleteUserModal';
+import { Icon } from './Icon';
 
 export const DeleteNodeModal: FC<DeleteUserModalProps> = ({
   deleteCallback,
@@ -36,7 +36,7 @@ export const DeleteNodeModal: FC<DeleteUserModalProps> = ({
   const { isLoading, mutate: onDelete } = useMutation(deleteNode, {
     onSuccess: () => {
       generateSuccessMessage(
-        t("deleteNode.deleteSuccess", {name: deletingNode && deletingNode.name}),
+        t('deleteNode.deleteSuccess', {name: deletingNode && deletingNode.name}),
         toast
       );
       setDeletingNode(null);
@@ -60,24 +60,24 @@ export const DeleteNodeModal: FC<DeleteUserModalProps> = ({
         <ModalCloseButton mt={3} />
         <ModalBody>
           <Text fontWeight="semibold" fontSize="lg">
-            {t("deleteNode.title")}
+            {t('deleteNode.title')}
           </Text>
           {deletingNode && (
             <Text
               mt={1}
               fontSize="sm"
-              _dark={{ color: "gray.400" }}
+              _dark={{ color: 'gray.400' }}
               color="gray.600"
             >
               <Trans components={{ b: <b /> }}>
-                {t("deleteNode.prompt", {name: deletingNode.name})}
+                {t('deleteNode.prompt', {name: deletingNode.name})}
               </Trans>
             </Text>
           )}
         </ModalBody>
         <ModalFooter display="flex">
           <Button size="sm" onClick={onClose} mr={3} w="full" variant="outline">
-            {t("cancel")}
+            {t('cancel')}
           </Button>
           <Button
             size="sm"
@@ -86,7 +86,7 @@ export const DeleteNodeModal: FC<DeleteUserModalProps> = ({
             onClick={() => onDelete()}
             leftIcon={isLoading ? <Spinner size="xs" /> : undefined}
           >
-            {t("delete")}
+            {t('delete')}
           </Button>
         </ModalFooter>
       </ModalContent>

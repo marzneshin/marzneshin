@@ -33,45 +33,45 @@ import {
   VStack,
   chakra,
   useToast,
-} from "@chakra-ui/react";
-import { InformationCircleIcon, LinkIcon } from "@heroicons/react/24/outline";
-import { zodResolver } from "@hookform/resolvers/zod";
+} from '@chakra-ui/react';
+import { InformationCircleIcon, LinkIcon } from '@heroicons/react/24/outline';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
   proxyALPN,
   proxyFingerprint,
   proxyHostSecurity,
-} from "constants/Proxies";
-import { useHosts } from "contexts/HostsContext";
-import { FC, useEffect, useState } from "react";
+} from 'constants/Proxies';
+import { useHosts } from 'contexts/HostsContext';
+import { FC, useEffect, useState } from 'react';
 import {
   FormProvider,
   useFieldArray,
   useForm,
   useFormContext,
-} from "react-hook-form";
-import { Trans, useTranslation } from "react-i18next";
-import "slick-carousel/slick/slick-theme.css";
-import "slick-carousel/slick/slick.css";
-import { z } from "zod";
-import { useDashboard } from "../contexts/DashboardContext";
-import { DeleteIcon } from "./DeleteUserModal";
-import { Icon } from "./Icon";
-import { Input as CustomInput } from "./Input";
+} from 'react-hook-form';
+import { Trans, useTranslation } from 'react-i18next';
+import 'slick-carousel/slick/slick-theme.css';
+import 'slick-carousel/slick/slick.css';
+import { z } from 'zod';
+import { useDashboard } from '../contexts/DashboardContext';
+import { DeleteIcon } from './DeleteUserModal';
+import { Icon } from './Icon';
+import { Input as CustomInput } from './Input';
 
 const Select = chakra(ChakraSelect, {
   baseStyle: {
-    bg: "white",
+    bg: 'white',
     _dark: {
-      bg: "gray.700",
+      bg: 'gray.700',
     },
   },
 });
 
 const Input = chakra(CustomInput, {
   baseStyle: {
-    bg: "white",
+    bg: 'white',
     _dark: {
-      bg: "gray.700",
+      bg: 'gray.700',
     },
   },
 });
@@ -87,8 +87,8 @@ const InfoIcon = chakra(InformationCircleIcon, {
   baseStyle: {
     w: 4,
     h: 4,
-    color: "gray.400",
-    cursor: "pointer",
+    color: 'gray.400',
+    cursor: 'pointer',
   },
 });
 
@@ -96,14 +96,14 @@ const hostsSchema = z.record(
   z.string().min(1),
   z.array(
     z.object({
-      remark: z.string().min(1, "Remark is required"),
-      address: z.string().min(1, "Address is required"),
+      remark: z.string().min(1, 'Remark is required'),
+      address: z.string().min(1, 'Address is required'),
       port: z
         .string()
         .or(z.number())
         .nullable()
         .transform((value) => {
-          if (typeof value === "number") return value;
+          if (typeof value === 'number') return value;
           if (value !== null && !isNaN(parseInt(value)))
             return Number(parseInt(value));
           return null;
@@ -120,10 +120,10 @@ const hostsSchema = z.record(
 
 const Error = chakra(FormErrorMessage, {
   baseStyle: {
-    color: "red.400",
-    display: "block",
-    textAlign: "left",
-    w: "100%",
+    color: 'red.400',
+    display: 'block',
+    textAlign: 'left',
+    w: '100%',
   },
 });
 
@@ -157,15 +157,15 @@ const AccordionInbound: FC<AccordionInboundType> = ({
   const accordionErrors = errors[hostKey];
   const handleAddHost = () => {
     addHost({
-      host: "",
-      sni: "",
+      host: '',
+      sni: '',
       port: null,
       path: null,
-      address: "",
-      remark: "",
-      security: "inbound_default",
-      alpn: "",
-      fingerprint: "",
+      address: '',
+      remark: '',
+      security: 'inbound_default',
+      alpn: '',
+      fingerprint: '',
     });
   };
   useEffect(() => {
@@ -176,8 +176,8 @@ const AccordionInbound: FC<AccordionInboundType> = ({
   return (
     <AccordionItem
       border="1px solid"
-      _dark={{ borderColor: "gray.600" }}
-      _light={{ borderColor: "gray.200" }}
+      _dark={{ borderColor: 'gray.600' }}
+      _light={{ borderColor: 'gray.200' }}
       borderRadius="4px"
       p={1}
       w="full"
@@ -190,7 +190,7 @@ const AccordionInbound: FC<AccordionInboundType> = ({
           flex="1"
           textAlign="left"
           color="gray.700"
-          _dark={{ color: "gray.300" }}
+          _dark={{ color: 'gray.300' }}
         >
           {hostKey}
         </Text>
@@ -202,8 +202,8 @@ const AccordionInbound: FC<AccordionInboundType> = ({
             <VStack
               key={index}
               border="1px solid"
-              _dark={{ borderColor: "gray.600", bg: "#273142" }}
-              _light={{ borderColor: "gray.200", bg: "#fcfbfb" }}
+              _dark={{ borderColor: 'gray.600', bg: '#273142' }}
+              _light={{ borderColor: 'gray.200', bg: '#fcfbfb' }}
               p={2}
               w="full"
               borderRadius="4px"
@@ -218,7 +218,7 @@ const AccordionInbound: FC<AccordionInboundType> = ({
                 >
                   <InputGroup>
                     <Input
-                      {...form.register(hostKey + "." + index + ".remark")}
+                      {...form.register(hostKey + '.' + index + '.remark')}
                       size="sm"
                       borderRadius="4px"
                       placeholder="Remark"
@@ -236,78 +236,78 @@ const AccordionInbound: FC<AccordionInboundType> = ({
                             <PopoverCloseButton />
                             <PopoverBody>
                               <Box fontSize="xs">
-                                <Text pr="20px">{t("hostsDialog.desc")}</Text>
+                                <Text pr="20px">{t('hostsDialog.desc')}</Text>
                                 <Text>
                                   <Badge>
-                                    {"{"}SERVER_IP{"}"}
-                                  </Badge>{" "}
-                                  {t("hostsDialog.currentServer")}
+                                    {'{'}SERVER_IP{'}'}
+                                  </Badge>{' '}
+                                  {t('hostsDialog.currentServer')}
                                 </Text>
                                 <Text mt={1}>
                                   <Badge>
-                                    {"{"}USERNAME{"}"}
-                                  </Badge>{" "}
-                                  {t("hostsDialog.username")}
+                                    {'{'}USERNAME{'}'}
+                                  </Badge>{' '}
+                                  {t('hostsDialog.username')}
                                 </Text>
                                 <Text mt={1}>
                                   <Badge>
-                                    {"{"}DATA_USAGE{"}"}
-                                  </Badge>{" "}
-                                  {t("hostsDialog.dataUsage")}
+                                    {'{'}DATA_USAGE{'}'}
+                                  </Badge>{' '}
+                                  {t('hostsDialog.dataUsage')}
                                 </Text>
                                 <Text mt={1}>
                                   <Badge>
-                                    {"{"}DATA_LEFT{"}"}
-                                  </Badge>{" "}
-                                  {t("hostsDialog.remainingData")}
+                                    {'{'}DATA_LEFT{'}'}
+                                  </Badge>{' '}
+                                  {t('hostsDialog.remainingData')}
                                 </Text>
                                 <Text mt={1}>
                                   <Badge>
-                                    {"{"}DATA_LIMIT{"}"}
-                                  </Badge>{" "}
-                                  {t("hostsDialog.dataLimit")}
+                                    {'{'}DATA_LIMIT{'}'}
+                                  </Badge>{' '}
+                                  {t('hostsDialog.dataLimit')}
                                 </Text>
                                 <Text mt={1}>
                                   <Badge>
-                                    {"{"}DAYS_LEFT{"}"}
-                                  </Badge>{" "}
-                                  {t("hostsDialog.remainingDays")}
+                                    {'{'}DAYS_LEFT{'}'}
+                                  </Badge>{' '}
+                                  {t('hostsDialog.remainingDays')}
                                 </Text>
                                 <Text mt={1}>
                                   <Badge>
-                                    {"{"}EXPIRE_DATE{"}"}
-                                  </Badge>{" "}
-                                  {t("hostsDialog.expireDate")}
+                                    {'{'}EXPIRE_DATE{'}'}
+                                  </Badge>{' '}
+                                  {t('hostsDialog.expireDate')}
                                 </Text>
                                 <Text mt={1}>
                                   <Badge>
-                                    {"{"}JALALI_EXPIRE_DATE{"}"}
-                                  </Badge>{" "}
-                                  {t("hostsDialog.jalaliExpireDate")}
+                                    {'{'}JALALI_EXPIRE_DATE{'}'}
+                                  </Badge>{' '}
+                                  {t('hostsDialog.jalaliExpireDate')}
                                 </Text>
                                 <Text mt={1}>
                                   <Badge>
-                                    {"{"}TIME_LEFT{"}"}
-                                  </Badge>{" "}
-                                  {t("hostsDialog.remainingTime")}
+                                    {'{'}TIME_LEFT{'}'}
+                                  </Badge>{' '}
+                                  {t('hostsDialog.remainingTime')}
                                 </Text>
                                 <Text mt={1}>
                                   <Badge>
-                                    {"{"}STATUS_EMOJI{"}"}
-                                  </Badge>{" "}
-                                  {t("hostsDialog.statusEmoji")}
+                                    {'{'}STATUS_EMOJI{'}'}
+                                  </Badge>{' '}
+                                  {t('hostsDialog.statusEmoji')}
                                 </Text>
                                 <Text mt={1}>
                                   <Badge>
-                                    {"{"}PROTOCOL{"}"}
-                                  </Badge>{" "}
-                                  {t("hostsDialog.proxyProtocol")}
+                                    {'{'}PROTOCOL{'}'}
+                                  </Badge>{' '}
+                                  {t('hostsDialog.proxyProtocol')}
                                 </Text>
                                 <Text mt={1}>
                                   <Badge>
-                                    {"{"}TRANSPORT{"}"}
-                                  </Badge>{" "}
-                                  {t("hostsDialog.proxyMethod")}
+                                    {'{'}TRANSPORT{'}'}
+                                  </Badge>{' '}
+                                  {t('hostsDialog.proxyMethod')}
                                 </Text>
                               </Box>
                             </PopoverBody>
@@ -331,7 +331,7 @@ const AccordionInbound: FC<AccordionInboundType> = ({
                     size="sm"
                     borderRadius="4px"
                     placeholder="Address (e.g. example.com)"
-                    {...form.register(hostKey + "." + index + ".address")}
+                    {...form.register(hostKey + '.' + index + '.address')}
                   />
                   <InputRightElement>
                     <Popover isLazy placement="right">
@@ -346,78 +346,78 @@ const AccordionInbound: FC<AccordionInboundType> = ({
                           <PopoverCloseButton />
                           <PopoverBody>
                             <Box fontSize="xs">
-                              <Text pr="20px">{t("hostsDialog.desc")}</Text>
+                              <Text pr="20px">{t('hostsDialog.desc')}</Text>
                               <Text>
                                 <Badge>
-                                  {"{"}SERVER_IP{"}"}
-                                </Badge>{" "}
-                                {t("hostsDialog.currentServer")}
+                                  {'{'}SERVER_IP{'}'}
+                                </Badge>{' '}
+                                {t('hostsDialog.currentServer')}
                               </Text>
                               <Text mt={1}>
                                 <Badge>
-                                  {"{"}USERNAME{"}"}
-                                </Badge>{" "}
-                                {t("hostsDialog.username")}
+                                  {'{'}USERNAME{'}'}
+                                </Badge>{' '}
+                                {t('hostsDialog.username')}
                               </Text>
                               <Text mt={1}>
                                 <Badge>
-                                  {"{"}DATA_USAGE{"}"}
-                                </Badge>{" "}
-                                {t("hostsDialog.dataUsage")}
+                                  {'{'}DATA_USAGE{'}'}
+                                </Badge>{' '}
+                                {t('hostsDialog.dataUsage')}
                               </Text>
                               <Text mt={1}>
                                 <Badge>
-                                  {"{"}DATA_LEFT{"}"}
-                                </Badge>{" "}
-                                {t("hostsDialog.remainingData")}
+                                  {'{'}DATA_LEFT{'}'}
+                                </Badge>{' '}
+                                {t('hostsDialog.remainingData')}
                               </Text>
                               <Text mt={1}>
                                 <Badge>
-                                  {"{"}DATA_LIMIT{"}"}
-                                </Badge>{" "}
-                                {t("hostsDialog.dataLimit")}
+                                  {'{'}DATA_LIMIT{'}'}
+                                </Badge>{' '}
+                                {t('hostsDialog.dataLimit')}
                               </Text>
                               <Text mt={1}>
                                 <Badge>
-                                  {"{"}DAYS_LEFT{"}"}
-                                </Badge>{" "}
-                                {t("hostsDialog.remainingDays")}
+                                  {'{'}DAYS_LEFT{'}'}
+                                </Badge>{' '}
+                                {t('hostsDialog.remainingDays')}
                               </Text>
                               <Text mt={1}>
                                 <Badge>
-                                  {"{"}EXPIRE_DATE{"}"}
-                                </Badge>{" "}
-                                {t("hostsDialog.expireDate")}
+                                  {'{'}EXPIRE_DATE{'}'}
+                                </Badge>{' '}
+                                {t('hostsDialog.expireDate')}
                               </Text>
                               <Text mt={1}>
                                 <Badge>
-                                  {"{"}JALALI_EXPIRE_DATE{"}"}
-                                </Badge>{" "}
-                                {t("hostsDialog.jalaliExpireDate")}
+                                  {'{'}JALALI_EXPIRE_DATE{'}'}
+                                </Badge>{' '}
+                                {t('hostsDialog.jalaliExpireDate')}
                               </Text>
                               <Text mt={1}>
                                 <Badge>
-                                  {"{"}TIME_LEFT{"}"}
-                                </Badge>{" "}
-                                {t("hostsDialog.remainingTime")}
+                                  {'{'}TIME_LEFT{'}'}
+                                </Badge>{' '}
+                                {t('hostsDialog.remainingTime')}
                               </Text>
                               <Text mt={1}>
                                 <Badge>
-                                  {"{"}STATUS_EMOJI{"}"}
-                                </Badge>{" "}
-                                {t("hostsDialog.statusEmoji")}
+                                  {'{'}STATUS_EMOJI{'}'}
+                                </Badge>{' '}
+                                {t('hostsDialog.statusEmoji')}
                               </Text>
                               <Text mt={1}>
                                 <Badge>
-                                  {"{"}PROTOCOL{"}"}
-                                </Badge>{" "}
-                                {t("hostsDialog.proxyProtocol")}
+                                  {'{'}PROTOCOL{'}'}
+                                </Badge>{' '}
+                                {t('hostsDialog.proxyProtocol')}
                               </Text>
                               <Text mt={1}>
                                 <Badge>
-                                  {"{"}TRANSPORT{"}"}
-                                </Badge>{" "}
-                                {t("hostsDialog.proxyMethod")}
+                                  {'{'}TRANSPORT{'}'}
+                                </Badge>{' '}
+                                {t('hostsDialog.proxyMethod')}
                               </Text>
                             </Box>
                           </PopoverBody>
@@ -439,15 +439,15 @@ const AccordionInbound: FC<AccordionInboundType> = ({
                     px={0}
                     py={1}
                     borderRadius={3}
-                    _hover={{ bg: "transparent" }}
+                    _hover={{ bg: 'transparent' }}
                   >
                     <Text
                       fontSize="xs"
                       color="gray.600"
-                      _dark={{ color: "gray.500" }}
+                      _dark={{ color: 'gray.500' }}
                       pl={1}
                     >
-                      {t("hostsDialog.advancedOptions")}
+                      {t('hostsDialog.advancedOptions')}
                       <AccordionIcon fontSize="sm" ml={1} />
                     </Text>
 
@@ -478,7 +478,7 @@ const AccordionInbound: FC<AccordionInboundType> = ({
                           gap={1}
                           m="0"
                         >
-                          <span>{t("hostsDialog.port")}</span>
+                          <span>{t('hostsDialog.port')}</span>
                           <Popover isLazy placement="right">
                             <PopoverTrigger>
                               <InfoIcon />
@@ -488,7 +488,7 @@ const AccordionInbound: FC<AccordionInboundType> = ({
                                 <PopoverArrow />
                                 <PopoverCloseButton />
                                 <Text fontSize="xs" pr={5}>
-                                  {t("hostsDialog.port.info")}
+                                  {t('hostsDialog.port.info')}
                                 </Text>
                               </PopoverContent>
                             </Portal>
@@ -497,9 +497,9 @@ const AccordionInbound: FC<AccordionInboundType> = ({
                         <Input
                           size="sm"
                           borderRadius="4px"
-                          placeholder={String(inbound.port || "8080")}
+                          placeholder={String(inbound.port || '8080')}
                           type="number"
-                          {...form.register(hostKey + "." + index + ".port")}
+                          {...form.register(hostKey + '.' + index + '.port')}
                         />
                       </FormControl>
                       <FormControl
@@ -515,7 +515,7 @@ const AccordionInbound: FC<AccordionInboundType> = ({
                           justifyContent="space-between"
                           m="0"
                         >
-                          <span>{t("hostsDialog.sni")}</span>
+                          <span>{t('hostsDialog.sni')}</span>
 
                           <Popover isLazy placement="right">
                             <PopoverTrigger>
@@ -526,7 +526,7 @@ const AccordionInbound: FC<AccordionInboundType> = ({
                                 <PopoverArrow />
                                 <PopoverCloseButton />
                                 <Text fontSize="xs" pr={5}>
-                                  {t("hostsDialog.sni.info")}
+                                  {t('hostsDialog.sni.info')}
                                 </Text>
                                 <Text fontSize="xs" mt="2">
                                   <Trans
@@ -552,7 +552,7 @@ const AccordionInbound: FC<AccordionInboundType> = ({
                           size="sm"
                           borderRadius="4px"
                           placeholder="SNI (e.g. example.com)"
-                          {...form.register(hostKey + "." + index + ".sni")}
+                          {...form.register(hostKey + '.' + index + '.sni')}
                         />
                         {accordionErrors && accordionErrors[index]?.sni && (
                           <Error>{accordionErrors[index]?.sni?.message}</Error>
@@ -571,7 +571,7 @@ const AccordionInbound: FC<AccordionInboundType> = ({
                           justifyContent="space-between"
                           m="0"
                         >
-                          <span>{t("hostsDialog.host")}</span>
+                          <span>{t('hostsDialog.host')}</span>
 
                           <Popover isLazy placement="right">
                             <PopoverTrigger>
@@ -582,7 +582,7 @@ const AccordionInbound: FC<AccordionInboundType> = ({
                                 <PopoverArrow />
                                 <PopoverCloseButton />
                                 <Text fontSize="xs" pr={5}>
-                                  {t("hostsDialog.host.info")}
+                                  {t('hostsDialog.host.info')}
                                 </Text>
                                 <Text fontSize="xs" mt="2">
                                   <Trans
@@ -608,7 +608,7 @@ const AccordionInbound: FC<AccordionInboundType> = ({
                           size="sm"
                           borderRadius="4px"
                           placeholder="Host (e.g. example.com)"
-                          {...form.register(hostKey + "." + index + ".host")}
+                          {...form.register(hostKey + '.' + index + '.host')}
                         />
                         {accordionErrors && accordionErrors[index]?.host && (
                           <Error>{accordionErrors[index]?.host?.message}</Error>
@@ -628,7 +628,7 @@ const AccordionInbound: FC<AccordionInboundType> = ({
                           justifyContent="space-between"
                           m="0"
                         >
-                          <span>{t("hostsDialog.path")}</span>
+                          <span>{t('hostsDialog.path')}</span>
 
                           <Popover isLazy placement="right">
                             <PopoverTrigger>
@@ -639,7 +639,7 @@ const AccordionInbound: FC<AccordionInboundType> = ({
                                 <PopoverArrow />
                                 <PopoverCloseButton />
                                 <Text fontSize="xs" pr={5}>
-                                  {t("hostsDialog.path.info")}
+                                  {t('hostsDialog.path.info')}
                                 </Text>
                               </PopoverContent>
                             </Portal>
@@ -649,7 +649,7 @@ const AccordionInbound: FC<AccordionInboundType> = ({
                           size="sm"
                           borderRadius="4px"
                           placeholder="path (e.g. /vless)"
-                          {...form.register(hostKey + "." + index + ".path")}
+                          {...form.register(hostKey + '.' + index + '.path')}
                         />
                         {accordionErrors && accordionErrors[index]?.path && (
                           <Error>{accordionErrors[index]?.path?.message}</Error>
@@ -665,7 +665,7 @@ const AccordionInbound: FC<AccordionInboundType> = ({
                           justifyContent="space-between"
                           m="0"
                         >
-                          <span>{t("hostsDialog.security")}</span>
+                          <span>{t('hostsDialog.security')}</span>
 
                           <Popover isLazy placement="right">
                             <PopoverTrigger>
@@ -676,7 +676,7 @@ const AccordionInbound: FC<AccordionInboundType> = ({
                                 <PopoverArrow />
                                 <PopoverCloseButton />
                                 <Text fontSize="xs" pr={5}>
-                                  {t("hostsDialog.security.info")}
+                                  {t('hostsDialog.security.info')}
                                 </Text>
                               </PopoverContent>
                             </Portal>
@@ -685,7 +685,7 @@ const AccordionInbound: FC<AccordionInboundType> = ({
                         <Select
                           size="sm"
                           {...form.register(
-                            hostKey + "." + index + ".security",
+                            hostKey + '.' + index + '.security',
                           )}
                         >
                           {proxyHostSecurity.map((s) => {
@@ -707,11 +707,11 @@ const AccordionInbound: FC<AccordionInboundType> = ({
                           justifyContent="space-between"
                           m="0"
                         >
-                          <span>{t("hostsDialog.alpn")}</span>
+                          <span>{t('hostsDialog.alpn')}</span>
                         </FormLabel>
                         <Select
                           size="sm"
-                          {...form.register(hostKey + "." + index + ".alpn")}
+                          {...form.register(hostKey + '.' + index + '.alpn')}
                         >
                           {proxyALPN.map((s) => {
                             return (
@@ -732,12 +732,12 @@ const AccordionInbound: FC<AccordionInboundType> = ({
                           justifyContent="space-between"
                           m="0"
                         >
-                          <span>{t("hostsDialog.fingerprint")}</span>
+                          <span>{t('hostsDialog.fingerprint')}</span>
                         </FormLabel>
                         <Select
                           size="sm"
                           {...form.register(
-                            hostKey + "." + index + ".fingerprint",
+                            hostKey + '.' + index + '.fingerprint',
                           )}
                         >
                           {proxyFingerprint.map((s) => {
@@ -760,10 +760,10 @@ const AccordionInbound: FC<AccordionInboundType> = ({
             w="full"
             size="sm"
             color=""
-            fontWeight={"normal"}
+            fontWeight={'normal'}
             onClick={handleAddHost}
           >
-            {t("hostsDialog.addHost")}
+            {t('hostsDialog.addHost')}
           </Button>
         </VStack>
       </AccordionPanel>
@@ -772,8 +772,7 @@ const AccordionInbound: FC<AccordionInboundType> = ({
 };
 
 export const HostsDialog: FC = () => {
-  const { isEditingHosts, onEditingHosts, refetchUsers, inbounds } =
-    useDashboard();
+  const { isEditingHosts, onEditingHosts, refetchUsers } = useDashboard();
   const { isLoading, hosts, fetchHosts, isPostLoading, setHosts } = useHosts();
   const toast = useToast();
   const { t } = useTranslation();
@@ -800,10 +799,10 @@ export const HostsDialog: FC = () => {
     setHosts(hosts)
       .then(() => {
         toast({
-          title: t("hostsDialog.savedSuccess"),
-          status: "success",
+          title: t('hostsDialog.savedSuccess'),
+          status: 'success',
           isClosable: true,
-          position: "top",
+          position: 'top',
           duration: 3000,
         });
         refetchUsers();
@@ -812,19 +811,19 @@ export const HostsDialog: FC = () => {
         if (err?.response?.status === 409 || err?.response?.status === 400) {
           toast({
             title: err.response?._data?.detail,
-            status: "error",
+            status: 'error',
             isClosable: true,
-            position: "top",
+            position: 'top',
             duration: 3000,
           });
         }
         if (err?.response?.status === 422) {
           Object.keys(err.response._data.detail).forEach((key) => {
             toast({
-              title: err.response._data.detail[key] + " (" + key + ")",
-              status: "error",
+              title: err.response._data.detail[key] + ' (' + key + ')',
+              status: 'error',
               isClosable: true,
-              position: "top",
+              position: 'top',
               duration: 3000,
             });
           });
@@ -854,9 +853,9 @@ export const HostsDialog: FC = () => {
           <FormProvider {...form}>
             <form onSubmit={form.handleSubmit(handleFormSubmit)}>
               <Text mb={3} opacity={0.8} fontSize="sm">
-                {t("hostsDialog.title")}
+                {t('hostsDialog.title')}
               </Text>
-              {isLoading && t("hostsDialog.loading")}
+              {isLoading && t('hostsDialog.loading')}
               {!isLoading &&
                 hosts &&
                 (Object.keys(hosts).length > 0 ? (
@@ -880,7 +879,7 @@ export const HostsDialog: FC = () => {
                     </VStack>
                   </Accordion>
                 ) : (
-                  "No inbound found. Please check your Xray config file."
+                  'No inbound found. Please check your Xray config file.'
                 ))}
 
               <HStack justifyContent="flex-end" py={2}>
@@ -894,7 +893,7 @@ export const HostsDialog: FC = () => {
                   isLoading={isPostLoading}
                   disabled={isPostLoading}
                 >
-                  {t("hostsDialog.apply")}
+                  {t('hostsDialog.apply')}
                 </Button>
               </HStack>
             </form>
