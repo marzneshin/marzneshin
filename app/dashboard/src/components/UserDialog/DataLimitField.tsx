@@ -10,7 +10,6 @@ interface DataLimitFieldProps {
     t: TFunction<'translation', undefined, 'translation'>;
 }
 
-
 export const DataLimitField = ({ form, disabled, t }: DataLimitFieldProps) => {
   return (
     <FormControl mb={'10px'}>

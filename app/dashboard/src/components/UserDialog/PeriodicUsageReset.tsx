@@ -11,7 +11,6 @@ interface PreiodicUsageResetProps {
 
 export const PeriodicUsageReset = ({ form, t }: PreiodicUsageResetProps) => {
   return (
-
     <FormControl height="66px">
       <FormLabel>
         {t('userDialog.periodicUsageReset')}

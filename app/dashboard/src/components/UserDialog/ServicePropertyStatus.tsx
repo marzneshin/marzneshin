@@ -9,7 +9,7 @@ type ServicePropertyStatusProps = {
 }
 
 export const ServicePropertyStatus: FC<ServicePropertyStatusProps> = ({ value, StatusIcon }) => {
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [valueState, _] = useState(value);
   return (
     <Flex flexDirection="row">

@@ -235,7 +235,6 @@ export const UserDialog: FC<UserDialogProps> = () => {
                       </Collapse>
                       <ExpireDateField form={form} t={t} i18n={i18n} disabled={disabled} />
                       <NoteField form={form} t={t} />
-
                     </Flex>
                     {error && (
                       <Alert
