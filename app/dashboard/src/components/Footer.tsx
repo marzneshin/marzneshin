@@ -6,7 +6,7 @@ import { FC } from 'react';
 export const Footer: FC<BoxProps> = (props) => {
   const { version } = useDashboard();
   return (
-    <HStack w="full" py="0" position="relative" {...props}>
+    <HStack w="full" position="relative" {...props}>
       <Text
         display="inline-block"
         flexGrow={1}
@@ -15,12 +15,12 @@ export const Footer: FC<BoxProps> = (props) => {
         fontSize="xs"
       >
         <Link color="blue.400" href={REPO_URL}>
-          Marzban
+          Marzneshin
         </Link>
         {version ? ` (v${version}), ` : ', '}
         Made with ❤️ in{' '}
         <Link color="blue.400" href={ORGANIZATION_URL}>
-          Gozargah
+          khodedawosh
         </Link>
       </Text>
     </HStack>

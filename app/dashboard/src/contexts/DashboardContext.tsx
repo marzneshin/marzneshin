@@ -30,6 +30,7 @@ export type InboundType = {
 };
 
 export type Inbounds = Map<ProtocolType, InboundType[]>;
+type PageId = number;
 
 type DashboardStateType = {
   isCreatingNewUser: boolean;
@@ -53,6 +54,8 @@ type DashboardStateType = {
   resetUsageUser: User | null;
   revokeSubscriptionUser: User | null;
   isEditingCore: boolean;
+  activePage: number;
+  activatePage: (pageId: PageId) => void;
   onCreateUser: (isOpen: boolean) => void;
   onEditingUser: (user: User | null) => void;
   onDeletingUser: (user: User | null) => void;
@@ -143,6 +146,10 @@ export const useDashboard = create(
     },
     inbounds: new Map(),
     isEditingCore: false,
+    activePage: 0,
+    activatePage: (pageId: number) => {
+      set({ activePage: pageId });
+    },
     refetchServices: () => {
       fetchServices();
     },

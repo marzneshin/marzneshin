@@ -8,6 +8,7 @@ import {
   Text,
 } from '@chakra-ui/react';
 import { ServerStackIcon, UsersIcon } from '@heroicons/react/24/outline';
+import { IconBaseStyle } from 'constants/IconBaseStyle';
 import { forwardRef, Ref } from 'react';
 import {
   useFormContext,
@@ -15,19 +16,10 @@ import {
 import { Service } from 'types/Service';
 import { ServicePropertyStatus } from './ServicePropertyStatus';
 
-const ServiceIconBaseStyle = {
-  baseStyle: {
-    strokeWidth: '2px',
-    color: 'primary.500',
-    w: 5,
-    h: 5,
-    mx: '6px',
-  },
-}
 
-const UsersServiceIcon = chakra(UsersIcon, ServiceIconBaseStyle);
+const UsersServiceIcon = chakra(UsersIcon, IconBaseStyle);
 
-const InboundsServiceIcon = chakra(ServerStackIcon, ServiceIconBaseStyle);
+const InboundsServiceIcon = chakra(ServerStackIcon, IconBaseStyle);
 
 type CustomCheckboxProps = {
   isChecked: boolean;
