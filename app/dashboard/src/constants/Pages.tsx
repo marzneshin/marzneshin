@@ -21,45 +21,34 @@ export const pages: PageType[] = [
     name: 'pageHeaderTitle.Home',
     path: '/',
     itemIcon: HomeSidebarItemIcon,
-    loader: fetchAdminLoader,
     element: <Dashboard />,
-    errorElement: <Login />
   },
   {
     name: 'pageHeaderTitle.Users',
     path: '/users',
     itemIcon: UsersSidebarItemIcon,
-    loader: fetchAdminLoader,
     element: <UsersPage />,
-    errorElement: <Login />
   },
   {
     name: 'pageHeaderTitle.Services',
     path: '/services',
     itemIcon: ServicesSidebarItemIcon,
     element: <ServicesPage />,
-    loader: fetchAdminLoader, errorElement: <Login />
   },
   {
     name: 'pageHeaderTitle.Nodes',
     path: '/nodes',
     itemIcon: NodesSidebarItemIcon,
     element: <NodesPage />,
-    loader: fetchAdminLoader,
-    errorElement: <Login />
   },
   {
     name: 'pageHeaderTitle.Host',
     path: '/host',
     itemIcon: HostSidebarItemIcon,
     element: <HostPage />,
-    loader: fetchAdminLoader,
-    errorElement: <Login />
   },
 ];
 
 export type PageRoute = Pick<PageType,
-    | 'path'
-    | 'loader'
-    | 'element'
-    | 'errorElement'>
+  | 'path'
+  | 'element'>
