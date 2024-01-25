@@ -14,6 +14,7 @@ import { updateThemeColor } from 'utils/themeColor';
 import { theme } from '../chakra.config';
 import App from './App';
 import 'index.scss';
+import { BrowserRouter } from 'react-router-dom';
 
 dayjs.extend(Timezone);
 dayjs.extend(LocalizedFormat);
@@ -25,10 +26,12 @@ updateThemeColor(localStorageManager.get() || 'light');
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <ChakraProvider theme={theme}>
-      <QueryClientProvider client={queryClient}>
-        <App />
-      </QueryClientProvider>
-    </ChakraProvider>
+    <BrowserRouter basename={import.meta.env.BASE_URL}>
+      <ChakraProvider theme={theme}>
+        <QueryClientProvider client={queryClient}>
+          <App />
+        </QueryClientProvider>
+      </ChakraProvider>
+    </BrowserRouter>
   </React.StrictMode>
 );
