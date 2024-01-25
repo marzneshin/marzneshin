@@ -8,7 +8,8 @@
     "preview": "vite preview --port 3000",
     "gen:theme-typings": "chakra-cli tokens ./chakra.config.ts",
     "postinstall": "npm run gen:theme-typings",
-    "lint": "eslint --ignore-path .eslintignore . --ext ts --ext tsx --ext js --ext jsx"
+    "lint": "eslint --ignore-path .eslintignore . --ext ts --ext tsx --ext js --ext jsx",
+    "lint:fix": "eslint --ignore-path .eslintignore . --ext ts --ext tsx --ext js --ext jsx --fix"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.1.1",
