@@ -6,8 +6,6 @@ import { queryClient } from 'utils/react-query';
 import { getUsersPerPageLimitSize } from 'utils/userPreferenceStorage';
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
-import { PageType } from 'types/Page';
-import { pages } from 'constants/Pages';
 
 export type FilterType = {
   username?: string;
