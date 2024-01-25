@@ -7,6 +7,7 @@ import Login from 'pages/Login';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-loading-skeleton/dist/skeleton.css';
 import { Route, Routes } from 'react-router-dom';
+import { fetchAdminLoader } from 'components/modules/Router';
 
 function App() {
   return (
@@ -35,7 +36,8 @@ function App() {
         <GridItem area={'main'}>
           <Routes>
             {pages.map((route: PageRoute) =>
-              <Route {...route} />
+              <Route {...route} errorElement={<Login />} loader={fetchAdminLoader} />
+
             )}
           </Routes>
         </GridItem>
