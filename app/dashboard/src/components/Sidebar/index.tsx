@@ -10,10 +10,10 @@ import { FC, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 export type SideBarItemProps = Pick<
-    PageType,
-    | 'name'
-    | 'path'
-    | 'itemIcon'
+  PageType,
+  | 'name'
+  | 'path'
+  | 'itemIcon'
 >
 
 export const SidebarMenuIcon = chakra(HamburgerIcon, {
@@ -53,23 +53,24 @@ export const SidebarItem: FC<SideBarItemProps & { index: number }> = ({ itemIcon
 }
 
 export const Sidebar = () => {
-
   return (
-    <Flex
-      pos="sticky"
-      left="5"
-      borderRightWidth="4px"
-      borderRightColor="primary.100"
-      borderRightStyle="solid"
-      flexDir="column"
-      h="100vh"
-      bg="gray.50"
-    >
-      <VStack pt="30px" gap="6">
-        <Image src="favicon/logo.svg" alt="marzneshin" boxSize="50px" />
-        {pages.map((item: SideBarItemProps, index: number) =>
-          <SidebarItem path={item.path} name={item.name} itemIcon={item.itemIcon} index={index} />)}
-      </VStack>
-    </Flex>
+    <aside>
+      <Flex
+        pos="sticky"
+        left="5"
+        borderRightWidth="4px"
+        borderRightColor="primary.100"
+        borderRightStyle="solid"
+        flexDir="column"
+        h="100vh"
+        bg="gray.50"
+      >
+        <VStack pt="30px" gap="6">
+          <Image src="favicon/logo.svg" alt="marzneshin" boxSize="50px" />
+          {pages.map((item: SideBarItemProps, index: number) =>
+            <SidebarItem path={item.path} name={item.name} itemIcon={item.itemIcon} index={index} />)}
+        </VStack>
+      </Flex>
+    </aside>
   )
 }
