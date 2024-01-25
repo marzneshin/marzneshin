@@ -22,6 +22,7 @@ import {
   SquaresPlusIcon,
   SunIcon,
 } from '@heroicons/react/24/outline';
+import { pages } from 'constants/Pages';
 import { DONATION_URL, REPO_URL } from 'constants/Project';
 import { useDashboard } from 'contexts/DashboardContext';
 import differenceInDays from 'date-fns/differenceInDays';
@@ -86,6 +87,7 @@ export const Header: FC<HeaderProps> = () => {
     onResetAllUsage,
     onEditingNodes,
     onShowingNodesUsage,
+    activePage,
   } = useDashboard();
   const { t } = useTranslation();
   const { colorMode, toggleColorMode } = useColorMode();
@@ -110,8 +112,8 @@ export const Header: FC<HeaderProps> = () => {
       }}
       position="relative"
     >
-      <Text as="h1" fontWeight="semibold" fontSize="2xl">
-        {t('users')}
+      <Text as="h1" fontWeight="bold" fontSize="2xl" m="0">
+        {t(pages[activePage]?.name)}
       </Text>
       {showDonationNotif && (
         <NotificationCircle top="0" right="0" zIndex={9999} />
