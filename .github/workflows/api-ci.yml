@@ -23,8 +23,7 @@ jobs:
 
     - name: Lint with pylint
       run: |
-          pip install pylint
-          OUTPUT=$(pylint ./src --exit-zero)
+          OUTPUT=$(pylint ./app --exit-zero)
           echo "MESSAGE=$OUTPUT" >> $GITHUB_ENV
 
     - name: Post Lint result to PR
