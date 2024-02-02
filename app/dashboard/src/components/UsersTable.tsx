@@ -800,3 +800,4 @@ const EmptySection: FC<EmptySectionProps> = ({ isFiltered }) => {
     </Box>
   );
 };
+
