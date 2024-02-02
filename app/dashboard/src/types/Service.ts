@@ -5,3 +5,8 @@ export type Service = {
     users: number[];
     inbounds: number[];
 }
+
+export type CreateService = Pick<Service,
+    | 'name'
+    | 'users'
+    | 'inbounds'>
