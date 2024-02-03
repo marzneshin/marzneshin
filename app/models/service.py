@@ -1,6 +1,6 @@
 from typing import Dict, List, Optional, Union
 
-from pydantic import ConfigDict, BaseModel, Field, validator
+from pydantic import ConfigDict, BaseModel, Field, validator, computed_field
 
 # from app import xray
 
@@ -46,6 +46,16 @@ class ServiceResponse(Service):
     id: int
     users: List[UserBase] = Field([])
     inbounds: List[InboundBase] = Field([])
+
+    @computed_field
+    @property
+    def user_ids(self) -> List[int]:
+        return [u.id for u in users]
+
+    @computed_field
+    @property
+    def inbound_ids(self) -> List[int]:
+        return [i.id for i in inbounds]
     """
     @validator("inbounds", pre=True)
     def validate_inbounds(cls, v):
