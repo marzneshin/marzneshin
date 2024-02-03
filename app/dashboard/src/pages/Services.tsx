@@ -1,5 +1,3 @@
-import { FC } from 'react';
-import { Text } from '@chakra-ui/react';
 import { FC, useEffect } from 'react';
 import { Box, VStack } from '@chakra-ui/react';
 import { ServicesFilters } from 'components/ServicesFilters';
