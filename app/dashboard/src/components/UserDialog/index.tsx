@@ -1,5 +1,9 @@
 import {
   Alert,
+  Button,
+  Tooltip,
+  IconButton,
+  Spinner,
   AlertIcon,
   Box,
   Collapse,
@@ -14,6 +18,7 @@ import {
   useColorMode,
   useToast,
   ModalOverlay,
+  HStack,
 } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FilterUsageType, useDashboard } from 'contexts/DashboardContext';
@@ -27,9 +32,11 @@ import {
   UserCreate,
 } from 'types/User';
 import { UsageFilter, createUsageConfig } from '../UsageFilter';
-import { AddUserIcon, EditUserIcon } from './UserDialogIcons';
-import { UserDialogModalHeader } from './ModalHeader';
-import { UserDialogModalFooter } from './ModalFooter';
+import { AddIcon, EditIcon } from 'components/Dialog/Icons';
+import { DialogModalHeader } from 'components/Dialog/ModalHeader';
+import { DialogModalFooter } from 'components/Dialog/ModalFooter';
+import { DeleteIcon } from '../DeleteUserModal';
+import { UserUsageIcon } from './UserDialogIcons';
 import { getDefaultValues } from './DefaultValues';
 import { schema, FormType } from './FormSchema';
 import { ServicesField } from './ServicesField';
@@ -206,7 +213,7 @@ export const UserDialog: FC<UserDialogProps> = () => {
       <FormProvider {...form} formState={form.formState}>
         <ModalContent mx="3">
           <form onSubmit={form.handleSubmit(submit)}>
-            <UserDialogModalHeader HeaderIcon={isEditing ? EditUserIcon : AddUserIcon} title={isEditing ? t('userDialog.editUserTitle') : t('createNewUser')} />
+            <DialogModalHeader HeaderIcon={isEditing ? EditIcon : AddIcon} title={isEditing ? t('userDialog.editUserTitle') : t('createNewUser')} />
             <ModalCloseButton mt={3} disabled={disabled} />
             <ModalBody>
               <Grid
@@ -288,16 +295,63 @@ export const UserDialog: FC<UserDialogProps> = () => {
                 </Alert>
               )}
             </ModalBody>
-            <UserDialogModalFooter
-              editingUser={isEditing ? editingUser : null}
-              onClose={onClose}
-              isEditing={isEditing}
-              onDeletingUser={onDeletingUser}
-              handleUsageToggle={handleUsageToggle}
-              handleResetUsage={handleResetUsage}
-              handleRevokeSubscription={handleRevokeSubscription}
-              loading={loading}
-            />
+            <DialogModalFooter>
+              <HStack
+                justifyContent="flex-start"
+                w={{
+                  base: 'full',
+                  sm: 'unset',
+                }}
+              >
+                {isEditing && editingUser !== null && (
+                  <>
+                    <Tooltip label={t('delete')} placement="top">
+                      <IconButton
+                        aria-label="Delete"
+                        size="sm"
+                        onClick={() => {
+                          onDeletingUser(editingUser);
+                          onClose();
+                        }}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip label={t('userDialog.usage')} placement="top">
+                      <IconButton
+                        aria-label="usage"
+                        size="sm"
+                        onClick={handleUsageToggle}
+                      >
+                        <UserUsageIcon />
+                      </IconButton>
+                    </Tooltip>
+                    <Button onClick={handleResetUsage} size="sm">
+                      {t('userDialog.resetUsage')}
+                    </Button>
+                    <Button onClick={handleRevokeSubscription} size="sm">
+                      {t('userDialog.revokeSubscription')}
+                    </Button>
+                  </>
+                )}
+              </HStack>
+              <HStack
+                w="full"
+                maxW={{ md: '50%', base: 'full' }}
+                justify="end"
+              >
+                <Button
+                  type="submit"
+                  size="sm"
+                  px="8"
+                  colorScheme="primary"
+                  leftIcon={loading ? <Spinner size="xs" /> : undefined}
+                  disabled={false}
+                >
+                  {isEditing ? t('userDialog.editUser') : t('createUser')}
+                </Button>
+              </HStack>
+            </DialogModalFooter>
           </form>
         </ModalContent>
       </FormProvider>
