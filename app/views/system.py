@@ -38,16 +38,10 @@ def get_system_stats(db: Session = Depends(get_db), admin: Admin = Depends(Admin
     )
 
 
-@app.get('/api/inbounds', tags=["System"], response_model=Dict[str, List[Inbound]])
+@app.get('/api/inbounds', tags=["System"], response_model=List[Inbound])
 def get_inbounds(db: Session = Depends(get_db), admin: Admin = Depends(Admin.get_current)):
     inbounds = crud.get_all_inbounds(db)# xray.config.inbounds_by_protocol
-    resp = {}
-    for i in inbounds:
-        if resp.get(i.protocol):
-            resp[i.protocol].append(i)
-        else:
-            resp[i.protocol] = [i]
-    return resp
+    return inbounds 
 
 
 @app.get('/api/hosts', tags=["System"], response_model=Dict[int, List[InboundHost]])
