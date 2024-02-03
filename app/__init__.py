@@ -33,7 +33,7 @@ app.add_middleware(
 )
 
 
-from app import dashboard, jobs, views  # , telegram # noqa
+from app import dashboard, views, jobs  # , telegram # noqa
 
 
 def use_route_names_as_operation_ids(app: FastAPI) -> None:
