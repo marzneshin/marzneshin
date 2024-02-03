@@ -131,7 +131,7 @@ export const Login: FC = () => {
                     colorScheme="primary"
                   >
                     {<LoginIcon marginRight={1} />}
-                    {t('login')}
+                    {t('login.login')}
                   </Button>
                 </VStack>
               </form>
