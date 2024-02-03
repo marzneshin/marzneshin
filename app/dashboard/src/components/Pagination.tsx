@@ -77,7 +77,7 @@ function generatePageItems(total: number, current: number, width: number) {
 
 export const Pagination: FC = () => {
   const {
-    filters,
+    usersFilters: filters,
     onFilterChange,
     users: { total },
   } = useDashboard();

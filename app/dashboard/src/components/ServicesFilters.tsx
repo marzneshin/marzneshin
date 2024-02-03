@@ -37,15 +37,15 @@ export const ReloadIcon = chakra(ArrowPathIcon, iconProps);
 export type FilterProps = {} & BoxProps;
 const setSearchField = debounce((username: string) => {
   useDashboard.getState().onFilterChange({
-    ...useDashboard.getState().filters,
+    ...useDashboard.getState().usersFilters,
     offset: 0,
     username,
   });
 }, 300);
 
-export const Filters: FC<FilterProps> = ({ ...props }) => {
-  const { loading, filters, onFilterChange, refetchUsers, onCreateUser } =
-    useDashboard();
+export const ServicesFilters: FC<FilterProps> = ({ ...props }) => {
+  const { loading, servicesFilters: filters, onFilterChange, refetchUsers, onCreateService } =
+        useDashboard();
   const { t } = useTranslation();
   const [search, setSearch] = useState('');
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -62,7 +62,7 @@ export const Filters: FC<FilterProps> = ({ ...props }) => {
   };
   return (
     <Grid
-      id="filters"
+      id="users-filters"
       templateColumns={{
         lg: 'repeat(3, 1fr)',
         md: 'repeat(4, 1fr)',
@@ -94,7 +94,7 @@ export const Filters: FC<FilterProps> = ({ ...props }) => {
 
           <InputRightElement>
             {loading && <Spinner size="xs" />}
-            {filters.username && filters.username.length > 0 && (
+            {filters.name && filters.name.length > 0 && (
               <IconButton
                 onClick={clear}
                 aria-label="clear"
@@ -125,10 +125,10 @@ export const Filters: FC<FilterProps> = ({ ...props }) => {
           <Button
             colorScheme="primary"
             size="sm"
-            onClick={() => onCreateUser(true)}
+            onClick={() => onCreateService(true)}
             px={5}
           >
-            {t('createUser')}
+            {t('createService')}
           </Button>
         </HStack>
       </GridItem>

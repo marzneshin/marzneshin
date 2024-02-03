@@ -64,7 +64,7 @@ import {
 import { useDashboard } from '../contexts/DashboardContext';
 import { DeleteNodeModal } from './DeleteNodeModal';
 import { DeleteIcon } from './DeleteUserModal';
-import { ReloadIcon } from './Filters';
+import { ReloadIcon } from './UsersFilters';
 import { Icon } from './Icon';
 import { StatusBadge } from './StatusBadge';
 
