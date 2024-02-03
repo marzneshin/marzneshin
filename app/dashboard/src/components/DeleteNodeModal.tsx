@@ -19,7 +19,8 @@ import {
   generateErrorMessage,
   generateSuccessMessage,
 } from 'utils/toastHandler';
-import { DeleteIcon, DeleteUserModalProps } from './DeleteUserModal';
+import { DeleteUserModalProps } from './DeleteUserModal';
+import { DeleteIcon } from './Dialog/Icons';
 import { Icon } from './Icon';
 
 export const DeleteNodeModal: FC<DeleteUserModalProps> = ({

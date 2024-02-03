@@ -54,7 +54,7 @@ import 'slick-carousel/slick/slick-theme.css';
 import 'slick-carousel/slick/slick.css';
 import { z } from 'zod';
 import { useDashboard } from '../contexts/DashboardContext';
-import { DeleteIcon } from './DeleteUserModal';
+import { DeleteIcon } from './Dialog/Icons';
 import { Icon } from './Icon';
 import { Input as CustomInput } from './Input';
 

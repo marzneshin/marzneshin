@@ -35,7 +35,7 @@ import { UsageFilter, createUsageConfig } from '../UsageFilter';
 import { AddIcon, EditIcon } from 'components/Dialog/Icons';
 import { DialogModalHeader } from 'components/Dialog/ModalHeader';
 import { DialogModalFooter } from 'components/Dialog/ModalFooter';
-import { DeleteIcon } from '../DeleteUserModal';
+import { DeleteIcon } from 'components/Dialog/Icons';
 import { UserUsageIcon } from './UserDialogIcons';
 import { getDefaultValues } from './DefaultValues';
 import { schema, FormType } from './FormSchema';
