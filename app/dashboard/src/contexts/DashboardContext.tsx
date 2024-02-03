@@ -100,215 +100,215 @@ type DashboardStateType = {
 };
 
 export const fetchUsers = async (query: UsersFilterType): Promise<User[]> => {
-    for (const key in query) {
-        if (!query[key as keyof UsersFilterType]) delete query[key as keyof UsersFilterType];
-    }
-    useDashboard.setState({ loading: true });
-    return fetch('/users', { query })
-        .then((users) => {
-            for (let i = 0; i < users.users.length; i++) {
-                users.users[i].service = users.users[i].service_ids;
-            }
-            useDashboard.setState({ users });
-            return users;
-        })
-        .finally(() => {
-            useDashboard.setState({ loading: false });
-        });
+  for (const key in query) {
+    if (!query[key as keyof UsersFilterType]) delete query[key as keyof UsersFilterType];
+  }
+  useDashboard.setState({ loading: true });
+  return fetch('/users', { query })
+    .then((users) => {
+      for (let i = 0; i < users.users.length; i++) {
+        users.users[i].service = users.users[i].service_ids;
+      }
+      useDashboard.setState({ users });
+      return users;
+    })
+    .finally(() => {
+      useDashboard.setState({ loading: false });
+    });
 };
 
 export const fetchServices = async (query: UsersFilterType): Promise<Service[]> => {
-    for (const key in query) {
-        if (!query[key as keyof UsersFilterType]) delete query[key as keyof UsersFilterType];
-    }
-    useDashboard.setState({ loading: true });
-    return fetch('/services')
-        .then((services) => {
-            useDashboard.setState({ services });
-            return services;
-        })
-        .finally(() => {
-            useDashboard.setState({ loading: false });
-        });
+  for (const key in query) {
+    if (!query[key as keyof UsersFilterType]) delete query[key as keyof UsersFilterType];
+  }
+  useDashboard.setState({ loading: true });
+  return fetch('/services')
+    .then((services) => {
+      useDashboard.setState({ services });
+      return services;
+    })
+    .finally(() => {
+      useDashboard.setState({ loading: false });
+    });
 };
 
 export const fetchInbounds = async () => {
-    return fetch('/inbounds')
-        .then((inbounds: Inbounds) => {
-            useDashboard.setState({
-                inbounds: new Map(Object.entries(inbounds)) as Inbounds,
-            });
-        })
-        .finally(() => {
-            useDashboard.setState({ loading: false });
-        });
+  return fetch('/inbounds')
+    .then((inbounds: Inbounds) => {
+      useDashboard.setState({
+        inbounds: new Map(Object.entries(inbounds)) as Inbounds,
+      });
+    })
+    .finally(() => {
+      useDashboard.setState({ loading: false });
+    });
 };
 
 export const useDashboard = create(
-    subscribeWithSelector<DashboardStateType>((set, get) => ({
-        version: null,
-        editingUser: null,
-        editingService: null,
-        deletingUser: null,
-        deletingService: null,
-        isCreatingNewUser: false,
-        isCreatingNewService: false,
-        QRcodeLinks: null,
-        subscribeUrl: null,
-        users: {
-            users: [],
-            total: 0,
-        },
-        loading: true,
-        services: [],
-        isResetingAllUsage: false,
-        isEditingHosts: false,
-        isEditingNodes: false,
-        isShowingNodesUsage: false,
-        resetUsageUser: null,
-        revokeSubscriptionUser: null,
-        servicesFilters: {
-            name: '',
-            limit: getServicesPerPageLimitSize(),
-            sort: '-created_at',
-        },
+  subscribeWithSelector<DashboardStateType>((set, get) => ({
+    version: null,
+    editingUser: null,
+    editingService: null,
+    deletingUser: null,
+    deletingService: null,
+    isCreatingNewUser: false,
+    isCreatingNewService: false,
+    QRcodeLinks: null,
+    subscribeUrl: null,
+    users: {
+      users: [],
+      total: 0,
+    },
+    loading: true,
+    services: [],
+    isResetingAllUsage: false,
+    isEditingHosts: false,
+    isEditingNodes: false,
+    isShowingNodesUsage: false,
+    resetUsageUser: null,
+    revokeSubscriptionUser: null,
+    servicesFilters: {
+      name: '',
+      limit: getServicesPerPageLimitSize(),
+      sort: '-created_at',
+    },
+    usersFilters: {
+      username: '',
+      limit: getUsersPerPageLimitSize(),
+      sort: '-created_at',
+    },
+    inbounds: new Map(),
+    isEditingCore: false,
+    activePage: 0,
+    activatePage: (pageId: number) => {
+      set({ activePage: pageId });
+    },
+    refetchServices: () => {
+      fetchServices(get().servicesFilters);
+    },
+    refetchUsers: () => {
+      fetchUsers(get().usersFilters);
+    },
+    refetchInbounds: () => {
+      fetchInbounds();
+    },
+    resetAllUsage: async () => {
+      return fetch('/users/reset', { method: 'POST' }).then(() => {
+        get().onResetAllUsage(false);
+        get().refetchUsers();
+      });
+    },
+    onResetAllUsage: (isResetingAllUsage) => set({ isResetingAllUsage }),
+    onCreateUser: (isCreatingNewUser) => set({ isCreatingNewUser }),
+    onCreateService: (isCreatingNewService) => set({ isCreatingNewService }),
+    onEditingService: (editingService) => {
+      set({ editingService });
+    },
+    onEditingUser: (editingUser) => {
+      set({ editingUser });
+    },
+    onDeletingUser: (deletingUser) => {
+      set({ deletingUser });
+    },
+    onDeletingService: (deletingService) => {
+      set({ deletingService });
+    },
+    onFilterChange: (filters) => {
+      set({
         usersFilters: {
-            username: '',
-            limit: getUsersPerPageLimitSize(),
-            sort: '-created_at',
+          ...get().usersFilters,
+          ...filters,
         },
-        inbounds: new Map(),
-        isEditingCore: false,
-        activePage: 0,
-        activatePage: (pageId: number) => {
-            set({ activePage: pageId });
-        },
-        refetchServices: () => {
-            fetchServices(get().servicesFilters);
-        },
-        refetchUsers: () => {
-            fetchUsers(get().usersFilters);
-        },
-        refetchInbounds: () => {
-            fetchInbounds();
-        },
-        resetAllUsage: async () => {
-            return fetch('/users/reset', { method: 'POST' }).then(() => {
-                get().onResetAllUsage(false);
-                get().refetchUsers();
-            });
-        },
-        onResetAllUsage: (isResetingAllUsage) => set({ isResetingAllUsage }),
-        onCreateUser: (isCreatingNewUser) => set({ isCreatingNewUser }),
-        onCreateService: (isCreatingNewService) => set({ isCreatingNewService }),
-        onEditingService: (editingService) => {
-            set({ editingService });
-        },
-        onEditingUser: (editingUser) => {
-            set({ editingUser });
-        },
-        onDeletingUser: (deletingUser) => {
-            set({ deletingUser });
-        },
-        onDeletingService: (deletingService) => {
-            set({ deletingService });
-        },
-        onFilterChange: (filters) => {
-            set({
-                usersFilters: {
-                    ...get().usersFilters,
-                    ...filters,
-                },
-            });
-            get().refetchUsers();
-        },
-        setQRCode: (QRcodeLinks) => {
-            set({ QRcodeLinks });
-        },
-        deleteUser: async (user: User) => {
-            set({ editingUser: null });
-            return fetch(`/user/${user.username}`, { method: 'DELETE' }).then(() => {
-                set({ deletingUser: null });
-                get().refetchUsers();
-                queryClient.invalidateQueries(StatisticsQueryKey);
-            });
-        },
-        createUser: async (body: UserCreate) => {
-            return fetch('/user', { method: 'POST', body }).then(() => {
-                set({ editingUser: null });
-                get().refetchUsers();
-                get().refetchServices();
-                queryClient.invalidateQueries(StatisticsQueryKey);
-            });
-        },
-        editUser: async (body: UserCreate) => {
-            return fetch(`/user/${body.username}`, { method: 'PUT', body }).then(
-                () => {
-                    get().onEditingUser(null);
-                    get().refetchUsers();
-                }
-            );
-        },
-        deleteService: async (service: Service) => {
-            set({ editingUser: null });
-            return fetch(`/service/${service.id}`, { method: 'DELETE' }).then(() => {
-                set({ deletingUser: null });
-                get().refetchUsers();
-                queryClient.invalidateQueries(StatisticsQueryKey);
-            });
-        },
-        createService: async (bodyWithId: Service) => {
-            const body: ServiceCreate = bodyWithId;
-            return fetch('/service', { method: 'POST', body }).then(() => {
-                set({ editingService: null });
-                get().refetchServices();
-                get().refetchServices();
-                queryClient.invalidateQueries(StatisticsQueryKey);
-            });
-        },
-        editService: async (bodyWithId: Service) => {
-            const body: ServiceCreate = bodyWithId;
-            return fetch(`/service/${bodyWithId.id}`, { method: 'PUT', body }).then(
-                () => {
-                    get().onEditingUser(null);
-                    get().refetchUsers();
-                }
-            );
-        },
-        fetchUserUsage: (body: User, query: FilterUsageType) => {
-            for (const key in query) {
-                if (!query[key as keyof FilterUsageType])
-                    delete query[key as keyof FilterUsageType];
-            }
-            return fetch(`/user/${body.username}/usage`, { method: 'GET', query });
-        },
-        onEditingHosts: (isEditingHosts: boolean) => {
-            set({ isEditingHosts });
-        },
-        onEditingNodes: (isEditingNodes: boolean) => {
-            set({ isEditingNodes });
-        },
-        onShowingNodesUsage: (isShowingNodesUsage: boolean) => {
-            set({ isShowingNodesUsage });
-        },
-        setSubLink: (subscribeUrl) => {
-            set({ subscribeUrl });
-        },
-        resetDataUsage: async (user) => {
-            return fetch(`/user/${user.username}/reset`, { method: 'POST' }).then(
-                () => {
-                    set({ resetUsageUser: null });
-                    get().refetchUsers();
-                }
-            );
-        },
-        revokeSubscription: async (user) => {
-            return fetch(`/user/${user.username}/revoke_sub`, {
-                method: 'POST',
-            }).then((user) => {
-                set({ revokeSubscriptionUser: null, editingUser: user });
-                get().refetchUsers();
-            });
-        },
-    }))
+      });
+      get().refetchUsers();
+    },
+    setQRCode: (QRcodeLinks) => {
+      set({ QRcodeLinks });
+    },
+    deleteUser: async (user: User) => {
+      set({ editingUser: null });
+      return fetch(`/user/${user.username}`, { method: 'DELETE' }).then(() => {
+        set({ deletingUser: null });
+        get().refetchUsers();
+        queryClient.invalidateQueries(StatisticsQueryKey);
+      });
+    },
+    createUser: async (body: UserCreate) => {
+      return fetch('/user', { method: 'POST', body }).then(() => {
+        set({ editingUser: null });
+        get().refetchUsers();
+        get().refetchServices();
+        queryClient.invalidateQueries(StatisticsQueryKey);
+      });
+    },
+    editUser: async (body: UserCreate) => {
+      return fetch(`/user/${body.username}`, { method: 'PUT', body }).then(
+        () => {
+          get().onEditingUser(null);
+          get().refetchUsers();
+        }
+      );
+    },
+    deleteService: async (service: Service) => {
+      set({ editingUser: null });
+      return fetch(`/service/${service.id}`, { method: 'DELETE' }).then(() => {
+        set({ deletingUser: null });
+        get().refetchUsers();
+        queryClient.invalidateQueries(StatisticsQueryKey);
+      });
+    },
+    createService: async (bodyWithId: Service) => {
+      const body: ServiceCreate = bodyWithId;
+      return fetch('/service', { method: 'POST', body }).then(() => {
+        set({ editingService: null });
+        get().refetchServices();
+        get().refetchServices();
+        queryClient.invalidateQueries(StatisticsQueryKey);
+      });
+    },
+    editService: async (bodyWithId: Service) => {
+      const body: ServiceCreate = bodyWithId;
+      return fetch(`/service/${bodyWithId.id}`, { method: 'PUT', body }).then(
+        () => {
+          get().onEditingUser(null);
+          get().refetchUsers();
+        }
+      );
+    },
+    fetchUserUsage: (body: User, query: FilterUsageType) => {
+      for (const key in query) {
+        if (!query[key as keyof FilterUsageType])
+          delete query[key as keyof FilterUsageType];
+      }
+      return fetch(`/user/${body.username}/usage`, { method: 'GET', query });
+    },
+    onEditingHosts: (isEditingHosts: boolean) => {
+      set({ isEditingHosts });
+    },
+    onEditingNodes: (isEditingNodes: boolean) => {
+      set({ isEditingNodes });
+    },
+    onShowingNodesUsage: (isShowingNodesUsage: boolean) => {
+      set({ isShowingNodesUsage });
+    },
+    setSubLink: (subscribeUrl) => {
+      set({ subscribeUrl });
+    },
+    resetDataUsage: async (user) => {
+      return fetch(`/user/${user.username}/reset`, { method: 'POST' }).then(
+        () => {
+          set({ resetUsageUser: null });
+          get().refetchUsers();
+        }
+      );
+    },
+    revokeSubscription: async (user) => {
+      return fetch(`/user/${user.username}/revoke_sub`, {
+        method: 'POST',
+      }).then((user) => {
+        set({ revokeSubscriptionUser: null, editingUser: user });
+        get().refetchUsers();
+      });
+    },
+  }))
 );
