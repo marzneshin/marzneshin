@@ -2,11 +2,11 @@
 import {
   Alert,
   AlertIcon,
-  Box,
-  Collapse,
   Flex,
-  Grid,
-  GridItem,
+  Button,
+  Tooltip,
+  HStack,
+  Spinner,
   ModalBody,
   ModalCloseButton,
   ModalContent,
@@ -14,18 +14,14 @@ import {
   VStack,
   useToast,
   ModalOverlay,
+  IconButton,
 } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { InboundType, useDashboard } from 'contexts/DashboardContext';
 import { FC, useEffect, useState } from 'react';
-import ReactApexChart from 'react-apexcharts';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import {
-  User,
-  ,
-} from 'types/User';
-import { AddIcon, EditIcon } from 'components/Dialog/Icons';
+import { AddIcon, DeleteIcon, EditIcon } from 'components/Dialog/Icons';
 import { DialogModalHeader } from 'components/Dialog/ModalHeader';
 import { DialogModalFooter } from 'components/Dialog/ModalFooter';
 import { getDefaultValues } from './DefaultValues';
@@ -33,6 +29,7 @@ import { schema, FormType } from './FormSchema';
 import { InboundsField } from './InboundsField';
 import { NameField } from './NameField';
 import { Service, ServiceCreate } from 'types/Service';
+import { DevTool } from '@hookform/devtools';
 
 const formatService = (service: Service): FormType => {
   const inbounds: number[] = service.inbounds.map((inbound: number | InboundType): number => {
@@ -44,9 +41,9 @@ const formatService = (service: Service): FormType => {
   };
 };
 
-export type UserDialogProps = {};
+export type ServiceDialogProps = {};
 
-export const UserDialog: FC<UserDialogProps> = () => {
+export const ServiceDialog: FC<ServiceDialogProps> = () => {
   const {
     editingService,
     isCreatingNewService,
@@ -63,7 +60,7 @@ export const UserDialog: FC<UserDialogProps> = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>('');
   const toast = useToast();
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
   const form = useForm<FormType>({
     defaultValues: getDefaultValues(),
@@ -88,13 +85,11 @@ export const UserDialog: FC<UserDialogProps> = () => {
     const methods = { edited: editService, created: createService };
     const method = isEditing ? 'edited' : 'created';
     setError(null);
-    const { services, username, ...rest } = values;
+    const { inbounds, name } = values;
 
-    let body: ServiceCreate = {
-      ...rest,
-      name,
-      inbounds,
-    };
+    let body: Service | ServiceCreate = (isEditing) ?
+      { name, inbounds, id: editingService.id }
+      : { name, inbounds };
 
     await methods[method](body)
       .then(() => {
@@ -116,13 +111,7 @@ export const UserDialog: FC<UserDialogProps> = () => {
         if (err?.response?.status === 422) {
           Object.keys(err.response._data.detail).forEach((key) => {
             setError(err?.response._data.detail[key] as string);
-            form.setError(
-              key as 'name' | 'inbounds',
-              {
-                type: 'custom',
-                message: err.response._data.detail[key],
-              }
-            );
+            form.setError(key as 'name' | 'inbounds', { type: 'custom', message: err.response._data.detail[key], });
           });
         }
       })
@@ -146,7 +135,7 @@ export const UserDialog: FC<UserDialogProps> = () => {
       <FormProvider {...form} formState={form.formState}>
         <ModalContent mx="3">
           <form onSubmit={form.handleSubmit(submit)}>
-            <DialogModalHeader HeaderIcon={isEditing ? EditIcon : AddIcon} title={isEditing ? t('userDialog.editServiceTitle') : t('createNewService')} />
+            <DialogModalHeader HeaderIcon={isEditing ? EditIcon : AddIcon} title={isEditing ? t('serviceDialog.editServiceTitle') : t('serviceDialog.createNewService')} />
             <ModalCloseButton mt={3} disabled={disabled} />
             <ModalBody>
               <VStack justifyContent="space-between">
@@ -180,9 +169,49 @@ export const UserDialog: FC<UserDialogProps> = () => {
               )}
             </ModalBody>
             <DialogModalFooter>
-
+              <HStack
+                justifyContent="flex-start"
+                w={{
+                  base: 'full',
+                  sm: 'unset',
+                }}
+              >
+                {isEditing && editingService !== null && (
+                  <>
+                    <Tooltip label={t('delete')} placement="top">
+                      <IconButton
+                        aria-label="Delete"
+                        size="sm"
+                        onClick={() => {
+                          onDeletingService(editingService);
+                          onClose();
+                        }}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </Tooltip>
+                  </>
+                )}
+              </HStack>
+              <HStack
+                w="full"
+                maxW={{ md: '50%', base: 'full' }}
+                justify="end"
+              >
+                <Button
+                  type="submit"
+                  size="sm"
+                  px="8"
+                  colorScheme="primary"
+                  leftIcon={loading ? <Spinner size="xs" /> : undefined}
+                  disabled={false}
+                >
+                  {isEditing ? t('serviceDialog.editService') : t('createService')}
+                </Button>
+              </HStack>
             </DialogModalFooter>
           </form>
+          <DevTool control={form.control} />
         </ModalContent>
       </FormProvider>
     </Modal >
