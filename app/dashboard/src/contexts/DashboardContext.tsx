@@ -1,7 +1,7 @@
 import { StatisticsQueryKey } from 'components/Statistics';
 import { fetch } from 'service/http';
 import { User, UserCreate } from 'types/User';
-import { Service, CreateService } from 'types/Service';
+import { Service, ServiceCreate } from 'types/Service';
 import { queryClient } from 'utils/react-query';
 import { getServicesPerPageLimitSize, getUsersPerPageLimitSize } from 'utils/userPreferenceStorage';
 import { create } from 'zustand';
@@ -32,6 +32,7 @@ export type FilterUsageType = {
 };
 
 export type InboundType = {
+    id: number;
     tag: string;
     protocol: ProtocolType;
     network: string;
@@ -45,8 +46,10 @@ type PageId = number;
 type DashboardStateType = {
     isCreatingNewUser: boolean;
     editingUser: User | null | undefined;
-    editingService: Service | null | undefined;
     deletingUser: User | null;
+    isCreatingNewService: boolean;
+    editingService: Service | null | undefined;
+    deletingService: Service | null;
     version: string | null;
     users: {
         users: User[];
@@ -73,14 +76,19 @@ type DashboardStateType = {
     onEditingUser: (user: User | null) => void;
     onEditingService: (service: Service | null) => void;
     onDeletingUser: (user: User | null) => void;
+    onDeletingService: (service: Service | null) => void;
     onResetAllUsage: (isResetingAllUsage: boolean) => void;
     refetchUsers: () => void;
+    refetchInbounds: () => void;
     refetchServices: () => void;
     resetAllUsage: () => Promise<void>;
     onFilterChange: (filters: Partial<UsersFilterType>) => void;
     deleteUser: (user: User) => Promise<void>;
     createUser: (user: UserCreate) => Promise<void>;
     editUser: (user: UserCreate) => Promise<void>;
+    deleteService: (service: Service) => Promise<void>;
+    createService: (service: ServiceCreate) => Promise<void>;
+    editService: (service: ServiceCreate) => Promise<void>;
     fetchUserUsage: (user: User, query: FilterUsageType) => Promise<void>;
     setQRCode: (links: string[] | null) => void;
     setSubLink: (subscribeURL: string | null) => void;
@@ -142,6 +150,7 @@ export const useDashboard = create(
         editingUser: null,
         editingService: null,
         deletingUser: null,
+        deletingService: null,
         isCreatingNewUser: false,
         isCreatingNewService: false,
         QRcodeLinks: null,
@@ -180,6 +189,9 @@ export const useDashboard = create(
         refetchUsers: () => {
             fetchUsers(get().usersFilters);
         },
+        refetchInbounds: () => {
+            fetchInbounds();
+        },
         resetAllUsage: async () => {
             return fetch('/users/reset', { method: 'POST' }).then(() => {
                 get().onResetAllUsage(false);
@@ -197,6 +209,9 @@ export const useDashboard = create(
         },
         onDeletingUser: (deletingUser) => {
             set({ deletingUser });
+        },
+        onDeletingService: (deletingService) => {
+            set({ deletingService });
         },
         onFilterChange: (filters) => {
             set({
@@ -243,7 +258,7 @@ export const useDashboard = create(
             });
         },
         createService: async (bodyWithId: Service) => {
-            const body: CreateService = bodyWithId;
+            const body: ServiceCreate = bodyWithId;
             return fetch('/service', { method: 'POST', body }).then(() => {
                 set({ editingService: null });
                 get().refetchServices();
@@ -252,7 +267,7 @@ export const useDashboard = create(
             });
         },
         editService: async (bodyWithId: Service) => {
-            const body: CreateService = bodyWithId;
+            const body: ServiceCreate = bodyWithId;
             return fetch(`/service/${bodyWithId.id}`, { method: 'PUT', body }).then(
                 () => {
                     get().onEditingUser(null);

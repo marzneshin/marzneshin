@@ -6,7 +6,6 @@ export type Service = {
     inbounds: number[];
 }
 
-export type CreateService = Pick<Service,
+export type ServiceCreate = Pick<Service,
     | 'name'
-    | 'users'
     | 'inbounds'>
