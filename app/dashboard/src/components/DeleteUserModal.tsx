@@ -1,7 +1,6 @@
 import { DeleteIcon } from 'components/Dialog/Icons';
 import {
   Button,
-  chakra,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -19,7 +18,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import { Icon } from './Icon';
 
 export type DeleteUserModalProps = {
-  deleteCallback?: () => void;
+    deleteCallback?: () => void;
 };
 
 export const DeleteUserModal: FC<DeleteUserModalProps> = () => {

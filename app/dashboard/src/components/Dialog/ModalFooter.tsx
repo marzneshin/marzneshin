@@ -2,12 +2,10 @@ import React, { ReactNode } from 'react';
 import {
   HStack,
 } from '@chakra-ui/react';
-
-import { useTranslation } from 'react-i18next';
 import { ModalFooter } from '@chakra-ui/react';
 
 interface UserDialogFooterProps {
-    children: ReactNode
+  children: ReactNode
 }
 
 export const DialogModalFooter: React.FC<UserDialogFooterProps> = ({
