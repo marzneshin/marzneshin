@@ -29,7 +29,7 @@ export const ServicesField = ({ form, t, services }: ServicesFieldProps) => {
       <Controller
         control={form.control}
         name="services"
-        render={({ field }) => {
+        render={() => {
           return (
             <ServicesSelectList
               list={services}

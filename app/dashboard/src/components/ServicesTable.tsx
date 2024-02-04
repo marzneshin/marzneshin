@@ -26,11 +26,7 @@ import { Pagination } from './Pagination';
 import { SortType } from './UsersTable';
 import { SortIcon } from './UsersTable/Icons';
 
-
-type ExpandedIndex = number | number[];
-
 const EmptySectionIcon = chakra(AddFileIcon);
-
 
 export const Sort: FC<SortType> = ({ sort, column }) => {
   if (sort.includes(column))
@@ -54,7 +50,6 @@ export const ServicesTable: FC<ServicesTableProps> = (props) => {
   const { t } = useTranslation();
   const marginTop = useBreakpointValue({ base: 120, lg: 72 }) || 72;
   const [top, setTop] = useState(`${marginTop}px`);
-  const useTable = useBreakpointValue({ base: false, md: true });
 
   useEffect(() => {
     const calcTop = () => {

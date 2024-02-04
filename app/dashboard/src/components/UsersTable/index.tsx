@@ -7,7 +7,6 @@ import {
   Box,
   HStack,
   IconButton,
-  Select,
   Table,
   TableProps,
   Tbody,

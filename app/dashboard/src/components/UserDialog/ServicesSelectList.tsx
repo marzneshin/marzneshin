@@ -1,16 +1,11 @@
 
 import {
   Box,
-  chakra,
   Flex,
-  Spacer,
   Stack,
-  Text,
 } from '@chakra-ui/react';
-import { ServerStackIcon, UsersIcon } from '@heroicons/react/24/outline';
 import { ListCheckBox } from 'components/ListCheckBox';
-import { IconBaseStyle } from 'constants/IconBaseStyle';
-import { forwardRef, ReactNode, Ref } from 'react';
+import { forwardRef, ReactNode } from 'react';
 import {
   useFormContext,
 } from 'react-hook-form';
