@@ -88,7 +88,7 @@ type DashboardStateType = {
     editUser: (user: UserCreate) => Promise<void>;
     deleteService: (service: Service) => Promise<void>;
     createService: (service: ServiceCreate) => Promise<void>;
-    editService: (service: Service) => Promise<void>;
+    editService: (service: ServiceCreate) => Promise<void>;
     fetchUserUsage: (user: User, query: FilterUsageType) => Promise<void>;
     setQRCode: (links: string[] | null) => void;
     setSubLink: (subscribeURL: string | null) => void;
@@ -263,7 +263,7 @@ export const useDashboard = create(
         queryClient.invalidateQueries(StatisticsQueryKey);
       });
     },
-    editService: async (body: Service) => {
+    editService: async (body: ServiceCreate) => {
       return fetch(`/service/${body.id}`, { method: 'PUT', body }).then(
         () => {
           get().onEditingUser(null);

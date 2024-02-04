@@ -87,9 +87,7 @@ export const ServiceDialog: FC<ServiceDialogProps> = () => {
     setError(null);
     const { inbounds, name } = values;
 
-    let body: Service | ServiceCreate = (isEditing) ?
-      { name, inbounds, id: editingService.id }
-      : { name, inbounds };
+    let body: ServiceCreate = { name, inbounds, id: editingService?.id };
 
     await methods[method](body)
       .then(() => {
