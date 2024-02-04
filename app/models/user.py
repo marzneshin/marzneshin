@@ -51,6 +51,7 @@ class UserDataLimitResetStrategy(str, Enum):
 
 class UserBase(BaseModel):
     # proxies: Dict[ProxyTypes, ProxySettings] = {}
+    id: Optional[int] = None
     username: str
     expire: Optional[int] = Field(None, nullable=True)
     key: str = Field(default_factory=lambda: secrets.token_hex(16))

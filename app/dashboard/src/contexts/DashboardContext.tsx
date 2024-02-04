@@ -1,85 +1,107 @@
 import { StatisticsQueryKey } from 'components/Statistics';
 import { fetch } from 'service/http';
 import { User, UserCreate } from 'types/User';
-import { Service } from 'types/Service';
+import { Service, ServiceCreate } from 'types/Service';
 import { queryClient } from 'utils/react-query';
-import { getUsersPerPageLimitSize } from 'utils/userPreferenceStorage';
+import { getServicesPerPageLimitSize, getUsersPerPageLimitSize } from 'utils/userPreferenceStorage';
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
 
-export type FilterType = {
-  username?: string;
-  limit?: number;
-  offset?: number;
-  sort: string;
-  status?: 'active' | 'disabled' | 'limited' | 'expired' | 'on_hold';
+export type UsersFilterType = {
+    username?: string;
+    limit?: number;
+    offset?: number;
+    sort: string;
+    status?: 'active' | 'disabled' | 'limited' | 'expired' | 'on_hold';
 };
+
+export type ServicesFilterType = {
+    name?: string;
+    users?: number;
+    inbounds?: number;
+    limit?: number;
+    offset?: number;
+    sort: string;
+};
+
 export type ProtocolType = 'vmess' | 'vless' | 'trojan' | 'shadowsocks';
 
 export type FilterUsageType = {
-  start?: string;
-  end?: string;
+    start?: string;
+    end?: string;
 };
 
 export type InboundType = {
-  tag: string;
-  protocol: ProtocolType;
-  network: string;
-  tls: string;
-  port?: number;
+    id: number;
+    tag: string;
+    protocol: ProtocolType;
+    network: string;
+    tls: string;
+    port?: number;
 };
 
-export type Inbounds = Map<ProtocolType, InboundType[]>;
+export type Inbounds = InboundType[];
 type PageId = number;
 
 type DashboardStateType = {
-  isCreatingNewUser: boolean;
-  editingUser: User | null | undefined;
-  deletingUser: User | null;
-  version: string | null;
-  users: {
-    users: User[];
-    total: number;
-  };
-  inbounds: Inbounds;
-  services: Service[];
-  loading: boolean;
-  filters: FilterType;
-  subscribeUrl: string | null;
-  QRcodeLinks: string[] | null;
-  isEditingHosts: boolean;
-  isEditingNodes: boolean;
-  isShowingNodesUsage: boolean;
-  isResetingAllUsage: boolean;
-  resetUsageUser: User | null;
-  revokeSubscriptionUser: User | null;
-  isEditingCore: boolean;
-  activePage: number;
-  activatePage: (pageId: PageId) => void;
-  onCreateUser: (isOpen: boolean) => void;
-  onEditingUser: (user: User | null) => void;
-  onDeletingUser: (user: User | null) => void;
-  onResetAllUsage: (isResetingAllUsage: boolean) => void;
-  refetchUsers: () => void;
-  refetchServices: () => void;
-  resetAllUsage: () => Promise<void>;
-  onFilterChange: (filters: Partial<FilterType>) => void;
-  deleteUser: (user: User) => Promise<void>;
-  createUser: (user: UserCreate) => Promise<void>;
-  editUser: (user: UserCreate) => Promise<void>;
-  fetchUserUsage: (user: User, query: FilterUsageType) => Promise<void>;
-  setQRCode: (links: string[] | null) => void;
-  setSubLink: (subscribeURL: string | null) => void;
-  onEditingHosts: (isEditingHosts: boolean) => void;
-  onEditingNodes: (isEditingHosts: boolean) => void;
-  onShowingNodesUsage: (isShowingNodesUsage: boolean) => void;
-  resetDataUsage: (user: User) => Promise<void>;
-  revokeSubscription: (user: User) => Promise<void>;
+    isCreatingNewUser: boolean;
+    editingUser: User | null | undefined;
+    deletingUser: User | null;
+    isCreatingNewService: boolean;
+    editingService: Service | null | undefined;
+    deletingService: Service | null;
+    version: string | null;
+    users: {
+        users: User[];
+        total: number;
+    };
+    inbounds: Inbounds;
+    services: Service[];
+    loading: boolean;
+    usersFilters: UsersFilterType;
+    servicesFilters: ServicesFilterType;
+    subscribeUrl: string | null;
+    QRcodeLinks: string[] | null;
+    isEditingHosts: boolean;
+    isEditingNodes: boolean;
+    isShowingNodesUsage: boolean;
+    isResetingAllUsage: boolean;
+    resetUsageUser: User | null;
+    revokeSubscriptionUser: User | null;
+    isEditingCore: boolean;
+    activePage: number;
+    activatePage: (pageId: PageId) => void;
+    onCreateUser: (isOpen: boolean) => void;
+    onCreateService: (isOpen: boolean) => void;
+    onEditingUser: (user: User | null) => void;
+    onEditingService: (service: Service | null) => void;
+    onDeletingUser: (user: User | null) => void;
+    onDeletingService: (service: Service | null) => void;
+    onResetAllUsage: (isResetingAllUsage: boolean) => void;
+    refetchUsers: () => void;
+    refetchInbounds: () => void;
+    refetchServices: () => void;
+    resetAllUsage: () => Promise<void>;
+    onFilterChange: (filters: Partial<UsersFilterType>) => void;
+    deleteUser: (user: User) => Promise<void>;
+    createUser: (user: UserCreate) => Promise<void>;
+    editUser: (user: UserCreate) => Promise<void>;
+    deleteService: (service: Service) => Promise<void>;
+    createService: (service: ServiceCreate) => Promise<void>;
+    editService: (service: Service) => Promise<void>;
+    fetchUserUsage: (user: User, query: FilterUsageType) => Promise<void>;
+    setQRCode: (links: string[] | null) => void;
+    setSubLink: (subscribeURL: string | null) => void;
+    onEditingHosts: (isEditingHosts: boolean) => void;
+    onEditingNodes: (isEditingHosts: boolean) => void;
+    onShowingNodesUsage: (isShowingNodesUsage: boolean) => void;
+    resetDataUsage: (user: User) => Promise<void>;
+    revokeSubscription: (user: User) => Promise<void>;
 };
 
-export const fetchUsers = async (query: FilterType): Promise<User[]> => {
+export const fetchUsers = async (query: UsersFilterType): Promise<User[]> => {
   for (const key in query) {
-    if (!query[key as keyof FilterType]) delete query[key as keyof FilterType];
+    if (!query[key as keyof UsersFilterType]) delete query[key as keyof UsersFilterType];
   }
   useDashboard.setState({ loading: true });
   return fetch('/users', { query })
@@ -95,7 +117,10 @@ export const fetchUsers = async (query: FilterType): Promise<User[]> => {
     });
 };
 
-export const fetchServices = async (): Promise<Service[]> => {
+export const fetchServices = async (query: UsersFilterType): Promise<Service[]> => {
+  for (const key in query) {
+    if (!query[key as keyof UsersFilterType]) delete query[key as keyof UsersFilterType];
+  }
   useDashboard.setState({ loading: true });
   return fetch('/services')
     .then((services) => {
@@ -110,9 +135,7 @@ export const fetchServices = async (): Promise<Service[]> => {
 export const fetchInbounds = async () => {
   return fetch('/inbounds')
     .then((inbounds: Inbounds) => {
-      useDashboard.setState({
-        inbounds: new Map(Object.entries(inbounds)) as Inbounds,
-      });
+      useDashboard.setState({ inbounds });
     })
     .finally(() => {
       useDashboard.setState({ loading: false });
@@ -123,8 +146,11 @@ export const useDashboard = create(
   subscribeWithSelector<DashboardStateType>((set, get) => ({
     version: null,
     editingUser: null,
+    editingService: null,
     deletingUser: null,
+    deletingService: null,
     isCreatingNewUser: false,
+    isCreatingNewService: false,
     QRcodeLinks: null,
     subscribeUrl: null,
     users: {
@@ -139,22 +165,30 @@ export const useDashboard = create(
     isShowingNodesUsage: false,
     resetUsageUser: null,
     revokeSubscriptionUser: null,
-    filters: {
+    servicesFilters: {
+      name: '',
+      limit: getServicesPerPageLimitSize(),
+      sort: '-created_at',
+    },
+    usersFilters: {
       username: '',
       limit: getUsersPerPageLimitSize(),
       sort: '-created_at',
     },
-    inbounds: new Map(),
+    inbounds: [],
     isEditingCore: false,
     activePage: 0,
     activatePage: (pageId: number) => {
       set({ activePage: pageId });
     },
     refetchServices: () => {
-      fetchServices();
+      fetchServices(get().servicesFilters);
     },
     refetchUsers: () => {
-      fetchUsers(get().filters);
+      fetchUsers(get().usersFilters);
+    },
+    refetchInbounds: () => {
+      fetchInbounds();
     },
     resetAllUsage: async () => {
       return fetch('/users/reset', { method: 'POST' }).then(() => {
@@ -164,16 +198,23 @@ export const useDashboard = create(
     },
     onResetAllUsage: (isResetingAllUsage) => set({ isResetingAllUsage }),
     onCreateUser: (isCreatingNewUser) => set({ isCreatingNewUser }),
+    onCreateService: (isCreatingNewService) => set({ isCreatingNewService }),
+    onEditingService: (editingService) => {
+      set({ editingService });
+    },
     onEditingUser: (editingUser) => {
       set({ editingUser });
     },
     onDeletingUser: (deletingUser) => {
       set({ deletingUser });
     },
+    onDeletingService: (deletingService) => {
+      set({ deletingService });
+    },
     onFilterChange: (filters) => {
       set({
-        filters: {
-          ...get().filters,
+        usersFilters: {
+          ...get().usersFilters,
           ...filters,
         },
       });
@@ -200,6 +241,30 @@ export const useDashboard = create(
     },
     editUser: async (body: UserCreate) => {
       return fetch(`/user/${body.username}`, { method: 'PUT', body }).then(
+        () => {
+          get().onEditingUser(null);
+          get().refetchUsers();
+        }
+      );
+    },
+    deleteService: async (service: Service) => {
+      set({ editingUser: null });
+      return fetch(`/service/${service.id}`, { method: 'DELETE' }).then(() => {
+        set({ deletingUser: null });
+        get().refetchUsers();
+        queryClient.invalidateQueries(StatisticsQueryKey);
+      });
+    },
+    createService: async (body: ServiceCreate) => {
+      return fetch('/service', { method: 'POST', body }).then(() => {
+        set({ editingService: null });
+        get().refetchServices();
+        get().refetchServices();
+        queryClient.invalidateQueries(StatisticsQueryKey);
+      });
+    },
+    editService: async (body: Service) => {
+      return fetch(`/service/${body.id}`, { method: 'PUT', body }).then(
         () => {
           get().onEditingUser(null);
           get().refetchUsers();

@@ -63,8 +63,8 @@ import {
 } from 'utils/toastHandler';
 import { useDashboard } from '../contexts/DashboardContext';
 import { DeleteNodeModal } from './DeleteNodeModal';
-import { DeleteIcon } from './DeleteUserModal';
-import { ReloadIcon } from './Filters';
+import { DeleteIcon } from './Dialog/Icons';
+import { ReloadIcon } from './UsersFilters';
 import { Icon } from './Icon';
 import { StatusBadge } from './StatusBadge';
 
