@@ -96,6 +96,21 @@
     "revokeSubscription": "Revoke Subscription",
     "total": "Total: "
   },
+  "serviceDialog": {
+    "editServiceTitle": "Edit service",
+    "editService": "Edit service",
+    "createNewService": "Create service",
+    "serviceEdited": "Service {{name}} edited.",
+    "serviceCreated": "Service {{name}} created.",
+    "serviceAlreadyExists": "Service already exists",
+    "resetStrategyNo": "No",
+    "resetStrategyDaily": "Daily",
+    "resetStrategyWeekly": "Weekly",
+    "resetStrategyMonthly": "Monthly",
+    "resetStrategyAnnually": "Annually",
+    "optional": "optional",
+    "total": "Total: "
+  },
   "hostsDialog": {
     "title": "Using this setting, you are able to assign specific address for each inbound.",
     "desc": "Use these variables to make it dynamic",
