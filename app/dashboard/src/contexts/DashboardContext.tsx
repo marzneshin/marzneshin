@@ -40,7 +40,7 @@ export type InboundType = {
     port?: number;
 };
 
-export type Inbounds = Map<ProtocolType, InboundType[]>;
+export type Inbounds = InboundType[];
 type PageId = number;
 
 type DashboardStateType = {
@@ -88,7 +88,7 @@ type DashboardStateType = {
     editUser: (user: UserCreate) => Promise<void>;
     deleteService: (service: Service) => Promise<void>;
     createService: (service: ServiceCreate) => Promise<void>;
-    editService: (service: ServiceCreate) => Promise<void>;
+    editService: (service: Service) => Promise<void>;
     fetchUserUsage: (user: User, query: FilterUsageType) => Promise<void>;
     setQRCode: (links: string[] | null) => void;
     setSubLink: (subscribeURL: string | null) => void;
@@ -135,9 +135,7 @@ export const fetchServices = async (query: UsersFilterType): Promise<Service[]> 
 export const fetchInbounds = async () => {
   return fetch('/inbounds')
     .then((inbounds: Inbounds) => {
-      useDashboard.setState({
-        inbounds: new Map(Object.entries(inbounds)) as Inbounds,
-      });
+      useDashboard.setState({ inbounds });
     })
     .finally(() => {
       useDashboard.setState({ loading: false });
@@ -177,7 +175,7 @@ export const useDashboard = create(
       limit: getUsersPerPageLimitSize(),
       sort: '-created_at',
     },
-    inbounds: new Map(),
+    inbounds: [],
     isEditingCore: false,
     activePage: 0,
     activatePage: (pageId: number) => {
@@ -257,8 +255,7 @@ export const useDashboard = create(
         queryClient.invalidateQueries(StatisticsQueryKey);
       });
     },
-    createService: async (bodyWithId: Service) => {
-      const body: ServiceCreate = bodyWithId;
+    createService: async (body: ServiceCreate) => {
       return fetch('/service', { method: 'POST', body }).then(() => {
         set({ editingService: null });
         get().refetchServices();
@@ -266,9 +263,8 @@ export const useDashboard = create(
         queryClient.invalidateQueries(StatisticsQueryKey);
       });
     },
-    editService: async (bodyWithId: Service) => {
-      const body: ServiceCreate = bodyWithId;
-      return fetch(`/service/${bodyWithId.id}`, { method: 'PUT', body }).then(
+    editService: async (body: Service) => {
+      return fetch(`/service/${body.id}`, { method: 'PUT', body }).then(
         () => {
           get().onEditingUser(null);
           get().refetchUsers();
