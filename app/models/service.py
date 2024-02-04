@@ -7,11 +7,13 @@ from pydantic import ConfigDict, BaseModel, Field, validator, computed_field
 
 class ServiceBase(BaseModel):
     id: Optional[int] = None
-    name: Optional[str] = Field(None, nullable=True)
+    name: Optional[str] = Field(None)
     model_config = ConfigDict(from_attributes=True)
+
 
 from app.models.proxy import InboundBase
 from app.models.user import UserBase
+
 
 class Service(ServiceBase):
     users: List[UserBase] = Field([])
@@ -50,12 +52,13 @@ class ServiceResponse(Service):
     @computed_field
     @property
     def user_ids(self) -> List[int]:
-        return [u.id for u in users]
+        return [u.id for u in self.users]
 
     @computed_field
     @property
     def inbound_ids(self) -> List[int]:
-        return [i.id for i in inbounds]
+        return [i.id for i in self.inbounds]
+
     """
     @validator("inbounds", pre=True)
     def validate_inbounds(cls, v):
