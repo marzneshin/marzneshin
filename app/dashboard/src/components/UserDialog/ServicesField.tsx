@@ -1,4 +1,4 @@
-import { FormControl, FormLabel, FormErrorMessage, Center, Spinner, Text, Spacer, Flex, chakra } from '@chakra-ui/react';
+import { FormControl, FormLabel, FormErrorMessage, Center, Spinner, Text, Flex, chakra } from '@chakra-ui/react';
 import { UsersIcon, ServerStackIcon } from '@heroicons/react/24/outline';
 import { IconBaseStyle } from 'constants/IconBaseStyle';
 import { TFunction } from 'i18next';
@@ -11,9 +11,9 @@ const UsersServiceIcon = chakra(UsersIcon, IconBaseStyle);
 const InboundsServiceIcon = chakra(ServerStackIcon, IconBaseStyle);
 
 interface ServicesFieldProps {
-  form: any;
-  services: Service[];
-  t: TFunction<'translation', undefined, 'translation'>;
+    form: any;
+    services: Service[];
+    t: TFunction<'translation', undefined, 'translation'>;
 }
 
 export const ServicesField = ({ form, t, services }: ServicesFieldProps) => {
@@ -34,17 +34,16 @@ export const ServicesField = ({ form, t, services }: ServicesFieldProps) => {
             <ServicesSelectList
               list={services}
               renderCheckboxContent={(service) => (
-                <>
-                  <Text fontSize="sm" color="gray.700" fontWeight="medium">
+                <Flex alignItems="center" justifyContent="space-between" flexDir="row" w="full">
+                  <Text fontSize="sm" color="gray.700" _dark={{ color: 'gray.100' }} fontWeight="medium">
                     {service.name}
                   </Text>
-                  <Spacer />
                   <Flex flexDirection="row" alignItems="center">
                     <ServicePropertyStatus value={service.users.length} StatusIcon={UsersServiceIcon} />
-                    <Text color="primary.600" mx="8px">/</Text>
+                    <Text color="primary.600" _dark={{ color: 'gray.100' }} mx="8px" fontSize="sm">/</Text>
                     <ServicePropertyStatus value={service.inbounds.length} StatusIcon={InboundsServiceIcon} />
                   </Flex>
-                </>
+                </Flex>
               )}
             />
           );
@@ -52,8 +51,8 @@ export const ServicesField = ({ form, t, services }: ServicesFieldProps) => {
       />
       <FormErrorMessage>
         {t(
-          form.formState.errors.services
-            ?.message as string
+                    form.formState.errors.services
+                      ?.message as string
         )}
       </FormErrorMessage>
     </FormControl>

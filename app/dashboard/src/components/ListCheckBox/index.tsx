@@ -3,23 +3,27 @@
 import {
   Box,
 } from '@chakra-ui/react';
-import { forwardRef, ReactNode, Ref } from 'react';
+import { ReactNode, Ref } from 'react';
 
 type ListCheckboxProps = {
     isChecked: boolean;
     onChange: () => void;
     renderContent: () => ReactNode;
     value: string;
+    ref?: Ref<HTMLDivElement>;
 }
 
-export const ListCheckBox = forwardRef(
-  (
-    { isChecked, onChange, renderContent, ...props }: ListCheckboxProps,
-    ref: Ref<HTMLDivElement>
-  ) => (
+
+export const ListCheckBox = (
+  { isChecked, onChange, renderContent, ref, ...props }: ListCheckboxProps,
+
+) => {
+  const darkStyle = { bg: isChecked ? 'gray.800' : 'transparent' };
+
+  return (
     <Box
       ref={ref}
-      border={isChecked ? '5px' : '2px'}
+      border={isChecked ? '5px' : '3px'}
       w="full"
       borderColor={isChecked ? 'primary.500' : 'gray.600'}
       boxShadow={
@@ -27,7 +31,8 @@ export const ListCheckBox = forwardRef(
           ? '0 0 0 3px rgba(102, 126, 234, 0.6)'
           : '0 0 0 1px rgba(102, 126, 234, 0.6)'
       }
-      bg={isChecked ? 'gray.100' : 'white'}
+      bg={isChecked ? 'gray.100' : 'transparent'}
+      _dark={darkStyle}
       py="4px"
       px="8px"
       borderRadius="md"
@@ -43,5 +48,5 @@ export const ListCheckBox = forwardRef(
     >
       {renderContent()}
     </Box>
-  )
-);
+  );
+}
