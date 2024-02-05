@@ -29,7 +29,6 @@ import { schema, FormType } from './FormSchema';
 import { InboundsField } from './InboundsField';
 import { NameField } from './NameField';
 import { Service, ServiceCreate } from 'types/Service';
-import { DevTool } from '@hookform/devtools';
 
 const formatService = (service: Service): FormType => {
   const inbounds: number[] = service.inbounds.map((inbound: number | InboundType): number => {
@@ -209,7 +208,6 @@ export const ServiceDialog: FC<ServiceDialogProps> = () => {
               </HStack>
             </DialogModalFooter>
           </form>
-          <DevTool control={form.control} />
         </ModalContent>
       </FormProvider>
     </Modal >
