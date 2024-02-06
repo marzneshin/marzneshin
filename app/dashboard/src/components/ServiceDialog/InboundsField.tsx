@@ -30,7 +30,7 @@ export const InboundsField = ({ form, t, inbounds }: InboundsFieldProps) => {
               list={inbounds}
               renderCheckboxContent={(inbound: InboundType) => (
                 <>
-                  <Text fontSize="sm" color="gray.700" fontWeight="medium">
+                  <Text fontSize="sm" color="gray.700" _dark={{ color: 'gray.100' }} fontWeight="medium">
                     {inbound.tag} {inbound.protocol}
                   </Text>
                   <Spacer />
