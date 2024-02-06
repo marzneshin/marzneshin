@@ -5,9 +5,9 @@ from typing import List
 
 import sqlalchemy
 from fastapi import BackgroundTasks, Depends, HTTPException, WebSocket
-from starlette.websockets import WebSocketDisconnect
 
-from app import app, logger, xray
+
+from app import app, logger
 from app.db import Session, crud, get_db
 from app.models.admin import Admin
 from app.models.node import (NodeCreate, NodeModify, NodeResponse,

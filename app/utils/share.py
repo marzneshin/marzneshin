@@ -6,12 +6,10 @@ import urllib.parse as urlparse
 from datetime import datetime as dt, timedelta
 from typing import TYPE_CHECKING, Literal, Union, List
 from uuid import UUID
-import traceback
 
 import yaml
 from jdatetime import date as jd
 
-from app import xray
 from app.models.proxy import FormatVariables, InboundBase, InboundHost, InboundHostSecurity
 from app.templates import render_template
 from app.utils.system import get_public_ip, readable_size

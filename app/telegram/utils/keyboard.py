@@ -4,7 +4,6 @@ from typing import Literal, Dict, List
 
 from telebot import types  # noqa
 
-from app import xray
 from app.utils.system import readable_size
 
 

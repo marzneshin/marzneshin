@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from app import logger, scheduler, xray
+from app import logger, scheduler
 from app.db import crud, GetDB, get_users
 from app.models.user import UserDataLimitResetStrategy, UserStatus
 

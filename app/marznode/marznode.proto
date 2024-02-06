@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+package marznode;
+
+message Empty {}
+
+message Inbound {
+  string tag = 1;
+  optional string config = 2;
+}
+
+message InboundsResponse {
+  repeated Inbound inbounds = 1;
+}
+
+message User {
+  int32 id = 1;
+  string username = 2;
+  string key = 3;
+}
+
+message UserUpdate {
+  User user = 1;
+  repeated Inbound inbound_additions = 2;
+  repeated Inbound inbound_reductions = 3;
+}
+
+message UsersUpdate {
+  repeated UserUpdate users_updates = 1;
+}
+
+message UsersStats {
+  message UserStats {
+    User user = 1;
+    uint64 uplink = 2;
+    uint64 downlink = 3;
+  }
+  repeated UserStats users_stats = 1;
+}
+
+service MarzService {
+  rpc AddUser(UserUpdate) returns (Empty);
+  rpc RemoveUser(UserUpdate) returns (Empty);
+  rpc UpdateUserInbounds(UserUpdate) returns (Empty);
+  rpc RepopulateUsers(UsersUpdate) returns (Empty);
+  rpc FetchInbounds(Empty) returns (InboundsResponse);
+  rpc FetchUsersStats(Empty) returns (UsersStats);
+}

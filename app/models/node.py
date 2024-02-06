@@ -25,7 +25,9 @@ class NodeBase(BaseModel):
     usage_coefficient: float = Field(gt=0, default=1.0)
     model_config = ConfigDict(from_attributes=True)
 
+
 from app.models.proxy import InboundBase
+
 
 class Node(NodeBase):
     inbounds: Optional[List[InboundBase]] = None

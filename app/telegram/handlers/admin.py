@@ -13,7 +13,6 @@ from telebot import types
 from telebot.util import user_link
 from telebot.asyncio_handler_backends import State, StatesGroup
 
-from app import xray
 from app.db import GetDB, crud
 from app.models.user import (UserCreate, UserModify, UserResponse, UserStatus,
                              UserStatusModify)

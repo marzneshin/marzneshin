@@ -6,15 +6,15 @@ from typing import Optional, Union, List
 from pydantic import ConfigDict, BaseModel, Field, validator
 
 
-# from app.utils.system import random_password
-from xray_api.types.account import (
-    ShadowsocksAccount,
-    ShadowsocksMethods,
-    TrojanAccount,
-    VLESSAccount,
-    VMessAccount,
-    XTLSFlows,
-)
+class XTLSFlows(Enum):
+    NONE = ''
+    VISION = 'xtls-rprx-vision'
+
+
+class ShadowsocksMethods(Enum):
+    AES_128_GCM = 'aes-128-gcm'
+    AES_256_GCM = 'aes-256-gcm'
+    CHACHA20_POLY1305 = 'chacha20-ietf-poly1305'
 
 
 class ProxyTypes(str, Enum):
@@ -24,17 +24,6 @@ class ProxyTypes(str, Enum):
     VLESS = "vless"
     Trojan = "trojan"
     Shadowsocks = "shadowsocks"
-
-    @property
-    def account_model(self):
-        if self == self.VMess:
-            return VMessAccount
-        if self == self.VLESS:
-            return VLESSAccount
-        if self == self.Trojan:
-            return TrojanAccount
-        if self == self.Shadowsocks:
-            return ShadowsocksAccount
 
     @property
     def settings_model(self):
@@ -63,22 +52,18 @@ class VMessSettings(ProxySettings):
     id: str = Field(nullable=False)
 
 
-
 class VLESSSettings(ProxySettings):
     id: str = Field(nullable=False)
     flow: XTLSFlows = XTLSFlows.NONE
-
 
 
 class TrojanSettings(ProxySettings):
     password: str = Field(nullable=False)
 
 
-
 class ShadowsocksSettings(ProxySettings):
     password: str = Field(nullable=False)
     method: ShadowsocksMethods = ShadowsocksMethods.CHACHA20_POLY1305
-
 
 
 class InboundHostSecurity(str, Enum):
@@ -178,8 +163,10 @@ class InboundBase(BaseModel):
     node_id: Optional[int] = Field(None)
     model_config = ConfigDict(from_attributes=True)
 
+
 from app.models.service import ServiceBase
 from app.models.node import NodeBase
+
 
 class Inbound(InboundBase):
     services: Optional[List[ServiceBase]] = None
