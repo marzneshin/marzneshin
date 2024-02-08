@@ -5,15 +5,12 @@ on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ["3.10"]
     steps:
     - uses: actions/checkout@v3
-    - name: Set up Python ${{ matrix.python-version }}
+    - name: Set up Python 3.11.2
       uses: actions/setup-python@v3
       with:
-        python-version: ${{ matrix.python-version }}
+        python-version: 3.11.2
 
     - name: Install dependencies
       run: |
@@ -23,14 +20,4 @@ jobs:
 
     - name: Lint with pylint
       run: |
-          OUTPUT=$(pylint ./app --exit-zero)
-          echo "MESSAGE=$OUTPUT" >> $GITHUB_ENV
-
-    - name: Post Lint result to PR
-      uses: mshick/add-pr-comment@v1
-      with:
-          message: ${{ env.MESSAGE }}
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          repo-token-user-login: 'github-actions[bot]' 
-          allow-repeats: false 
-
+          pylint --exit-zero
