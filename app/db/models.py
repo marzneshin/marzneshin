@@ -61,7 +61,8 @@ class User(Base):
     inbounds = relationship(
         "Inbound",
         secondary="join(users_services, inbounds_services, inbounds_services.c.service_id == users_services.c.service_id)"
-                  ".join(Inbound, Inbound.id == inbounds_services.c.inbound_id)", viewonly=True, distinct_target_key=True,
+                  ".join(Inbound, Inbound.id == inbounds_services.c.inbound_id)", viewonly=True,
+        distinct_target_key=True,
         lazy="joined")
     # proxies = relationship("Proxy", back_populates="user", cascade="all, delete-orphan")
     status = Column(Enum(UserStatus), nullable=False, default=UserStatus.active)
@@ -194,12 +195,11 @@ class Node(Base):
     __tablename__ = "nodes"
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(256, collation='NOCASE'), unique=True)
-    address = Column(String(256), unique=False, nullable=False)
-    port = Column(Integer, unique=False, nullable=False)
-    api_port = Column(Integer, unique=False, nullable=False)
+    address = Column(String(256), unique=False, nullable=True)
+    port = Column(Integer, unique=False, nullable=True)
     xray_version = Column(String(32), nullable=True)
     inbounds = relationship("Inbound", back_populates="node")
-    status = Column(Enum(NodeStatus), nullable=False, default=NodeStatus.connecting)
+    status = Column(Enum(NodeStatus), nullable=False, default=NodeStatus.unhealthy)
     last_status_change = Column(DateTime, default=datetime.utcnow)
     message = Column(String(1024), nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)

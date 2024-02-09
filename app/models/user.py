@@ -189,13 +189,12 @@ class UserResponse(User):
     def service_ids(self) -> List[int]:
         return [s.id for s in self.services]
 
-
     @computed_field
     @property
     def links(self) -> List[str]:
-        return generate_v2ray_links(
-                inbounds=self.inbounds, key=self.key, extra_data=self.dict(exclude={'subscription_url', 'links'})
-                )
+        return [""]# generate_v2ray_links(
+               # inbounds=self.inbounds, key=self.key, extra_data=self.dict(exclude={'subscription_url', 'links'})
+               # )
 
     @computed_field
     @property

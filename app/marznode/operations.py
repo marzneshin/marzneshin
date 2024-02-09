@@ -21,16 +21,17 @@ async def add_user(user: "DBUser"):
     node_inbounds = defaultdict(list)
     for inb in user.inbounds:
         node_inbounds[inb.node_id].append(inb.tag)
-    for node, tags in node_inbounds:
-        await node.add_user(user=user, inbounds=tags)
+
+    for node_id, tags in node_inbounds.items():
+        await marznode.nodes[node_id].add_user(user=user, inbounds=tags)
 
 
 async def remove_user(user: "DBUser"):
-    email = f"{user.id}.{user.username}"
     nodes_set = set()
 
     for inb in user.inbounds:
         nodes_set.add(inb.node_id)
+    print(nodes_set)
     for n in nodes_set:
         await marznode.nodes[n].remove_user(user)
 
