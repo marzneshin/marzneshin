@@ -82,7 +82,7 @@ export const Sidebar = () => {
         bg="gray.50"
         _dark={{ bg: 'gray.800', borderRightColor: 'gray.700' }}
       >
-        <VStack pt="30px" gap="6">
+        <VStack pt="30px" gap="2">
           <Image src="favicon/logo.svg" alt="marzneshin" boxSize="50px" />
           {pages.map((item: SideBarItemProps, index: number) =>
             <SidebarItem path={item.path} name={item.name} itemIcon={item.itemIcon} index={index} />)}
