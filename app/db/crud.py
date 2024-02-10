@@ -512,8 +512,10 @@ def create_service(db: Session, service: Service) -> Service:
 def get_service(db: Session, service_name: str) -> Service:
     return db.query(Service).filter( Service.name == service_name ).first()
 
+
 def get_services(db: Session) -> List[Service]:
     return db.query(Service).all()
+
 
 def get_node(db: Session, name: str):
     return db.query(Node).filter(Node.name == name).first()
@@ -596,15 +598,12 @@ def update_node(db: Session, dbnode: Node, modify: NodeModify):
     if modify.port is not None:
         dbnode.port = modify.port
 
-    if modify.api_port is not None:
-        dbnode.api_port = modify.api_port
-
     if modify.status is NodeStatus.disabled:
         dbnode.status = modify.status
         dbnode.xray_version = None
         dbnode.message = None
     else:
-        dbnode.status = NodeStatus.connecting
+        dbnode.status = NodeStatus.unhealthy
 
     if modify.usage_coefficient:
         dbnode.usage_coefficient = modify.usage_coefficient

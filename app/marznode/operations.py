@@ -8,15 +8,6 @@ if TYPE_CHECKING:
     from app.db import User as DBUser
 
 
-"""def get_tls():
-    with GetDB() as db:
-        tls = get_tls_certificate(db)
-        return {
-            "key": tls.key,
-            "certificate": tls.certificate
-        }"""
-
-
 async def add_user(user: "DBUser"):
     node_inbounds = defaultdict(list)
     for inb in user.inbounds:
@@ -62,12 +53,7 @@ async def update_user_inbounds(user: "DBUser", new_inbounds: set, old_inbounds: 
 
 async def remove_node(node_id: int):
     if node_id in marznode.nodes:
-        try:
-            await marznode.nodes[node_id].stop()
-        except Exception:
-            pass
-        finally:
-            del marznode.nodes[node_id]
+        del marznode.nodes[node_id]
 
 
 async def add_node(node_id: int, node: MarzNodeBase):

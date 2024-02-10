@@ -34,8 +34,19 @@ class MarzNodeGRPC(MarzNodeBase):
         self._channel = Channel(self._address, self._port, ssl=ctx)
         self._stub = MarzServiceStub(self._channel)
         self._health = HealthStub(self._channel)
+        self.synced = False
         atexit.register(self._channel.close)
 
+    @staticmethod
+    def catch_connection_problem(func):
+        async def catcher(self, *args, **kwargs):
+            try:
+                await func(self, *args, **kwargs)
+            except (OSError, ConnectionError, GRPCError):
+                self.synced = False
+        return catcher
+
+    @catch_connection_problem
     async def add_user(self, user, inbounds: list[str] | None = None) -> None:
         if inbounds is None:
             inbounds = []
@@ -45,6 +56,7 @@ class MarzNodeGRPC(MarzNodeBase):
                                               inbound_additions=[Inbound(tag=i) for i in inbounds]))
             await stm.recv_message()
 
+    @catch_connection_problem
     async def remove_user(self, user, inbounds: list[str] | None = None) -> None:
         if inbounds is None:
             inbounds = []
@@ -53,6 +65,7 @@ class MarzNodeGRPC(MarzNodeBase):
                                               inbound_reductions=[Inbound(tag=i) for i in inbounds]))
             await stm.recv_message()
 
+    @catch_connection_problem
     async def update_user_inbounds(self, user,
                                    inbound_additions: list[str] | None = None,
                                    inbound_reductions: list[str] | None = None) -> None:
@@ -67,6 +80,7 @@ class MarzNodeGRPC(MarzNodeBase):
                                               inbound_reductions=[Inbound(tag=i) for i in inbound_reductions]))
             await stm.recv_message()
 
+    @catch_connection_problem
     async def repopulate_users(self, user_updates: list[dict]) -> None:
         async with self._stub.RepopulateUsers.open() as stream:
             updates = [UserUpdate(user=User(id=u["id"], username=u["username"], key=u["key"]),
@@ -85,7 +99,7 @@ class MarzNodeGRPC(MarzNodeBase):
     async def is_alive(self) -> bool:
         try:
             response = await self._health.Check(HealthCheckRequest())
-        except (ConnectionError, GRPCError):
+        except (OSError, ConnectionError, GRPCError):
             pass
         else:
             if response.status is HealthCheckResponse.SERVING:
