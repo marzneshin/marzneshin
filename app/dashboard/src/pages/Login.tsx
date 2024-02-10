@@ -19,10 +19,10 @@ import { z } from 'zod';
 import { Footer } from 'components/Footer';
 import { Input } from 'components/Input';
 import { fetch } from 'service/http';
-import { removeAuthToken, setAuthToken } from 'utils/authStorage';
 import { ReactComponent as Logo } from 'assets/logo.svg';
 import { useTranslation } from 'react-i18next';
 import { Language } from 'components/Language';
+import { useAdmin } from 'contexts/AdminContext';
 
 const schema = z.object({
   username: z.string().min(1, 'login.fieldRequired'),
@@ -49,6 +49,7 @@ export const Login: FC = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { setAuthToken, removeAuthToken } = useAdmin();
   const { t } = useTranslation();
   let location = useLocation();
   const {

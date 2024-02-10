@@ -6,12 +6,14 @@ import { Sidebar } from 'components/Sidebar';
 import Login from 'pages/Login';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-loading-skeleton/dist/skeleton.css';
-import { Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import { fetchAdminLoader } from 'components/modules/Router';
+import { useAdmin } from 'contexts/AdminContext';
 
 function App() {
+  const { isLoggedIn } = useAdmin();
   return (
-    <main >
+    <main>
       <Routes>
         <Route
           path="/login"
@@ -45,6 +47,7 @@ function App() {
           <Footer />
         </GridItem>
       </Grid>
+      {!isLoggedIn && <Navigate to="/login" />}
     </main>
   );
 }
