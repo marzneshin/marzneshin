@@ -2,14 +2,14 @@ import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
 
 type AdminStateType = {
-    isLoggedIn: boolean,
-    getAuthToken: () => string | null;
-    setAuthToken: (token: string) => void;
-    removeAuthToken: () => void;
+  isLoggedIn: boolean,
+  getAuthToken: () => string | null;
+  setAuthToken: (token: string) => void;
+  removeAuthToken: () => void;
 }
 
 export const useAdmin = create(
-  subscribeWithSelector<AdminStateType>((set, get) => ({
+  subscribeWithSelector<AdminStateType>((set,) => ({
     isLoggedIn: false,
     getAuthToken: () => {
       return localStorage.getItem('token');
