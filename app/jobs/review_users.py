@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 
 from sqlalchemy.orm import Session
 
-from app import logger, scheduler, xray
+from app import logger, scheduler
 from app.db import (GetDB, get_notification_reminder, get_users,
                     start_user_expire, update_user_status)
 from app.models.user import ReminderType, UserResponse, UserStatus
@@ -51,7 +51,7 @@ async def review():
                     add_notification_reminders(db, user, now)
                 continue
 
-            await xray.operations.remove_user(user)
+            # await xray.operations.remove_user(user)
             update_user_status(db, user, status)
 
             #bg.add_task(
@@ -93,7 +93,7 @@ async def review():
                 continue
 
             update_user_status(db, user, status)
-            await xray.operations.add_user(user)
+            # await xray.operations.add_user(user)
 
             logger.info(f"User \"{user.username}\" status fixed.")
 

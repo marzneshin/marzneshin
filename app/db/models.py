@@ -7,7 +7,6 @@ from sqlalchemy import (BigInteger, Boolean, Column, DateTime, Enum,
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.expression import text
 
-from app import xray
 from app.db.base import Base
 from app.models.node import NodeStatus
 from app.models.proxy import (InboundHostALPN, InboundHostFingerprint,
@@ -59,12 +58,19 @@ class User(Base):
     username = Column(String(32, collation='NOCASE'), unique=True, index=True)
     key = Column(String(64), unique=True, index=True)
     services = relationship("Service", secondary=users_services, back_populates="users", lazy="joined")
-    inbounds = relationship("Inbound", secondary="join(users_services, inbounds_services, inbounds_services.c.service_id == users_services.c.service_id).join(Inbound, Inbound.id == inbounds_services.c.inbound_id)", viewonly=True, distinct_target_key=True, lazy="joined")
+    inbounds = relationship(
+        "Inbound",
+        secondary="join(users_services, inbounds_services, inbounds_services.c.service_id == users_services.c.service_id)"
+                  ".join(Inbound, Inbound.id == inbounds_services.c.inbound_id)", viewonly=True,
+        distinct_target_key=True,
+        lazy="joined")
     # proxies = relationship("Proxy", back_populates="user", cascade="all, delete-orphan")
     status = Column(Enum(UserStatus), nullable=False, default=UserStatus.active)
     used_traffic = Column(BigInteger, default=0)
-    node_usages = relationship("NodeUserUsage", back_populates="user", cascade="all,delete,delete-orphan", lazy="joined")
-    notification_reminders = relationship("NotificationReminder", back_populates="user", cascade="all,delete,delete-orphan")
+    node_usages = relationship("NodeUserUsage", back_populates="user", cascade="all,delete,delete-orphan",
+                               lazy="joined")
+    notification_reminders = relationship("NotificationReminder", back_populates="user",
+                                          cascade="all,delete,delete-orphan")
     data_limit = Column(BigInteger, nullable=True)
     data_limit_reset_strategy = Column(
         Enum(UserDataLimitResetStrategy),
@@ -97,20 +103,6 @@ class User(Base):
     @property
     def last_traffic_reset_time(self):
         return self.usage_logs[-1].reset_at if self.usage_logs else self.created_at
-    """
-    @property
-    def inbounds(self):
-        _ = {}
-        for proxy in self.proxies:
-            _[proxy.type] = []
-            excluded_tags = [i.tag for i in proxy.excluded_inbounds]
-            for inbound in xray.config.inbounds_by_protocol.get(proxy.type, []):
-                if inbound["tag"] not in excluded_tags:
-                    _[proxy.type].append(inbound["tag"])
-
-        return _
-    """
-
 
 
 class UserUsageResetLogs(Base):
@@ -121,7 +113,6 @@ class UserUsageResetLogs(Base):
     user = relationship("User", back_populates="usage_logs")
     used_traffic_at_reset = Column(BigInteger, nullable=False)
     reset_at = Column(DateTime, default=datetime.utcnow)
-
 
 
 class Inbound(Base):
@@ -140,9 +131,6 @@ class Inbound(Base):
 
 class InboundHost(Base):
     __tablename__ = "hosts"
-    # __table_args__ = (
-    #     UniqueConstraint('inbound_tag', 'remark'),
-    # )
 
     id = Column(Integer, primary_key=True)
     remark = Column(String(256), unique=False, nullable=False)
@@ -207,12 +195,11 @@ class Node(Base):
     __tablename__ = "nodes"
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(256, collation='NOCASE'), unique=True)
-    address = Column(String(256), unique=False, nullable=False)
-    port = Column(Integer, unique=False, nullable=False)
-    api_port = Column(Integer, unique=False, nullable=False)
+    address = Column(String(256), unique=False, nullable=True)
+    port = Column(Integer, unique=False, nullable=True)
     xray_version = Column(String(32), nullable=True)
     inbounds = relationship("Inbound", back_populates="node")
-    status = Column(Enum(NodeStatus), nullable=False, default=NodeStatus.connecting)
+    status = Column(Enum(NodeStatus), nullable=False, default=NodeStatus.unhealthy)
     last_status_change = Column(DateTime, default=datetime.utcnow)
     message = Column(String(1024), nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)

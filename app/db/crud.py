@@ -1,3 +1,4 @@
+import json
 from datetime import datetime
 from enum import Enum
 from typing import Dict, List, Optional, Tuple, Union
@@ -6,10 +7,10 @@ from sqlalchemy import and_, delete
 from sqlalchemy.orm import Session
 
 from app.db.models import (JWT, TLS, Admin, Node, NodeUsage, NodeUserUsage,
-                           NotificationReminder, #Proxy, 
+                           NotificationReminder,
                            InboundHost, Service,
                            Inbound, ProxyTypes, System, User,
-                            UserUsageResetLogs)
+                           UserUsageResetLogs)
 from app.models.admin import AdminCreate, AdminModify, AdminPartialModify
 from app.models.node import (NodeCreate, NodeModify, NodeStatus,
                              NodeUsageResponse)
@@ -33,17 +34,19 @@ def add_default_hosts(db: Session, inbounds: List[Inbound]):
 
 def assure_node_inbounds(db: Session, inbounds: List[Inbound], node_id: int):
     existing_inbounds = set((i.protocol, i.tag) for i in db.query(Inbound).filter(Inbound.node_id == node_id).all())
-    inbounds_set = set((i.protocol, i.tag) for i in inbounds)
+    inbounds_set = set((json.loads(i.config)["protocol"], i.tag) for i in list(inbounds))
+    new_inbounds = inbounds_set - existing_inbounds
+    deleted_inbounds = existing_inbounds - inbounds_set
     # difference = [ i for i in existing_inbounds if (i.protocol, i.tag) not in existing_inbounds ]
-    if not inbounds_set.difference(existing_inbounds) and not existing_inbounds.difference(inbounds_set):
+    if not new_inbounds and not deleted_inbounds:
         return
-    stmt = (
+    """stmt = (
             delete(Inbound)
-            .where( Inbound.node_id == node_id )
+            .where(Inbound.node_id == node_id)
             .execution_options(synchronize_session="fetch")
             )
-    db.execute(stmt)
-    new_inbounds = [Inbound(tag=i.tag, protocol=i.protocol, node_id=node_id) for i in inbounds]
+    db.execute(stmt)"""
+    new_inbounds = [Inbound(tag=i[1], protocol=i[0], node_id=node_id) for i in new_inbounds]
     db.add_all(new_inbounds)
     db.flush()
     for i in new_inbounds:
@@ -52,22 +55,26 @@ def assure_node_inbounds(db: Session, inbounds: List[Inbound], node_id: int):
     db.commit()
 
 
-def get_node_users(db: Session, statuses: List[UserStatus], node_id: Optional[int]):
-    query = db.query(User.id, User.username, User.key, Inbound.protocol, Inbound.tag).distinct(
+def get_node_users(db: Session, node_id: Optional[int], statuses: Optional[List[UserStatus]] = None):
+    query = db.query(User.id, User.username, User.key, Inbound).distinct(
             ).join(Inbound.services).join(Service.users).filter(Inbound.node_id == node_id)
-    if statuses:
+    if isinstance(statuses, list):
         query = query.filter(User.status.in_(statuses))
     return query.all()
 
+
 def get_user_hosts(db: Session, user_id: int):
     return db.query(InboundHost).distinct().join(User.services).join(Service.inbounds).join(Inbound.hosts).filter( User.id == user_id ).all()
+
 
 def get_all_hosts(db: Session) -> Dict[int, InboundHost]:
     all_inbounds = db.query(Inbound).all()
     return {i.id: i.hosts for i in all_inbounds}
 
+
 def get_inbound_hosts(db: Session, inbound_id: int) -> List[InboundHost]:
     return db.query(InboundHost).filter(InboundHost.inbound_id == inbound_id).all()
+
 
 def get_all_inbounds(db: Session):
     return db.query(Inbound).all()
@@ -505,8 +512,10 @@ def create_service(db: Session, service: Service) -> Service:
 def get_service(db: Session, service_name: str) -> Service:
     return db.query(Service).filter( Service.name == service_name ).first()
 
+
 def get_services(db: Session) -> List[Service]:
     return db.query(Service).all()
+
 
 def get_node(db: Session, name: str):
     return db.query(Node).filter(Node.name == name).first()
@@ -534,7 +543,7 @@ def get_nodes(db: Session,
 
 
 def get_nodes_usage(db: Session, start: datetime, end: datetime) -> List[NodeUsageResponse]:
-    usages = {}
+    usages = dict()
 
     usages[0] = NodeUsageResponse(  # Main Core
         node_id=None,
@@ -565,8 +574,7 @@ def get_nodes_usage(db: Session, start: datetime, end: datetime) -> List[NodeUsa
 def create_node(db: Session, node: NodeCreate):
     dbnode = Node(name=node.name,
                   address=node.address,
-                  port=node.port,
-                  api_port=node.api_port)
+                  port=node.port)
 
     db.add(dbnode)
     db.commit()
@@ -590,15 +598,12 @@ def update_node(db: Session, dbnode: Node, modify: NodeModify):
     if modify.port is not None:
         dbnode.port = modify.port
 
-    if modify.api_port is not None:
-        dbnode.api_port = modify.api_port
-
     if modify.status is NodeStatus.disabled:
         dbnode.status = modify.status
         dbnode.xray_version = None
         dbnode.message = None
     else:
-        dbnode.status = NodeStatus.connecting
+        dbnode.status = NodeStatus.unhealthy
 
     if modify.usage_coefficient:
         dbnode.usage_coefficient = modify.usage_coefficient
@@ -629,7 +634,7 @@ def create_notification_reminder(
 
 def get_notification_reminder(
         db: Session, user_id: int, reminder_type: ReminderType,
-) -> Union[NotificationReminder, None]:
+) -> Optional[NotificationReminder]:
     reminder = db.query(NotificationReminder).filter(
         NotificationReminder.user_id == user_id).filter(
         NotificationReminder.type == reminder_type).first()

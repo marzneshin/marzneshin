@@ -5,7 +5,7 @@ import asyncio
 import sqlalchemy
 from fastapi import BackgroundTasks, Depends, HTTPException, Query
 
-from app import app, logger, xray
+from app import app, logger, marznode
 from app.db import Session, crud, get_db
 from app.models.admin import Admin
 from app.models.user import (UserCreate, UserModify, UserResponse,
@@ -36,8 +36,8 @@ async def add_user(new_user: UserCreate,
         raise HTTPException(status_code=409, detail="User already exists")
 
     user = UserResponse.model_validate(dbuser)
-    asyncio.get_running_loop().create_task(xray.operations.add_user(user=user))
-    asyncio.get_running_loop().create_task(
+    await marznode.operations.add_user(user=dbuser)
+    asyncio.create_task(
         report.user_created(
         user=user,
         user_id=dbuser.id,
@@ -77,10 +77,10 @@ async def modify_user(username: str,
     - **proxies** dictionary of protocol:settings, empty means no change
     - **inbounds** dictionary of protocol:inbound_tags, empty means no change
     """
+    dbuser = crud.get_user(db, username)
     if not (admin.is_sudo or (dbuser.admin and dbuser.admin.username == admin.username)):
         raise HTTPException(status_code=403, detail="You're not allowed")
 
-    dbuser = crud.get_user(db, username)
     if not dbuser:
         raise HTTPException(status_code=404, detail="User not found")
     old_inbounds = {(i.node_id, i.protocol, i.tag) for i in dbuser.inbounds}
@@ -90,11 +90,11 @@ async def modify_user(username: str,
     user = UserResponse.model_validate(dbuser)
 
     if user.status in [UserStatus.active, UserStatus.on_hold]:
-        asyncio.get_running_loop().create_task(xray.operations.update_user(
+        asyncio.create_task(marznode.operations.update_user(
             user=new_user, new_inbounds=new_inbounds, old_inbounds=old_inbounds)
                                                )
     else:
-        asyncio.get_running_loop().create_task(xray.operations.remove_user(dbuser))
+        asyncio.create_task(marznode.operations.remove_user(dbuser))
     
     asyncio.get_running_loop().create_task(report.user_updated(
                 user=user,
@@ -121,22 +121,19 @@ async def remove_user(username: str,
     """
     Remove a user
     """
+    dbuser = crud.get_user(db, username)
     if not (admin.is_sudo or (dbuser.admin and dbuser.admin.username == admin.username)):
         raise HTTPException(status_code=403, detail="You're not allowed")
 
-    dbuser = crud.get_user(db, username)
     if not dbuser:
         raise HTTPException(status_code=404, detail="User not found")
     
-    await xray.operations.remove_user(dbuser)
+    await marznode.operations.remove_user(dbuser)
 
-    # db.expunge(dbuser)
     crud.remove_user(db, dbuser)
     db.flush()
-    
-    # asyncio.get_running_loop().create_task(xray.operations.remove_user(dbuser))
-    
-    asyncio.get_running_loop().create_task(
+
+    asyncio.create_task(
         report.user_deleted(
         username=dbuser.username,
         by=admin
@@ -161,10 +158,10 @@ async def reset_user_data_usage(username: str,
 
     dbuser = crud.reset_user_data_usage(db=db, dbuser=dbuser)
     if dbuser.status in [UserStatus.active, UserStatus.on_hold]:
-        asyncio.get_running_loop().create_task(xray.operations.add_user(dbuser=dbuser))
+        asyncio.create_task(marznode.operations.add_user(dbuser=dbuser))
 
     user = UserResponse.model_validate(dbuser)
-    asyncio.get_running_loop().create_task(report.user_data_usage_reset(
+    asyncio.create_task(report.user_data_usage_reset(
                 user=user,
                 by=admin))
 
@@ -306,7 +303,7 @@ def set_owner(username: str,
     dbuser = crud.set_owner(db, dbuser, new_admin)
     user = UserResponse.model_validate(dbuser)
 
-    logger.info(f"{user.username}\"owner successfully set to{admin.username}")
+    logger.info(f"{user.username}'s owner successfully set to {admin.username}")
 
     return user
 

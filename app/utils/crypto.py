@@ -1,3 +1,5 @@
+import ssl
+
 from cryptography import x509
 from cryptography.hazmat.backends import default_backend
 from OpenSSL import crypto
@@ -31,3 +33,15 @@ def generate_certificate():
         "cert": cert_pem,
         "key": key_pem
     }
+
+
+def create_secure_context(
+    client_cert: str, client_key: str, trusted: str,
+) -> ssl.SSLContext:
+    ctx = ssl.create_default_context(cafile=trusted)
+    ctx.load_cert_chain(client_cert, client_key)
+    ctx.set_ciphers('ECDHE+AESGCM:ECDHE+CHACHA20:DHE+AESGCM:DHE+CHACHA20')
+    ctx.set_alpn_protocols(['h2'])
+    ctx.check_hostname = False
+    ctx.verify_mode = ssl.CERT_NONE
+    return ctx

@@ -5,14 +5,14 @@ from typing import List
 
 import sqlalchemy
 from fastapi import BackgroundTasks, Depends, HTTPException, WebSocket
-from starlette.websockets import WebSocketDisconnect
 
-from app import app, logger, xray
-from app.db import Session, crud, get_db
+
+from app import app, logger, marznode
+from app.db import Session, crud, get_db, get_tls_certificate
+from app.marznode import MarzNodeGRPC
 from app.models.admin import Admin
 from app.models.node import (NodeCreate, NodeModify, NodeResponse,
                              NodeSettings, NodeStatus, NodesUsageResponse)
-from app.models.proxy import InboundHost
 
 
 @app.get("/api/node/settings", tags=['Node'], response_model=NodeSettings)
@@ -30,37 +30,26 @@ def get_node_settings(db: Session = Depends(get_db),
 
 @app.post("/api/node", tags=['Node'], response_model=NodeResponse)
 async def add_node(new_node: NodeCreate,
-             bg: BackgroundTasks,
-             db: Session = Depends(get_db),
-             admin: Admin = Depends(Admin.get_current)):
+                   db: Session = Depends(get_db),
+                   admin: Admin = Depends(Admin.get_current)):
 
     if not admin.is_sudo:
         raise HTTPException(status_code=403, detail="You're not allowed")
 
     try:
-        dbnode = crud.create_node(db, new_node)
+        db_node = crud.create_node(db, new_node)
     except sqlalchemy.exc.IntegrityError:
         db.rollback()
         raise HTTPException(status_code=409, detail=f"Node \"{new_node.name}\" already exists")
+    certificate = get_tls_certificate(db)
 
-    asyncio.get_running_loop().create_task(
-        xray.operations.start_node(
-        node_id=dbnode.id,
-        config=xray.config.include_db_users())
-    )
+    node = MarzNodeGRPC(db_node.address, db_node.port,
+                        ssl_key=certificate.key, ssl_cert=certificate.certificate)
 
-    if new_node.add_as_new_host is True:
-        host = InboundHost(
-            remark=(new_node.name + " ({USERNAME}) [{PROTOCOL} - {TRANSPORT}]"),
-            address=new_node.address
-        )
-        for inbound_tag in xray.config.inbounds_by_tag:
-            crud.add_host(db, inbound_tag, host)
+    await marznode.operations.add_node(db_node.id, node)
 
-        xray.hosts.update()
-
-    logger.info(f"New node \"{dbnode.name}\" added")
-    return dbnode
+    logger.info(f"New node \"{db_node.name}\" added")
+    return db_node
 
 
 @app.get("/api/node/{node_id}", tags=['Node'], response_model=NodeResponse)
@@ -91,7 +80,7 @@ async def node_logs(node_id: int, websocket: WebSocket, db: Session = Depends(ge
     if not admin.is_sudo:
         return await websocket.close(reason="You're not allowed", code=4403)
 
-    if not xray.nodes.get(node_id):
+    if not marznode.nodes.get(node_id):
         return await websocket.close(reason="Node not found", code=4404)
 
     if not await xray.nodes[node_id].is_healthy():
@@ -109,38 +98,6 @@ async def node_logs(node_id: int, websocket: WebSocket, db: Session = Depends(ge
     await websocket.accept()
     async for l in xray.nodes[node_id].get_logs():
         await websocket.send_text(l)
-    """
-    cache = ''
-    last_sent_ts = 0
-    with xray.nodes[node_id].get_logs() as logs:
-        while True:
-            if interval and time.time() - last_sent_ts >= interval and cache:
-                try:
-                    await websocket.send_text(cache)
-                except (WebSocketDisconnect, RuntimeError):
-                    break
-                cache = ''
-                last_sent_ts = time.time()
-
-            if not logs:
-                try:
-                    await asyncio.wait_for(websocket.receive(), timeout=0.2)
-                    continue
-                except asyncio.TimeoutError:
-                    continue
-                except (WebSocketDisconnect, RuntimeError):
-                    break
-
-            log = logs.popleft()
-
-            if interval:
-                cache += f'{log}\n'
-                continue
-
-            try:
-                await websocket.send_text(log)
-            except (WebSocketDisconnect, RuntimeError):
-                break"""
 
 
 @app.get("/api/nodes", tags=['Node'], response_model=List[NodeResponse])
@@ -153,50 +110,42 @@ def get_nodes(db: Session = Depends(get_db),
 
 @app.put("/api/node/{node_id}", tags=['Node'], response_model=NodeResponse)
 async def modify_node(node_id: int,
-                modified_node: NodeModify,
-                bg: BackgroundTasks,
-                db: Session = Depends(get_db),
-                admin: Admin = Depends(Admin.get_current)):
+                      modified_node: NodeModify,
+                      db: Session = Depends(get_db),
+                      admin: Admin = Depends(Admin.get_current)):
 
     if not admin.is_sudo:
         raise HTTPException(status_code=403, detail="You're not allowed")
 
-    dbnode = crud.get_node_by_id(db, node_id)
-    if not dbnode:
+    db_node = crud.get_node_by_id(db, node_id)
+    if not db_node:
         raise HTTPException(status_code=404, detail="Node not found")
 
-    dbnode = crud.update_node(db, dbnode, modified_node)
+    db_node = crud.update_node(db, db_node, modified_node)
 
-    await xray.operations.remove_node(dbnode.id)
-    if dbnode.status != NodeStatus.disabled:
-        asyncio.get_running_loop().create_task(
-            xray.operations.start_node(
-            node_id=dbnode.id,
-            config=xray.config.include_db_users()
-        ))
+    await marznode.operations.remove_node(db_node.id)
+    if db_node.status != NodeStatus.disabled:
+        certificate = get_tls_certificate(db)
+        node = MarzNodeGRPC(db_node.address, db_node.port,
+                            ssl_key=certificate.key, ssl_cert=certificate.certificate)
+        await marznode.operations.add_node(db_node.id, node)
 
-    logger.info(f"Node \"{dbnode.name}\" modified")
-    return dbnode
+    logger.info(f"Node \"{db_node.name}\" modified")
+    return db_node
 
 
-@app.post("/api/node/{node_id}/reconnect", tags=['Node'])
+@app.post("/api/node/{node_id}/resync", tags=['Node'])
 async def reconnect_node(node_id: int,
-                   bg: BackgroundTasks,
-                   db: Session = Depends(get_db),
-                   admin: Admin = Depends(Admin.get_current)):
+                         db: Session = Depends(get_db),
+                         admin: Admin = Depends(Admin.get_current)):
 
     if not admin.is_sudo:
         raise HTTPException(status_code=403, detail="You're not allowed")
 
-    dbnode = crud.get_node_by_id(db, node_id)
-    if not dbnode:
+    db_node = crud.get_node_by_id(db, node_id)
+    if not db_node:
         raise HTTPException(status_code=404, detail="Node not found")
 
-    asyncio.get_running_loop().create_task(
-        xray.operations.start_node(
-        node_id=dbnode.id,
-        config=xray.config.include_db_users())
-    )
     return {}
 
 
@@ -208,14 +157,14 @@ async def remove_node(node_id: int,
     if not admin.is_sudo:
         raise HTTPException(status_code=403, detail="You're not allowed")
 
-    dbnode = crud.get_node_by_id(db, node_id)
-    if not dbnode:
+    db_node = crud.get_node_by_id(db, node_id)
+    if not db_node:
         raise HTTPException(status_code=404, detail="Node not found")
 
-    crud.remove_node(db, dbnode)
-    await xray.operations.remove_node(dbnode.id)
+    crud.remove_node(db, db_node)
+    await marznode.operations.remove_node(db_node.id)
 
-    logger.info(f"Node \"{dbnode.name}\" deleted")
+    logger.info(f"Node \"{db_node.name}\" deleted")
     return {}
 
 

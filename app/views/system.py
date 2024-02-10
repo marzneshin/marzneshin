@@ -2,7 +2,7 @@ from typing import Dict, List, Union
 
 from fastapi import Depends, HTTPException
 
-from app import app, xray
+from app import app
 from app.db import Session, crud, get_db
 from app.models.admin import Admin
 from app.models.proxy import InboundHost, Inbound, ProxyTypes, InboundBase

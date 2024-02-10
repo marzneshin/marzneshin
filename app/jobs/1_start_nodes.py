@@ -1,41 +1,54 @@
-import json
+from collections import defaultdict
 
-from app import app, logger, scheduler, xray
-from app.db import GetDB, crud
+from grpclib import GRPCError
+
+from app import app, scheduler, marznode
+from app.db import GetDB, crud, get_tls_certificate
+from app.marznode import MarzNodeGRPC
 from app.models.node import NodeStatus
-from xray_api import exc as xray_exc
+from app.models.proxy import InboundBase
+from app.models.user import UserStatus
 
 
 async def nodes_health_check():
-    for node_id, node in list(xray.nodes.items()):
-        if node.started and await node.is_healthy():
-            try:
-                await node.api.get_sys_stats()
-            except (ConnectionError, xray_exc.ConnectionError, xray_exc.UnknownError):
-                await xray.operations.restart_node(node_id, xray.configs[node_id].include_db_users(node_id))
+    with GetDB() as db:
+        for node_id, node in marznode.nodes.items():
+            db_node = crud.get_node_by_id(db, node_id)
+            if await node.is_alive():
+                crud.update_node_status(db, db_node, NodeStatus.healthy)
+                if not node.synced:
+                    await sync_node(db, node, node_id)
+            else:
+                crud.update_node_status(db, db_node, NodeStatus.unhealthy)
 
-        if not await node.is_healthy():
-            await xray.operations.start_node(node_id, xray.configs[node_id].include_db_users(node_id))
+
+async def sync_node(db, node, node_id):
+    inbounds = await node.fetch_inbounds()
+    crud.assure_node_inbounds(db, inbounds, node_id)
+    relations = crud.get_node_users(db, node_id, [UserStatus.active, UserStatus.on_hold])
+    users = dict()
+    for rel in relations:
+        if not users.get(rel[0]):
+            users[rel[0]] = dict(username=rel[1], id=rel[0], key=rel[2], inbounds=[])
+        users[rel[0]]["inbounds"].append(rel[3].tag)
+    await node.repopulate_users(list(users.values()))
+    node.synced = True
 
 
 @app.on_event("startup")
-async def app_startup():
+async def nodes_startup():
     with GetDB() as db:
-        dbnodes = crud.get_nodes(db=db, enabled=True)
-        node_ids = [dbnode.id for dbnode in dbnodes]
-        for dbnode in dbnodes:
-            crud.update_node_status(db, dbnode, NodeStatus.connecting)
+        certificate = get_tls_certificate(db)
+        db_nodes = crud.get_nodes(db=db, enabled=True)
+        for db_node in db_nodes:
+            node = MarzNodeGRPC(db_node.address, db_node.port,
+                                ssl_key=certificate.key, ssl_cert=certificate.certificate)
+            if not await node.is_alive():
+                node.synced = False
+                await marznode.operations.add_node(db_node.id, node)
+                continue
+            await sync_node(db, node, db_node.id)
+            await marznode.operations.add_node(db_node.id, node)
+            # crud.update_node_status(db, db_node, NodeStatus.connecting)
 
-    for node_id in node_ids:
-        await xray.operations.start_node(node_id, xray.configs[node_id].include_db_users(node_id))
-
-    scheduler.add_job(nodes_health_check, 'interval', seconds=20, coalesce=True, max_instances=1)
-
-
-@app.on_event("shutdown")
-async def app_shutdown():
-    for node in list(xray.nodes.values()):
-        try:
-            await node.stop()
-        except Exception:
-            pass
+    scheduler.add_job(nodes_health_check, 'interval', seconds=5, coalesce=True, max_instances=1)
