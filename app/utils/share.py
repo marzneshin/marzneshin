@@ -922,11 +922,10 @@ def process_inbounds_and_tags(
     results = []
     
     for inb in inbounds:
-        inb_id, protocol, tag = inb.id, inb.protocol, inb.tag
+        inb_id, inbound, protocol, tag = inb.id, json.loads(inb.config), inb.protocol, inb.tag
         settings = generate_settings(ukey, protocol)
 
         format_variables.update({"PROTOCOL": protocol.name})
-        inbound = xray.configs[inb.node_id].inbounds_by_tag.get(tag)
         if not inbound:
             continue
 

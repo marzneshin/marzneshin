@@ -33,8 +33,8 @@ def add_default_hosts(db: Session, inbounds: List[Inbound]):
 
 
 def assure_node_inbounds(db: Session, inbounds: List[Inbound], node_id: int):
-    existing_inbounds = set((i.protocol, i.tag) for i in db.query(Inbound).filter(Inbound.node_id == node_id).all())
-    inbounds_set = set((json.loads(i.config)["protocol"], i.tag) for i in list(inbounds))
+    existing_inbounds = set((i.protocol, i.tag, i.config) for i in db.query(Inbound).filter(Inbound.node_id == node_id).all())
+    inbounds_set = set((json.loads(i.config)["protocol"], i.tag, i.config) for i in list(inbounds))
     new_inbounds = inbounds_set - existing_inbounds
     deleted_inbounds = existing_inbounds - inbounds_set
     # difference = [ i for i in existing_inbounds if (i.protocol, i.tag) not in existing_inbounds ]
@@ -46,7 +46,7 @@ def assure_node_inbounds(db: Session, inbounds: List[Inbound], node_id: int):
             .execution_options(synchronize_session="fetch")
             )
     db.execute(stmt)"""
-    new_inbounds = [Inbound(tag=i[1], protocol=i[0], node_id=node_id) for i in new_inbounds]
+    new_inbounds = [Inbound(tag=i[1], protocol=i[0], config=i[2], node_id=node_id) for i in new_inbounds]
     db.add_all(new_inbounds)
     db.flush()
     for i in new_inbounds:
