@@ -4,6 +4,7 @@ import tempfile
 
 from grpclib import GRPCError
 from grpclib.client import Channel
+from grpclib.exceptions import StreamTerminatedError
 from grpclib.health.v1.health_grpc import HealthStub
 from grpclib.health.v1.health_pb2 import HealthCheckResponse, HealthCheckRequest
 
@@ -99,7 +100,7 @@ class MarzNodeGRPC(MarzNodeBase):
     async def is_alive(self) -> bool:
         try:
             response = await self._health.Check(HealthCheckRequest())
-        except (OSError, ConnectionError, GRPCError):
+        except (OSError, ConnectionError, GRPCError, StreamTerminatedError):
             pass
         else:
             if response.status is HealthCheckResponse.SERVING:
