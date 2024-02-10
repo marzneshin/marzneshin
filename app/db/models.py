@@ -121,6 +121,7 @@ class Inbound(Base):
     id = Column(Integer, primary_key=True)
     protocol = Column(Enum(ProxyTypes))
     tag = Column(String(256), nullable=False, index=True)
+    config = Column(String(), nullable=False)
     node_id = Column(Integer, ForeignKey("nodes.id"), index=True)
     node = relationship("Node", back_populates="inbounds")
     services = relationship("Service", secondary=inbounds_services, back_populates="inbounds")

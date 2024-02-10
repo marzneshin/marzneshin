@@ -94,7 +94,9 @@ class UserBase(BaseModel):
         return v
     model_config = ConfigDict(from_attributes=True)
 
+
 from app.models.service import ServiceBase
+
 
 class User(UserBase): 
     pass
@@ -131,7 +133,7 @@ class UserCreate(User):
         on_hold_expire = info.data.get("on_hold_expire_duration")
         expire = info.data.get("expire")
         if status == UserStatusCreate.on_hold:
-            if (on_hold_expire == 0 or on_hold_expire is None):
+            if on_hold_expire == 0 or on_hold_expire is None:
                 raise ValueError("User cannot be on hold without a valid on_hold_expire_duration.")
             if expire:
                 raise ValueError("User cannot be on hold with specified expire.")
@@ -192,9 +194,9 @@ class UserResponse(User):
     @computed_field
     @property
     def links(self) -> List[str]:
-        return [""]# generate_v2ray_links(
-               # inbounds=self.inbounds, key=self.key, extra_data=self.dict(exclude={'subscription_url', 'links'})
-               # )
+        return generate_v2ray_links(
+            inbounds=self.inbounds, key=self.key, extra_data=self.dict(exclude={'subscription_url', 'links'})
+        )
 
     @computed_field
     @property

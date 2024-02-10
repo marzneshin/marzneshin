@@ -160,6 +160,7 @@ class InboundBase(BaseModel):
     id: Optional[int] = Field(None)
     tag: str = Field()
     protocol: ProxyTypes = Field()
+    config: str
     node_id: Optional[int] = Field(None)
     model_config = ConfigDict(from_attributes=True)
 
