@@ -1,22 +1,7 @@
 import { fetch } from 'service/http';
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
-export type UsersFilterType = {
-    username?: string;
-    limit?: number;
-    offset?: number;
-    sort: string;
-    status?: 'active' | 'disabled' | 'limited' | 'expired' | 'on_hold';
-};
 
-export type ServicesFilterType = {
-    name?: string;
-    users?: number;
-    inbounds?: number;
-    limit?: number;
-    offset?: number;
-    sort: string;
-};
 export type ProtocolType = 'vmess' | 'vless' | 'trojan' | 'shadowsocks';
 
 export type InboundType = {

@@ -77,7 +77,7 @@ export const UsersTable: FC<UsersTableProps> = (props) => {
     () => window.removeEventListener('scroll', calcTop);
   }, []);
 
-  const isFiltered = users.length !== totalUsers.total;
+  const isFiltered = users.length !== total;
 
   const handleSort = (column: string) => {
     let newSort = filters.sort;
@@ -444,7 +444,7 @@ export const UsersTable: FC<UsersTableProps> = (props) => {
           )}
         </Tbody>
       </Table>
-      <Pagination />
+      <Pagination filters={filters} total={total} onFilterChange={onFilterChange} />
     </Box>
   );
 };

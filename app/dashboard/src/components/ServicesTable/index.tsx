@@ -149,7 +149,7 @@ export const ServicesTable: FC<ServicesTableProps> = (props) => {
           }
         </Tbody>
       </Table>
-      <Pagination />
+      <Pagination total={services.length} onFilterChange={onFilterChange} filters={filters} />
     </Box>
   );
 };

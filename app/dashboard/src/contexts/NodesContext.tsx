@@ -11,14 +11,10 @@ export const NodeSchema = z.object({
     .number()
     .min(1)
     .or(z.string().transform((v) => parseFloat(v))),
-  api_port: z
-    .number()
-    .min(1)
-    .or(z.string().transform((v) => parseFloat(v))),
   xray_version: z.string().nullable().optional(),
   id: z.number().nullable().optional(),
   status: z
-    .enum(['connected', 'connecting', 'error', 'disabled'])
+    .enum(['healthy', 'unhealthy', 'disabled'])
     .nullable()
     .optional(),
   message: z.string().nullable().optional(),
@@ -31,7 +27,6 @@ export const getNodeDefaultValues = (): NodeType => ({
   name: '',
   address: '',
   port: 62050,
-  api_port: 62051,
   xray_version: '',
 });
 
