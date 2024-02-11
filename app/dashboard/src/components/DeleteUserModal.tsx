@@ -12,18 +12,18 @@ import {
   Text,
   useToast,
 } from '@chakra-ui/react';
-import { useDashboard } from 'contexts/DashboardContext';
 import { FC, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Icon } from './Icon';
+import { useUsers } from 'contexts/UsersContext';
 
 export type DeleteUserModalProps = {
-    deleteCallback?: () => void;
+  deleteCallback?: () => void;
 };
 
 export const DeleteUserModal: FC<DeleteUserModalProps> = () => {
   const [loading, setLoading] = useState(false);
-  const { deletingUser: user, onDeletingUser, deleteUser } = useDashboard();
+  const { deletingUser: user, onDeletingUser, deleteUser } = useUsers();
   const { t } = useTranslation();
   const toast = useToast();
   const onClose = () => {

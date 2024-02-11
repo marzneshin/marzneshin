@@ -16,7 +16,7 @@ import classNames from 'classnames';
 import { FC, Fragment, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { EmptySection } from 'components/Table/EmptySection';
-import { Pagination } from 'components/Pagination';
+import { Pagination } from 'components/Table/Pagination';
 import { Sort } from 'components/Table/Sort';
 import { useServices } from 'contexts/ServicesContext';
 

@@ -6,6 +6,8 @@ export type Status =
   | 'on_hold'
   | 'error'
   | 'connecting'
+  | 'healthy'
+  | 'unhealthy'
   | 'connected';
 export type ProxyKeys = ('vmess' | 'vless' | 'trojan' | 'shadowsocks')[];
 export type ProxyType = {

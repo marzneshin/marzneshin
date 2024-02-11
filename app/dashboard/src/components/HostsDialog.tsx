@@ -42,6 +42,7 @@ import {
   proxyHostSecurity,
 } from 'constants/Proxies';
 import { useHosts } from 'contexts/HostsContext';
+import { useInbounds } from 'contexts/InboundsContext';
 import { FC, useEffect, useState } from 'react';
 import {
   FormProvider,
@@ -138,7 +139,7 @@ const AccordionInbound: FC<AccordionInboundType> = ({
   isOpen,
   toggleAccordion,
 }) => {
-  const { inbounds } = useDashboard();
+  const { inbounds } = useInbounds();
   const inbound = [...inbounds.values()]
     .flat()
     .filter((inbound) => inbound.tag === hostKey)[0];

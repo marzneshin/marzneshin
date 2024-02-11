@@ -25,6 +25,9 @@ import {
 import { pages } from 'constants/Pages';
 import { DONATION_URL, REPO_URL } from 'constants/Project';
 import { useDashboard } from 'contexts/DashboardContext';
+import { useHosts } from 'contexts/HostsContext';
+import { useNodes } from 'contexts/NodesContext';
+import { useUsers } from 'contexts/UsersContext';
 import differenceInDays from 'date-fns/differenceInDays';
 import isValid from 'date-fns/isValid';
 import { FC, ReactNode, useState } from 'react';
@@ -83,12 +86,18 @@ export const shouldShowDonation = (): boolean => {
 
 export const Header: FC<HeaderProps> = () => {
   const {
-    onEditingHosts,
-    onResetAllUsage,
-    onEditingNodes,
-    onShowingNodesUsage,
     activePage,
   } = useDashboard();
+  const {
+    onResetAllUsage,
+  } = useUsers();
+  const {
+    onEditingHosts,
+  } = useHosts();
+  const {
+    onEditingNodes,
+    onShowingNodesUsage,
+  } = useNodes();
   const { t } = useTranslation();
   const { colorMode, toggleColorMode } = useColorMode();
   const [showDonationNotif, setShowDonationNotif] = useState(
@@ -192,7 +201,7 @@ export const Header: FC<HeaderProps> = () => {
             variant="outline"
             aria-label="core settings"
             onClick={() => {
-              useDashboard.setState({ isEditingCore: true });
+              useNodes.setState({ isEditingCore: true });
             }}
           >
             <CoreSettingsIcon />

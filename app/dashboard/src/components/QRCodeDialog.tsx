@@ -23,8 +23,8 @@ import { useTranslation } from 'react-i18next';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick-theme.css';
 import 'slick-carousel/slick/slick.css';
-import { useDashboard } from '../contexts/DashboardContext';
 import { Icon } from './Icon';
+import { useUsers } from 'contexts/UsersContext';
 
 const QRCode = chakra(QRCodeCanvas);
 const NextIcon = chakra(ChevronRightIcon, {
@@ -55,7 +55,7 @@ const QRIcon = chakra(QrCodeIcon, {
 });
 
 export const QRCodeDialog: FC = () => {
-  const { QRcodeLinks, setQRCode, setSubLink, subscribeUrl } = useDashboard();
+  const { QRcodeLinks, setQRCode, setSubLink, subscribeUrl } = useUsers();
   const isOpen = QRcodeLinks !== null;
   const [index, setIndex] = useState(0);
   const { t } = useTranslation();

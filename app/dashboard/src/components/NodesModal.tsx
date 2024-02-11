@@ -130,11 +130,7 @@ const NodeAccordion: FC<AccordionInboundType> = ({ toggleAccordion, node }) => {
     }
   );
 
-  const nodeStatus: Status = isReconnecting
-    ? 'connecting'
-    : node.status
-      ? node.status
-      : 'error';
+  const nodeStatus: Status = isReconnecting ? 'connecting' : node.status ? node.status : 'unhealthy';
 
   return (
     <AccordionItem
