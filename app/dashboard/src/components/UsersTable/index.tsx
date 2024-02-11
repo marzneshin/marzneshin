@@ -435,7 +435,7 @@ export const UsersTable: FC<UsersTableProps> = (props) => {
                   isFiltered={isFiltered}
                   noObjectT="usersTable.noUser"
                   noObjectMatchedT='usersTable.noUserMatched'
-                  createObjectT="createuser"
+                  createObjectT="createUser"
                   onCreateObject={onCreateUser}
                 />
               </Td>
