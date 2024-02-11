@@ -29,6 +29,7 @@ import { schema, FormType } from './FormSchema';
 import { InboundsField } from './InboundsField';
 import { NameField } from './NameField';
 import { Service, ServiceCreate } from 'types/Service';
+import { useServices } from 'contexts/ServicesContext';
 
 const formatService = (service: Service): FormType => {
   const inbounds: number[] = service.inbounds.map((inbound: number | InboundType): number => {
@@ -46,13 +47,15 @@ export const ServiceDialog: FC<ServiceDialogProps> = () => {
   const {
     editingService,
     isCreatingNewService,
-    inbounds,
     onCreateService,
     editService,
-    refetchInbounds,
     onEditingService,
     createService,
     onDeletingService,
+  } = useServices();
+  const {
+    inbounds,
+    refetchInbounds,
   } = useDashboard();
   const isEditing = !!editingService;
   const isOpen = isCreatingNewService || isEditing;

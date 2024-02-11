@@ -44,6 +44,7 @@ import {
 import { Sort } from 'components/Table/Sort';
 import { UsageSlider, UsageSliderCompact } from './UsageSlider';
 import { StatusSortSelect } from './StatusSortSelect';
+import { useUsers } from 'contexts/UsersContext';
 
 type ExpandedIndex = number | number[];
 
@@ -53,7 +54,7 @@ export const UsersTable: FC<UsersTableProps> = (props) => {
   const {
     usersFilters: filters,
     users: { users },
-    users: totalUsers,
+    users: { total },
     onEditingUser,
     onCreateUser,
     onFilterChange,

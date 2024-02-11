@@ -19,6 +19,7 @@ import {
 } from '@heroicons/react/24/outline';
 import classNames from 'classnames';
 import { useDashboard } from 'contexts/DashboardContext';
+import { useServices } from 'contexts/ServicesContext';
 import debounce from 'lodash.debounce';
 import React, { FC, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -39,13 +40,14 @@ const setSearchField = debounce((username: string) => {
   useDashboard.getState().onFilterChange({
     ...useDashboard.getState().usersFilters,
     offset: 0,
-    username,
+    name,
   });
 }, 300);
 
 export const ServicesFilters: FC<FilterProps> = ({ ...props }) => {
-  const { loading, servicesFilters: filters, onFilterChange, refetchUsers, onCreateService } =
-        useDashboard();
+  const { loading } =
+    useDashboard();
+  const { servicesFilters: filters, refetchServices, onFilterChange, onCreateService } = useServices();
   const { t } = useTranslation();
   const [search, setSearch] = useState('');
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {

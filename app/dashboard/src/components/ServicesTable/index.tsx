@@ -13,12 +13,12 @@ import {
 } from '@chakra-ui/react';
 
 import classNames from 'classnames';
-import { useDashboard } from 'contexts/DashboardContext';
 import { FC, Fragment, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { EmptySection } from 'components/Table/EmptySection';
 import { Pagination } from 'components/Pagination';
 import { Sort } from 'components/Table/Sort';
+import { useServices } from 'contexts/ServicesContext';
 
 type ServicesTableProps = {} & TableProps;
 
@@ -29,7 +29,7 @@ export const ServicesTable: FC<ServicesTableProps> = (props) => {
     onEditingService,
     onCreateService,
     onFilterChange,
-  } = useDashboard();
+  } = useServices();
 
   const { t } = useTranslation();
   const marginTop = useBreakpointValue({ base: 120, lg: 72 }) || 72;
