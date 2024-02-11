@@ -11,30 +11,34 @@ import { useServices } from './ServicesContext';
 import { UsersFilterType, FilterUsageType } from 'types/Filter';
 
 type UsersStateType = {
-    isCreatingNewUser: boolean;
-    editingUser: User | null | undefined;
-    deletingUser: User | null;
-    users: {
-        users: User[];
-        total: number;
-    };
-    usersFilters: UsersFilterType;
-    resetUsageUser: User | null;
-    revokeSubscriptionUser: User | null;
-    isResetingAllUsage: boolean;
-    onResetAllUsage: (isResetingAllUsage: boolean) => void;
-    resetAllUsage: () => Promise<void>;
-    resetDataUsage: (user: User) => Promise<void>;
-    revokeSubscription: (user: User) => Promise<void>;
-    onCreateUser: (isOpen: boolean) => void;
-    onEditingUser: (user: User | null) => void;
-    onDeletingUser: (user: User | null) => void;
-    refetchUsers: () => void;
-    onFilterChange: (filters: Partial<UsersFilterType>) => void;
-    deleteUser: (user: User) => Promise<void>;
-    createUser: (user: UserCreate) => Promise<void>;
-    editUser: (user: UserCreate) => Promise<void>;
-    fetchUserUsage: (user: User, query: FilterUsageType) => Promise<void>;
+  isCreatingNewUser: boolean;
+  editingUser: User | null | undefined;
+  deletingUser: User | null;
+  users: {
+    users: User[];
+    total: number;
+  };
+  usersFilters: UsersFilterType;
+  resetUsageUser: User | null;
+  revokeSubscriptionUser: User | null;
+  isResetingAllUsage: boolean;
+  subscribeUrl: string | null;
+  QRcodeLinks: string[] | null;
+  setQRCode: (links: string[] | null) => void;
+  setSubLink: (subscribeURL: string | null) => void;
+  onResetAllUsage: (isResetingAllUsage: boolean) => void;
+  resetAllUsage: () => Promise<void>;
+  resetDataUsage: (user: User) => Promise<void>;
+  revokeSubscription: (user: User) => Promise<void>;
+  onCreateUser: (isOpen: boolean) => void;
+  onEditingUser: (user: User | null) => void;
+  onDeletingUser: (user: User | null) => void;
+  refetchUsers: () => void;
+  onFilterChange: (filters: Partial<UsersFilterType>) => void;
+  deleteUser: (user: User) => Promise<void>;
+  createUser: (user: UserCreate) => Promise<void>;
+  editUser: (user: UserCreate) => Promise<void>;
+  fetchUserUsage: (user: User, query: FilterUsageType) => Promise<void>;
 }
 
 export const fetchUsers = async (query: UsersFilterType): Promise<User[]> => {
@@ -70,6 +74,14 @@ export const useUsers = create(subscribeWithSelector<UsersStateType>((set, get) 
     username: '',
     limit: getUsersPerPageLimitSize(),
     sort: '-created_at',
+  },
+  QRcodeLinks: null,
+  subscribeUrl: null,
+  setQRCode: (QRcodeLinks) => {
+    set({ QRcodeLinks });
+  },
+  setSubLink: (subscribeUrl) => {
+    set({ subscribeUrl });
   },
   refetchUsers: () => {
     fetchUsers(get().usersFilters);

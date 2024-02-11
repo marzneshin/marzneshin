@@ -2,7 +2,7 @@ import { useQuery } from 'react-query';
 import { fetch } from 'service/http';
 import { z } from 'zod';
 import { create } from 'zustand';
-import { FilterUsageType, useDashboard } from './DashboardContext';
+import { FilterUsageType } from 'types/Filter';
 
 export const NodeSchema = z.object({
   name: z.string().min(1),
@@ -34,28 +34,35 @@ export const FetchNodesQueryKey = 'fetch-nodes-query-key';
 
 export type NodeStore = {
   nodes: NodeType[];
+  deletingNode?: NodeType | null;
+  isEditingNodes: boolean;
+  isShowingNodesUsage: boolean;
+  isEditingCore: boolean;
   addNode: (node: NodeType) => Promise<unknown>;
   fetchNodes: () => Promise<NodeType[]>;
   fetchNodesUsage: (query: FilterUsageType) => Promise<void>;
   updateNode: (node: NodeType) => Promise<unknown>;
   reconnectNode: (node: NodeType) => Promise<unknown>;
-  deletingNode?: NodeType | null;
   deleteNode: () => Promise<unknown>;
   setDeletingNode: (node: NodeType | null) => void;
+  onEditingNodes: (isEditingHosts: boolean) => void;
+  onShowingNodesUsage: (isShowingNodesUsage: boolean) => void;
 };
 
 export const useNodesQuery = () => {
-  const { isEditingNodes } = useDashboard();
   return useQuery({
     queryKey: FetchNodesQueryKey,
     queryFn: useNodes.getState().fetchNodes,
-    refetchInterval: isEditingNodes ? 3000 : undefined,
+    refetchInterval: useNodes.getState().isEditingNodes ? 3000 : undefined,
     refetchOnWindowFocus: false,
   });
 };
 
 export const useNodes = create<NodeStore>((set, get) => ({
   nodes: [],
+  isEditingNodes: false,
+  isShowingNodesUsage: false,
+  isEditingCore: false,
   addNode(body) {
     return fetch('/node', { method: 'POST', body });
   },
@@ -83,5 +90,11 @@ export const useNodes = create<NodeStore>((set, get) => ({
     return fetch(`/node/${get().deletingNode?.id}`, {
       method: 'DELETE',
     });
+  },
+  onEditingNodes: (isEditingNodes: boolean) => {
+    set({ isEditingNodes });
+  },
+  onShowingNodesUsage: (isShowingNodesUsage: boolean) => {
+    set({ isShowingNodesUsage });
   },
 }));

@@ -10,19 +10,19 @@ import { fetch } from 'service/http';
 import { ServicesFilterType } from 'types/Filter';
 
 type ServicesStateType = {
-    services: Service[],
-    isCreatingNewService: boolean;
-    editingService: Service | null | undefined;
-    deletingService: Service | null;
-    servicesFilters: ServicesFilterType;
-    onCreateService: (isOpen: boolean) => void;
-    onEditingService: (service: Service | null) => void;
-    onDeletingService: (service: Service | null) => void;
-    refetchServices: () => void;
-    deleteService: (service: Service) => Promise<void>;
-    createService: (service: ServiceCreate) => Promise<void>;
-    editService: (service: ServiceCreate) => Promise<void>;
-    onFilterChange: (filters: Partial<ServicesFilterType>) => void;
+  services: Service[],
+  isCreatingNewService: boolean;
+  editingService: Service | null | undefined;
+  deletingService: Service | null;
+  servicesFilters: ServicesFilterType;
+  onCreateService: (isOpen: boolean) => void;
+  onEditingService: (service: Service | null) => void;
+  onDeletingService: (service: Service | null) => void;
+  refetchServices: () => void;
+  deleteService: (service: Service) => Promise<void>;
+  createService: (service: ServiceCreate) => Promise<void>;
+  editService: (service: ServiceCreate) => Promise<void>;
+  onFilterChange: (filters: Partial<ServicesFilterType>) => void;
 };
 
 export const fetchServices = async (query: ServicesFilterType): Promise<Service[]> => {
@@ -62,7 +62,6 @@ export const useServices = create(
       });
       get().refetchServices();
     },
-
     refetchServices: () => {
       fetchServices(get().servicesFilters);
     },
