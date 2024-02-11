@@ -121,7 +121,7 @@ export const useUsers = create(subscribeWithSelector<UsersStateType>((set, get) 
     return fetch('/user', { method: 'POST', body }).then(() => {
       set({ editingUser: null });
       get().refetchUsers();
-      useServices.refetchServices();
+      useServices.getState().refetchServices();
       queryClient.invalidateQueries(StatisticsQueryKey);
     });
   },

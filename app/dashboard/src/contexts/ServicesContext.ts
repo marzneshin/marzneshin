@@ -8,6 +8,7 @@ import { subscribeWithSelector } from 'zustand/middleware';
 import { useDashboard } from 'contexts/DashboardContext';
 import { fetch } from 'service/http';
 import { ServicesFilterType } from 'types/Filter';
+import { useUsers } from './UsersContext';
 
 type ServicesStateType = {
   services: Service[],
@@ -77,7 +78,7 @@ export const useServices = create(
       return fetch(`/service/${service.id}`, { method: 'DELETE' }).then(() => {
         set({ deletingService: null });
         get().refetchServices();
-        useDashboard.getState().refetchUsers();
+        useUsers.getState().refetchUsers();
         queryClient.invalidateQueries(StatisticsQueryKey);
       });
     },

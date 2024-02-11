@@ -43,6 +43,7 @@ import {
 } from 'constants/Proxies';
 import { useHosts } from 'contexts/HostsContext';
 import { useInbounds } from 'contexts/InboundsContext';
+import { useUsers } from 'contexts/UsersContext';
 import { FC, useEffect, useState } from 'react';
 import {
   FormProvider,
@@ -54,7 +55,6 @@ import { Trans, useTranslation } from 'react-i18next';
 import 'slick-carousel/slick/slick-theme.css';
 import 'slick-carousel/slick/slick.css';
 import { z } from 'zod';
-import { useDashboard } from '../contexts/DashboardContext';
 import { DeleteIcon } from './Dialog/Icons';
 import { Icon } from './Icon';
 import { Input as CustomInput } from './Input';
@@ -773,8 +773,8 @@ const AccordionInbound: FC<AccordionInboundType> = ({
 };
 
 export const HostsDialog: FC = () => {
-  const { isEditingHosts, onEditingHosts, refetchUsers } = useDashboard();
-  const { isLoading, hosts, fetchHosts, isPostLoading, setHosts } = useHosts();
+  const { refetchUsers } = useUsers();
+  const { isEditingHosts, onEditingHosts, isLoading, hosts, fetchHosts, isPostLoading, setHosts } = useHosts();
   const toast = useToast();
   const { t } = useTranslation();
   const [openAccordions, setOpenAccordions] = useState<any>({});

@@ -1,14 +1,14 @@
 import { FormControl, FormLabel, FormErrorMessage, Center, Spinner, Text, Spacer, Flex } from '@chakra-ui/react';
-import { Inbounds, InboundType } from 'contexts/DashboardContext';
+import { Inbounds, InboundType } from 'types/Inbounds';
 import { TFunction } from 'i18next';
 import { Controller } from 'react-hook-form';
 import { InboundsSelectList } from './InboundsSelectList';
 
 
 interface InboundsFieldProps {
-    form: any;
-    inbounds: Inbounds;
-    t: TFunction<'translation', undefined, 'translation'>;
+  form: any;
+  inbounds: Inbounds;
+  t: TFunction<'translation', undefined, 'translation'>;
 }
 
 export const InboundsField = ({ form, t, inbounds }: InboundsFieldProps) => {

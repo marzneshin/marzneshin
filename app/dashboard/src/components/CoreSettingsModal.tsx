@@ -28,7 +28,6 @@ import {
 import { joinPaths } from '@remix-run/router';
 import classNames from 'classnames';
 import { useCoreSettings } from 'contexts/CoreSettingsContext';
-import { useDashboard } from 'contexts/DashboardContext';
 import { useNodes } from 'contexts/NodesContext';
 import debounce from 'lodash.debounce';
 import { FC, useCallback, useEffect, useRef, useState } from 'react';
@@ -315,8 +314,8 @@ const CoreSettingModalContent: FC = () => {
   );
 };
 export const CoreSettingsModal: FC = () => {
-  const { isEditingCore } = useDashboard();
-  const onClose = useDashboard.setState.bind(null, { isEditingCore: false });
+  const { isEditingCore } = useNodes();
+  const onClose = useNodes.setState.bind(null, { isEditingCore: false });
   const { t } = useTranslation();
 
   return (

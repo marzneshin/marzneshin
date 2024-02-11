@@ -1,11 +1,11 @@
 
 import { Select } from '@chakra-ui/react'
-import { UsersFilterType } from 'contexts/DashboardContext'
+import { UsersFilterType } from 'types/Filter';
 import React from 'react'
 
 interface StatusSortSelectProps {
-    filters: UsersFilterType;
-    handleStatusFilter: (e: any) => void;
+  filters: UsersFilterType;
+  handleStatusFilter: (e: any) => void;
 }
 
 export const StatusSortSelect: React.FC<StatusSortSelectProps> = ({ filters, handleStatusFilter }) => {
