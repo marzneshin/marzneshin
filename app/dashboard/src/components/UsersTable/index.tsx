@@ -57,7 +57,7 @@ export const UsersTable: FC<UsersTableProps> = (props) => {
     onEditingUser,
     onCreateUser,
     onFilterChange,
-  } = useDashboard();
+  } = useUsers();
 
   const { t } = useTranslation();
   const [selectedRow, setSelectedRow] = useState<ExpandedIndex | undefined>(
