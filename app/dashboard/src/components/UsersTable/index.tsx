@@ -32,8 +32,6 @@ import { OnlineBadge } from '../OnlineBadge';
 import { OnlineStatus } from '../OnlineStatus';
 import { Pagination } from '../Pagination';
 import { StatusBadge } from '../StatusBadge';
-import { EmptySection } from './EmptySection';
-import { AccordionArrowIcon, SortIcon, EditIcon, CopiedIcon, CopyIcon, QRIcon, SubscriptionLinkIcon } from 'components/UsersTable/Icons';
 import { EmptySection } from 'components/Table/EmptySection';
 import {
   AccordionArrowIcon,
@@ -48,22 +46,6 @@ import { UsageSlider, UsageSliderCompact } from './UsageSlider';
 import { StatusSortSelect } from './StatusSortSelect';
 
 type ExpandedIndex = number | number[];
-
-
-export type SortType = {
-    sort: string;
-    column: string;
-};
-
-export const Sort: FC<SortType> = ({ sort, column }) => {
-  if (sort.includes(column))
-    return (
-      <SortIcon
-        transform={sort.startsWith('-') ? undefined : 'rotate(180deg)'}
-      />
-    );
-  return null;
-};
 
 type UsersTableProps = {} & TableProps;
 
