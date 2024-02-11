@@ -30,7 +30,7 @@ import { useTranslation } from 'react-i18next';
 import { User } from 'types/User';
 import { OnlineBadge } from '../OnlineBadge';
 import { OnlineStatus } from '../OnlineStatus';
-import { Pagination } from '../Pagination';
+import { Pagination } from 'components/Table/Pagination';
 import { StatusBadge } from '../StatusBadge';
 import { EmptySection } from 'components/Table/EmptySection';
 import {
