@@ -152,4 +152,19 @@ export const ServicesTable: FC<ServicesTableProps> = (props) => {
             <Pagination />
         </Box>
     );
+          {services.length !== 0 ? services.map((service, i) => {
+            );
+          }) :
+            <Tr>
+              <Td colSpan={3}>
+                <EmptySection
+                  isFiltered={false}
+                  createObjectT='createService'
+                  onCreateObject={onCreateService}
+                  noObjectT="servicesTable.noService"
+                  noObjectMatchedT='servicesTable.noServiceMatched'
+                />
+              </Td>
+            </Tr>
+          }
 };

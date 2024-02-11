@@ -34,6 +34,16 @@ import { Pagination } from '../Pagination';
 import { StatusBadge } from '../StatusBadge';
 import { EmptySection } from './EmptySection';
 import { AccordionArrowIcon, SortIcon, EditIcon, CopiedIcon, CopyIcon, QRIcon, SubscriptionLinkIcon } from 'components/UsersTable/Icons';
+import { EmptySection } from 'components/Table/EmptySection';
+import {
+  AccordionArrowIcon,
+  EditIcon,
+  CopiedIcon,
+  CopyIcon,
+  QRIcon,
+  SubscriptionLinkIcon
+} from 'components/Table/Icons';
+import { Sort } from 'components/Table/Sort';
 import { UsageSlider, UsageSliderCompact } from './UsageSlider';
 import { StatusSortSelect } from './StatusSortSelect';
 
@@ -63,6 +73,7 @@ export const UsersTable: FC<UsersTableProps> = (props) => {
     users: { users },
     users: totalUsers,
     onEditingUser,
+    onCreateUser,
     onFilterChange,
   } = useDashboard();
 
@@ -438,7 +449,13 @@ export const UsersTable: FC<UsersTableProps> = (props) => {
           {users.length == 0 && (
             <Tr>
               <Td colSpan={4}>
-                <EmptySection isFiltered={isFiltered} />
+                <EmptySection
+                  isFiltered={isFiltered}
+                  noObjectT="usersTable.noUser"
+                  noObjectMatchedT='usersTable.noUserMatched'
+                  createObjectT="createuser"
+                  onCreateObject={onCreateUser}
+                />
               </Td>
             </Tr>
           )}

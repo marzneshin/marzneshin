@@ -1,18 +1,30 @@
+
 import { Box, Text, Button, chakra } from '@chakra-ui/react';
-import { useDashboard } from 'contexts/DashboardContext';
 import { FC } from 'react';
 import { ReactComponent as AddFileIcon } from 'assets/add_file.svg';
-import { useTranslation } from 'react-i18next';
+import { t } from 'i18next';
 
 type EmptySectionProps = {
     isFiltered: boolean;
+    noObjectMatchedT: string;
+    noObjectT: string;
+    createObjectT: string;
+    onCreateObject: (isOpen: boolean) => void;
 };
 
 const EmptySectionIcon = chakra(AddFileIcon);
 
-export const EmptySection: FC<EmptySectionProps> = ({ isFiltered }) => {
-  const { onCreateUser } = useDashboard();
-  const { t } = useTranslation();
+/**
+ * Component to provide visual feedback for the result of table filtering
+ * and table emptiness
+ *
+ * @param noObjectMatchedT - i18n token for "No <object> where Matched"
+ * @param noObjectT - i18n token for "No <object> where found"
+ * @param createObjectT - i18n token for "Create <object>" Button
+ * @param onCreateObject - Create object event handler on click
+ *
+ */
+export const EmptySection: FC<EmptySectionProps> = ({ isFiltered, noObjectT, noObjectMatchedT, createObjectT, onCreateObject }) => {
   return (
     <Box
       padding="5"
@@ -47,15 +59,15 @@ export const EmptySection: FC<EmptySectionProps> = ({ isFiltered }) => {
         }}
       />
       <Text fontWeight="medium" color="gray.600" _dark={{ color: 'gray.400' }}>
-        {isFiltered ? t('usersTable.noUserMatched') : t('usersTable.noUser')}
+        {isFiltered ? t(noObjectMatchedT) : t(noObjectT)}
       </Text>
       {!isFiltered && (
         <Button
           size="sm"
           colorScheme="primary"
-          onClick={() => onCreateUser(true)}
+          onClick={() => onCreateObject(true)}
         >
-          {t('createUser')}
+          {t(createObjectT)}
         </Button>
       )}
     </Box>
