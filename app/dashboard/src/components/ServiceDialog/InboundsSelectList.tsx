@@ -5,15 +5,15 @@ import {
   Stack,
 } from '@chakra-ui/react';
 import { ListCheckBox } from 'components/ListCheckBox';
-import { Inbounds, InboundType } from 'contexts/DashboardContext';
+import { Inbounds, InboundType } from 'types/Inbounds';
 import { forwardRef, ReactNode } from 'react';
 import {
   useFormContext,
 } from 'react-hook-form';
 
 interface InboundsSelectListProps {
-    list: Inbounds;
-    renderCheckboxContent: (inbound: InboundType) => ReactNode;
+  list: Inbounds;
+  renderCheckboxContent: (inbound: InboundType) => ReactNode;
 }
 
 export const InboundsSelectList = forwardRef<HTMLDivElement, InboundsSelectListProps>(

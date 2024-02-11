@@ -21,7 +21,6 @@ import {
   HStack,
 } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useDashboard } from 'contexts/DashboardContext';
 import { FilterUsageType } from 'types/Filter';
 import dayjs from 'dayjs';
 import { FC, useEffect, useState } from 'react';
@@ -200,11 +199,11 @@ export const UserDialog: FC<UserDialogProps> = () => {
   };
 
   const handleResetUsage = () => {
-    useDashboard.setState({ resetUsageUser: editingUser });
+    useUsers.setState({ resetUsageUser: editingUser });
   };
 
   const handleRevokeSubscription = () => {
-    useDashboard.setState({ revokeSubscriptionUser: editingUser });
+    useUsers.setState({ revokeSubscriptionUser: editingUser });
   };
 
   const disabled = loading;

@@ -43,6 +43,7 @@ import {
 } from 'constants/Proxies';
 import { useHosts } from 'contexts/HostsContext';
 import { useInbounds } from 'contexts/InboundsContext';
+import { useUsers } from 'contexts/UsersContext';
 import { FC, useEffect, useState } from 'react';
 import {
   FormProvider,
@@ -773,8 +774,8 @@ const AccordionInbound: FC<AccordionInboundType> = ({
 };
 
 export const HostsDialog: FC = () => {
-  const { isEditingHosts, onEditingHosts, refetchUsers } = useDashboard();
-  const { isLoading, hosts, fetchHosts, isPostLoading, setHosts } = useHosts();
+  const { refetchUsers } = useUsers();
+  const { isEditingHosts, onEditingHosts, isLoading, hosts, fetchHosts, isPostLoading, setHosts } = useHosts();
   const toast = useToast();
   const { t } = useTranslation();
   const [openAccordions, setOpenAccordions] = useState<any>({});

@@ -22,7 +22,6 @@ import {
 import classNames from 'classnames';
 
 import { statusColors } from 'constants/UserSettings';
-import { useDashboard } from 'contexts/DashboardContext';
 import { t } from 'i18next';
 import { FC, Fragment, useEffect, useState } from 'react';
 import CopyToClipboard from 'react-copy-to-clipboard';
@@ -454,7 +453,7 @@ type ActionButtonsProps = {
 };
 
 const ActionButtons: FC<ActionButtonsProps> = ({ user }) => {
-  const { setQRCode, setSubLink } = useDashboard();
+  const { setQRCode, setSubLink } = useUsers();
 
   const proxyLinks = user.links.join('\r\n');
 

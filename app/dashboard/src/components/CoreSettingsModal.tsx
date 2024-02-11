@@ -315,8 +315,8 @@ const CoreSettingModalContent: FC = () => {
   );
 };
 export const CoreSettingsModal: FC = () => {
-  const { isEditingCore } = useDashboard();
-  const onClose = useDashboard.setState.bind(null, { isEditingCore: false });
+  const { isEditingCore } = useNodes();
+  const onClose = useNodes.setState.bind(null, { isEditingCore: false });
   const { t } = useTranslation();
 
   return (
