@@ -21,7 +21,7 @@ import {
   HStack,
 } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { FilterUsageType, useDashboard } from 'contexts/DashboardContext';
+import { FilterUsageType } from 'types/Filter';
 import dayjs from 'dayjs';
 import { FC, useEffect, useState } from 'react';
 import ReactApexChart from 'react-apexcharts';
@@ -46,6 +46,8 @@ import { PeriodicUsageReset as PeriodicUsageReset } from './PeriodicUsageReset';
 import { ExpireDateField } from './ExpireDateField';
 import { NoteField } from './NoteField';
 import { Service } from 'types/Service';
+import { useUsers } from 'contexts/UsersContext';
+import { useServices } from 'contexts/ServicesContext';
 
 const formatUser = (user: User): FormType => {
   const services: number[] = user.services.map((service: number | Service): number => {
@@ -66,15 +68,14 @@ export const UserDialog: FC<UserDialogProps> = () => {
   const {
     editingUser,
     isCreatingNewUser,
-    services,
     onCreateUser,
     editUser,
     fetchUserUsage,
-    refetchServices,
     onEditingUser,
     createUser,
     onDeletingUser,
-  } = useDashboard();
+  } = useUsers();
+  const { refetchServices, services } = useServices();
   const isEditing = !!editingUser;
   const isOpen = isCreatingNewUser || isEditing;
   const [loading, setLoading] = useState(false);
@@ -198,11 +199,11 @@ export const UserDialog: FC<UserDialogProps> = () => {
   };
 
   const handleResetUsage = () => {
-    useDashboard.setState({ resetUsageUser: editingUser });
+    useUsers.setState({ resetUsageUser: editingUser });
   };
 
   const handleRevokeSubscription = () => {
-    useDashboard.setState({ revokeSubscriptionUser: editingUser });
+    useUsers.setState({ revokeSubscriptionUser: editingUser });
   };
 
   const disabled = loading;

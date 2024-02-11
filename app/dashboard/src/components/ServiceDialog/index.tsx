@@ -17,7 +17,7 @@ import {
   IconButton,
 } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { InboundType, useDashboard } from 'contexts/DashboardContext';
+import { InboundType } from 'types/Inbounds';
 import { FC, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -29,6 +29,8 @@ import { schema, FormType } from './FormSchema';
 import { InboundsField } from './InboundsField';
 import { NameField } from './NameField';
 import { Service, ServiceCreate } from 'types/Service';
+import { useServices } from 'contexts/ServicesContext';
+import { useInbounds } from 'contexts/InboundsContext';
 
 const formatService = (service: Service): FormType => {
   const inbounds: number[] = service.inbounds.map((inbound: number | InboundType): number => {
@@ -46,14 +48,16 @@ export const ServiceDialog: FC<ServiceDialogProps> = () => {
   const {
     editingService,
     isCreatingNewService,
-    inbounds,
     onCreateService,
     editService,
-    refetchInbounds,
     onEditingService,
     createService,
     onDeletingService,
-  } = useDashboard();
+  } = useServices();
+  const {
+    inbounds,
+    refetchInbounds,
+  } = useInbounds();
   const isEditing = !!editingService;
   const isOpen = isCreatingNewService || isEditing;
   const [loading, setLoading] = useState(false);

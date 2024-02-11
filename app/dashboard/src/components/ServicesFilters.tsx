@@ -19,6 +19,7 @@ import {
 } from '@heroicons/react/24/outline';
 import classNames from 'classnames';
 import { useDashboard } from 'contexts/DashboardContext';
+import { useServices } from 'contexts/ServicesContext';
 import debounce from 'lodash.debounce';
 import React, { FC, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -35,17 +36,18 @@ const ClearIcon = chakra(XMarkIcon, iconProps);
 export const ReloadIcon = chakra(ArrowPathIcon, iconProps);
 
 export type FilterProps = {} & BoxProps;
-const setSearchField = debounce((username: string) => {
-  useDashboard.getState().onFilterChange({
-    ...useDashboard.getState().usersFilters,
+const setSearchField = debounce((name: string) => {
+  useServices.getState().onFilterChange({
+    ...useServices.getState().servicesFilters,
     offset: 0,
-    username,
+    name,
   });
 }, 300);
 
 export const ServicesFilters: FC<FilterProps> = ({ ...props }) => {
-  const { loading, servicesFilters: filters, onFilterChange, refetchUsers, onCreateService } =
-        useDashboard();
+  const { loading } =
+    useDashboard();
+  const { servicesFilters: filters, refetchServices, onFilterChange, onCreateService } = useServices();
   const { t } = useTranslation();
   const [search, setSearch] = useState('');
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -57,7 +59,7 @@ export const ServicesFilters: FC<FilterProps> = ({ ...props }) => {
     onFilterChange({
       ...filters,
       offset: 0,
-      username: '',
+      name: '',
     });
   };
   return (
@@ -91,7 +93,6 @@ export const ServicesFilters: FC<FilterProps> = ({ ...props }) => {
             borderColor="light-border"
             onChange={onChange}
           />
-
           <InputRightElement>
             {loading && <Spinner size="xs" />}
             {filters.name && filters.name.length > 0 && (
@@ -110,9 +111,9 @@ export const ServicesFilters: FC<FilterProps> = ({ ...props }) => {
       <GridItem colSpan={2} order={{ base: 1, md: 2 }}>
         <HStack justifyContent="flex-end" alignItems="center" h="full">
           <IconButton
-            aria-label="refresh users"
+            aria-label="refresh services"
             disabled={loading}
-            onClick={refetchUsers}
+            onClick={refetchServices}
             size="sm"
             variant="outline"
           >

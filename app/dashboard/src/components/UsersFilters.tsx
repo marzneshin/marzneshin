@@ -19,6 +19,7 @@ import {
 } from '@heroicons/react/24/outline';
 import classNames from 'classnames';
 import { useDashboard } from 'contexts/DashboardContext';
+import { useUsers } from 'contexts/UsersContext';
 import debounce from 'lodash.debounce';
 import React, { FC, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -36,16 +37,17 @@ export const ReloadIcon = chakra(ArrowPathIcon, iconProps);
 
 export type FilterProps = {} & BoxProps;
 const setSearchField = debounce((username: string) => {
-  useDashboard.getState().onFilterChange({
-    ...useDashboard.getState().usersFilters,
+  useUsers.getState().onFilterChange({
+    ...useUsers.getState().usersFilters,
     offset: 0,
     username,
   });
 }, 300);
 
 export const UsersFilters: FC<FilterProps> = ({ ...props }) => {
-  const { loading, usersFilters: filters, onFilterChange, refetchUsers, onCreateUser } =
+  const { loading, } =
     useDashboard();
+  const { usersFilters: filters, onFilterChange, refetchUsers, onCreateUser } = useUsers();
   const { t } = useTranslation();
   const [search, setSearch] = useState('');
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -91,7 +93,6 @@ export const UsersFilters: FC<FilterProps> = ({ ...props }) => {
             borderColor="light-border"
             onChange={onChange}
           />
-
           <InputRightElement>
             {loading && <Spinner size="xs" />}
             {filters.username && filters.username.length > 0 && (

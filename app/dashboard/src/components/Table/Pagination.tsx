@@ -11,9 +11,9 @@ import {
   ArrowLongLeftIcon,
   ArrowLongRightIcon,
 } from '@heroicons/react/24/outline';
-import { useDashboard } from 'contexts/DashboardContext';
 import { ChangeEvent, FC } from 'react';
 import { useTranslation } from 'react-i18next';
+import { FilterType } from 'types/Filter';
 import { setUsersPerPageLimitSize } from 'utils/userPreferenceStorage';
 
 const PrevIcon = chakra(ArrowLongLeftIcon, {
@@ -75,12 +75,13 @@ function generatePageItems(total: number, current: number, width: number) {
   return items;
 }
 
-export const Pagination: FC = () => {
-  const {
-    usersFilters: filters,
-    onFilterChange,
-    users: { total },
-  } = useDashboard();
+type PaginationProps = {
+  total: number;
+  onFilterChange: (filters: Partial<FilterType>) => void;
+  filters: FilterType;
+}
+
+export const Pagination: FC<PaginationProps> = ({ filters, total, onFilterChange }) => {
   const { limit: perPage, offset } = filters;
 
   const page = (offset || 0) / (perPage || 1);

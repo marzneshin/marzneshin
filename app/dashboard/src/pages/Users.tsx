@@ -11,12 +11,13 @@ import { QRCodeDialog } from 'components/QRCodeDialog';
 import { ResetUserUsageModal } from 'components/ResetUserUsageModal';
 import { RevokeSubscriptionModal } from 'components/RevokeSubscriptionModal';
 import { pages } from 'constants/Pages';
+import { useUsers } from 'contexts/UsersContext';
 
 
 export const UsersPage = () => {
   useEffect(() => {
     useDashboard.getState().activatePage(pages.findIndex((page) => page.path === '/users'));
-    useDashboard.getState().refetchUsers();
+    useUsers.getState().refetchUsers();
   }, []);
   return (
     <VStack justifyContent="space-between" maxH="100vh" p="2rem" rowGap={4}>

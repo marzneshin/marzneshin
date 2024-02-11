@@ -18,7 +18,7 @@ export const Footer: FC<BoxProps> = (props) => {
           Marzneshin
         </Link>
         {version ? ` (v${version}), ` : ', '}
-        Made with ❤️ in{' '}
+        Made in{' '}
         <Link color="blue.400" href={ORGANIZATION_URL}>
           khodedawosh
         </Link>

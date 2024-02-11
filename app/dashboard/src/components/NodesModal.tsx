@@ -61,7 +61,6 @@ import {
   generateErrorMessage,
   generateSuccessMessage,
 } from 'utils/toastHandler';
-import { useDashboard } from '../contexts/DashboardContext';
 import { DeleteNodeModal } from './DeleteNodeModal';
 import { DeleteIcon } from './Dialog/Icons';
 import { ReloadIcon } from './UsersFilters';
@@ -130,11 +129,7 @@ const NodeAccordion: FC<AccordionInboundType> = ({ toggleAccordion, node }) => {
     }
   );
 
-  const nodeStatus: Status = isReconnecting
-    ? 'connecting'
-    : node.status
-      ? node.status
-      : 'error';
+  const nodeStatus: Status = isReconnecting ? 'connecting' : node.status ? node.status : 'unhealthy';
 
   return (
     <AccordionItem
@@ -184,7 +179,7 @@ const NodeAccordion: FC<AccordionInboundType> = ({ toggleAccordion, node }) => {
       </AccordionButton>
       <AccordionPanel px={2} pb={2}>
         <VStack pb={3} alignItems="flex-start">
-          {nodeStatus === 'error' && (
+          {nodeStatus === 'unhealthy' && (
             <Alert status="error" size="xs">
               <Box>
                 <HStack w="full">
@@ -489,15 +484,6 @@ const NodeForm: NodeFormType = ({
               error={form.formState?.errors?.port?.message}
             />
           </Box>
-          <Box w="25%">
-            <CustomInput
-              label={t('nodes.nodeAPIPort')}
-              size="sm"
-              placeholder="62051"
-              {...form.register('api_port')}
-              error={form.formState?.errors?.api_port?.message}
-            />
-          </Box>
         </HStack>
         {addAsHost && (
           <FormControl py={1}>
@@ -527,7 +513,7 @@ const NodeForm: NodeFormType = ({
 };
 
 export const NodesDialog: FC = () => {
-  const { isEditingNodes, onEditingNodes } = useDashboard();
+  const { isEditingNodes, onEditingNodes } = useNodes();
   const { t } = useTranslation();
   const [openAccordions, setOpenAccordions] = useState<any>({});
   const { data: nodes, isLoading } = useNodesQuery();

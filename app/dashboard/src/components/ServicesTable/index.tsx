@@ -1,42 +1,25 @@
 
 import {
   Box,
-  Button,
-  chakra,
   HStack,
   Table,
   TableProps,
   Tbody,
   Td,
-  Text,
   Th,
   Thead,
   Tr,
   useBreakpointValue,
 } from '@chakra-ui/react';
 
-
-import { ReactComponent as AddFileIcon } from 'assets/add_file.svg';
 import classNames from 'classnames';
-import { useDashboard } from 'contexts/DashboardContext';
-import { t } from 'i18next';
 import { FC, Fragment, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Pagination } from './Pagination';
-import { SortType } from './UsersTable';
-import { SortIcon } from './UsersTable/Icons';
+import { EmptySection } from 'components/Table/EmptySection';
+import { Pagination } from 'components/Table/Pagination';
+import { Sort } from 'components/Table/Sort';
+import { useServices } from 'contexts/ServicesContext';
 
-const EmptySectionIcon = chakra(AddFileIcon);
-
-export const Sort: FC<SortType> = ({ sort, column }) => {
-  if (sort.includes(column))
-    return (
-      <SortIcon
-        transform={sort.startsWith('-') ? undefined : 'rotate(180deg)'}
-      />
-    );
-  return null;
-};
 type ServicesTableProps = {} & TableProps;
 
 export const ServicesTable: FC<ServicesTableProps> = (props) => {
@@ -44,8 +27,9 @@ export const ServicesTable: FC<ServicesTableProps> = (props) => {
     servicesFilters: filters,
     services,
     onEditingService,
+    onCreateService,
     onFilterChange,
-  } = useDashboard();
+  } = useServices();
 
   const { t } = useTranslation();
   const marginTop = useBreakpointValue({ base: 120, lg: 72 }) || 72;
@@ -121,11 +105,10 @@ export const ServicesTable: FC<ServicesTableProps> = (props) => {
                 <Sort sort={filters.sort} column="inbounds_number" />
               </HStack>
             </Th>
-
           </Tr>
         </Thead>
         <Tbody>
-          {services ? services.map((service, i) => {
+          {services.length !== 0 ? services.map((service, i) => {
             return (
               <Fragment key={service.name}>
                 <Tr
@@ -154,68 +137,19 @@ export const ServicesTable: FC<ServicesTableProps> = (props) => {
           }) :
             <Tr>
               <Td colSpan={3}>
-                <EmptySection isFiltered={false} />
+                <EmptySection
+                  isFiltered={false}
+                  createObjectT='createService'
+                  onCreateObject={onCreateService}
+                  noObjectT="servicesTable.noService"
+                  noObjectMatchedT='servicesTable.noServiceMatched'
+                />
               </Td>
             </Tr>
           }
         </Tbody>
       </Table>
-      <Pagination />
-    </Box>
-  );
-};
-
-type EmptySectionProps = {
-    isFiltered: boolean;
-};
-
-const EmptySection: FC<EmptySectionProps> = ({ isFiltered }) => {
-  const { onCreateService } = useDashboard();
-  return (
-    <Box
-      padding="5"
-      py="8"
-      display="flex"
-      alignItems="center"
-      flexDirection="column"
-      gap={4}
-      w="full"
-    >
-      <EmptySectionIcon
-        maxHeight="200px"
-        maxWidth="200px"
-        _dark={{
-          'path[fill="#fff"]': {
-            fill: 'gray.800',
-          },
-          'path[fill="#f2f2f2"], path[fill="#e6e6e6"], path[fill="#ccc"]': {
-            fill: 'gray.700',
-          },
-          'circle[fill="#3182CE"]': {
-            fill: 'primary.300',
-          },
-        }}
-        _light={{
-          'path[fill="#f2f2f2"], path[fill="#e6e6e6"], path[fill="#ccc"]': {
-            fill: 'gray.300',
-          },
-          'circle[fill="#3182CE"]': {
-            fill: 'primary.500',
-          },
-        }}
-      />
-      <Text fontWeight="medium" color="gray.600" _dark={{ color: 'gray.400' }}>
-        {isFiltered ? t('servicesTable.noServiceMatched') : t('servicesTable.noService')}
-      </Text>
-      {!isFiltered && (
-        <Button
-          size="sm"
-          colorScheme="primary"
-          onClick={() => onCreateService(true)}
-        >
-          {t('createService')}
-        </Button>
-      )}
+      <Pagination total={services.length} onFilterChange={onFilterChange} filters={filters} />
     </Box>
   );
 };

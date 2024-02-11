@@ -19,11 +19,17 @@ type HostsStore = {
   hosts: HostsSchema;
   fetchHosts: () => void;
   setHosts: (hosts: HostsSchema) => Promise<void>;
+  onEditingHosts: (isEditingHosts: boolean) => void;
+  isEditingHosts: boolean;
 };
 export const useHosts = create<HostsStore>((set) => ({
   isLoading: false,
   isPostLoading: false,
   hosts: {},
+  isEditingHosts: false,
+  onEditingHosts: (isEditingHosts: boolean) => {
+    set({ isEditingHosts });
+  },
   fetchHosts: () => {
     set({ isLoading: true });
     fetch('/hosts')
