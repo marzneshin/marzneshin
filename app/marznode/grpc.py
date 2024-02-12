@@ -21,7 +21,7 @@ def string_to_temp_file(content: str):
 
 
 class MarzNodeGRPC(MarzNodeBase):
-    def __init__(self, address: str, port: int, ssl_key: str, ssl_cert: str):  # TODO: implement ssl
+    def __init__(self, address: str, port: int, ssl_key: str, ssl_cert: str, usage_coefficient: int = 1):
         self._address = address
         self._port = port
 
@@ -36,6 +36,8 @@ class MarzNodeGRPC(MarzNodeBase):
         self._stub = MarzServiceStub(self._channel)
         self._health = HealthStub(self._channel)
         self.synced = False
+
+        self.usage_coefficient = usage_coefficient
         atexit.register(self._channel.close)
 
     @staticmethod
@@ -89,7 +91,10 @@ class MarzNodeGRPC(MarzNodeBase):
             await stream.send_message(UsersUpdate(users_updates=updates))
 
     async def fetch_users_stats(self):
-        raise NotImplementedError
+        async with self._stub.FetchUsersStats.open() as stream:
+            await stream.send_message(Empty())
+            stats = await stream.recv_message()
+            return stats.users_stats
 
     async def fetch_inbounds(self) -> list:
         async with self._stub.FetchInbounds.open() as stm:

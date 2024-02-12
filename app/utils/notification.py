@@ -100,6 +100,6 @@ class UserSubscriptionRevoked(UserNotification):
     user: UserResponse
 
 
-async def notify(message: Type[Notification]) -> None:
+async def notify(message: Notification) -> None:
     if config.WEBHOOK_ADDRESS:
         queue.append(message)
