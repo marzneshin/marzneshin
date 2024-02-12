@@ -352,7 +352,7 @@ def reset_user_data_usage(db: Session, dbuser: User):
 
     dbuser.used_traffic = 0
     dbuser.node_usages.clear()
-    if dbuser.status is UserStatus.limited:
+    if dbuser.status == UserStatus.limited:
         dbuser.status = UserStatus.active.value
     db.add(dbuser)
 
