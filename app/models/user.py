@@ -7,7 +7,6 @@ from typing import List, Optional, Union
 from pydantic import field_validator, ConfigDict, BaseModel, Field, validator, computed_field, ValidationInfo
 
 from app.models.proxy import InboundBase
-from app.utils.jwt import create_subscription_token
 from config import XRAY_SUBSCRIPTION_PATH, XRAY_SUBSCRIPTION_URL_PREFIX
 
 USERNAME_REGEXP = re.compile(r"^(?=\w{3,32}\b)[a-zA-Z0-9-_@.]+(?:_[a-zA-Z0-9-_@.]+)*$")
@@ -203,8 +202,7 @@ class UserResponse(User):
     def subscription_url(self) -> str:
         salt = secrets.token_hex(8)
         url_prefix = (XRAY_SUBSCRIPTION_URL_PREFIX).replace('*', salt)
-        token = create_subscription_token(self.username)
-        return f"{url_prefix}/{XRAY_SUBSCRIPTION_PATH}/{token}"
+        return f"{url_prefix}/{XRAY_SUBSCRIPTION_PATH}/{self.username}/{self.key}"
     
 
 class UsersResponse(BaseModel): 

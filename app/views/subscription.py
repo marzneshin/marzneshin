@@ -8,7 +8,6 @@ from app import app
 from app.db import Session, crud, get_db
 from app.models.user import UserResponse
 from app.templates import render_template
-from app.utils.jwt import get_subscription_payload
 from app.utils.share import encode_title, generate_subscription
 from config import (
     SUB_PROFILE_TITLE,
@@ -19,9 +18,10 @@ from config import (
 )
 
 
-@app.get("/%s/{token}/" % XRAY_SUBSCRIPTION_PATH, tags=['Subscription'])
-@app.get("/%s/{token}" % XRAY_SUBSCRIPTION_PATH, include_in_schema=False)
-def user_subscription(token: str,
+@app.get("/%s/{username}/{key}/" % XRAY_SUBSCRIPTION_PATH, tags=['Subscription'])
+@app.get("/%s/{username}/{key}" % XRAY_SUBSCRIPTION_PATH, include_in_schema=False)
+def user_subscription(username: str,
+                      key: str,
                       request: Request,
                       db: Session = Depends(get_db),
                       user_agent: str = Header(default="")):
@@ -37,17 +37,14 @@ def user_subscription(token: str,
             "total": user.data_limit,
             "expire": user.expire,
         }
+    try:
+        int(key, 16)
+    except ValueError:
+        return Response(status_code=404)
 
-    sub = get_subscription_payload(token)
-    if not sub:
-        return Response(status_code=204)
-
-    dbuser = crud.get_user(db, sub['username'])
-    if not dbuser or dbuser.created_at > sub['created_at']:
-        return Response(status_code=204)
-
-    if dbuser.sub_revoked_at and dbuser.sub_revoked_at > sub['created_at']:
-        return Response(status_code=204)
+    dbuser = crud.get_user(db, username)
+    if not dbuser or dbuser.key != key:
+        return Response(status_code=404)
 
     user: UserResponse = UserResponse.model_validate(dbuser)
 
@@ -95,39 +92,37 @@ def user_subscription(token: str,
         return Response(content=conf, media_type="text/plain", headers=response_headers)
 
 
-@app.get("/%s/{token}/info" % XRAY_SUBSCRIPTION_PATH, tags=['Subscription'], response_model=UserResponse)
-def user_subscription_info(token: str,
+@app.get("/%s/{username}/{key}/info" % XRAY_SUBSCRIPTION_PATH, tags=['Subscription'], response_model=UserResponse)
+def user_subscription_info(username: str,
+                           key: str,
                            db: Session = Depends(get_db)):
-    sub = get_subscription_payload(token)
-    if not sub:
+    try:
+        int(key, 16)
+    except ValueError:
         return Response(status_code=404)
 
-    dbuser = crud.get_user(db, sub['username'])
-    if not dbuser or dbuser.created_at > sub['created_at']:
-        return Response(status_code=404)
-
-    elif dbuser.sub_revoked_at and dbuser.sub_revoked_at > sub['created_at']:
+    dbuser = crud.get_user(db, username)
+    if not dbuser or key != dbuser.key:
         return Response(status_code=404)
 
     return dbuser
 
 
-@app.get("/%s/{token}/usage" % XRAY_SUBSCRIPTION_PATH, tags=['Subscription'])
-def user_get_usage(token: str,
+@app.get("/%s/{username}/{key}/usage" % XRAY_SUBSCRIPTION_PATH, tags=['Subscription'])
+def user_get_usage(username: str,
+                   key: str,
                    start: str = None,
                    end: str = None,
                    db: Session = Depends(get_db)):
 
-    sub = get_subscription_payload(token)
-    if not sub:
-        return Response(status_code=204)
+    try:
+        int(key, 16)
+    except ValueError:
+        return Response(status_code=404)
 
-    dbuser = crud.get_user(db, sub['username'])
-    if not dbuser or dbuser.created_at > sub['created_at']:
-        return Response(status_code=204)
-
-    if dbuser.sub_revoked_at and dbuser.sub_revoked_at > sub['created_at']:
-        return Response(status_code=204)
+    dbuser = crud.get_user(db, username)
+    if not dbuser or key != dbuser.key:
+        return Response(status_code=404)
 
     if start is None:
         start_date = datetime.fromtimestamp(datetime.utcnow().timestamp() - 30 * 24 * 3600)
@@ -144,12 +139,13 @@ def user_get_usage(token: str,
     return {"usages": usages, "username": dbuser.username}
 
 
-@app.get("/%s/{token}/{client_type}" % XRAY_SUBSCRIPTION_PATH, tags=['Subscription'])
+@app.get("/%s/{username}/{key}/{client_type}" % XRAY_SUBSCRIPTION_PATH, tags=['Subscription'])
 def user_subscription_with_client_type(
-    token: str,
-    request: Request,
-    client_type: str = Path(..., regex="sing-box|clash-meta|clash|outline|v2ray"),
-    db: Session = Depends(get_db),
+        username: str,
+        key: str,
+        request: Request,
+        client_type: str = Path(..., regex="sing-box|clash-meta|clash|outline|v2ray"),
+        db: Session = Depends(get_db),
 ):
     """
     Subscription link, v2ray, clash, sing-box, outline and clash-meta supported
@@ -163,16 +159,14 @@ def user_subscription_with_client_type(
             "expire": user.expire,
         }
 
-    sub = get_subscription_payload(token)
-    if not sub:
-        return Response(status_code=204)
+    try:
+        int(key, 16)
+    except ValueError:
+        return Response(status_code=404)
 
-    dbuser = crud.get_user(db, sub['username'])
-    if not dbuser or dbuser.created_at > sub['created_at']:
-        return Response(status_code=204)
-
-    if dbuser.sub_revoked_at and dbuser.sub_revoked_at > sub['created_at']:
-        return Response(status_code=204)
+    dbuser = crud.get_user(db, username)
+    if not dbuser or key != dbuser.key:
+        return Response(status_code=404)
 
     user: UserResponse = UserResponse.model_validate(dbuser)
 
