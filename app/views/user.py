@@ -149,25 +149,27 @@ async def reset_user_data_usage(username: str,
     """
     Reset user data usage
     """
-    if not (admin.is_sudo or (dbuser.admin and dbuser.admin.username == admin.username)):
+    db_user = crud.get_user(db, username)
+    if not (admin.is_sudo or (db_user.admin and db_user.admin.username == admin.username)):
         raise HTTPException(status_code=403, detail="You're not allowed")
 
-    dbuser = crud.get_user(db, username)
-    if not dbuser:
+    if not db_user:
         raise HTTPException(status_code=404, detail="User not found")
 
-    dbuser = crud.reset_user_data_usage(db=db, dbuser=dbuser)
-    if dbuser.status in [UserStatus.active, UserStatus.on_hold]:
-        asyncio.create_task(marznode.operations.add_user(dbuser=dbuser))
+    previous_status = db_user.status
+    db_user = crud.reset_user_data_usage(db=db, dbuser=db_user)
 
-    user = UserResponse.model_validate(dbuser)
+    if db_user.status == UserStatus.active and previous_status == UserStatus.limited:
+        await marznode.operations.add_user(db_user)
+
+    user = UserResponse.model_validate(db_user)
     asyncio.create_task(report.user_data_usage_reset(
                 user=user,
                 by=admin))
 
     logger.info(f"User \"{username}\"'s usage was reset")
 
-    return dbuser
+    return user
 
 
 @app.post("/api/user/{username}/revoke_sub", tags=['User'], response_model=UserResponse)
