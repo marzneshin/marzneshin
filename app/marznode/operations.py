@@ -22,7 +22,7 @@ async def remove_user(user: "DBUser"):
 
     for inb in user.inbounds:
         nodes_set.add(inb.node_id)
-    print(nodes_set)
+
     for n in nodes_set:
         await marznode.nodes[n].remove_user(user)
 

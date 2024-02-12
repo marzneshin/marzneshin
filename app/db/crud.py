@@ -1,4 +1,5 @@
 import json
+import secrets
 from datetime import datetime
 from enum import Enum
 from typing import Dict, List, Optional, Tuple, Union
@@ -216,15 +217,9 @@ def get_users(db: Session,
 
 def get_user_usages(db: Session, dbuser: User, start: datetime, end: datetime,
                     ) -> List[UserUsageResponse]:
-    usages = {}
+    usages = dict()
 
-    usages[0] = UserUsageResponse(  # Main Core
-        node_id=None,
-        node_name="Master",
-        used_traffic=0
-    )
     for node in db.query(Node).all():
-
         usages[node.id] = UserUsageResponse(
             node_id=node.id,
             node_name=node.name,
@@ -362,14 +357,7 @@ def reset_user_data_usage(db: Session, dbuser: User):
 
 
 def revoke_user_sub(db: Session, dbuser: User):
-    dbuser.sub_revoked_at = datetime.utcnow()
-
-    user = UserResponse.model_validate(dbuser)
-    for proxy_type, settings in user.proxies.copy().items():
-        settings.revoke()
-        user.proxies[proxy_type] = settings
-    dbuser = update_user(db, dbuser, user)
-
+    dbuser.key = secrets.token_hex(16)
     db.commit()
     db.refresh(dbuser)
     return dbuser

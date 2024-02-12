@@ -115,7 +115,6 @@ def upgrade() -> None:
     sa.Column('settings', sa.String(), nullable=True),
     sa.Column('expire', sa.Integer(), nullable=True),
     sa.Column('admin_id', sa.Integer(), nullable=True),
-    sa.Column('sub_revoked_at', sa.DateTime(), nullable=True),
     sa.Column('sub_updated_at', sa.DateTime(), nullable=True),
     sa.Column('sub_last_user_agent', sa.String(length=512), nullable=True),
     sa.Column('created_at', sa.DateTime(), nullable=True),
