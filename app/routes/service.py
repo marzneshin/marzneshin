@@ -20,7 +20,7 @@ def add_service(new_service: ServiceCreate,
 
     - **name** can be up to 64 characters
     - **data_limit** must be in bytes and larger or equal to 0
-    - **expire_duration** must be in seconds and larger or equat to 0
+    - **expire_duration** must be in seconds and larger or equal to 0
     - **inbounds** dictionary of protocol:inbound_tags, empty means all inbounds
     """
     try:
@@ -52,8 +52,10 @@ def modify_service(id: int,
     - **name** can be up to 64 characters
     - **data_limit** must be in bytes and larger or equal to 0
     - **expire_duration** must be in seconds and larger or equat to 0
-    - **inbounds** dictionary of protocol:inbound_tags, empty means all inbounds
+    - **inbounds** list of inbound ids. if not specified no change will be applied;
+    in case of an empty list all inbounds would be removed.
     """
+    # TODO: Update all affected users in nodes
     dbservice = crud.get_service(db, id)
     if not dbservice:
         raise HTTPException(status_code=404, detail="Service not found") 
@@ -72,7 +74,8 @@ def remove_service(id: int,
     if not dbservice:
         raise HTTPException(status_code=404, detail="Service not found")
     
-    return crud.remove_service(db, dbservice)
+    crud.remove_service(db, dbservice)
+    return dict()
 
 
 @router.get("/api/services", response_model=List[ServiceResponse])
