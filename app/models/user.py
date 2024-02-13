@@ -25,7 +25,7 @@ class UserStatus(str, Enum):
     on_hold = "on_hold"
 
 
-from app.utils.share import generate_v2ray_links
+# from app.utils.share import generate_v2ray_links
 
 
 class UserStatusModify(str, Enum):
@@ -67,7 +67,7 @@ class UserBase(BaseModel):
     on_hold_expire_duration: Optional[int] = Field(None, nullable=True)
     on_hold_timeout: Optional[Union[datetime, None]] = Field(None, nullable=True)
 
-    
+
     @field_validator("username")
     @classmethod
     def validate_username(cls, v: str):
@@ -180,8 +180,8 @@ class UserResponse(User):
     created_at: datetime
     inbounds: List[InboundBase] = Field([])
     services: List[ServiceBase] = Field([])
+    links: List[str] | None = []  # Field(None)
 
-    # links: List[str] = [] # Field(default_factory=lamba x: )
     # subscription_url: str = ""
     model_config = ConfigDict(from_attributes=True)
 
@@ -189,13 +189,6 @@ class UserResponse(User):
     @property
     def service_ids(self) -> List[int]:
         return [s.id for s in self.services]
-
-    @computed_field
-    @property
-    def links(self) -> List[str]:
-        return generate_v2ray_links(
-            inbounds=self.inbounds, key=self.key, extra_data=self.dict(exclude={'subscription_url', 'links'})
-        )
 
     @computed_field
     @property

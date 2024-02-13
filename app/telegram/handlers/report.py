@@ -1,13 +1,16 @@
 import datetime
-
-from app import logger
-from app.telegram import bot
-from telebot.apihelper import ApiTelegramException
+import logging
 from datetime import datetime
+
+from telebot.apihelper import ApiTelegramException
+from telebot.formatting import escape_html
+
+from app.telegram import bot
 from app.telegram.utils.keyboard import BotKeyboard
 from app.utils.system import readable_size
 from config import TELEGRAM_ADMIN_ID, TELEGRAM_LOGGER_CHANNEL_ID
-from telebot.formatting import escape_html
+
+logger = logging.getLogger(__name__)
 
 
 async def report(message: str, parse_mode="html", keyboard=None):

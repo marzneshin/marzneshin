@@ -1,14 +1,17 @@
 from typing import List, Optional, Annotated
 
 import sqlalchemy
-from app import app
-from app.db import Session, crud
-from app.models.admin import Admin, AdminCreate, AdminInDB, AdminModify, Token
-from app.utils.jwt import create_admin_token
-from app.dependencies import AdminDep, SudoAdminDep, DBDep
-from config import SUDOERS
+from fastapi import APIRouter
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
+
+from app.db import Session, crud
+from app.dependencies import AdminDep, SudoAdminDep, DBDep
+from app.models.admin import Admin, AdminCreate, AdminInDB, AdminModify, Token
+from app.utils.jwt import create_admin_token
+from config import SUDOERS
+
+router = APIRouter(tags=["Admin"])
 
 
 def authenticate_env_sudo(username: str, password: str) -> bool:
@@ -26,7 +29,7 @@ def authenticate_admin(db: Session, username: str, password: str) -> Optional[Ad
     return dbadmin if AdminInDB.model_validate(dbadmin).verify_password(password) else None
 
 
-@app.post("/api/admin/token", tags=['Admin'], response_model=Token)
+@router.post("/api/admin/token", response_model=Token)
 def admin_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
                 db: DBDep):
     if authenticate_env_sudo(form_data.username, form_data.password):
@@ -42,7 +45,7 @@ def admin_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
     )
 
 
-@app.post("/api/admin", tags=['Admin'], response_model=Admin)
+@router.post("/api/admin", response_model=Admin)
 def create_admin(new_admin: AdminCreate,
                  db: DBDep,
                  admin: SudoAdminDep):
@@ -55,7 +58,7 @@ def create_admin(new_admin: AdminCreate,
     return dbadmin
 
 
-@app.put("/api/admin/{username}", tags=['Admin'], response_model=Admin)
+@router.put("/api/admin/{username}", response_model=Admin)
 def modify_admin(username: str,
                  modified_admin: AdminModify,
                  db: DBDep,
@@ -82,7 +85,7 @@ def modify_admin(username: str,
     return dbadmin
 
 
-@app.delete("/api/admin/{username}", tags=['Admin'])
+@router.delete("/api/admin/{username}")
 def remove_admin(username: str,
                  db: DBDep,
                  admin: SudoAdminDep):
@@ -100,12 +103,12 @@ def remove_admin(username: str,
     return {}
 
 
-@app.get("/api/admin", tags=["Admin"], response_model=Admin)
+@router.get("/api/admin", response_model=Admin)
 def get_current_admin(admin: AdminDep):
     return admin
 
 
-@app.get("/api/admins", tags=['Admin'], response_model=List[Admin])
+@router.get("/api/admins", response_model=List[Admin])
 def get_admins(db: DBDep,
                admin: SudoAdminDep,
                offset: int = None,

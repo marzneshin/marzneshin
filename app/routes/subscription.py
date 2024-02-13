@@ -1,15 +1,15 @@
 import re
 from datetime import datetime
 
+from fastapi import APIRouter
 from fastapi import Header, HTTPException, Path, Request, Response
 from fastapi.responses import HTMLResponse
 
-from app import app
 from app.db import crud
 from app.dependencies import DBDep, SubUserDep
 from app.models.user import UserResponse
 from app.templates import render_template
-from app.utils.share import encode_title, generate_subscription
+from app.utils.share import encode_title, generate_subscription, generate_v2ray_links
 from config import (
     SUB_PROFILE_TITLE,
     SUB_SUPPORT_URL,
@@ -17,6 +17,8 @@ from config import (
     SUBSCRIPTION_PAGE_TEMPLATE,
     XRAY_SUBSCRIPTION_PATH
 )
+
+router = APIRouter(tags=['Subscription'])
 
 
 def get_subscription_user_info(user: UserResponse) -> dict:
@@ -28,8 +30,8 @@ def get_subscription_user_info(user: UserResponse) -> dict:
     }
 
 
-@app.get("/%s/{username}/{key}/" % XRAY_SUBSCRIPTION_PATH, tags=['Subscription'])
-@app.get("/%s/{username}/{key}" % XRAY_SUBSCRIPTION_PATH, include_in_schema=False)
+@router.get("/%s/{username}/{key}/" % XRAY_SUBSCRIPTION_PATH)
+@router.get("/%s/{username}/{key}" % XRAY_SUBSCRIPTION_PATH, include_in_schema=False)
 def user_subscription(db_user: SubUserDep,
                       request: Request,
                       db: DBDep,
@@ -42,10 +44,15 @@ def user_subscription(db_user: SubUserDep,
     user: UserResponse = UserResponse.model_validate(db_user)
 
     if "text/html" in accept_header:
+        links = generate_v2ray_links(user.inbounds,
+                                     user.key,
+                                     user.model_dump(
+                                         exclude={"subscription_url", "services", "inbounds", "links"}
+                                     ))
         return HTMLResponse(
             render_template(
                 SUBSCRIPTION_PAGE_TEMPLATE,
-                {"user": user}
+                {"user": user, "links": links}
             )
         )
 
@@ -85,12 +92,12 @@ def user_subscription(db_user: SubUserDep,
         return Response(content=conf, media_type="text/plain", headers=response_headers)
 
 
-@app.get("/%s/{username}/{key}/info" % XRAY_SUBSCRIPTION_PATH, tags=['Subscription'], response_model=UserResponse)
+@router.get("/%s/{username}/{key}/info" % XRAY_SUBSCRIPTION_PATH, response_model=UserResponse)
 def user_subscription_info(db_user: SubUserDep):
     return db_user
 
 
-@app.get("/%s/{username}/{key}/usage" % XRAY_SUBSCRIPTION_PATH, tags=['Subscription'])
+@router.get("/%s/{username}/{key}/usage" % XRAY_SUBSCRIPTION_PATH)
 def user_get_usage(db_user: SubUserDep,
                    db: DBDep,
                    start: str = None,
@@ -111,7 +118,7 @@ def user_get_usage(db_user: SubUserDep,
     return {"usages": usages, "username": db_user.username}
 
 
-@app.get("/%s/{username}/{key}/{client_type}" % XRAY_SUBSCRIPTION_PATH, tags=['Subscription'])
+@router.get("/%s/{username}/{key}/{client_type}" % XRAY_SUBSCRIPTION_PATH)
 def user_subscription_with_client_type(
         db_user: SubUserDep,
         request: Request,

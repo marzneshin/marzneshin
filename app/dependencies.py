@@ -1,12 +1,18 @@
 from typing import Annotated
 
 from fastapi import Depends, HTTPException, status
+from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
-from app.db import crud, get_db, User
+from app.db import crud, User, GetDB
 from app.models.admin import Admin, oauth2_scheme
 from app.utils.jwt import get_admin_payload
 from config import SUDOERS
+
+
+def get_db():  # Dependency
+    with GetDB() as db:
+        yield db
 
 
 def get_admin(db: Annotated[Session, Depends(get_db)],
@@ -48,9 +54,10 @@ def sudo_admin(admin: Annotated[Admin, Depends(get_current_admin)]):
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Access Denied",
         )
+    return admin
 
 
-def get_current_user(username: str, key: str, db: Annotated[Session, Depends(get_db)]):
+def get_subscription_user(username: str, key: str, db: Annotated[Session, Depends(get_db)]):
     try:
         int(key, 16)
     except ValueError:
@@ -62,7 +69,21 @@ def get_current_user(username: str, key: str, db: Annotated[Session, Depends(get
     return db_user
 
 
-SubUserDep = Annotated[User, Depends(get_current_user)]
+def get_user(username: str,
+             admin: Annotated[Admin, Depends(get_current_admin)],
+             db: Annotated[Session, Depends(get_db)]):
+    db_user = crud.get_user(db, username)
+    if not (admin.is_sudo or (db_user.admin and db_user.admin.username == admin.username)):
+        raise HTTPException(status_code=403, detail="You're not allowed")
+
+    if not db_user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    return db_user
+
+
+SubUserDep = Annotated[User, Depends(get_subscription_user)]
+UserDep = Annotated[User, Depends(get_user)]
 AdminDep = Annotated[Admin, Depends(get_current_admin)]
 SudoAdminDep = Annotated[Admin, Depends(sudo_admin)]
 DBDep = Annotated[Session, Depends(get_db)]

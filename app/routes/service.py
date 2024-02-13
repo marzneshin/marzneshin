@@ -1,19 +1,20 @@
 from typing import List
 
 import sqlalchemy
+from fastapi import APIRouter, Depends
 from fastapi import HTTPException
 
-from app import app
 from app.db import crud
+from app.dependencies import DBDep, sudo_admin
 from app.models.service import (ServiceCreate, ServiceModify,
                                 ServiceResponse)
-from app.dependencies import AdminDep, DBDep, SudoAdminDep
+
+router = APIRouter(dependencies=[Depends(sudo_admin)], tags=['Service'])
 
 
-@app.post("/api/service", tags=['Service'], response_model=ServiceResponse)
+@router.post("/api/service", response_model=ServiceResponse)
 def add_service(new_service: ServiceCreate,
-                db: DBDep,
-                admin: SudoAdminDep):
+                db: DBDep):
     """
     Add a new user template
 
@@ -29,8 +30,8 @@ def add_service(new_service: ServiceCreate,
         raise HTTPException(status_code=409, detail="Service by this name already exists")
 
 
-@app.get("/api/service/{id}", tags=['Service'], response_model=ServiceResponse)
-def get_service(id: int, db: DBDep, admin: SudoAdminDep):
+@router.get("/api/service/{id}", response_model=ServiceResponse)
+def get_service(id: int, db: DBDep):
     """
     Get Service information with id
     """
@@ -41,11 +42,10 @@ def get_service(id: int, db: DBDep, admin: SudoAdminDep):
     return dbservice
 
 
-@app.put("/api/service/{id}", tags=['Service'], response_model=ServiceResponse)
+@router.put("/api/service/{id}", response_model=ServiceResponse)
 def modify_service(id: int,
-                   modify_service: ServiceModify,
-                   db: DBDep,
-                   admin: SudoAdminDep):
+                   modification: ServiceModify,
+                   db: DBDep):
     """
     Modify Service
 
@@ -54,24 +54,20 @@ def modify_service(id: int,
     - **expire_duration** must be in seconds and larger or equat to 0
     - **inbounds** dictionary of protocol:inbound_tags, empty means all inbounds
     """
-    if not (admin.is_sudo):
-        raise HTTPException(status_code=403, detail="You're not allowed")
-    
     dbservice = crud.get_service(db, id)
     if not dbservice:
         raise HTTPException(status_code=404, detail="Service not found") 
 
     try:
-        return crud.update_service(db, dbservice, modify_service)
+        return crud.update_service(db, dbservice, modification)
     except sqlalchemy.exc.IntegrityError:
         db.rollback()
         raise HTTPException(status_code=409, detail="Service by this name already exists")
 
 
-@app.delete("/api/service/{id}", tags=['Service'])
+@router.delete("/api/service/{id}")
 def remove_service(id: int,
-                   db: DBDep,
-                   admin: SudoAdminDep):
+                   db: DBDep):
     dbservice = crud.get_service(db, id)
     if not dbservice:
         raise HTTPException(status_code=404, detail="Service not found")
@@ -79,9 +75,8 @@ def remove_service(id: int,
     return crud.remove_service(db, dbservice)
 
 
-@app.get("/api/services", tags=['Service'], response_model=List[ServiceResponse])
+@router.get("/api/services", response_model=List[ServiceResponse])
 def get_services(db: DBDep,
-                 admin: AdminDep,
                  offset: int = None,
                  limit: int = None):
-    return crud.get_services(db) #, offset, limit)
+    return crud.get_services(db)  # , offset, limit)

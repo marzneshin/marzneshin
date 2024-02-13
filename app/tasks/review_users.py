@@ -1,10 +1,11 @@
 import asyncio
+import logging
 from datetime import datetime
 from typing import TYPE_CHECKING
 
 from sqlalchemy.orm import Session
 
-from app import logger, scheduler, marznode
+from app import marznode
 from app.db import (GetDB, get_notification_reminder, get_users,
                     start_user_expire, update_user_status)
 from app.models.user import ReminderType, UserResponse, UserStatus
@@ -16,6 +17,9 @@ from config import (NOTIFY_DAYS_LEFT, NOTIFY_REACHED_USAGE_PERCENT,
 
 if TYPE_CHECKING:
     from app.db.models import User
+
+
+logger = logging.getLogger(__name__)
 
 
 def add_notification_reminders(db: Session, user: "User", now: datetime = datetime.utcnow()) -> None:
@@ -35,7 +39,7 @@ def add_notification_reminders(db: Session, user: "User", now: datetime = dateti
                 user.id, user.expire)
 
 
-async def review():
+async def review_users():
     now = datetime.utcnow()
     with GetDB() as db:
         for user in get_users(db, status=UserStatus.active):
@@ -88,4 +92,3 @@ async def review():
             logger.info(f"on hold user `{user.username}` has been activated")
 
 
-scheduler.add_job(review, 'interval', seconds=600, coalesce=True, max_instances=1)

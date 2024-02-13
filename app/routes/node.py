@@ -1,22 +1,24 @@
-import asyncio
-# import time
+import logging
 from datetime import datetime
 from typing import List
 
 import sqlalchemy
+from fastapi import APIRouter, Depends
 from fastapi import HTTPException, WebSocket
 
-
-from app import app, logger, marznode
+from app import marznode
 from app.db import crud, get_tls_certificate
+from app.dependencies import DBDep, SudoAdminDep, sudo_admin
 from app.marznode import MarzNodeGRPC
 from app.models.admin import Admin
 from app.models.node import (NodeCreate, NodeModify, NodeResponse,
                              NodeSettings, NodeStatus, NodesUsageResponse)
-from app.dependencies import DBDep, SudoAdminDep
+
+logger = logging.getLogger(__name__)
+router = APIRouter(tags=['Node'], dependencies=[Depends(sudo_admin)])
 
 
-@app.get("/api/node/settings", tags=['Node'], response_model=NodeSettings)
+@router.get("/api/node/settings", response_model=NodeSettings)
 def get_node_settings(db: DBDep,
                       admin: SudoAdminDep):
     tls = crud.get_tls_certificate(db)
@@ -26,7 +28,7 @@ def get_node_settings(db: DBDep,
     )
 
 
-@app.post("/api/node", tags=['Node'], response_model=NodeResponse)
+@router.post("/api/node", response_model=NodeResponse)
 async def add_node(new_node: NodeCreate,
                    db: DBDep,
                    admin: SudoAdminDep):
@@ -42,11 +44,11 @@ async def add_node(new_node: NodeCreate,
 
     await marznode.operations.add_node(db_node.id, node)
 
-    logger.info(f"New node \"{db_node.name}\" added")
+    logger.info("New node `%s` added", db_node.name)
     return db_node
 
 
-@app.get("/api/node/{node_id}", tags=['Node'], response_model=NodeResponse)
+@router.get("/api/node/{node_id}", response_model=NodeResponse)
 def get_node(node_id: int,
              db: DBDep,
              admin: SudoAdminDep):
@@ -57,7 +59,7 @@ def get_node(node_id: int,
     return db_node
 
 
-@app.websocket("/api/node/{node_id}/logs")
+@router.websocket("/api/node/{node_id}/logs", dependencies=None)
 async def node_logs(node_id: int,
                     websocket: WebSocket,
                     db: DBDep):
@@ -93,13 +95,13 @@ async def node_logs(node_id: int,
         await websocket.send_text(l)
 
 
-@app.get("/api/nodes", tags=['Node'], response_model=List[NodeResponse])
+@router.get("/api/nodes", response_model=List[NodeResponse])
 def get_nodes(db: DBDep,
               admin: SudoAdminDep):
     return crud.get_nodes(db)
 
 
-@app.put("/api/node/{node_id}", tags=['Node'], response_model=NodeResponse)
+@router.put("/api/node/{node_id}", response_model=NodeResponse)
 async def modify_node(node_id: int,
                       modified_node: NodeModify,
                       db: DBDep,
@@ -117,11 +119,11 @@ async def modify_node(node_id: int,
                             ssl_key=certificate.key, ssl_cert=certificate.certificate)
         await marznode.operations.add_node(db_node.id, node)
 
-    logger.info(f"Node \"{db_node.name}\" modified")
+    logger.info("Node `%s` modified", db_node.name)
     return db_node
 
 
-@app.post("/api/node/{node_id}/resync", tags=['Node'])
+@router.post("/api/node/{node_id}/resync")
 async def reconnect_node(node_id: int,
                          db: DBDep,
                          admin: SudoAdminDep):
@@ -132,7 +134,7 @@ async def reconnect_node(node_id: int,
     return {}
 
 
-@app.delete("/api/node/{node_id}", tags=['Node'])
+@router.delete("/api/node/{node_id}")
 async def remove_node(node_id: int,
                       db: DBDep,
                       admin: SudoAdminDep):
@@ -143,11 +145,11 @@ async def remove_node(node_id: int,
     crud.remove_node(db, db_node)
     await marznode.operations.remove_node(db_node.id)
 
-    logger.info(f"Node \"{db_node.name}\" deleted")
+    logger.info(f"Node `%s` deleted", db_node.name)
     return {}
 
 
-@app.get("/api/nodes/usage", tags=['Node'], response_model=NodesUsageResponse)
+@router.get("/api/nodes/usage", response_model=NodesUsageResponse)
 def get_usage(db: DBDep,
               admin: SudoAdminDep,
               start: str = None,

@@ -1,17 +1,21 @@
 from typing import Dict, List, Union
 
-from app import app
+from fastapi import APIRouter
+
+from app import __version__
+# from .. import __version__
 from app.db import crud
+from app.dependencies import DBDep, AdminDep, SudoAdminDep
 from app.models.admin import Admin
-from app.models.proxy import InboundHost, Inbound, ProxyTypes, InboundBase
+from app.models.proxy import InboundHost, Inbound
 from app.models.system import SystemStats
 from app.models.user import UserStatus
-from app.dependencies import DBDep, AdminDep, SudoAdminDep
 from app.utils.system import memory_usage, cpu_usage, realtime_bandwidth
-from app import __version__
+
+router = APIRouter(tags=["System"])
 
 
-@app.get("/api/system", tags=["System"], response_model=SystemStats)
+@router.get("/api/system", response_model=SystemStats)
 def get_system_stats(db: DBDep, admin: AdminDep):
     mem = memory_usage()
     cpu = cpu_usage()
@@ -37,20 +41,20 @@ def get_system_stats(db: DBDep, admin: AdminDep):
     )
 
 
-@app.get('/api/inbounds', tags=["System"], response_model=List[Inbound])
+@router.get('/api/inbounds', response_model=List[Inbound])
 def get_inbounds(db: DBDep, admin: SudoAdminDep):
     inbounds = crud.get_all_inbounds(db)
     return inbounds
 
 
-@app.get('/api/hosts', tags=["System"], response_model=Dict[int, List[InboundHost]])
+@router.get('/api/hosts', response_model=Dict[int, List[InboundHost]])
 def get_hosts(db: DBDep, admin: SudoAdminDep):
     hosts = crud.get_all_hosts(db)
 
     return hosts
 
 
-@app.put('/api/hosts', tags=["System"], response_model=Dict[str, List[InboundHost]])
+@router.put('/api/hosts', response_model=Dict[str, List[InboundHost]])
 def modify_hosts(modified_hosts: Dict[str, List[InboundHost]],
                  db: DBDep,
                  admin: SudoAdminDep):
