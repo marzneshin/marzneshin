@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Annotated
 
 from fastapi import Depends, HTTPException, status
@@ -82,8 +83,24 @@ def get_user(username: str,
     return db_user
 
 
+def parse_start_date(start: str | None = None):
+    if not start:
+        return datetime.fromtimestamp(datetime.utcnow().timestamp() - 30 * 24 * 3600)
+    else:
+        return datetime.fromisoformat(start)
+
+
+def parse_end_date(end: str | None = None):
+    if not end:
+        return datetime.utcnow()
+    else:
+        return datetime.fromisoformat(end)
+
+
 SubUserDep = Annotated[User, Depends(get_subscription_user)]
 UserDep = Annotated[User, Depends(get_user)]
 AdminDep = Annotated[Admin, Depends(get_current_admin)]
 SudoAdminDep = Annotated[Admin, Depends(sudo_admin)]
 DBDep = Annotated[Session, Depends(get_db)]
+StartDateDep = Annotated[datetime, Depends(parse_start_date)]
+EndDateDep = Annotated[datetime, Depends(parse_end_date)]

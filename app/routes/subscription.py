@@ -1,12 +1,11 @@
 import re
-from datetime import datetime
 
 from fastapi import APIRouter
 from fastapi import Header, HTTPException, Path, Request, Response
 from fastapi.responses import HTMLResponse
 
 from app.db import crud
-from app.dependencies import DBDep, SubUserDep
+from app.dependencies import DBDep, SubUserDep, StartDateDep, EndDateDep
 from app.models.user import UserResponse
 from app.templates import render_template
 from app.utils.share import encode_title, generate_subscription, generate_v2ray_links
@@ -99,19 +98,8 @@ def user_subscription_info(db_user: SubUserDep):
 @router.get("/sub/{username}/{key}/usage")
 def user_get_usage(db_user: SubUserDep,
                    db: DBDep,
-                   start: str = None,
-                   end: str = None):
-
-    if start is None:
-        start_date = datetime.fromtimestamp(datetime.utcnow().timestamp() - 30 * 24 * 3600)
-    else:
-        start_date = datetime.fromisoformat(start)
-
-    if end is None:
-        end_date = datetime.utcnow()
-    else:
-        end_date = datetime.fromisoformat(end)
-
+                   start_date: StartDateDep,
+                   end_date: EndDateDep):
     usages = crud.get_user_usages(db, db_user, start_date, end_date)
 
     return {"usages": usages, "username": db_user.username}

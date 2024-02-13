@@ -9,7 +9,7 @@ from fastapi import HTTPException, Query
 
 from app import marznode
 from app.db import crud
-from app.dependencies import DBDep, AdminDep, SudoAdminDep, UserDep
+from app.dependencies import DBDep, AdminDep, SudoAdminDep, UserDep, StartDateDep, EndDateDep
 from app.models.user import (UserCreate, UserModify, UserResponse,
                              UsersResponse, UserStatus, UserUsagesResponse)
 from app.utils import report
@@ -26,7 +26,7 @@ async def add_user(new_user: UserCreate,
     Add a new user
 
     - **username** must have 3 to 32 characters and is allowed to contain a-z, 0-9, and underscores in between
-    - **expire** must be an UTC timestamp
+    - **expire** must be a UTC timestamp
     - **data_limit** must be in Bytes, e.g. 1073741824B = 1GB
     - **services** list of service ids
     """
@@ -234,22 +234,11 @@ async def reset_users_data_usage(db: DBDep,
 @router.get("/api/user/{username}/usage", response_model=UserUsagesResponse)
 def get_user_usage(db: DBDep,
                    db_user: UserDep,
-                   start: str = None,
-                   end: str = None):
+                   start_date: StartDateDep,
+                   end_date: EndDateDep):
     """
     Get users usage
     """
-    if start is None:
-        start_date = datetime.fromtimestamp(
-            datetime.utcnow().timestamp() - 30 * 24 * 3600)
-    else:
-        start_date = datetime.fromisoformat(start)
-
-    if end is None:
-        end_date = datetime.utcnow()
-    else:
-        end_date = datetime.fromisoformat(end)
-
     usages = crud.get_user_usages(db, db_user, start_date, end_date)
 
     return {"usages": usages, "username": db_user.username}

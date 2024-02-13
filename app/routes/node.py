@@ -8,7 +8,7 @@ from fastapi import HTTPException, WebSocket
 
 from app import marznode
 from app.db import crud, get_tls_certificate
-from app.dependencies import DBDep, SudoAdminDep, sudo_admin
+from app.dependencies import DBDep, SudoAdminDep, sudo_admin, EndDateDep, StartDateDep
 from app.marznode import MarzNodeGRPC
 from app.models.admin import Admin
 from app.models.node import (NodeCreate, NodeModify, NodeResponse,
@@ -152,21 +152,11 @@ async def remove_node(node_id: int,
 @router.get("/api/nodes/usage", response_model=NodesUsageResponse)
 def get_usage(db: DBDep,
               admin: SudoAdminDep,
-              start: str = None,
-              end: str = None):
+              start_date: StartDateDep,
+              end_date: EndDateDep):
     """
     Get nodes usage
     """
-    if start is None:
-        start_date = datetime.fromtimestamp(datetime.utcnow().timestamp() - 30 * 24 * 3600)
-    else:
-        start_date = datetime.fromisoformat(start)
-
-    if end is None:
-        end_date = datetime.utcnow()
-    else:
-        end_date = datetime.fromisoformat(end)
-
     usages = crud.get_nodes_usage(db, start_date, end_date)
 
     return {"usages": usages}
