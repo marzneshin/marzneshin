@@ -1,7 +1,7 @@
 from app.telegram import bot
 from typing import Union
 
-from telebot import types, custom_filters
+from telebot import types
 from telebot.asyncio_filters import AdvancedCustomFilter, StateFilter
 
 from config import TELEGRAM_ADMIN_ID
@@ -28,7 +28,6 @@ def query_startswith(text: Union[list, str]):
         return lambda query: query.data.startswith(text)
     else:
         return lambda query: query.data.startswith(tuple(text))
-
 
 
 def setup() -> None:

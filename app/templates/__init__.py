@@ -4,7 +4,6 @@ from typing import Union
 import jinja2
 
 from config import CUSTOM_TEMPLATES_DIRECTORY
-
 from .filters import CUSTOM_FILTERS
 
 template_directories = ["app/templates"]

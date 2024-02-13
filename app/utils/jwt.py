@@ -4,12 +4,12 @@ from typing import Union
 
 from jose import JWTError, jwt
 
-from config import JWT_ACCESS_TOKEN_EXPIRE_MINUTES
+from config import JWT_ACCESS_TOKEN_EXPIRE_MINUTES, SUDOERS
+from app.db import GetDB, get_jwt_secret_key
 
 
 @lru_cache(maxsize=None)
 def get_secret_key():
-    from app.db import GetDB, get_jwt_secret_key
     with GetDB() as db:
         return get_jwt_secret_key(db)
 

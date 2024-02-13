@@ -1,10 +1,19 @@
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
-from sqlalchemy.schema import MetaData
 
 from .base import Base, SessionLocal, engine  # noqa
 
-# meta_obj = MetaData()
+from .crud import (create_admin, create_notification_reminder,  # noqa
+                   create_user, delete_notification_reminder, get_admin,
+                   get_admins, get_jwt_secret_key, get_notification_reminder,
+                   assure_node_inbounds, get_system_usage,
+                   get_tls_certificate, get_user, get_user_by_id, get_users,
+                   get_users_count, remove_admin, remove_user, revoke_user_sub,
+                   set_owner, update_admin, update_user, update_user_status,
+                   update_user_sub, start_user_expire)
+
+from .models import JWT, System, User  # noqa
+
 
 class GetDB:  # Context Manager
     def __init__(self):
@@ -20,26 +29,7 @@ class GetDB:  # Context Manager
         self.db.close()
 
 
-def get_db():  # Dependency
-    with GetDB() as db:
-        yield db
-
-
-from .crud import (create_admin, create_notification_reminder,  # noqa
-                   create_user, delete_notification_reminder, get_admin,
-                   get_admins, get_jwt_secret_key, get_notification_reminder,
-                   assure_node_inbounds, get_system_usage,
-                   get_tls_certificate, get_user, get_user_by_id, get_users,
-                   get_users_count, remove_admin, remove_user, revoke_user_sub,
-                   set_owner, update_admin, update_user, update_user_status,
-                   update_user_sub, start_user_expire)
-
-from .models import JWT, System, User  # noqa
-
-# meta_obj.create_all(engine)
-
 __all__ = [
-    "get_or_create_inbound",
     "get_user",
     "get_user_by_id",
     "get_users",
@@ -66,7 +56,6 @@ __all__ = [
     "delete_notification_reminder",
 
     "GetDB",
-    "get_db",
 
     "User",
     "System",

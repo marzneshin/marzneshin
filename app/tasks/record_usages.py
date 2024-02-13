@@ -5,7 +5,7 @@ from datetime import datetime
 from grpclib import GRPCError
 from sqlalchemy import and_, select, insert, update, bindparam
 
-from app import marznode, scheduler
+from app import marznode
 from app.db import GetDB
 from app.db.models import NodeUsage, NodeUserUsage, User
 from app.marznode import MarzNodeBase
@@ -119,4 +119,3 @@ async def record_user_usages():
         record_user_stats(params, node_id,
                           node.usage_coefficient if (node := marznode.nodes.get(node_id)) else 1)
 
-scheduler.add_job(record_user_usages, 'interval', coalesce=True, seconds=30)

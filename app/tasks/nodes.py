@@ -2,7 +2,7 @@ from collections import defaultdict
 
 from grpclib import GRPCError
 
-from app import app, scheduler, marznode
+from app import marznode
 from app.db import GetDB, crud, get_tls_certificate
 from app.marznode import MarzNodeGRPC
 from app.models.node import NodeStatus
@@ -35,7 +35,6 @@ async def sync_node(db, node, node_id):
     node.synced = True
 
 
-@app.on_event("startup")
 async def nodes_startup():
     with GetDB() as db:
         certificate = get_tls_certificate(db)
@@ -51,4 +50,3 @@ async def nodes_startup():
             await marznode.operations.add_node(db_node.id, node)
             # crud.update_node_status(db, db_node, NodeStatus.connecting)
 
-    scheduler.add_job(nodes_health_check, 'interval', seconds=5, coalesce=True, max_instances=1)

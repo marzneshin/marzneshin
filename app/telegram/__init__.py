@@ -1,23 +1,17 @@
 import importlib.util
-import asyncio
 from os.path import dirname
 from config import TELEGRAM_API_TOKEN, TELEGRAM_PROXY_URL
-from app import app
 from telebot.async_telebot import AsyncTeleBot
-from telebot import asyncio_helper #, logger
-
-# import logging
-
-# logger.setLevel(logging.DEBUG)
+from telebot import asyncio_helper
 
 bot = None
 if TELEGRAM_API_TOKEN:
     asyncio_helper.proxy = TELEGRAM_PROXY_URL
     bot = AsyncTeleBot(TELEGRAM_API_TOKEN)
 
-handler_names = ["admin", "report", "user"]
+handler_names = ["admin", "user"]
 
-@app.on_event("startup")
+
 async def start_bot():
     if bot:
         handler_dir = dirname(__file__) + "/handlers/"
@@ -27,7 +21,7 @@ async def start_bot():
 
         from app.telegram import utils # setup custom handlers
         utils.setup()
-        asyncio.get_running_loop().create_task(bot.polling())
+        await bot.polling()
 
 
 from .handlers.report import (  # noqa

@@ -7,7 +7,7 @@ from typing import List, Optional, Union
 from pydantic import field_validator, ConfigDict, BaseModel, Field, validator, computed_field, ValidationInfo
 
 from app.models.proxy import InboundBase
-from config import XRAY_SUBSCRIPTION_PATH, XRAY_SUBSCRIPTION_URL_PREFIX
+from config import XRAY_SUBSCRIPTION_URL_PREFIX
 
 USERNAME_REGEXP = re.compile(r"^(?=\w{3,32}\b)[a-zA-Z0-9-_@.]+(?:_[a-zA-Z0-9-_@.]+)*$")
 
@@ -25,7 +25,7 @@ class UserStatus(str, Enum):
     on_hold = "on_hold"
 
 
-from app.utils.share import generate_v2ray_links
+# from app.utils.share import generate_v2ray_links
 
 
 class UserStatusModify(str, Enum):
@@ -67,7 +67,7 @@ class UserBase(BaseModel):
     on_hold_expire_duration: Optional[int] = Field(None, nullable=True)
     on_hold_timeout: Optional[Union[datetime, None]] = Field(None, nullable=True)
 
-    
+
     @field_validator("username")
     @classmethod
     def validate_username(cls, v: str):
@@ -180,8 +180,8 @@ class UserResponse(User):
     created_at: datetime
     inbounds: List[InboundBase] = Field([])
     services: List[ServiceBase] = Field([])
+    links: List[str] | None = []  # Field(None)
 
-    # links: List[str] = [] # Field(default_factory=lamba x: )
     # subscription_url: str = ""
     model_config = ConfigDict(from_attributes=True)
 
@@ -192,17 +192,10 @@ class UserResponse(User):
 
     @computed_field
     @property
-    def links(self) -> List[str]:
-        return generate_v2ray_links(
-            inbounds=self.inbounds, key=self.key, extra_data=self.dict(exclude={'subscription_url', 'links'})
-        )
-
-    @computed_field
-    @property
     def subscription_url(self) -> str:
         salt = secrets.token_hex(8)
         url_prefix = (XRAY_SUBSCRIPTION_URL_PREFIX).replace('*', salt)
-        return f"{url_prefix}/{XRAY_SUBSCRIPTION_PATH}/{self.username}/{self.key}"
+        return f"{url_prefix}/sub/{self.username}/{self.key}"
     
 
 class UsersResponse(BaseModel): 

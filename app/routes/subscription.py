@@ -1,58 +1,56 @@
 import re
-from datetime import datetime
 
-from fastapi import Depends, Header, HTTPException, Path, Request, Response
+from fastapi import APIRouter
+from fastapi import Header, HTTPException, Path, Request, Response
 from fastapi.responses import HTMLResponse
 
-from app import app
-from app.db import Session, crud, get_db
+from app.db import crud
+from app.dependencies import DBDep, SubUserDep, StartDateDep, EndDateDep
 from app.models.user import UserResponse
 from app.templates import render_template
-from app.utils.share import encode_title, generate_subscription
+from app.utils.share import encode_title, generate_subscription, generate_v2ray_links
 from config import (
     SUB_PROFILE_TITLE,
     SUB_SUPPORT_URL,
     SUB_UPDATE_INTERVAL,
-    SUBSCRIPTION_PAGE_TEMPLATE,
-    XRAY_SUBSCRIPTION_PATH
+    SUBSCRIPTION_PAGE_TEMPLATE
 )
 
+router = APIRouter(tags=['Subscription'])
 
-@app.get("/%s/{username}/{key}/" % XRAY_SUBSCRIPTION_PATH, tags=['Subscription'])
-@app.get("/%s/{username}/{key}" % XRAY_SUBSCRIPTION_PATH, include_in_schema=False)
-def user_subscription(username: str,
-                      key: str,
+
+def get_subscription_user_info(user: UserResponse) -> dict:
+    return {
+        "upload": 0,
+        "download": user.used_traffic,
+        "total": user.data_limit,
+        "expire": user.expire,
+    }
+
+
+@router.get("/sub/{username}/{key}/")
+@router.get("/sub/{username}/{key}", include_in_schema=False)
+def user_subscription(db_user: SubUserDep,
                       request: Request,
-                      db: Session = Depends(get_db),
+                      db: DBDep,
                       user_agent: str = Header(default="")):
     """
     Subscription link, V2ray and Clash supported
     """
     accept_header = request.headers.get("Accept", "")
 
-    def get_subscription_user_info(user: UserResponse) -> dict:
-        return {
-            "upload": 0,
-            "download": user.used_traffic,
-            "total": user.data_limit,
-            "expire": user.expire,
-        }
-    try:
-        int(key, 16)
-    except ValueError:
-        return Response(status_code=404)
-
-    dbuser = crud.get_user(db, username)
-    if not dbuser or dbuser.key != key:
-        return Response(status_code=404)
-
-    user: UserResponse = UserResponse.model_validate(dbuser)
+    user: UserResponse = UserResponse.model_validate(db_user)
 
     if "text/html" in accept_header:
+        links = generate_v2ray_links(user.inbounds,
+                                     user.key,
+                                     user.model_dump(
+                                         exclude={"subscription_url", "services", "inbounds", "links"}
+                                     ))
         return HTMLResponse(
             render_template(
                 SUBSCRIPTION_PAGE_TEMPLATE,
-                {"user": user}
+                {"user": user, "links": links}
             )
         )
 
@@ -69,7 +67,7 @@ def user_subscription(username: str,
         )
     }
 
-    crud.update_user_sub(db, dbuser, user_agent)
+    crud.update_user_sub(db, db_user, user_agent)
 
     if re.match('^([Cc]lash-verge|[Cc]lash-?[Mm]eta)', user_agent):
         conf = generate_subscription(user=user, config_format="clash-meta", as_base64=False)
@@ -92,83 +90,31 @@ def user_subscription(username: str,
         return Response(content=conf, media_type="text/plain", headers=response_headers)
 
 
-@app.get("/%s/{username}/{key}/info" % XRAY_SUBSCRIPTION_PATH, tags=['Subscription'], response_model=UserResponse)
-def user_subscription_info(username: str,
-                           key: str,
-                           db: Session = Depends(get_db)):
-    try:
-        int(key, 16)
-    except ValueError:
-        return Response(status_code=404)
-
-    dbuser = crud.get_user(db, username)
-    if not dbuser or key != dbuser.key:
-        return Response(status_code=404)
-
-    return dbuser
+@router.get("/sub/{username}/{key}/info", response_model=UserResponse)
+def user_subscription_info(db_user: SubUserDep):
+    return db_user
 
 
-@app.get("/%s/{username}/{key}/usage" % XRAY_SUBSCRIPTION_PATH, tags=['Subscription'])
-def user_get_usage(username: str,
-                   key: str,
-                   start: str = None,
-                   end: str = None,
-                   db: Session = Depends(get_db)):
+@router.get("/sub/{username}/{key}/usage")
+def user_get_usage(db_user: SubUserDep,
+                   db: DBDep,
+                   start_date: StartDateDep,
+                   end_date: EndDateDep):
+    usages = crud.get_user_usages(db, db_user, start_date, end_date)
 
-    try:
-        int(key, 16)
-    except ValueError:
-        return Response(status_code=404)
-
-    dbuser = crud.get_user(db, username)
-    if not dbuser or key != dbuser.key:
-        return Response(status_code=404)
-
-    if start is None:
-        start_date = datetime.fromtimestamp(datetime.utcnow().timestamp() - 30 * 24 * 3600)
-    else:
-        start_date = datetime.fromisoformat(start)
-
-    if end is None:
-        end_date = datetime.utcnow()
-    else:
-        end_date = datetime.fromisoformat(end)
-
-    usages = crud.get_user_usages(db, dbuser, start_date, end_date)
-
-    return {"usages": usages, "username": dbuser.username}
+    return {"usages": usages, "username": db_user.username}
 
 
-@app.get("/%s/{username}/{key}/{client_type}" % XRAY_SUBSCRIPTION_PATH, tags=['Subscription'])
+@router.get("/sub/{username}/{key}/{client_type}")
 def user_subscription_with_client_type(
-        username: str,
-        key: str,
+        db_user: SubUserDep,
         request: Request,
-        client_type: str = Path(..., regex="sing-box|clash-meta|clash|outline|v2ray"),
-        db: Session = Depends(get_db),
-):
+        client_type: str = Path(..., regex="sing-box|clash-meta|clash|outline|v2ray")):
     """
     Subscription link, v2ray, clash, sing-box, outline and clash-meta supported
     """
 
-    def get_subscription_user_info(user: UserResponse) -> dict:
-        return {
-            "upload": 0,
-            "download": user.used_traffic,
-            "total": user.data_limit,
-            "expire": user.expire,
-        }
-
-    try:
-        int(key, 16)
-    except ValueError:
-        return Response(status_code=404)
-
-    dbuser = crud.get_user(db, username)
-    if not dbuser or key != dbuser.key:
-        return Response(status_code=404)
-
-    user: UserResponse = UserResponse.model_validate(dbuser)
+    user: UserResponse = UserResponse.model_validate(db_user)
 
     response_headers = {
         "content-disposition": f'attachment; filename="{user.username}"',

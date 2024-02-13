@@ -19,7 +19,7 @@ from app.models.proxy import InboundHost as InboundHostModify
 from app.models.user import (ReminderType, UserCreate,
                              UserDataLimitResetStrategy, UserModify,
                              UserResponse, UserStatus, UserUsageResponse)
-from app.models.service import Service as ServiceModify
+from app.models.service import Service as ServiceModify, ServiceCreate
 # from app.models.user_template import UserTemplateCreate, UserTemplateModify
 from app.utils.helpers import (calculate_expiration_days,
                                calculate_usage_percent)
@@ -482,10 +482,7 @@ def get_admins(db: Session,
     return query.all()
 
 
-def create_service(db: Session, service: Service) -> Service:
-    
-    #for _, i in service.inbounds.items():
-    #    inbound_tags.extend(i)
+def create_service(db: Session, service: ServiceCreate) -> Service:
     dbservice = Service(
         name=service.name,
         inbounds=db.query(Inbound).filter(Inbound.id.in_(service.inbounds)).all(),
@@ -497,12 +494,30 @@ def create_service(db: Session, service: Service) -> Service:
     return dbservice
 
 
-def get_service(db: Session, service_name: str) -> Service:
-    return db.query(Service).filter( Service.name == service_name ).first()
+def get_service(db: Session, service_id: id) -> Service:
+    return db.query(Service).filter(Service.id == service_id).first()
 
 
 def get_services(db: Session) -> List[Service]:
     return db.query(Service).all()
+
+
+def update_service(db: Session, db_service: Service, modification: ServiceModify):
+    if modification.name is not None:
+        db_service.name = modification.name
+
+    if modification.inbounds is not None:
+        db_service.inbounds = db.query(Inbound).filter(Inbound.id.in_(modification.inbounds)).all()
+
+    db.commit()
+    db.refresh(db_service)
+    return db_service
+
+
+def remove_service(db: Session, db_service: Service):
+    db.delete(db_service)
+    db.commit()
+    return db_service
 
 
 def get_node(db: Session, name: str):
