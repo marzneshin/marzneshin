@@ -14,8 +14,7 @@ from config import (
     SUB_PROFILE_TITLE,
     SUB_SUPPORT_URL,
     SUB_UPDATE_INTERVAL,
-    SUBSCRIPTION_PAGE_TEMPLATE,
-    XRAY_SUBSCRIPTION_PATH
+    SUBSCRIPTION_PAGE_TEMPLATE
 )
 
 router = APIRouter(tags=['Subscription'])
@@ -30,8 +29,8 @@ def get_subscription_user_info(user: UserResponse) -> dict:
     }
 
 
-@router.get("/%s/{username}/{key}/" % XRAY_SUBSCRIPTION_PATH)
-@router.get("/%s/{username}/{key}" % XRAY_SUBSCRIPTION_PATH, include_in_schema=False)
+@router.get("/sub/{username}/{key}/")
+@router.get("/sub/{username}/{key}", include_in_schema=False)
 def user_subscription(db_user: SubUserDep,
                       request: Request,
                       db: DBDep,
@@ -92,12 +91,12 @@ def user_subscription(db_user: SubUserDep,
         return Response(content=conf, media_type="text/plain", headers=response_headers)
 
 
-@router.get("/%s/{username}/{key}/info" % XRAY_SUBSCRIPTION_PATH, response_model=UserResponse)
+@router.get("/sub/{username}/{key}/info", response_model=UserResponse)
 def user_subscription_info(db_user: SubUserDep):
     return db_user
 
 
-@router.get("/%s/{username}/{key}/usage" % XRAY_SUBSCRIPTION_PATH)
+@router.get("/sub/{username}/{key}/usage")
 def user_get_usage(db_user: SubUserDep,
                    db: DBDep,
                    start: str = None,
@@ -118,7 +117,7 @@ def user_get_usage(db_user: SubUserDep,
     return {"usages": usages, "username": db_user.username}
 
 
-@router.get("/%s/{username}/{key}/{client_type}" % XRAY_SUBSCRIPTION_PATH)
+@router.get("/sub/{username}/{key}/{client_type}")
 def user_subscription_with_client_type(
         db_user: SubUserDep,
         request: Request,
