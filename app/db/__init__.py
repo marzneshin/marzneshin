@@ -1,10 +1,10 @@
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
-from sqlalchemy.schema import MetaData
 
 from .base import Base, SessionLocal, engine  # noqa
 
 # meta_obj = MetaData()
+
 
 class GetDB:  # Context Manager
     def __init__(self):
@@ -39,7 +39,6 @@ from .models import JWT, System, User  # noqa
 # meta_obj.create_all(engine)
 
 __all__ = [
-    "get_or_create_inbound",
     "get_user",
     "get_user_by_id",
     "get_users",

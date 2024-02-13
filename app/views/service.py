@@ -1,19 +1,19 @@
 from typing import List
 
 import sqlalchemy
-from fastapi import Depends, HTTPException
+from fastapi import HTTPException
 
 from app import app
-from app.db import Session, crud, get_db
-from app.models.admin import Admin
+from app.db import crud
 from app.models.service import (ServiceCreate, ServiceModify,
-                                      ServiceResponse)
+                                ServiceResponse)
+from app.dependencies import AdminDep, DBDep, SudoAdminDep
 
 
 @app.post("/api/service", tags=['Service'], response_model=ServiceResponse)
 def add_service(new_service: ServiceCreate,
-                      db: Session = Depends(get_db),
-                      admin: Admin = Depends(Admin.get_current)):
+                db: DBDep,
+                admin: SudoAdminDep):
     """
     Add a new user template
 
@@ -22,8 +22,6 @@ def add_service(new_service: ServiceCreate,
     - **expire_duration** must be in seconds and larger or equat to 0
     - **inbounds** dictionary of protocol:inbound_tags, empty means all inbounds
     """
-    if not (admin.is_sudo):
-        raise HTTPException(status_code=403, detail="You're not allowed")
     try:
         return crud.create_service(db, new_service)
     except sqlalchemy.exc.IntegrityError:
@@ -32,7 +30,7 @@ def add_service(new_service: ServiceCreate,
 
 
 @app.get("/api/service/{id}", tags=['Service'], response_model=ServiceResponse)
-def get_service(id: int, db: Session = Depends(get_db), admin: Admin = Depends(Admin.get_current)):
+def get_service(id: int, db: DBDep, admin: SudoAdminDep):
     """
     Get Service information with id
     """
@@ -44,9 +42,10 @@ def get_service(id: int, db: Session = Depends(get_db), admin: Admin = Depends(A
 
 
 @app.put("/api/service/{id}", tags=['Service'], response_model=ServiceResponse)
-def modify_service(id: int, modify_service: ServiceModify,
-                         db: Session = Depends(get_db),
-                         admin: Admin = Depends(Admin.get_current)):
+def modify_service(id: int,
+                   modify_service: ServiceModify,
+                   db: DBDep,
+                   admin: SudoAdminDep):
     """
     Modify Service
 
@@ -59,7 +58,7 @@ def modify_service(id: int, modify_service: ServiceModify,
         raise HTTPException(status_code=403, detail="You're not allowed")
     
     dbservice = crud.get_service(db, id)
-    if not dbuser_template:
+    if not dbservice:
         raise HTTPException(status_code=404, detail="Service not found") 
 
     try:
@@ -71,20 +70,18 @@ def modify_service(id: int, modify_service: ServiceModify,
 
 @app.delete("/api/service/{id}", tags=['Service'])
 def remove_service(id: int,
-                         db: Session = Depends(get_db),
-                         admin: Admin = Depends(Admin.get_current)):
-    if not (admin.is_sudo):
-        raise HTTPException(status_code=403, detail="You're not allowed")
-
+                   db: DBDep,
+                   admin: SudoAdminDep):
     dbservice = crud.get_service(db, id)
-    if not dbuser_template:
+    if not dbservice:
         raise HTTPException(status_code=404, detail="Service not found")
     
     return crud.remove_service(db, dbservice)
 
 
 @app.get("/api/services", tags=['Service'], response_model=List[ServiceResponse])
-def get_services(
-        offset: int = None, limit: int = None, db: Session = Depends(get_db),
-        admin: Admin = Depends(Admin.get_current)):
+def get_services(db: DBDep,
+                 admin: AdminDep,
+                 offset: int = None,
+                 limit: int = None):
     return crud.get_services(db) #, offset, limit)

@@ -11,12 +11,13 @@ from app.models.admin import Admin
 from app.models.user import (UserCreate, UserModify, UserResponse,
                              UsersResponse, UserStatus, UserUsagesResponse)
 from app.utils import report
+from app.dependencies import get_current_admin, DBDep, AdminDep, SudoAdminDep
 
 
 @app.post("/api/user", tags=['User'], response_model=UserResponse)
 async def add_user(new_user: UserCreate,
-             db: Session = Depends(get_db),
-             admin: Admin = Depends(Admin.get_current)):
+                   db: DBDep,
+                   admin: AdminDep):
     """
     Add a new user
 
@@ -49,15 +50,15 @@ async def add_user(new_user: UserCreate,
 
 @app.get("/api/user/{username}", tags=['User'], response_model=UserResponse)
 def get_user(username: str,
-             db: Session = Depends(get_db),
-             admin: Admin = Depends(Admin.get_current)):
+             db: DBDep,
+             admin: AdminDep):
     """
     Get users information
     """
+    dbuser = crud.get_user(db, username)
     if not (admin.is_sudo or (dbuser.admin and dbuser.admin.username == admin.username)):
         raise HTTPException(status_code=403, detail="You're not allowed")
     
-    dbuser = crud.get_user(db, username)
     if not dbuser:
         raise HTTPException(status_code=404, detail="User not found")
 
@@ -67,8 +68,8 @@ def get_user(username: str,
 @app.put("/api/user/{username}", tags=['User'], response_model=UserResponse)
 async def modify_user(username: str,
                 modified_user: UserModify,
-                db: Session = Depends(get_db),
-                admin: Admin = Depends(Admin.get_current)):
+                db: DBDep,
+                admin: AdminDep):
     """
     Modify a user
 
@@ -116,8 +117,8 @@ async def modify_user(username: str,
 
 @app.delete("/api/user/{username}", tags=['User'])
 async def remove_user(username: str,
-                db: Session = Depends(get_db),
-                admin: Admin = Depends(Admin.get_current)):
+                      db: DBDep,
+                      admin: AdminDep):
     """
     Remove a user
     """
@@ -144,8 +145,8 @@ async def remove_user(username: str,
 
 @app.post("/api/user/{username}/reset", tags=['User'], response_model=UserResponse)
 async def reset_user_data_usage(username: str,
-                          db: Session = Depends(get_db),
-                          admin: Admin = Depends(Admin.get_current)):
+                          db: DBDep,
+                          admin: AdminDep):
     """
     Reset user data usage
     """
@@ -174,8 +175,8 @@ async def reset_user_data_usage(username: str,
 
 @app.post("/api/user/{username}/revoke_sub", tags=['User'], response_model=UserResponse)
 async def revoke_user_subscription(username: str,
-                             db: Session = Depends(get_db),
-                             admin: Admin = Depends(Admin.get_current)):
+                                   db: DBDep,
+                                   admin: AdminDep):
     """
     Revoke users subscription (Subscription link and proxies)
     """
@@ -205,13 +206,13 @@ async def revoke_user_subscription(username: str,
 
 
 @app.get("/api/users", tags=['User'], response_model=UsersResponse)
-def get_users(offset: int = None,
+def get_users(db: DBDep,
+              admin: AdminDep,
+              offset: int = None,
               limit: int = None,
               username: List[str] = Query(None),
               status: UserStatus = None,
-              sort: str = None,
-              db: Session = Depends(get_db),
-              admin: Admin = Depends(Admin.get_current)):
+              sort: str = None):
     """
     Get all users
     """
@@ -240,14 +241,11 @@ def get_users(offset: int = None,
 
 
 @app.post("/api/users/reset", tags=['User'])
-async def reset_users_data_usage(db: Session = Depends(get_db),
-                           admin: Admin = Depends(Admin.get_current)):
+async def reset_users_data_usage(db: DBDep,
+                                 admin: SudoAdminDep):
     """
     Reset all users data usage
     """
-    if not admin.is_sudo:
-        raise HTTPException(status_code=403, detail="You're not allowed")
-
     dbadmin = crud.get_admin(db, admin.username)
     crud.reset_all_users_data_usage(db=db, admin=dbadmin)
     # startup_config = xray.config.include_db_users()
@@ -259,11 +257,11 @@ async def reset_users_data_usage(db: Session = Depends(get_db),
 
 
 @app.get("/api/user/{username}/usage", tags=['User'], response_model=UserUsagesResponse)
-def get_user_usage(username: str,
+def get_user_usage(db: DBDep,
+                   admin: AdminDep,
+                   username: str,
                    start: str = None,
-                   end: str = None,
-                   db: Session = Depends(get_db),
-                   admin: Admin = Depends(Admin.get_current)):
+                   end: str = None):
     """
     Get users usage
     """
@@ -290,12 +288,8 @@ def get_user_usage(username: str,
 @app.put("/api/user/{username}/set-owner", tags=['User'], response_model=UserResponse)
 def set_owner(username: str,
               admin_username: str,
-              db: Session = Depends(get_db),
-              admin: Admin = Depends(Admin.get_current)):
-
-    if not admin.is_sudo:
-        raise HTTPException(status_code=403, detail="You're not allowed")
-
+              db: DBDep,
+              admin: SudoAdminDep):
     dbuser = crud.get_user(db, username)
     if not dbuser:
         raise HTTPException(status_code=404, detail="User not found")
@@ -314,8 +308,8 @@ def set_owner(username: str,
 
 @app.delete("/api/users/expired", tags=['User'])
 def delete_expired(passed_time: int,
-                   db: Session = Depends(get_db),
-                   admin: Admin = Depends(Admin.get_current)):
+                   db: DBDep,
+                   admin: AdminDep):
     """
     Delete expired users
     - **passed_time** must be a timestamp

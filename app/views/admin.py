@@ -1,10 +1,11 @@
-from typing import List, Optional
+from typing import List, Optional, Annotated
 
 import sqlalchemy
 from app import app
-from app.db import Session, crud, get_db
+from app.db import Session, crud
 from app.models.admin import Admin, AdminCreate, AdminInDB, AdminModify, Token
 from app.utils.jwt import create_admin_token
+from app.dependencies import AdminDep, SudoAdminDep, DBDep
 from config import SUDOERS
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
@@ -26,8 +27,8 @@ def authenticate_admin(db: Session, username: str, password: str) -> Optional[Ad
 
 
 @app.post("/api/admin/token", tags=['Admin'], response_model=Token)
-def admin_token(form_data: OAuth2PasswordRequestForm = Depends(),
-                db: Session = Depends(get_db)):
+def admin_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
+                db: DBDep):
     if authenticate_env_sudo(form_data.username, form_data.password):
         return Token(access_token=create_admin_token(form_data.username, is_sudo=True))
 
@@ -43,12 +44,8 @@ def admin_token(form_data: OAuth2PasswordRequestForm = Depends(),
 
 @app.post("/api/admin", tags=['Admin'], response_model=Admin)
 def create_admin(new_admin: AdminCreate,
-                 db: Session = Depends(get_db),
-                 admin: Admin = Depends(Admin.get_current)):
-
-    if not admin.is_sudo:
-        raise HTTPException(status_code=403, detail="You're not allowed")
-
+                 db: DBDep,
+                 admin: SudoAdminDep):
     try:
         dbadmin = crud.create_admin(db, new_admin)
     except sqlalchemy.exc.IntegrityError:
@@ -61,8 +58,8 @@ def create_admin(new_admin: AdminCreate,
 @app.put("/api/admin/{username}", tags=['Admin'], response_model=Admin)
 def modify_admin(username: str,
                  modified_admin: AdminModify,
-                 db: Session = Depends(get_db),
-                 admin: Admin = Depends(Admin.get_current)):
+                 db: DBDep,
+                 admin: AdminDep):
     if not (admin.is_sudo or admin.username == username):
         raise HTTPException(status_code=403, detail="You're not allowed")
 
@@ -78,7 +75,7 @@ def modify_admin(username: str,
     if (username != admin.username) and dbadmin.is_sudo:
         raise HTTPException(
             status_code=403,
-            detail=("You're not allowed to edit another sudoers account. Use marzban-cli instead.",),
+            detail="You're not allowed to edit another sudoers account. Use marzban-cli instead.",
         )
 
     dbadmin = crud.update_admin(db, dbadmin, modified_admin)
@@ -87,11 +84,8 @@ def modify_admin(username: str,
 
 @app.delete("/api/admin/{username}", tags=['Admin'])
 def remove_admin(username: str,
-                 db: Session = Depends(get_db),
-                 admin: Admin = Depends(Admin.get_current)):
-    if not admin.is_sudo:
-        raise HTTPException(status_code=403, detail="You're not allowed")
-
+                 db: DBDep,
+                 admin: SudoAdminDep):
     dbadmin = crud.get_admin(db, username)
     if not dbadmin:
         raise HTTPException(status_code=404, detail="Admin not found")
@@ -99,26 +93,22 @@ def remove_admin(username: str,
     if dbadmin.is_sudo:
         raise HTTPException(
             status_code=403,
-            detail=("You're not allowed to delete sudoers accounts. Use marzban-cli instead."),
+            detail="You're not allowed to delete sudoers accounts. Use marzban-cli instead.",
         )
 
-    dbadmin = crud.remove_admin(db, dbadmin)
+    crud.remove_admin(db, dbadmin)
     return {}
 
 
 @app.get("/api/admin", tags=["Admin"], response_model=Admin)
-def get_current_admin(admin: Admin = Depends(Admin.get_current)):
+def get_current_admin(admin: AdminDep):
     return admin
 
 
 @app.get("/api/admins", tags=['Admin'], response_model=List[Admin])
-def get_admins(offset: int = None,
+def get_admins(db: DBDep,
+               admin: SudoAdminDep,
+               offset: int = None,
                limit: int = None,
-               username: str = None,
-               db: Session = Depends(get_db),
-               admin: Admin = Depends(Admin.get_current)):
-
-    if not admin.is_sudo:
-        raise HTTPException(status_code=403, detail="You're not allowed")
-
+               username: str = None):
     return crud.get_admins(db, offset, limit, username)
