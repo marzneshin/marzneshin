@@ -2,7 +2,7 @@ import json
 import secrets
 from datetime import datetime
 from enum import Enum
-from typing import Dict, List, Optional, Tuple, Union
+from typing import List, Optional, Tuple, Union
 
 from sqlalchemy import and_, delete
 from sqlalchemy.orm import Session
@@ -10,31 +10,31 @@ from sqlalchemy.orm import Session
 from app.db.models import (JWT, TLS, Admin, Node, NodeUsage, NodeUserUsage,
                            NotificationReminder,
                            InboundHost, Service,
-                           Inbound, ProxyTypes, System, User,
+                           Inbound, System, User,
                            UserUsageResetLogs)
 from app.models.admin import AdminCreate, AdminModify, AdminPartialModify
 from app.models.node import (NodeCreate, NodeModify, NodeStatus,
                              NodeUsageResponse)
 from app.models.proxy import InboundHost as InboundHostModify
+from app.models.service import Service as ServiceModify, ServiceCreate
 from app.models.user import (ReminderType, UserCreate,
                              UserDataLimitResetStrategy, UserModify,
-                             UserResponse, UserStatus, UserUsageResponse)
-from app.models.service import Service as ServiceModify, ServiceCreate
-# from app.models.user_template import UserTemplateCreate, UserTemplateModify
+                             UserStatus, UserUsageResponse)
 from app.utils.helpers import (calculate_expiration_days,
                                calculate_usage_percent)
-from app.utils.notification import Notification
 from config import NOTIFY_DAYS_LEFT, NOTIFY_REACHED_USAGE_PERCENT
 
 
 def add_default_hosts(db: Session, inbounds: List[Inbound]):
-    hosts = [InboundHost(remark="🚀 Marz ({USERNAME}) [{PROTOCOL} - {TRANSPORT}]", address="{SERVER_IP}", inbound=i) for i in inbounds]
+    hosts = [InboundHost(remark="🚀 Marz ({USERNAME}) [{PROTOCOL} - {TRANSPORT}]", address="{SERVER_IP}", inbound=i) for
+             i in inbounds]
     db.add_all(hosts)
     db.commit()
 
 
 def assure_node_inbounds(db: Session, inbounds: List[Inbound], node_id: int):
-    existing_inbounds = set((i.protocol, i.tag, i.config) for i in db.query(Inbound).filter(Inbound.node_id == node_id).all())
+    existing_inbounds = set(
+        (i.protocol, i.tag, i.config) for i in db.query(Inbound).filter(Inbound.node_id == node_id).all())
     inbounds_set = set((json.loads(i.config)["protocol"], i.tag, i.config) for i in list(inbounds))
     new_inbounds = inbounds_set - existing_inbounds
     deleted_inbounds = existing_inbounds - inbounds_set
@@ -51,26 +51,22 @@ def assure_node_inbounds(db: Session, inbounds: List[Inbound], node_id: int):
     db.add_all(new_inbounds)
     db.flush()
     for i in new_inbounds:
-        db.refresh(i) 
+        db.refresh(i)
     add_default_hosts(db, new_inbounds)
     db.commit()
 
 
 def get_node_users(db: Session, node_id: Optional[int], statuses: Optional[List[UserStatus]] = None):
     query = db.query(User.id, User.username, User.key, Inbound).distinct(
-            ).join(Inbound.services).join(Service.users).filter(Inbound.node_id == node_id)
+    ).join(Inbound.services).join(Service.users).filter(Inbound.node_id == node_id)
     if isinstance(statuses, list):
         query = query.filter(User.status.in_(statuses))
     return query.all()
 
 
 def get_user_hosts(db: Session, user_id: int):
-    return db.query(InboundHost).distinct().join(User.services).join(Service.inbounds).join(Inbound.hosts).filter( User.id == user_id ).all()
-
-
-def get_all_hosts(db: Session) -> Dict[int, InboundHost]:
-    all_inbounds = db.query(Inbound).all()
-    return {i.id: i.hosts for i in all_inbounds}
+    return db.query(InboundHost).distinct().join(User.services).join(Service.inbounds).join(Inbound.hosts).filter(
+        User.id == user_id).all()
 
 
 def get_inbound_hosts(db: Session, inbound_id: int) -> List[InboundHost]:
@@ -81,29 +77,46 @@ def get_all_inbounds(db: Session):
     return db.query(Inbound).all()
 
 
-def get_inbound(db: Session, inbound_id: int):
+def get_inbound(db: Session, inbound_id: int) -> Inbound | None:
     return db.query(Inbound).filter(Inbound.id == inbound_id).first()
 
 
+def get_host(db: Session, host_id) -> InboundHost:
+    return db.query(InboundHost).filter(InboundHost.id == host_id).first()
+
+
 def add_host(db: Session, inbound: Inbound, host: InboundHostModify):
-    # inbound = get_or_create_inbound(db, inbound_tag)
-    inbound.hosts.append(
-        InboundHost(
-            remark=host.remark,
-            address=host.address,
-            port=host.port,
-            path=host.path,
-            sni=host.sni,
-            host=host.host,
-            inbound=inbound,
-            security=host.security,
-            alpn=host.alpn,
-            fingerprint=host.fingerprint
-        )
+    host = InboundHost(
+        remark=host.remark,
+        address=host.address,
+        port=host.port,
+        path=host.path,
+        sni=host.sni,
+        host=host.host,
+        inbound=inbound,
+        security=host.security,
+        alpn=host.alpn,
+        fingerprint=host.fingerprint
     )
+    inbound.hosts.append(host)
     db.commit()
-    db.refresh(inbound)
-    return inbound.hosts
+    db.refresh(host)
+    return host
+
+
+def update_host(db: Session, db_host: InboundHost, host: InboundHostModify):
+    db_host.remark = host.remark
+    db_host.address = host.address
+    db_host.port = host.port
+    db_host.path = host.path
+    db_host.sni = host.sni
+    db_host.host = host.host
+    db_host.security = host.security
+    db_host.alpn = host.alpn
+    db_host.fingerprint = host.fingerprint
+    db.commit()
+    db.refresh(db_host)
+    return db_host
 
 
 def update_hosts(db: Session, inbound_tag: str, modified_hosts: List[InboundHostModify]):
@@ -235,12 +248,11 @@ def get_users_count(db: Session, status: UserStatus = None, admin: Admin = None)
 
 
 def create_user(db: Session, user: UserCreate, admin: Admin = None):
-
     dbuser = User(
         username=user.username,
         # proxies=proxies,
         key=user.key,
-        services=db.query(Service).filter(Service.id.in_(user.services)).all(),# user.services,
+        services=db.query(Service).filter(Service.id.in_(user.services)).all(),  # user.services,
         status=user.status,
         data_limit=(user.data_limit or None),
         expire=(user.expire or None),
@@ -301,7 +313,7 @@ def update_user(db: Session, dbuser: User, modify: UserModify):
 
     if modify.on_hold_expire_duration is not None:
         dbuser.on_hold_expire_duration = modify.on_hold_expire_duration
-    
+
     if modify.services is not None:
         dbuser.services = db.query(Service).filter(Service.id.in_(modify.services)).all()
     dbuser.edit_at = datetime.utcnow()
@@ -377,7 +389,6 @@ def set_owner(db: Session, dbuser: User, admin: Admin):
 
 
 def start_user_expire(db: Session, dbuser: User):
-
     expire = int(datetime.utcnow().timestamp()) + dbuser.on_hold_expire_duration
     dbuser.expire = expire
     db.commit()
@@ -460,7 +471,7 @@ def create_service(db: Session, service: ServiceCreate) -> Service:
         name=service.name,
         inbounds=db.query(Inbound).filter(Inbound.id.in_(service.inbounds)).all(),
         users=db.query(User).filter(User.id.in_(service.users)).all()
-        )
+    )
     db.add(dbservice)
     db.commit()
     db.refresh(dbservice)

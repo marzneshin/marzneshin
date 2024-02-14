@@ -156,6 +156,10 @@ class InboundHost(BaseModel):
         return v
 
 
+class InboundHostResponse(InboundHost):
+    id: int
+
+
 class InboundBase(BaseModel):
     id: Optional[int] = Field(None)
     tag: str = Field()

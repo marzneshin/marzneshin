@@ -28,8 +28,7 @@ def get_subscription_user_info(user: UserResponse) -> dict:
     }
 
 
-@router.get("/sub/{username}/{key}/")
-@router.get("/sub/{username}/{key}", include_in_schema=False)
+@router.get("/sub/{username}/{key}")
 def user_subscription(db_user: SubUserDep,
                       request: Request,
                       db: DBDep,
