@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 router = APIRouter(tags=['Node'], dependencies=[Depends(sudo_admin)])
 
 
-@router.get("/api/node/settings", response_model=NodeSettings)
+@router.get("/node/settings", response_model=NodeSettings)
 def get_node_settings(db: DBDep,
                       admin: SudoAdminDep):
     tls = crud.get_tls_certificate(db)
@@ -28,7 +28,7 @@ def get_node_settings(db: DBDep,
     )
 
 
-@router.post("/api/node", response_model=NodeResponse)
+@router.post("/node", response_model=NodeResponse)
 async def add_node(new_node: NodeCreate,
                    db: DBDep,
                    admin: SudoAdminDep):
@@ -48,7 +48,7 @@ async def add_node(new_node: NodeCreate,
     return db_node
 
 
-@router.get("/api/node/{node_id}", response_model=NodeResponse)
+@router.get("/node/{node_id}", response_model=NodeResponse)
 def get_node(node_id: int,
              db: DBDep,
              admin: SudoAdminDep):
@@ -59,7 +59,7 @@ def get_node(node_id: int,
     return db_node
 
 
-@router.websocket("/api/node/{node_id}/logs", dependencies=None)
+@router.websocket("/node/{node_id}/logs", dependencies=None)
 async def node_logs(node_id: int,
                     websocket: WebSocket,
                     db: DBDep):
@@ -95,13 +95,13 @@ async def node_logs(node_id: int,
         await websocket.send_text(l)
 
 
-@router.get("/api/nodes", response_model=List[NodeResponse])
+@router.get("/nodes", response_model=List[NodeResponse])
 def get_nodes(db: DBDep,
               admin: SudoAdminDep):
     return crud.get_nodes(db)
 
 
-@router.put("/api/node/{node_id}", response_model=NodeResponse)
+@router.put("/node/{node_id}", response_model=NodeResponse)
 async def modify_node(node_id: int,
                       modified_node: NodeModify,
                       db: DBDep,
@@ -123,7 +123,7 @@ async def modify_node(node_id: int,
     return db_node
 
 
-@router.post("/api/node/{node_id}/resync")
+@router.post("/node/{node_id}/resync")
 async def reconnect_node(node_id: int,
                          db: DBDep,
                          admin: SudoAdminDep):
@@ -134,7 +134,7 @@ async def reconnect_node(node_id: int,
     return {}
 
 
-@router.delete("/api/node/{node_id}")
+@router.delete("/node/{node_id}")
 async def remove_node(node_id: int,
                       db: DBDep,
                       admin: SudoAdminDep):
@@ -149,7 +149,7 @@ async def remove_node(node_id: int,
     return {}
 
 
-@router.get("/api/nodes/usage", response_model=NodesUsageResponse)
+@router.get("/nodes/usage", response_model=NodesUsageResponse)
 def get_usage(db: DBDep,
               admin: SudoAdminDep,
               start_date: StartDateDep,

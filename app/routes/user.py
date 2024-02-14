@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 router = APIRouter(tags=['User'])
 
 
-@router.post("/api/user", response_model=UserResponse)
+@router.post("/user", response_model=UserResponse)
 async def add_user(new_user: UserCreate,
                    db: DBDep,
                    admin: AdminDep):
@@ -51,7 +51,7 @@ async def add_user(new_user: UserCreate,
     return user
 
 
-@router.get("/api/user/{username}", response_model=UserResponse)
+@router.get("/user/{username}", response_model=UserResponse)
 def get_user(db_user: UserDep):
     """
     Get users information
@@ -59,7 +59,7 @@ def get_user(db_user: UserDep):
     return db_user
 
 
-@router.put("/api/user/{username}", response_model=UserResponse)
+@router.put("/user/{username}", response_model=UserResponse)
 async def modify_user(db_user: UserDep,
                       modifications: UserModify,
                       db: DBDep,
@@ -112,7 +112,7 @@ async def modify_user(db_user: UserDep,
     return user
 
 
-@router.delete("/api/user/{username}")
+@router.delete("/user/{username}")
 async def remove_user(db_user: UserDep,
                       db: DBDep,
                       admin: AdminDep):
@@ -133,7 +133,7 @@ async def remove_user(db_user: UserDep,
     return {}
 
 
-@router.post("/api/user/{username}/reset", response_model=UserResponse)
+@router.post("/user/{username}/reset", response_model=UserResponse)
 async def reset_user_data_usage(db_user: UserDep,
                                 db: DBDep,
                                 admin: AdminDep):
@@ -156,7 +156,7 @@ async def reset_user_data_usage(db_user: UserDep,
     return user
 
 
-@router.post("/api/user/{username}/revoke_sub", response_model=UserResponse)
+@router.post("/user/{username}/revoke_sub", response_model=UserResponse)
 async def revoke_user_subscription(db_user: UserDep,
                                    db: DBDep,
                                    admin: AdminDep):
@@ -180,7 +180,7 @@ async def revoke_user_subscription(db_user: UserDep,
     return user
 
 
-@router.get("/api/users", response_model=UsersResponse)
+@router.get("/users", response_model=UsersResponse)
 def get_users(db: DBDep,
               admin: AdminDep,
               offset: int = None,
@@ -215,7 +215,7 @@ def get_users(db: DBDep,
     return {"users": users, "total": count}
 
 
-@router.post("/api/users/reset")
+@router.post("/users/reset")
 async def reset_users_data_usage(db: DBDep,
                                  admin: SudoAdminDep):
     """
@@ -231,7 +231,7 @@ async def reset_users_data_usage(db: DBDep,
     return {}
 
 
-@router.get("/api/user/{username}/usage", response_model=UserUsagesResponse)
+@router.get("/user/{username}/usage", response_model=UserUsagesResponse)
 def get_user_usage(db: DBDep,
                    db_user: UserDep,
                    start_date: StartDateDep,
@@ -244,7 +244,7 @@ def get_user_usage(db: DBDep,
     return {"usages": usages, "username": db_user.username}
 
 
-@router.put("/api/user/{username}/set-owner", response_model=UserResponse)
+@router.put("/user/{username}/set-owner", response_model=UserResponse)
 def set_owner(username: str,
               admin_username: str,
               db: DBDep,
@@ -265,7 +265,7 @@ def set_owner(username: str,
     return user
 
 
-@router.delete("/api/users/expired")
+@router.delete("/users/expired")
 def delete_expired(passed_time: int,
                    db: DBDep,
                    admin: AdminDep):

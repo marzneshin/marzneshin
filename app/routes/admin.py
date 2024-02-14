@@ -29,7 +29,7 @@ def authenticate_admin(db: Session, username: str, password: str) -> Optional[Ad
     return dbadmin if AdminInDB.model_validate(dbadmin).verify_password(password) else None
 
 
-@router.post("/api/admin/token", response_model=Token)
+@router.post("/admin/token", response_model=Token)
 def admin_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
                 db: DBDep):
     if authenticate_env_sudo(form_data.username, form_data.password):
@@ -45,7 +45,7 @@ def admin_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
     )
 
 
-@router.post("/api/admin", response_model=Admin)
+@router.post("/admin", response_model=Admin)
 def create_admin(new_admin: AdminCreate,
                  db: DBDep,
                  admin: SudoAdminDep):
@@ -58,7 +58,7 @@ def create_admin(new_admin: AdminCreate,
     return dbadmin
 
 
-@router.put("/api/admin/{username}", response_model=Admin)
+@router.put("/admin/{username}", response_model=Admin)
 def modify_admin(username: str,
                  modified_admin: AdminModify,
                  db: DBDep,
@@ -85,7 +85,7 @@ def modify_admin(username: str,
     return dbadmin
 
 
-@router.delete("/api/admin/{username}")
+@router.delete("/admin/{username}")
 def remove_admin(username: str,
                  db: DBDep,
                  admin: SudoAdminDep):
@@ -103,12 +103,12 @@ def remove_admin(username: str,
     return {}
 
 
-@router.get("/api/admin", response_model=Admin)
+@router.get("/admin", response_model=Admin)
 def get_current_admin(admin: AdminDep):
     return admin
 
 
-@router.get("/api/admins", response_model=List[Admin])
+@router.get("/admins", response_model=List[Admin])
 def get_admins(db: DBDep,
                admin: SudoAdminDep,
                offset: int = None,

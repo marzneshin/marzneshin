@@ -15,7 +15,7 @@ from app.utils.system import memory_usage, cpu_usage, realtime_bandwidth
 router = APIRouter(tags=["System"])
 
 
-@router.get("/api/system", response_model=SystemStats)
+@router.get("/system", response_model=SystemStats)
 def get_system_stats(db: DBDep, admin: AdminDep):
     mem = memory_usage()
     cpu = cpu_usage()

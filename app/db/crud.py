@@ -80,24 +80,10 @@ def get_inbound_hosts(db: Session, inbound_id: int) -> List[InboundHost]:
 def get_all_inbounds(db: Session):
     return db.query(Inbound).all()
 
-"""
-def get_or_create_inbound(db: Session, inbound_tag: Inbound):
-    inbound = db.query(ProxyInbound).filter(ProxyInbound.tag == inbound_tag).first()
-    if not inbound:
-        inbound = ProxyInbound(tag=inbound_tag)
-        db.add(inbound)
-        db.commit()
-        add_default_host(db, inbound)
-        db.refresh(inbound)
 
-    return inbound
+def get_inbound(db: Session, inbound_id: int):
+    return db.query(Inbound).filter(Inbound.id == inbound_id).first()
 
-
-def get_hosts(db: Session, inbound: Inbound):
-    inbound = get_or_create_inbound(db, inbound_tag)
-    return inbound.hosts
-
-"""
 
 def add_host(db: Session, inbound: Inbound, host: InboundHostModify):
     # inbound = get_or_create_inbound(db, inbound_tag)
@@ -249,19 +235,6 @@ def get_users_count(db: Session, status: UserStatus = None, admin: Admin = None)
 
 
 def create_user(db: Session, user: UserCreate, admin: Admin = None):
-    """
-    excluded_inbounds_tags = user.excluded_inbounds
-    proxies = []
-    for proxy_type, settings in user.proxies.items():
-        excluded_inbounds = [
-            get_or_create_inbound(db, tag) for tag in excluded_inbounds_tags[proxy_type]
-        ]
-        proxies.append(
-            Proxy(type=proxy_type.value,
-                  settings=settings.dict(no_obj=True),
-                  excluded_inbounds=excluded_inbounds)
-        )
-    """
 
     dbuser = User(
         username=user.username,
@@ -447,7 +420,7 @@ def update_admin(db: Session, dbadmin: Admin, modified_admin: AdminModify):
         dbadmin.password_reset_at = datetime.utcnow()
     db.commit()
     db.refresh(dbadmin)
-    return                        dbadmin
+    return dbadmin
 
 
 def partial_update_admin(db: Session, dbadmin: Admin, modified_admin: AdminPartialModify):
