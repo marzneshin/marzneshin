@@ -16,7 +16,7 @@ from config import (
     SUBSCRIPTION_PAGE_TEMPLATE
 )
 
-router = APIRouter(tags=['Subscription'])
+router = APIRouter(prefix="/sub", tags=['Subscription'])
 
 
 def get_subscription_user_info(user: UserResponse) -> dict:
@@ -28,8 +28,7 @@ def get_subscription_user_info(user: UserResponse) -> dict:
     }
 
 
-@router.get("/sub/{username}/{key}/")
-@router.get("/sub/{username}/{key}", include_in_schema=False)
+@router.get("/{username}/{key}")
 def user_subscription(db_user: SubUserDep,
                       request: Request,
                       db: DBDep,
@@ -90,12 +89,12 @@ def user_subscription(db_user: SubUserDep,
         return Response(content=conf, media_type="text/plain", headers=response_headers)
 
 
-@router.get("/sub/{username}/{key}/info", response_model=UserResponse)
+@router.get("/{username}/{key}/info", response_model=UserResponse)
 def user_subscription_info(db_user: SubUserDep):
     return db_user
 
 
-@router.get("/sub/{username}/{key}/usage")
+@router.get("/{username}/{key}/usage")
 def user_get_usage(db_user: SubUserDep,
                    db: DBDep,
                    start_date: StartDateDep,
@@ -105,7 +104,7 @@ def user_get_usage(db_user: SubUserDep,
     return {"usages": usages, "username": db_user.username}
 
 
-@router.get("/sub/{username}/{key}/{client_type}")
+@router.get("/{username}/{key}/{client_type}")
 def user_subscription_with_client_type(
         db_user: SubUserDep,
         request: Request,

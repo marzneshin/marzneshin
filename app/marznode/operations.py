@@ -43,9 +43,9 @@ async def update_user_inbounds(user: "DBUser", new_inbounds: set, old_inbounds: 
     node_inbounds = defaultdict(lambda: tuple((list(), list())))
 
     for inbound_addition in inbound_additions:
-        node_inbounds[inbound_addition[0]][0].append(inbound_addition[3])
+        node_inbounds[inbound_addition[0]][0].append(inbound_addition[2])
     for inbound_reduction in inbound_reductions:
-        node_inbounds[inbound_reduction[0]][1].append(inbound_reduction[3])
+        node_inbounds[inbound_reduction[0]][1].append(inbound_reduction[2])
 
     for node, inbound_change in node_inbounds.items():
         await marznode.nodes[node].update_user_inbounds(user, inbound_change[0], inbound_change[1])

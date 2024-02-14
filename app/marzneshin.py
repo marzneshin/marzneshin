@@ -23,7 +23,7 @@ from . import __version__, telegram
 from .dashboard import build_dir, build, base_dir
 from .tasks import record_user_usages, review_users, reset_user_data_usage, nodes_health_check, \
     record_realtime_bandwidth, send_notifications, delete_expired_reminders, nodes_startup
-from .routes import admin, node, service, subscription, system, user
+from .routes import api_router
 
 logger = logging.getLogger(__name__)
 dashboard_path = "/dashboard/"
@@ -36,16 +36,11 @@ app = FastAPI(
     redoc_url="/redoc" if DOCS else None,
 )
 
-app.include_router(admin.router)
-app.include_router(node.router)
-app.include_router(service.router)
-app.include_router(subscription.router)
-app.include_router(system.router)
-app.include_router(user.router)
+app.include_router(api_router)
 
 
 @app.get("/", response_class=HTMLResponse)
-def home():
+def home_page():
     return render_template(HOME_PAGE_TEMPLATE)
 
 

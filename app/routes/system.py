@@ -15,7 +15,7 @@ from app.utils.system import memory_usage, cpu_usage, realtime_bandwidth
 router = APIRouter(tags=["System"])
 
 
-@router.get("/api/system", response_model=SystemStats)
+@router.get("/system", response_model=SystemStats)
 def get_system_stats(db: DBDep, admin: AdminDep):
     mem = memory_usage()
     cpu = cpu_usage()
@@ -41,13 +41,13 @@ def get_system_stats(db: DBDep, admin: AdminDep):
     )
 
 
-@router.get('/api/inbounds', response_model=List[Inbound])
+@router.get("/inbounds", response_model=List[Inbound])
 def get_inbounds(db: DBDep, admin: SudoAdminDep):
     inbounds = crud.get_all_inbounds(db)
     return inbounds
 
 
-@router.get('/api/hosts', response_model=Dict[int, List[InboundHost]])
+@router.get("/hosts", response_model=Dict[int, List[InboundHost]])
 def get_hosts(db: DBDep, admin: SudoAdminDep):
     hosts = crud.get_all_hosts(db)
 

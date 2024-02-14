@@ -9,10 +9,10 @@ from app.dependencies import DBDep, sudo_admin
 from app.models.service import (ServiceCreate, ServiceModify,
                                 ServiceResponse)
 
-router = APIRouter(dependencies=[Depends(sudo_admin)], tags=['Service'])
+router = APIRouter(prefix="/service", dependencies=[Depends(sudo_admin)], tags=['Service'])
 
 
-@router.post("/api/service", response_model=ServiceResponse)
+@router.post("", response_model=ServiceResponse)
 def add_service(new_service: ServiceCreate,
                 db: DBDep):
     """
@@ -30,7 +30,7 @@ def add_service(new_service: ServiceCreate,
         raise HTTPException(status_code=409, detail="Service by this name already exists")
 
 
-@router.get("/api/service/{id}", response_model=ServiceResponse)
+@router.get("/{id}", response_model=ServiceResponse)
 def get_service(id: int, db: DBDep):
     """
     Get Service information with id
@@ -42,7 +42,7 @@ def get_service(id: int, db: DBDep):
     return dbservice
 
 
-@router.put("/api/service/{id}", response_model=ServiceResponse)
+@router.put("/{id}", response_model=ServiceResponse)
 def modify_service(id: int,
                    modification: ServiceModify,
                    db: DBDep):
@@ -67,7 +67,7 @@ def modify_service(id: int,
         raise HTTPException(status_code=409, detail="Service by this name already exists")
 
 
-@router.delete("/api/service/{id}")
+@router.delete("/{id}")
 def remove_service(id: int,
                    db: DBDep):
     dbservice = crud.get_service(db, id)
@@ -78,7 +78,7 @@ def remove_service(id: int,
     return dict()
 
 
-@router.get("/api/services", response_model=List[ServiceResponse])
+@router.get("s", response_model=List[ServiceResponse])
 def get_services(db: DBDep,
                  offset: int = None,
                  limit: int = None):
