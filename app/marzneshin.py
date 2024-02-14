@@ -40,7 +40,7 @@ app.include_router(api_router)
 
 
 @app.get("/", response_class=HTMLResponse)
-def home():
+def home_page():
     return render_template(HOME_PAGE_TEMPLATE)
 
 
