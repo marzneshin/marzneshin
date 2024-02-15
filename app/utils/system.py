@@ -1,4 +1,3 @@
-import requests
 import math
 import secrets
 import socket
@@ -6,18 +5,16 @@ from dataclasses import dataclass
 
 import psutil
 
-from app import scheduler
-
 
 @dataclass
-class MemoryStat():
+class MemoryStat:
     total: int
     used: int
     free: int
 
 
 @dataclass
-class CPUStat():
+class CPUStat:
     cores: int
     percent: float
 
@@ -63,15 +60,6 @@ rt_bw = RealtimeBandwidth(
     incoming_bytes=0, outgoing_bytes=0, incoming_packets=0, outgoing_packets=0)
 
 
-@scheduler.scheduled_job('interval', seconds=1, coalesce=True, max_instances=1)
-def record_realtime_bandwidth() -> None:
-    io = psutil.net_io_counters()
-    rt_bw.incoming_bytes, rt_bw.bytes_recv = io.bytes_recv - rt_bw.bytes_recv, io.bytes_recv
-    rt_bw.outgoing_bytes, rt_bw.bytes_sent = io.bytes_sent - rt_bw.bytes_sent, io.bytes_sent
-    rt_bw.incoming_packets, rt_bw.packets_recv = io.packets_recv - rt_bw.packets_recv, io.packets_recv
-    rt_bw.outgoing_packets, rt_bw.packet_sent = io.packets_sent - rt_bw.packet_sent, io.packets_sent
-
-
 def realtime_bandwidth() -> RealtimeBandwidthStat:
     return RealtimeBandwidthStat(
         incoming_bytes=rt_bw.incoming_bytes, outgoing_bytes=rt_bw.outgoing_bytes,
@@ -94,24 +82,6 @@ def check_port(port: int) -> bool:
 
 
 def get_public_ip():
-    """
-    try:
-        return requests.get('https://api.ipify.org?format=json&ipv=4', timeout=5).json()['ip']
-    except (requests.exceptions.RequestException,
-            requests.exceptions.RequestException,
-            KeyError) as e:
-        pass
-
-    try:
-        requests.packages.urllib3.util.connection.HAS_IPV6 = False
-        return requests.get('https://ifconfig.io/ip', timeout=5).text.strip()
-    except (requests.exceptions.RequestException,
-            requests.exceptions.RequestException,
-            KeyError) as e:
-        pass
-    finally:
-        requests.packages.urllib3.util.connection.HAS_IPV6 = True
-    """
     try:
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         sock.connect(('8.8.8.8', 80))

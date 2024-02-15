@@ -1,15 +1,18 @@
+import logging
 from datetime import datetime as dt
 from datetime import timedelta as td
 from typing import Any, Dict, List
 
+import aiohttp
 from fastapi.encoders import jsonable_encoder
 from requests import Session
 
 import config
-from app import app, logger, scheduler
-from app.db import GetDB
 from app.db.models import NotificationReminder
 from app.utils.notification import queue
+from app.db import GetDB
+
+logger = logging.getLogger(__name__)
 
 session = Session()
 
@@ -70,13 +73,3 @@ def delete_expired_reminders() -> None:
         db.query(NotificationReminder).filter(NotificationReminder.expires_at < dt.utcnow()).delete()
         db.commit()
 
-
-if config.WEBHOOK_ADDRESS:
-    @app.on_event("shutdown")
-    async def app_shutdown():
-        logger.info("Sending pending notifications before shutdown...")
-        await send_notifications()
-
-    logger.info("Send webhook job started")
-    scheduler.add_job(send_notifications, "interval", seconds=30, replace_existing=True)
-    scheduler.add_job(delete_expired_reminders, "interval", hours=2, start_date=dt.utcnow() + td(minutes=1))

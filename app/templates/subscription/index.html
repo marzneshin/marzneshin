@@ -94,7 +94,7 @@
     {% if user.status == 'active' %}
     <h2>Links:</h2>
     <ul>
-        {% for link in user.links %}
+        {% for link in links %}
         <li>
             <input type="text" value="{{ link }}" readonly>
             <button class="copy-button" onclick="copyLink('{{ link }}', this)">Copy</button>

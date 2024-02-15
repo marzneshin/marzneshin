@@ -4,12 +4,12 @@ from typing import Union
 
 from jose import JWTError, jwt
 
-from config import JWT_ACCESS_TOKEN_EXPIRE_MINUTES
+from config import JWT_ACCESS_TOKEN_EXPIRE_MINUTES, SUDOERS
+from app.db import GetDB, get_jwt_secret_key
 
 
 @lru_cache(maxsize=None)
 def get_secret_key():
-    from app.db import GetDB, get_jwt_secret_key
     with GetDB() as db:
         return get_jwt_secret_key(db)
 
@@ -36,22 +36,5 @@ def get_admin_payload(token: str) -> Union[dict, None]:
             created_at = None
 
         return {"username": username, "is_sudo": access == "sudo", "created_at": created_at}
-    except JWTError:
-        return
-
-
-def create_subscription_token(username: str) -> str:
-    data = {"sub": username, "access": "subscription", "iat": datetime.utcnow()+timedelta(seconds=1)}
-    encoded_jwt = jwt.encode(data, get_secret_key(), algorithm="HS256")
-    return encoded_jwt
-
-
-def get_subscription_payload(token: str) -> Union[dict, None]:
-    try:
-        payload = jwt.decode(token, get_secret_key(), algorithms=["HS256"])
-        if payload.get("access") != "subscription":
-            return
-
-        return {"username": payload['sub'], "created_at": datetime.utcfromtimestamp(payload['iat'])}
     except JWTError:
         return

@@ -1,8 +1,11 @@
+import logging
 from datetime import datetime
 
-from app import logger, scheduler
+from app import marznode
 from app.db import crud, GetDB, get_users
 from app.models.user import UserDataLimitResetStrategy, UserStatus
+
+logger = logging.getLogger(__name__)
 
 reset_strategy_to_days = {
     UserDataLimitResetStrategy.day.value: 1,
@@ -12,7 +15,7 @@ reset_strategy_to_days = {
 }
 
 
-def reset_user_data_usage():
+async def reset_user_data_usage():
     now = datetime.utcnow()
     with GetDB() as db:
         for user in get_users(db, reset_strategy=[
@@ -27,12 +30,10 @@ def reset_user_data_usage():
             if not (now - last_reset_time).days >= num_days_to_reset:
                 continue
 
+            old_status = user.status
             crud.reset_user_data_usage(db, user)
             # make user active if limited on usage reset
-            if user.status == UserStatus.limited:
-                xray.operations.add_user(user)
+            if user.status == UserStatus.active and old_status == UserStatus.limited:
+                await marznode.operations.add_user(user)
 
             logger.info(f"User data usage reset for User \"{user.username}\"")
-
-
-scheduler.add_job(reset_user_data_usage, 'interval', coalesce=True, hours=1)

@@ -1,7 +1,6 @@
 from collections import deque
 from datetime import datetime as dt
 from enum import Enum
-from typing import Type
 
 from pydantic import BaseModel
 
@@ -100,6 +99,6 @@ class UserSubscriptionRevoked(UserNotification):
     user: UserResponse
 
 
-async def notify(message: Type[Notification]) -> None:
+async def notify(message: Notification) -> None:
     if config.WEBHOOK_ADDRESS:
         queue.append(message)

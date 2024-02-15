@@ -14,7 +14,7 @@ message InboundsResponse {
 }
 
 message User {
-  int32 id = 1;
+  uint32 id = 1;
   string username = 2;
   string key = 3;
 }
@@ -31,9 +31,8 @@ message UsersUpdate {
 
 message UsersStats {
   message UserStats {
-    User user = 1;
-    uint64 uplink = 2;
-    uint64 downlink = 3;
+    uint32 uid = 1;
+    uint64 usage = 2;
   }
   repeated UserStats users_stats = 1;
 }

@@ -1,14 +1,15 @@
+import asyncio
+import logging
 from datetime import datetime
 from typing import TYPE_CHECKING
 
 from sqlalchemy.orm import Session
 
-from app import logger, scheduler
+from app import marznode
 from app.db import (GetDB, get_notification_reminder, get_users,
                     start_user_expire, update_user_status)
 from app.models.user import ReminderType, UserResponse, UserStatus
 from app.utils import report
-# from app.utils.concurrency import GetBG
 from app.utils.helpers import (calculate_expiration_days,
                                calculate_usage_percent)
 from config import (NOTIFY_DAYS_LEFT, NOTIFY_REACHED_USAGE_PERCENT,
@@ -16,6 +17,9 @@ from config import (NOTIFY_DAYS_LEFT, NOTIFY_REACHED_USAGE_PERCENT,
 
 if TYPE_CHECKING:
     from app.db.models import User
+
+
+logger = logging.getLogger(__name__)
 
 
 def add_notification_reminders(db: Session, user: "User", now: datetime = datetime.utcnow()) -> None:
@@ -35,9 +39,9 @@ def add_notification_reminders(db: Session, user: "User", now: datetime = dateti
                 user.id, user.expire)
 
 
-async def review():
+async def review_users():
     now = datetime.utcnow()
-    with GetDB() as db: #, GetBG() as bg:
+    with GetDB() as db:
         for user in get_users(db, status=UserStatus.active):
 
             limited = user.data_limit and user.used_traffic >= user.data_limit
@@ -51,12 +55,13 @@ async def review():
                     add_notification_reminders(db, user, now)
                 continue
 
-            # await xray.operations.remove_user(user)
+            await marznode.operations.remove_user(user)
             update_user_status(db, user, status)
 
-            #bg.add_task(
-            #    report.status_change, user.username, status, UserResponse.model_validate(user)
-            #)
+            asyncio.create_task(report.status_change(
+                user.username,
+                user.status,
+                UserResponse.model_validate(user)))
 
             logger.info(f"User \"{user.username}\" status changed to {status}")
 
@@ -80,22 +85,10 @@ async def review():
 
             update_user_status(db, user, status)
             start_user_expire(db, user)
-            #bg.add_task(report.status_change, user.username, status,
-            #            UserResponse.model_validate(user))
-
-            logger.info(f"User \"{user.username}\" status changed to {status}")
-
-
-            active = user.expire and user.expire >= now.timestamp()
-            if active:
-                status = UserStatus.active
-            else:
-                continue
-
-            update_user_status(db, user, status)
-            # await xray.operations.add_user(user)
-
-            logger.info(f"User \"{user.username}\" status fixed.")
+            asyncio.create_task(report.status_change(
+                user.username,
+                user.status,
+                UserResponse.model_validate(user)))
+            logger.info(f"on hold user `{user.username}` has been activated")
 
 
-scheduler.add_job(review, 'interval', seconds=10, coalesce=True, max_instances=1)

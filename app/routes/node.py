@@ -1,26 +1,26 @@
-import asyncio
-# import time
+import logging
 from datetime import datetime
 from typing import List
 
 import sqlalchemy
-from fastapi import BackgroundTasks, Depends, HTTPException, WebSocket
+from fastapi import APIRouter, Depends
+from fastapi import HTTPException, WebSocket
 
-
-from app import app, logger, marznode
-from app.db import Session, crud, get_db, get_tls_certificate
+from app import marznode
+from app.db import crud, get_tls_certificate
+from app.dependencies import DBDep, SudoAdminDep, sudo_admin, EndDateDep, StartDateDep
 from app.marznode import MarzNodeGRPC
 from app.models.admin import Admin
 from app.models.node import (NodeCreate, NodeModify, NodeResponse,
                              NodeSettings, NodeStatus, NodesUsageResponse)
 
+logger = logging.getLogger(__name__)
+router = APIRouter(prefix="/node", tags=['Node'], dependencies=[Depends(sudo_admin)])
 
-@app.get("/api/node/settings", tags=['Node'], response_model=NodeSettings)
-def get_node_settings(db: Session = Depends(get_db),
-                      admin: Admin = Depends(Admin.get_current)):
-    if not admin.is_sudo:
-        raise HTTPException(status_code=403, detail="You're not allowed")
 
+@router.get("/settings", response_model=NodeSettings)
+def get_node_settings(db: DBDep,
+                      admin: SudoAdminDep):
     tls = crud.get_tls_certificate(db)
 
     return NodeSettings(
@@ -28,14 +28,10 @@ def get_node_settings(db: Session = Depends(get_db),
     )
 
 
-@app.post("/api/node", tags=['Node'], response_model=NodeResponse)
+@router.post("", response_model=NodeResponse)
 async def add_node(new_node: NodeCreate,
-                   db: Session = Depends(get_db),
-                   admin: Admin = Depends(Admin.get_current)):
-
-    if not admin.is_sudo:
-        raise HTTPException(status_code=403, detail="You're not allowed")
-
+                   db: DBDep,
+                   admin: SudoAdminDep):
     try:
         db_node = crud.create_node(db, new_node)
     except sqlalchemy.exc.IntegrityError:
@@ -48,26 +44,25 @@ async def add_node(new_node: NodeCreate,
 
     await marznode.operations.add_node(db_node.id, node)
 
-    logger.info(f"New node \"{db_node.name}\" added")
+    logger.info("New node `%s` added", db_node.name)
     return db_node
 
 
-@app.get("/api/node/{node_id}", tags=['Node'], response_model=NodeResponse)
+@router.get("/{node_id}", response_model=NodeResponse)
 def get_node(node_id: int,
-             db: Session = Depends(get_db),
-             admin: Admin = Depends(Admin.get_current)):
-    if not admin.is_sudo:
-        raise HTTPException(status_code=403, detail="You're not allowed")
-
-    dbnode = crud.get_node_by_id(db, node_id)
-    if not dbnode:
+             db: DBDep,
+             admin: SudoAdminDep):
+    db_node = crud.get_node_by_id(db, node_id)
+    if not db_node:
         raise HTTPException(status_code=404, detail="Node not found")
 
-    return dbnode
+    return db_node
 
 
-@app.websocket("/api/node/{node_id}/logs")
-async def node_logs(node_id: int, websocket: WebSocket, db: Session = Depends(get_db)):
+@router.websocket("/{node_id}/logs", dependencies=None)
+async def node_logs(node_id: int,
+                    websocket: WebSocket,
+                    db: DBDep):
     token = (
         websocket.query_params.get('token')
         or
@@ -100,23 +95,17 @@ async def node_logs(node_id: int, websocket: WebSocket, db: Session = Depends(ge
         await websocket.send_text(l)
 
 
-@app.get("/api/nodes", tags=['Node'], response_model=List[NodeResponse])
-def get_nodes(db: Session = Depends(get_db),
-              admin: Admin = Depends(Admin.get_current)):
-    if not admin.is_sudo:
-        raise HTTPException(status_code=403, detail="You're not allowed")
+@router.get("s", response_model=List[NodeResponse])
+def get_nodes(db: DBDep,
+              admin: SudoAdminDep):
     return crud.get_nodes(db)
 
 
-@app.put("/api/node/{node_id}", tags=['Node'], response_model=NodeResponse)
+@router.put("/{node_id}", response_model=NodeResponse)
 async def modify_node(node_id: int,
                       modified_node: NodeModify,
-                      db: Session = Depends(get_db),
-                      admin: Admin = Depends(Admin.get_current)):
-
-    if not admin.is_sudo:
-        raise HTTPException(status_code=403, detail="You're not allowed")
-
+                      db: DBDep,
+                      admin: SudoAdminDep):
     db_node = crud.get_node_by_id(db, node_id)
     if not db_node:
         raise HTTPException(status_code=404, detail="Node not found")
@@ -130,18 +119,14 @@ async def modify_node(node_id: int,
                             ssl_key=certificate.key, ssl_cert=certificate.certificate)
         await marznode.operations.add_node(db_node.id, node)
 
-    logger.info(f"Node \"{db_node.name}\" modified")
+    logger.info("Node `%s` modified", db_node.name)
     return db_node
 
 
-@app.post("/api/node/{node_id}/resync", tags=['Node'])
+@router.post("/{node_id}/resync")
 async def reconnect_node(node_id: int,
-                         db: Session = Depends(get_db),
-                         admin: Admin = Depends(Admin.get_current)):
-
-    if not admin.is_sudo:
-        raise HTTPException(status_code=403, detail="You're not allowed")
-
+                         db: DBDep,
+                         admin: SudoAdminDep):
     db_node = crud.get_node_by_id(db, node_id)
     if not db_node:
         raise HTTPException(status_code=404, detail="Node not found")
@@ -149,14 +134,10 @@ async def reconnect_node(node_id: int,
     return {}
 
 
-@app.delete("/api/node/{node_id}", tags=['Node'])
+@router.delete("/{node_id}")
 async def remove_node(node_id: int,
-                db: Session = Depends(get_db),
-                admin: Admin = Depends(Admin.get_current)):
-
-    if not admin.is_sudo:
-        raise HTTPException(status_code=403, detail="You're not allowed")
-
+                      db: DBDep,
+                      admin: SudoAdminDep):
     db_node = crud.get_node_by_id(db, node_id)
     if not db_node:
         raise HTTPException(status_code=404, detail="Node not found")
@@ -164,32 +145,18 @@ async def remove_node(node_id: int,
     crud.remove_node(db, db_node)
     await marznode.operations.remove_node(db_node.id)
 
-    logger.info(f"Node \"{db_node.name}\" deleted")
+    logger.info(f"Node `%s` deleted", db_node.name)
     return {}
 
 
-@app.get("/api/nodes/usage", tags=['Node'], response_model=NodesUsageResponse)
-def get_usage(db: Session = Depends(get_db),
-              start: str = None,
-              end: str = None,
-              admin: Admin = Depends(Admin.get_current)):
+@router.get("s/usage", response_model=NodesUsageResponse)
+def get_usage(db: DBDep,
+              admin: SudoAdminDep,
+              start_date: StartDateDep,
+              end_date: EndDateDep):
     """
     Get nodes usage
     """
-
-    if not admin.is_sudo:
-        raise HTTPException(status_code=403, detail="You're not allowed")
-
-    if start is None:
-        start_date = datetime.fromtimestamp(datetime.utcnow().timestamp() - 30 * 24 * 3600)
-    else:
-        start_date = datetime.fromisoformat(start)
-
-    if end is None:
-        end_date = datetime.utcnow()
-    else:
-        end_date = datetime.fromisoformat(end)
-
     usages = crud.get_nodes_usage(db, start_date, end_date)
 
     return {"usages": usages}
