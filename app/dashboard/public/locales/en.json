@@ -8,6 +8,9 @@
   "createService": "Create Service",
   "username": "Username",
   "name": "Name",
+  "node": "Node",
+  "xrayVersion": "xray version",
+  "addNode": "Add Node",
   "expires": "Expires in {{time}}",
   "expired": "Expired {{time}} ago",
   "dateFormat": "MMMM d, yyy",
@@ -56,6 +59,20 @@
     "inboundsNumber": "Inbounds",
     "total": "Total"
   },
+  "nodesTable": {
+    "status": "status",
+    "dataUsage": "data usage",
+    "editNode": "Edit node",
+    "copyCertificate": "Copy Certificate",
+    "copied": "Certificate Copied",
+    "addNode": "Add node",
+    "ipPort": "Node IP Port",
+    "xrayVersion": "xray version",
+    "noNodeMatched": "It seems there is no node matched with what you are looking for",
+    "noNode": "There is no node added to the system",
+    "copyConfigs": "Copy Configs",
+    "total": "Total"
+  },
   "userDialog": {
     "dataLimit": "Data Limit",
     "periodicUsageReset": "Periodic Usage Reset",
@@ -96,6 +113,19 @@
     "revokeSubscription": "Revoke Subscription",
     "total": "Total: "
   },
+  "nodeDialog": {
+    "editNodeTitle": "Edit node",
+    "editNode": "Edit node",
+    "addNode": "Add node",
+    "createNewNode": "Create node",
+    "nodeEdited": "Node {{name}} edited.",
+    "nodeCreated": "Node {{name}} created.",
+    "nodeAlreadyExists": "Node already exists",
+    "optional": "optional",
+    "total": "Total: ",
+    "updateSubmit": "Submit update",
+    "addSubmit": "Submit"
+  },
   "serviceDialog": {
     "editServiceTitle": "Edit service",
     "editService": "Edit service",
@@ -104,10 +134,6 @@
     "serviceCreated": "Service {{name}} created.",
     "serviceAlreadyExists": "Service already exists",
     "resetStrategyNo": "No",
-    "resetStrategyDaily": "Daily",
-    "resetStrategyWeekly": "Weekly",
-    "resetStrategyMonthly": "Monthly",
-    "resetStrategyAnnually": "Annually",
     "optional": "optional",
     "total": "Total: "
   },
