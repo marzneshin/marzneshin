@@ -87,7 +87,6 @@ Marzban is user-friendly, feature-rich and reliable. It lets you to create diffe
 ### Features
 
 - Built-in **Web UI**
-- Fully **REST API** backend
 - [**Multiple Nodes**](#marzban-node) support (for infrastructure distribution & scalability)
 - Supports protocols **Vmess**, **VLESS**, **Trojan** and **Shadowsocks**
 - **Multi-protocol** for a single user
