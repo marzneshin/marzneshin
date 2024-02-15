@@ -5,6 +5,7 @@ Revises:
 Create Date: 2024-01-15 09:48:24.808505
 
 """
+
 import os
 from alembic import op
 import sqlalchemy as sa
@@ -28,7 +29,6 @@ def upgrade() -> None:
     sa.Column('password_reset_at', sa.DateTime(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
-    op.create_index(op.f('ix_admins_id'), 'admins', ['id'], unique=False)
     op.create_index(op.f('ix_admins_username'), 'admins', ['username'], unique=True)
     
     jwttable = op.create_table('jwt',
@@ -40,7 +40,7 @@ def upgrade() -> None:
 
     op.create_table('nodes',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('name', sa.String(length=256, collation='NOCASE'), nullable=True),
+    sa.Column('name', sa.String(length=256), nullable=True),
     sa.Column('address', sa.String(length=256), nullable=True),
     sa.Column('port', sa.Integer(), nullable=True),
     sa.Column('xray_version', sa.String(length=32), nullable=True),
@@ -52,17 +52,15 @@ def upgrade() -> None:
     sa.Column('downlink', sa.BigInteger(), nullable=True),
     sa.Column('usage_coefficient', sa.Float(), server_default=sa.text('(1.0)'), nullable=False),
     sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('name')
+    sa.UniqueConstraint('name'),
+    sa.UniqueConstraint('address', 'port')
     )
-    op.create_index(op.f('ix_nodes_id'), 'nodes', ['id'], unique=False)
     op.create_table('services',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=64), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
-    op.create_index(op.f('ix_services_id'), 'services', ['id'], unique=False)
-    op.create_index(op.f('ix_services_name'), 'services', ['name'], unique=False)
-    
+
     systable = op.create_table('system',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('uplink', sa.BigInteger(), nullable=True),
@@ -70,8 +68,7 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('id')
     )
     op.bulk_insert(systable, [{"id": 1, "uplink": 0, "downlink": 0}])
-    op.create_index(op.f('ix_system_id'), 'system', ['id'], unique=False)
-    
+
     tlstable = op.create_table('tls',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('key', sa.String(length=4096), nullable=False),
@@ -83,15 +80,15 @@ def upgrade() -> None:
 
     op.create_table('inbounds',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('protocol', sa.String(), nullable=True),
+    sa.Column('protocol', sa.Enum('VMess', 'VLESS', 'Trojan', 'Shadowsocks', name='proxytypes'), nullable=True),
     sa.Column('tag', sa.String(length=256), nullable=False),
     sa.Column('config', sa.String(), nullable=False),
     sa.Column('node_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['node_id'], ['nodes.id'], ),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint("node_id", "tag")
     )
     op.create_index(op.f('ix_inbounds_node_id'), 'inbounds', ['node_id'], unique=False)
-    op.create_index(op.f('ix_inbounds_tag'), 'inbounds', ['tag'], unique=False)
     op.create_table('node_usages',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('created_at', sa.DateTime(), nullable=False),
@@ -102,10 +99,9 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('created_at', 'node_id')
     )
-    op.create_index(op.f('ix_node_usages_id'), 'node_usages', ['id'], unique=False)
     op.create_table('users',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('username', sa.String(length=32, collation='NOCASE'), nullable=True),
+    sa.Column('username', sa.String(length=32), nullable=True),
     sa.Column('key', sa.String(length=64), nullable=True),
     sa.Column('status', sa.Enum('active', 'disabled', 'limited', 'expired', 'on_hold', name='userstatus'), nullable=False),
     sa.Column('used_traffic', sa.BigInteger(), nullable=True),
@@ -124,10 +120,9 @@ def upgrade() -> None:
     sa.Column('on_hold_timeout', sa.DateTime(), nullable=True),
     sa.Column('edit_at', sa.DateTime(), nullable=True),
     sa.ForeignKeyConstraint(['admin_id'], ['admins.id'], ),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('key')
     )
-    op.create_index(op.f('ix_users_id'), 'users', ['id'], unique=False)
-    op.create_index(op.f('ix_users_key'), 'users', ['key'], unique=True)
     op.create_index(op.f('ix_users_username'), 'users', ['username'], unique=True)
     op.create_table('hosts',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -164,7 +159,6 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('created_at', 'user_id', 'node_id')
     )
-    op.create_index(op.f('ix_node_user_usages_id'), 'node_user_usages', ['id'], unique=False)
     op.create_table('notification_reminders',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=True),
@@ -174,7 +168,6 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
-    op.create_index(op.f('ix_notification_reminders_id'), 'notification_reminders', ['id'], unique=False)
     op.create_table('user_usage_logs',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=True),
@@ -183,7 +176,6 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
-    op.create_index(op.f('ix_user_usage_logs_id'), 'user_usage_logs', ['id'], unique=False)
     op.create_table('users_services',
     sa.Column('user_id', sa.Integer(), nullable=False),
     sa.Column('service_id', sa.Integer(), nullable=False),
@@ -197,33 +189,21 @@ def upgrade() -> None:
 def downgrade() -> None:
     # ### commands auto generated by Alembic - please adjust! ###
     op.drop_table('users_services')
-    op.drop_index(op.f('ix_user_usage_logs_id'), table_name='user_usage_logs')
     op.drop_table('user_usage_logs')
-    op.drop_index(op.f('ix_notification_reminders_id'), table_name='notification_reminders')
     op.drop_table('notification_reminders')
-    op.drop_index(op.f('ix_node_user_usages_id'), table_name='node_user_usages')
     op.drop_table('node_user_usages')
     op.drop_table('inbounds_services')
     op.drop_table('hosts')
     op.drop_index(op.f('ix_users_username'), table_name='users')
-    op.drop_index(op.f('ix_users_key'), table_name='users')
-    op.drop_index(op.f('ix_users_id'), table_name='users')
     op.drop_table('users')
-    op.drop_index(op.f('ix_node_usages_id'), table_name='node_usages')
     op.drop_table('node_usages')
-    op.drop_index(op.f('ix_inbounds_tag'), table_name='inbounds')
     op.drop_index(op.f('ix_inbounds_node_id'), table_name='inbounds')
     op.drop_table('inbounds')
     op.drop_table('tls')
-    op.drop_index(op.f('ix_system_id'), table_name='system')
     op.drop_table('system')
-    op.drop_index(op.f('ix_services_name'), table_name='services')
-    op.drop_index(op.f('ix_services_id'), table_name='services')
     op.drop_table('services')
-    op.drop_index(op.f('ix_nodes_id'), table_name='nodes')
     op.drop_table('nodes')
     op.drop_table('jwt')
     op.drop_index(op.f('ix_admins_username'), table_name='admins')
-    op.drop_index(op.f('ix_admins_id'), table_name='admins')
     op.drop_table('admins')
     # ### end Alembic commands ###

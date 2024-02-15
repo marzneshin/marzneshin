@@ -2,9 +2,10 @@ import re
 import secrets
 from datetime import datetime
 from enum import Enum
-from typing import List, Optional, Union
+from typing import List, Optional, Union, Annotated
 
-from pydantic import field_validator, ConfigDict, BaseModel, Field, validator, computed_field, ValidationInfo
+from pydantic import field_validator, ConfigDict, BaseModel, Field, validator, computed_field, ValidationInfo, constr, \
+    StringConstraints
 
 from app.models.proxy import InboundBase
 from config import XRAY_SUBSCRIPTION_URL_PREFIX
@@ -50,7 +51,7 @@ class UserDataLimitResetStrategy(str, Enum):
 class UserBase(BaseModel):
     # proxies: Dict[ProxyTypes, ProxySettings] = {}
     id: Optional[int] = None
-    username: str
+    username: Annotated[str, StringConstraints(to_lower=True)]
     expire: Optional[int] = Field(None, nullable=True)
     key: str = Field(default_factory=lambda: secrets.token_hex(16))
     data_limit: Optional[int] = Field(
@@ -97,7 +98,7 @@ class UserBase(BaseModel):
 from app.models.service import ServiceBase
 
 
-class User(UserBase): 
+class User(UserBase):
     pass
 
 
