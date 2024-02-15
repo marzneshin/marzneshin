@@ -11,7 +11,7 @@ from app.models.admin import Admin, AdminCreate, AdminInDB, AdminModify, Token
 from app.utils.jwt import create_admin_token
 from config import SUDOERS
 
-router = APIRouter(tags=["Admin"], prefix="/admin")
+router = APIRouter(tags=["Admin"], prefix="/admins")
 
 
 def authenticate_env_sudo(username: str, password: str) -> bool:
@@ -103,12 +103,12 @@ def remove_admin(username: str,
     return {}
 
 
-@router.get("", response_model=Admin)
+@router.get("/current", response_model=Admin)
 def get_current_admin(admin: AdminDep):
     return admin
 
 
-@router.get("s", response_model=List[Admin])
+@router.get("", response_model=List[Admin])
 def get_admins(db: DBDep,
                admin: SudoAdminDep,
                offset: int = None,

@@ -41,12 +41,6 @@ def get_system_stats(db: DBDep, admin: AdminDep):
     )
 
 
-@router.get("/inbounds", response_model=List[Inbound])
-def get_inbounds(db: DBDep, admin: SudoAdminDep):
-    inbounds = crud.get_all_inbounds(db)
-    return inbounds
-
-
 @router.get("/hosts", response_model=Dict[int, List[InboundHost]])
 def get_hosts(db: DBDep, admin: SudoAdminDep):
     hosts = crud.get_all_hosts(db)
