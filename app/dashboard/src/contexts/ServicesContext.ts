@@ -75,7 +75,7 @@ export const useServices = create(
     },
     deleteService: async (service: Service) => {
       set({ editingService: null });
-      return fetch(`/service/${service.id}`, { method: 'DELETE' }).then(() => {
+      return fetch(`/services/${service.id}`, { method: 'DELETE' }).then(() => {
         set({ deletingService: null });
         get().refetchServices();
         useUsers.getState().refetchUsers();
@@ -83,14 +83,14 @@ export const useServices = create(
       });
     },
     createService: async (body: ServiceCreate) => {
-      return fetch('/service', { method: 'POST', body }).then(() => {
+      return fetch('/services', { method: 'POST', body }).then(() => {
         set({ editingService: null });
         get().refetchServices();
         queryClient.invalidateQueries(StatisticsQueryKey);
       });
     },
     editService: async (body: ServiceCreate) => {
-      return fetch(`/service/${body.id}`, { method: 'PUT', body }).then(
+      return fetch(`/services/${body.id}`, { method: 'PUT', body }).then(
         () => {
           get().onEditingService(null);
           get().refetchServices();
