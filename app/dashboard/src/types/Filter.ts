@@ -21,3 +21,13 @@ export type ServicesFilterType = FilterType & {
     users?: number;
     inbounds?: number;
 };
+
+export type NodesFilterType = FilterType & {
+    name?: string;
+    address?: string;
+    port?: number;
+    xray_version?: number;
+    message?: string | null;
+    add_as_new_host?: boolean;
+    status?: 'healthy' | 'disabled' | 'healthy';
+}
