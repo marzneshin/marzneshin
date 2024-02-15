@@ -21,7 +21,7 @@ import {
 } from '@chakra-ui/react';
 import classNames from 'classnames';
 
-import { statusColors } from 'constants/UserSettings';
+import { statusColors } from 'constants/Settings';
 import { t } from 'i18next';
 import { FC, Fragment, useEffect, useState } from 'react';
 import CopyToClipboard from 'react-copy-to-clipboard';
@@ -42,7 +42,7 @@ import {
 } from 'components/Table/Icons';
 import { Sort } from 'components/Table/Sort';
 import { UsageSlider, UsageSliderCompact } from './UsageSlider';
-import { StatusSortSelect } from './StatusSortSelect';
+import { StatusSortSelect } from 'components/Table/StatusSortSelect';
 import { useUsers } from 'contexts/UsersContext';
 
 type ExpandedIndex = number | number[];
@@ -154,7 +154,7 @@ export const UsersTable: FC<UsersTableProps> = (props) => {
                     {t('usersTable.status')}
                     {filters.status ? ': ' + filters.status : ''}
                   </Text>
-                  <StatusSortSelect filters={filters} handleStatusFilter={handleStatusFilter} />
+                  <StatusSortSelect filters={filters} handleStatusFilter={handleStatusFilter} options={['active', 'disabled', 'limited', 'expired', 'on_hold']} />
                 </HStack>
               </Th>
               <Th
@@ -365,7 +365,7 @@ export const UsersTable: FC<UsersTableProps> = (props) => {
                   {t('usersTable.status')}
                   {filters.status ? ': ' + filters.status : ''}
                 </Text>
-                <StatusSortSelect filters={filters} handleStatusFilter={handleStatusFilter} />
+                <StatusSortSelect filters={filters} handleStatusFilter={handleStatusFilter} options={['active', 'disabled', 'limited', 'expired', 'on_hold']} />
               </HStack>
             </Th>
             <Th

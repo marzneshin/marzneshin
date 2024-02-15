@@ -1,14 +1,15 @@
 
 import { Select } from '@chakra-ui/react'
-import { UsersFilterType } from 'types/Filter';
+import { FilterType } from 'types/Filter';
 import React from 'react'
 
 interface StatusSortSelectProps {
-  filters: UsersFilterType;
+  filters: FilterType;
   handleStatusFilter: (e: any) => void;
+  options: string[];
 }
 
-export const StatusSortSelect: React.FC<StatusSortSelectProps> = ({ filters, handleStatusFilter }) => {
+export const StatusSortSelect: React.FC<StatusSortSelectProps> = ({ filters, handleStatusFilter, options }) => {
   return (
     <div>
       <Select
@@ -28,12 +29,8 @@ export const StatusSortSelect: React.FC<StatusSortSelectProps> = ({ filters, han
         onChange={handleStatusFilter}
       >
         <option></option>
-        <option>active</option>
-        <option>disabled</option>
-        <option>limited</option>
-        <option>expired</option>
+        {options.map((option, i) => <option key={i}>{option}</option>)}
       </Select>
-
     </div>
   )
 }
