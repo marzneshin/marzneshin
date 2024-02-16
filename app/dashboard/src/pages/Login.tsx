@@ -72,7 +72,7 @@ export const Login: FC = () => {
     formData.append('password', values.password);
     formData.append('grant_type', 'password');
     setLoading(true);
-    fetch('/admin/token', { method: 'post', body: formData })
+    fetch('/admins/token', { method: 'post', body: formData })
       .then(({ access_token: token }) => {
         setAuthToken(token);
         navigate('/');
