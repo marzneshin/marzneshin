@@ -55,9 +55,9 @@ import { Trans, useTranslation } from 'react-i18next';
 import 'slick-carousel/slick/slick-theme.css';
 import 'slick-carousel/slick/slick.css';
 import { z } from 'zod';
-import { DeleteIcon } from './Dialog/Icons';
-import { Icon } from './Icon';
-import { Input as CustomInput } from './Input';
+import { DeleteIcon } from 'components/dialog/Icons';
+import { Icon } from 'components/Icon';
+import { Input as CustomInput } from 'components/Input';
 
 const Select = chakra(ChakraSelect, {
   baseStyle: {
