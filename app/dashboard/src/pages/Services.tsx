@@ -6,6 +6,7 @@ import { pages } from 'constants/Pages';
 import { ServiceDialog } from 'components/ServiceDialog';
 import { useServices } from 'contexts/ServicesContext';
 import { useDashboard } from 'contexts/DashboardContext';
+import { DeleteServiceModal } from 'components/DeleteServiceModal';
 
 
 export const ServicesPage: FC = () => {
@@ -17,7 +18,7 @@ export const ServicesPage: FC = () => {
     <VStack justifyContent="space-between" maxH="100vh" p="2rem" rowGap={4}>
       <Box w="full" >
         <ServiceDialog />
-        {/* <DeleteServiceModal /> */}
+        <DeleteServiceModal />
         <ServicesFilters />
         <ServicesTable />
       </Box>
