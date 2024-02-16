@@ -4,7 +4,7 @@ import {
   Flex,
   Stack,
 } from '@chakra-ui/react';
-import { ListCheckBox } from 'components/ListCheckBox';
+import { ListCheckBox } from 'components/list-check-box';
 import { Inbounds, InboundType } from 'types/Inbounds';
 import { forwardRef, ReactNode } from 'react';
 import {
