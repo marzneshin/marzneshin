@@ -22,8 +22,22 @@ export const NodeSchema = z.object({
   add_as_new_host: z.boolean(),
 });
 
+export const NodeCreateSchema = z.object({
+  name: z.string().min(1),
+  address: z.string().min(1),
+  port: z
+    .number()
+    .min(1)
+    .or(z.string().transform((v) => parseFloat(v))),
+  id: z.number().nullable().optional(),
+  status: z
+    .enum(['none', 'disabled']),
+  usage_coefficient: z.number().default(1),
+  add_as_new_host: z.boolean().optional(),
+});
+
 export type NodeType = z.infer<typeof NodeSchema>;
-export type NodeCreate = Pick<NodeType, 'name' | 'status' | 'address' | 'port' | 'usage_coefficient' | 'id' | 'add_as_new_host'>
+export type NodeCreate = z.infer<typeof NodeCreateSchema>;
 
 export const getNodeDefaultValues = (): NodeType => ({
   name: '',
@@ -35,6 +49,16 @@ export const getNodeDefaultValues = (): NodeType => ({
   usage_coefficient: 1,
 });
 
+export const getNodeCreateDefaultValues = (): NodeCreate => ({
+  name: '',
+  address: '',
+  status: 'none',
+  port: 62050,
+  add_as_new_host: false,
+  usage_coefficient: 1,
+  id: 0,
+});
+
 export const FetchNodesQueryKey = 'fetch-nodes-query-key';
 
 export function fetchNodes() {
@@ -44,8 +68,8 @@ export function fetchNodes() {
 export type NodeStore = {
   nodes: NodeType[];
   certificate: string,
-  deletingNode?: NodeType | null;
-  editingNode: NodeType | null;
+  deletingNode?: NodeCreate | null;
+  editingNode: NodeCreate | null;
   isAddingNode: boolean;
   isShowingNodesUsage: boolean;
   isEditingNode: boolean;
@@ -58,10 +82,10 @@ export type NodeStore = {
   deleteNode: (node: NodeCreate) => Promise<unknown>;
   updateNode: (node: NodeCreate) => Promise<unknown>;
   reconnectNode: (node: NodeType) => Promise<unknown>;
-  setDeletingNode: (node: NodeType | null) => void;
+  onDeletingNode: (node: NodeCreate | undefined) => void;
   onEditingNode: (node: NodeType | undefined) => void;
   onAddingNode: (isAddingNode: boolean) => void;
-  onFilterChange: (filters: NodesFilterType) => void;
+  onFilterChange: (filters: Partial<NodesFilterType>) => void;
   onShowingNodesUsage: (isShowingNodesUsage: boolean) => void;
 };
 
@@ -98,7 +122,7 @@ export const useNodes = create<NodeStore>((set, get) => ({
     get().refetchNodes();
   },
   addNode: async (body) => {
-    return fetch('/node', { method: 'POST', body }).then(() => { get().refetchCertificate() });
+    return fetch('/nodes', { method: 'POST', body }).then(() => { get().refetchCertificate() });
   },
   refetchNodes: () => {
     useDashboard.setState({ loading: true })
@@ -116,13 +140,19 @@ export const useNodes = create<NodeStore>((set, get) => ({
     return fetch('/nodes/usage', { query });
   },
   updateNode: (body) => {
+    console.log('update: ' + body.id)
     return fetch(`/nodes/${body.id}`, {
       method: 'PUT',
       body,
     });
   },
-  setDeletingNode: (node) => {
-    set({ deletingNode: node });
+  onDeletingNode: (node: NodeCreate | undefined) => {
+    if (node !== undefined) {
+      set({ deletingNode: node });
+    }
+    else {
+      set({ deletingNode: undefined });
+    }
   },
   reconnectNode: (body) => {
     return fetch(`/nodes/${body.id}/reconnect`, {
@@ -135,7 +165,14 @@ export const useNodes = create<NodeStore>((set, get) => ({
     });
   },
   onEditingNode: (editingNode: NodeType | undefined) => {
-    set({ editingNode, isEditingNode: (editingNode?.id ? true : false) });
+    if (editingNode !== undefined) {
+      const { status, ...rest } = editingNode;
+      set({ editingNode: { ...rest, status: (status === 'healthy' || status === 'unhealthy') ? 'none' : 'disabled' }, isEditingNode: true });
+    }
+    else {
+      set({ editingNode: undefined, isEditingNode: false });
+
+    }
   },
   onAddingNode: (isAddingNode: boolean) => {
     set({ isAddingNode });

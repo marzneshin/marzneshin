@@ -14,13 +14,13 @@ import {
   Switch,
   Tooltip,
   useToast,
-  VStack, IconButton
+  VStack, IconButton, Spacer
 } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
-  getNodeDefaultValues,
+  getNodeCreateDefaultValues,
   NodeCreate,
-  NodeSchema,
+  NodeCreateSchema,
   useNodes,
 } from 'contexts/NodesContext';
 import { FC, useEffect, useState } from 'react';
@@ -31,6 +31,7 @@ import 'slick-carousel/slick/slick.css';
 import { DeleteIcon, AddIcon, EditIcon } from './Dialog/Icons';
 import { Input } from './Input';
 import { DialogModalHeader } from './Dialog/ModalHeader';
+import { DevTool } from '@hookform/devtools';
 
 const CustomInput = chakra(Input, {
   baseStyle: {
@@ -42,15 +43,15 @@ const CustomInput = chakra(Input, {
 });
 
 export const NodesDialog: FC = () => {
-  const { editingNode, isEditingNode, onEditingNode, isAddingNode, refetchNodes, updateNode, addNode, onAddingNode, setDeletingNode } = useNodes();
+  const { editingNode, isEditingNode, onEditingNode, isAddingNode, refetchNodes, updateNode, addNode, onAddingNode, onDeletingNode } = useNodes();
   const [loading, setLoading] = useState(false);
   const [, setError] = useState<string | null>('');
 
   const { t } = useTranslation();
   const toast = useToast();
-  const defaultValueNode: NodeCreate = (isEditingNode && editingNode !== null) ? editingNode : getNodeDefaultValues()!;
+  const defaultValueNode: NodeCreate = (isEditingNode === true && editingNode !== null && editingNode !== undefined) ? editingNode : getNodeCreateDefaultValues();
   const form = useForm<NodeCreate>({
-    resolver: zodResolver(NodeSchema),
+    resolver: zodResolver(NodeCreateSchema),
     defaultValues: defaultValueNode,
   });
   const isOpen = isEditingNode || isAddingNode;
@@ -61,23 +62,24 @@ export const NodesDialog: FC = () => {
   useEffect(() => {
     if (isOpen) {
       refetchNodes();
+      form.reset(defaultValueNode);
     }
   }, [isOpen]);
-
-  const handleDeleteNode = setDeletingNode.bind(null, editingNode);
 
   const submit = async (values: NodeCreate) => {
     setLoading(true);
     const methods = { edited: updateNode, created: addNode };
     const method = isEditingNode ? 'edited' : 'created';
-    const { name, port, address, usage_coefficient } = values;
+    const { name, port, id, address, usage_coefficient } = values;
     setError(null);
     let body: NodeCreate = {
+      id,
       name,
       address,
       port,
-      status: values.status === 'healthy' ? '' : values.status,
+      status: values.status,
       usage_coefficient,
+      add_as_new_host: values.add_as_new_host,
     };
 
     await methods[method](body)
@@ -121,7 +123,7 @@ export const NodesDialog: FC = () => {
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay bg="blackAlpha.300" backdropFilter="blur(10px)" />
         <ModalContent mx="3" w="fit-content" maxW="3xl">
-          <DialogModalHeader HeaderIcon={isEditingNode ? EditIcon : AddIcon} title={isEditingNode ? t('nodesDialog.editNode') : t('nodeDialog.addNode')} />
+          <DialogModalHeader HeaderIcon={isEditingNode ? EditIcon : AddIcon} title={isEditingNode ? t('nodeDialog.editNode') : t('nodeDialog.addNode')} />
           <ModalCloseButton mt={3} />
           <ModalBody w="440px" pb={6} pt={3}>
             <VStack>
@@ -160,7 +162,7 @@ export const NodesDialog: FC = () => {
                                   isChecked={field.value !== 'disabled'}
                                   onChange={(e) => {
                                     if (e.target.checked) {
-                                      field.onChange('');
+                                      field.onChange('none');
                                     } else {
                                       field.onChange('disabled');
                                     }
@@ -174,7 +176,7 @@ export const NodesDialog: FC = () => {
                     </HStack>
                   </HStack>
                   <HStack alignItems="flex-start">
-                    <Box w="50%">
+                    <Box w="65%">
                       <CustomInput
                         label={t('nodes.nodeAddress')}
                         size="sm"
@@ -183,7 +185,7 @@ export const NodesDialog: FC = () => {
                         error={form.formState?.errors?.address?.message}
                       />
                     </Box>
-                    <Box w="25%">
+                    <Box w="35%">
                       <CustomInput
                         label={t('nodes.nodePort')}
                         size="sm"
@@ -200,6 +202,7 @@ export const NodesDialog: FC = () => {
                       </Checkbox>
                     </FormControl>
                   )}
+                  <Spacer m={2}></Spacer>
                   <HStack w="full">
                     <Tooltip label={t('delete')} placement="top">
                       <IconButton
@@ -207,7 +210,13 @@ export const NodesDialog: FC = () => {
                         variant="ghost"
                         size="sm"
                         aria-label="delete node"
-                        onClick={handleDeleteNode}
+                        onClick={() => {
+                          if (editingNode !== null) {
+                            console.log('deleting')
+                            onDeletingNode(editingNode);
+                            onClose();
+                          }
+                        }}
                       >
                         <DeleteIcon />
                       </IconButton>
@@ -226,6 +235,7 @@ export const NodesDialog: FC = () => {
                   </HStack>
                 </VStack>
               </form>
+              <DevTool control={form.control} />
             </VStack>
           </ModalBody>
         </ModalContent>

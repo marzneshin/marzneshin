@@ -6,6 +6,7 @@ import { NodesDialog } from 'components/NodesModal';
 import { NodesUsage } from 'components/NodesUsage';
 import { NodesTable } from 'components/NodesTable';
 import { NodesFilters } from 'components/NodesFilters';
+import { DeleteNodeModal } from 'components/DeleteNodeModal';
 import { useDashboard } from 'contexts/DashboardContext';
 import { useNodes } from 'contexts/NodesContext';
 import { pages } from 'constants/Pages';
@@ -22,7 +23,7 @@ export const NodesPage: FC = () => {
         <NodesFilters />
         <NodesTable />
         <NodesDialog />
-        {/* <DeleteNodesModal /> */}
+        <DeleteNodeModal />
         <NodesUsage />
         <CoreSettingsModal />
       </Box>
