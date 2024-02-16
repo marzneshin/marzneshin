@@ -12,36 +12,36 @@ import {
   Text,
   useToast,
 } from '@chakra-ui/react';
-import { ArrowPathIcon } from '@heroicons/react/24/outline';
-import { useUsers } from 'contexts/UsersContext';
 import { FC, useState } from 'react';
-import { Trans, useTranslation } from 'react-i18next';
-import { Icon } from './Icon';
+import { ArrowPathIcon } from '@heroicons/react/24/outline';
+import { Icon } from 'components/Icon';
+import { useTranslation, Trans } from 'react-i18next';
+import { useUsers } from 'contexts/UsersContext';
 
-export const ResetIcon = chakra(ArrowPathIcon, {
+const ResetIcon = chakra(ArrowPathIcon, {
   baseStyle: {
     w: 5,
     h: 5,
   },
 });
 
-export type RevokeSubscriptionModalProps = {};
+type DeleteUserModalProps = {};
 
-export const RevokeSubscriptionModal: FC<RevokeSubscriptionModalProps> = () => {
+export const ResetUserUsageModal: FC<DeleteUserModalProps> = () => {
   const [loading, setLoading] = useState(false);
-  const { revokeSubscriptionUser: user, revokeSubscription } = useUsers();
+  const { resetUsageUser: user, resetDataUsage } = useUsers();
   const { t } = useTranslation();
   const toast = useToast();
   const onClose = () => {
-    useUsers.setState({ revokeSubscriptionUser: null });
+    useUsers.setState({ resetUsageUser: null });
   };
   const onReset = () => {
     if (user) {
       setLoading(true);
-      revokeSubscription(user)
+      resetDataUsage(user)
         .then(() => {
           toast({
-            title: t('revokeUserSub.success', { username: user.username }),
+            title: t('resetUserUsage.success', { username: user.username }),
             status: 'success',
             isClosable: true,
             position: 'top',
@@ -50,7 +50,7 @@ export const RevokeSubscriptionModal: FC<RevokeSubscriptionModalProps> = () => {
         })
         .catch(() => {
           toast({
-            title: t('revokeUserSub.error'),
+            title: t('resetUserUsage.error'),
             status: 'error',
             isClosable: true,
             position: 'top',
@@ -74,7 +74,7 @@ export const RevokeSubscriptionModal: FC<RevokeSubscriptionModalProps> = () => {
         <ModalCloseButton mt={3} />
         <ModalBody>
           <Text fontWeight="semibold" fontSize="lg">
-            {t('revokeUserSub.title')}
+            {t('resetUserUsage.title')}
           </Text>
           {user && (
             <Text
@@ -83,8 +83,9 @@ export const RevokeSubscriptionModal: FC<RevokeSubscriptionModalProps> = () => {
               _dark={{ color: 'gray.400' }}
               color="gray.600"
             >
-              <Trans components={{ b: <b /> }}>
-                {t('revokeUserSub.prompt', { username: user.username })}
+              <Trans
+                components={{ b: <b /> }}>
+                {t('resetUserUsage.prompt', { username: user.username })}
               </Trans>
             </Text>
           )}
@@ -100,7 +101,7 @@ export const RevokeSubscriptionModal: FC<RevokeSubscriptionModalProps> = () => {
             onClick={onReset}
             leftIcon={loading ? <Spinner size="xs" /> : undefined}
           >
-            {t('revoke')}
+            {t('reset')}
           </Button>
         </ModalFooter>
       </ModalContent>

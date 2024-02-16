@@ -31,20 +31,20 @@ import {
   User,
   UserCreate,
 } from 'types/User';
-import { UsageFilter, createUsageConfig } from '../UsageFilter';
-import { AddIcon, EditIcon } from 'components/Dialog/Icons';
-import { DialogModalHeader } from 'components/Dialog/ModalHeader';
-import { DialogModalFooter } from 'components/Dialog/ModalFooter';
-import { DeleteIcon } from 'components/Dialog/Icons';
-import { UserUsageIcon } from './UserDialogIcons';
-import { getDefaultValues } from './DefaultValues';
-import { schema, FormType } from './FormSchema';
-import { ServicesField } from './ServicesField';
-import { UsernameField } from './UsernameField';
-import { DataLimitField } from './DataLimitField';
-import { PeriodicUsageReset as PeriodicUsageReset } from './PeriodicUsageReset';
-import { ExpireDateField } from './ExpireDateField';
-import { NoteField } from './NoteField';
+import { UsageFilter, createUsageConfig } from 'components/UsageFilter';
+import { AddIcon, EditIcon } from 'components/dialog/Icons';
+import { DialogModalHeader } from 'components/dialog/ModalHeader';
+import { DialogModalFooter } from 'components/dialog/ModalFooter';
+import { DeleteIcon } from 'components/dialog/Icons';
+import { UserUsageIcon } from './icons';
+import { getDefaultValues } from './default-values';
+import { schema, FormType } from './form-schema';
+import { ServicesField } from './services-field';
+import { UsernameField } from './username-field';
+import { DataLimitField } from './data-limit-field';
+import { PeriodicUsageReset } from './periodic-usage-reset';
+import { ExpireDateField } from './expire-date-field';
+import { NoteField } from './note-field';
 import { Service } from 'types/Service';
 import { useUsers } from 'contexts/UsersContext';
 import { useServices } from 'contexts/ServicesContext';

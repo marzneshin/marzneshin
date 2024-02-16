@@ -23,7 +23,7 @@ import { useTranslation } from 'react-i18next';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick-theme.css';
 import 'slick-carousel/slick/slick.css';
-import { Icon } from './Icon';
+import { Icon } from 'components/Icon';
 import { useUsers } from 'contexts/UsersContext';
 
 const QRCode = chakra(QRCodeCanvas);

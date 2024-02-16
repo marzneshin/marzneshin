@@ -12,36 +12,36 @@ import {
   Text,
   useToast,
 } from '@chakra-ui/react';
-import { FC, useState } from 'react';
 import { ArrowPathIcon } from '@heroicons/react/24/outline';
-import { Icon } from './Icon';
-import { useTranslation, Trans } from 'react-i18next';
 import { useUsers } from 'contexts/UsersContext';
+import { FC, useState } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
+import { Icon } from 'components/Icon';
 
-export const ResetIcon = chakra(ArrowPathIcon, {
+const ResetIcon = chakra(ArrowPathIcon, {
   baseStyle: {
     w: 5,
     h: 5,
   },
 });
 
-export type DeleteUserModalProps = {};
+export type RevokeSubscriptionModalProps = {};
 
-export const ResetUserUsageModal: FC<DeleteUserModalProps> = () => {
+export const RevokeSubscriptionModal: FC<RevokeSubscriptionModalProps> = () => {
   const [loading, setLoading] = useState(false);
-  const { resetUsageUser: user, resetDataUsage } = useUsers();
+  const { revokeSubscriptionUser: user, revokeSubscription } = useUsers();
   const { t } = useTranslation();
   const toast = useToast();
   const onClose = () => {
-    useUsers.setState({ resetUsageUser: null });
+    useUsers.setState({ revokeSubscriptionUser: null });
   };
   const onReset = () => {
     if (user) {
       setLoading(true);
-      resetDataUsage(user)
+      revokeSubscription(user)
         .then(() => {
           toast({
-            title: t('resetUserUsage.success', { username: user.username }),
+            title: t('revokeUserSub.success', { username: user.username }),
             status: 'success',
             isClosable: true,
             position: 'top',
@@ -50,7 +50,7 @@ export const ResetUserUsageModal: FC<DeleteUserModalProps> = () => {
         })
         .catch(() => {
           toast({
-            title: t('resetUserUsage.error'),
+            title: t('revokeUserSub.error'),
             status: 'error',
             isClosable: true,
             position: 'top',
@@ -74,7 +74,7 @@ export const ResetUserUsageModal: FC<DeleteUserModalProps> = () => {
         <ModalCloseButton mt={3} />
         <ModalBody>
           <Text fontWeight="semibold" fontSize="lg">
-            {t('resetUserUsage.title')}
+            {t('revokeUserSub.title')}
           </Text>
           {user && (
             <Text
@@ -83,9 +83,8 @@ export const ResetUserUsageModal: FC<DeleteUserModalProps> = () => {
               _dark={{ color: 'gray.400' }}
               color="gray.600"
             >
-              <Trans
-                components={{ b: <b /> }}>
-                {t('resetUserUsage.prompt', { username: user.username })}
+              <Trans components={{ b: <b /> }}>
+                {t('revokeUserSub.prompt', { username: user.username })}
               </Trans>
             </Text>
           )}
@@ -101,7 +100,7 @@ export const ResetUserUsageModal: FC<DeleteUserModalProps> = () => {
             onClick={onReset}
             leftIcon={loading ? <Spinner size="xs" /> : undefined}
           >
-            {t('reset')}
+            {t('revoke')}
           </Button>
         </ModalFooter>
       </ModalContent>

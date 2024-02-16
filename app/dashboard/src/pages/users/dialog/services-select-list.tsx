@@ -4,7 +4,7 @@ import {
   Flex,
   Stack,
 } from '@chakra-ui/react';
-import { ListCheckBox } from 'components/ListCheckBox';
+import { ListCheckBox } from 'components/list-check-box';
 import { forwardRef, ReactNode } from 'react';
 import {
   useFormContext,
@@ -12,8 +12,8 @@ import {
 import { Service } from 'types/Service';
 
 interface ServicesSelectListProps {
-    list: Service[];
-    renderCheckboxContent: (service: Service) => ReactNode;
+  list: Service[];
+  renderCheckboxContent: (service: Service) => ReactNode;
 }
 
 export const ServicesSelectList = forwardRef<HTMLDivElement, ServicesSelectListProps>(
