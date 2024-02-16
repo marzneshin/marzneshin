@@ -73,6 +73,7 @@ export const ServiceDialog: FC<ServiceDialogProps> = () => {
   useEffect(() => {
     if (isOpen) {
       refetchInbounds();
+      form.reset();
     }
   }, [isOpen]);
 
