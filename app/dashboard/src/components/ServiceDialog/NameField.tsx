@@ -4,10 +4,10 @@ import { TFunction } from 'i18next';
 import { Controller } from 'react-hook-form';
 
 interface NameFieldProps {
-    form: any;
-    isEditing: boolean;
-    t: TFunction<'translation', undefined, 'translation'>;
-    disabled: boolean;
+  form: any;
+  isEditing: boolean;
+  t: TFunction<'translation', undefined, 'translation'>;
+  disabled: boolean;
 }
 
 export const NameField = ({ form, isEditing, t, disabled }: NameFieldProps) => {
@@ -20,7 +20,7 @@ export const NameField = ({ form, isEditing, t, disabled }: NameFieldProps) => {
           type="text"
           borderRadius="6px"
           error={form.formState.errors.name?.message}
-          disabled={disabled || isEditing}
+          disabled={disabled}
           {...form.register('name')}
         />
         {isEditing && (
@@ -40,7 +40,7 @@ export const NameField = ({ form, isEditing, t, disabled }: NameFieldProps) => {
                         colorScheme="primary"
                         disabled={
                           field.value !== 'active' &&
-                                                    field.value !== 'disabled'
+                          field.value !== 'disabled'
                         }
                         isChecked={field.value === 'active'}
                         onChange={(e) => {
