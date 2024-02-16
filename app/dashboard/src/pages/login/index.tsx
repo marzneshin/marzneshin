@@ -10,7 +10,7 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react';
-import { ArrowRightOnRectangleIcon } from '@heroicons/react/24/outline';
+import { ArrowRightStartOnRectangleIcon } from '@heroicons/react/24/outline';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FC, useEffect, useState } from 'react';
 import { FieldValues, useForm } from 'react-hook-form';
@@ -37,7 +37,7 @@ export const LogoIcon = chakra(Logo, {
   },
 });
 
-const LoginIcon = chakra(ArrowRightOnRectangleIcon, {
+const LoginIcon = chakra(ArrowRightStartOnRectangleIcon, {
   baseStyle: {
     w: 5,
     h: 5,
