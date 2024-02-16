@@ -25,7 +25,7 @@ import debounce from 'lodash.debounce';
 import React, { FC, useEffect, useState } from 'react';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { useTranslation } from 'react-i18next';
-import { CopiedIcon, SubscriptionLinkIcon } from './Table/Icons';
+import { CopiedIcon, SubscriptionLinkIcon } from 'components/Table/Icons';
 
 const iconProps = {
   baseStyle: {

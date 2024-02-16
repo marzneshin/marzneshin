@@ -26,7 +26,7 @@ import { t } from 'i18next';
 import { FC, Fragment, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Pagination } from 'components/Table/Pagination';
-import { StatusBadge } from '../StatusBadge';
+import { StatusBadge } from 'components/StatusBadge';
 import { EmptySection } from 'components/Table/EmptySection';
 import {
   AccordionArrowIcon,

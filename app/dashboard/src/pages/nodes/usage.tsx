@@ -21,8 +21,8 @@ import dayjs from 'dayjs';
 import { FC, Suspense, useEffect, useState } from 'react';
 import ReactApexChart from 'react-apexcharts';
 import { useTranslation } from 'react-i18next';
-import { Icon } from './Icon';
-import { UsageFilter, createUsageConfig } from './UsageFilter';
+import { Icon } from 'components/Icon';
+import { UsageFilter, createUsageConfig } from 'components/UsageFilter';
 
 const UsageIcon = chakra(ChartPieIcon, {
   baseStyle: {
