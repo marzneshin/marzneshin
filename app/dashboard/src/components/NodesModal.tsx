@@ -31,7 +31,6 @@ import 'slick-carousel/slick/slick.css';
 import { DeleteIcon, AddIcon, EditIcon } from './Dialog/Icons';
 import { Input } from './Input';
 import { DialogModalHeader } from './Dialog/ModalHeader';
-import { DevTool } from '@hookform/devtools';
 
 const CustomInput = chakra(Input, {
   baseStyle: {
@@ -235,7 +234,6 @@ export const NodesDialog: FC = () => {
                   </HStack>
                 </VStack>
               </form>
-              <DevTool control={form.control} />
             </VStack>
           </ModalBody>
         </ModalContent>
