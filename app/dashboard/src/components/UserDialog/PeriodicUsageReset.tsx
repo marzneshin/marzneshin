@@ -1,12 +1,12 @@
 import { FormControl, FormLabel, Select } from '@chakra-ui/react';
 import { Controller } from 'react-hook-form';
-import { resetStrategy } from 'constants/UserSettings';
+import { resetStrategy } from 'constants/Settings';
 import { TFunction } from 'i18next';
 
 
 interface PreiodicUsageResetProps {
-    form: any;
-    t: TFunction<'translation', undefined, 'translation'>;
+  form: any;
+  t: TFunction<'translation', undefined, 'translation'>;
 }
 
 export const PeriodicUsageReset = ({ form, t }: PreiodicUsageResetProps) => {

@@ -85,7 +85,7 @@ export const Sidebar = () => {
         <VStack pt="30px" gap="2">
           <Image src="favicon/logo.svg" alt="marzneshin" boxSize="50px" />
           {pages.map((item: SideBarItemProps, index: number) =>
-            <SidebarItem path={item.path} name={item.name} itemIcon={item.itemIcon} index={index} />)}
+            <SidebarItem path={item.path} name={item.name} itemIcon={item.itemIcon} index={index} key={index} />)}
         </VStack>
       </Flex>
     </aside>

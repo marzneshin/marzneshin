@@ -9,7 +9,7 @@ from app.dependencies import DBDep, sudo_admin
 from app.models.service import (ServiceCreate, ServiceModify,
                                 ServiceResponse)
 
-router = APIRouter(prefix="/service", dependencies=[Depends(sudo_admin)], tags=['Service'])
+router = APIRouter(prefix="/services", dependencies=[Depends(sudo_admin)], tags=['Service'])
 
 
 @router.post("", response_model=ServiceResponse)
@@ -78,7 +78,7 @@ def remove_service(id: int,
     return dict()
 
 
-@router.get("s", response_model=List[ServiceResponse])
+@router.get("", response_model=List[ServiceResponse])
 def get_services(db: DBDep,
                  offset: int = None,
                  limit: int = None):

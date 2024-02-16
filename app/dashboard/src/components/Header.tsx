@@ -19,7 +19,6 @@ import {
   DocumentMinusIcon,
   LinkIcon,
   MoonIcon,
-  SquaresPlusIcon,
   SunIcon,
 } from '@heroicons/react/24/outline';
 import { pages } from 'constants/Pages';
@@ -54,7 +53,6 @@ const SettingsIcon = chakra(Bars3Icon, iconProps);
 const LogoutIcon = chakra(ArrowLeftStartOnRectangleIcon, iconProps);
 const DonationIcon = chakra(CurrencyDollarIcon, iconProps);
 const HostsIcon = chakra(LinkIcon, iconProps);
-const NodesIcon = chakra(SquaresPlusIcon, iconProps);
 const NodesUsageIcon = chakra(ChartPieIcon, iconProps);
 const ResetUsageIcon = chakra(DocumentMinusIcon, iconProps);
 const NotificationCircle = chakra(Box, {
@@ -95,7 +93,6 @@ export const Header: FC<HeaderProps> = () => {
     onEditingHosts,
   } = useHosts();
   const {
-    onEditingNodes,
     onShowingNodesUsage,
   } = useNodes();
   const { t } = useTranslation();
@@ -149,14 +146,6 @@ export const Header: FC<HeaderProps> = () => {
                 onClick={onEditingHosts.bind(null, true)}
               >
                 {t('header.hostSettings')}
-              </MenuItem>
-              <MenuItem
-                maxW="170px"
-                fontSize="sm"
-                icon={<NodesIcon />}
-                onClick={onEditingNodes.bind(null, true)}
-              >
-                {t('header.nodeSettings')}
               </MenuItem>
               <MenuItem
                 maxW="170px"

@@ -5,6 +5,7 @@ import {
   AccordionItem,
   AccordionPanel,
   Box,
+  chakra,
   HStack,
   IconButton,
   Table,
@@ -21,43 +22,43 @@ import {
 } from '@chakra-ui/react';
 import classNames from 'classnames';
 
-import { statusColors } from 'constants/Settings';
 import { t } from 'i18next';
 import { FC, Fragment, useEffect, useState } from 'react';
-import CopyToClipboard from 'react-copy-to-clipboard';
 import { useTranslation } from 'react-i18next';
-import { User } from 'types/User';
-import { OnlineBadge } from '../OnlineBadge';
-import { OnlineStatus } from '../OnlineStatus';
 import { Pagination } from 'components/Table/Pagination';
 import { StatusBadge } from '../StatusBadge';
 import { EmptySection } from 'components/Table/EmptySection';
 import {
   AccordionArrowIcon,
   EditIcon,
-  CopiedIcon,
-  CopyIcon,
-  QRIcon,
-  SubscriptionLinkIcon
 } from 'components/Table/Icons';
 import { Sort } from 'components/Table/Sort';
-import { UsageSlider, UsageSliderCompact } from './UsageSlider';
 import { StatusSortSelect } from 'components/Table/StatusSortSelect';
-import { useUsers } from 'contexts/UsersContext';
+import { useNodes } from 'contexts/NodesContext';
+import { Cog6ToothIcon } from '@heroicons/react/24/outline';
+
+const iconProps = {
+  baseStyle: {
+    w: 4,
+    h: 4,
+  },
+};
+const CoreSettingsIcon = chakra(Cog6ToothIcon, iconProps);
 
 type ExpandedIndex = number | number[];
 
-type UsersTableProps = {} & TableProps;
+type NodesTableProps = {} & TableProps;
 
-export const UsersTable: FC<UsersTableProps> = (props) => {
+export const NodesTable: FC<NodesTableProps> = (props) => {
   const {
-    usersFilters: filters,
-    users: { users },
-    users: { total },
-    onEditingUser,
-    onCreateUser,
+    nodesFilters: filters,
+    nodes,
+    onEditingNode: onEditingNodes,
+    onAddingNode: onCreateNodes,
     onFilterChange,
-  } = useUsers();
+  } = useNodes();
+
+  const total = nodes.length;
 
   const { t } = useTranslation();
   const [selectedRow, setSelectedRow] = useState<ExpandedIndex | undefined>(
@@ -76,7 +77,8 @@ export const UsersTable: FC<UsersTableProps> = (props) => {
     () => window.removeEventListener('scroll', calcTop);
   }, []);
 
-  const isFiltered = users.length !== total;
+  // TODO: Find a different mechancism to to detect ftiler
+  // const isFiltered = users.length !== total;
 
   const handleSort = (column: string) => {
     let newSort = filters.sort;
@@ -104,8 +106,10 @@ export const UsersTable: FC<UsersTableProps> = (props) => {
     setSelectedRow(index === selectedRow ? undefined : index);
   };
 
+  const StatusSortSelectNodes = () => (<StatusSortSelect filters={filters} options={['healthy', 'unhealthy', 'disabled']} handleStatusFilter={handleStatusFilter} />);
+
   return (
-    <Box id="users-table" overflowX={{ base: 'unset', md: 'unset' }}>
+    <Box id="node-table" overflowX={{ base: 'unset', md: 'unset' }} >
       <Accordion
         allowMultiple
         display={{ base: 'block', md: 'none' }}
@@ -121,11 +125,11 @@ export const UsersTable: FC<UsersTableProps> = (props) => {
                 pl={4}
                 pr={4}
                 cursor={'pointer'}
-                onClick={handleSort.bind(null, 'username')}
+                onClick={handleSort.bind(null, 'name')}
               >
                 <HStack>
-                  <span>{t('users')}</span>
-                  <Sort sort={filters.sort} column="username" />
+                  <span>{t('name')}</span>
+                  <Sort sort={filters.sort} column="name" />
                 </HStack>
               </Th>
               <Th
@@ -151,10 +155,10 @@ export const UsersTable: FC<UsersTableProps> = (props) => {
                     zIndex={1}
                     w="100%"
                   >
-                    {t('usersTable.status')}
+                    {t('nodesTable.status')}
                     {filters.status ? ': ' + filters.status : ''}
                   </Text>
-                  <StatusSortSelect filters={filters} handleStatusFilter={handleStatusFilter} options={['active', 'disabled', 'limited', 'expired', 'on_hold']} />
+                  <StatusSortSelectNodes />
                 </HStack>
               </Th>
               <Th
@@ -163,13 +167,23 @@ export const UsersTable: FC<UsersTableProps> = (props) => {
                 minW="100px"
                 cursor={'pointer'}
                 pr={0}
-                onClick={handleSort.bind(null, 'used_traffic')}
+                onClick={handleSort.bind(null, 'xray_version')}
               >
                 <HStack>
-                  <span>{t('usersTable.dataUsage')}</span>
-                  <Sort sort={filters.sort} column="used_traffic" />
+                  <span>{t('nodesTable.xrayVersion')}</span>
+                  <Sort sort={filters.sort} column="xray_version" />
                 </HStack>
               </Th>
+              <Th
+                position="sticky"
+                top={top}
+                minW="100px"
+                cursor={'pointer'}
+                pr={0}
+              >
+                <span>{t('nodesTable.ipPort')}</span>
+              </Th>
+              {/* Action buttons (certificate, core settings)*/}
               <Th
                 position="sticky"
                 top={top}
@@ -182,37 +196,25 @@ export const UsersTable: FC<UsersTableProps> = (props) => {
           </Thead>
           <Tbody>
             {!useTable &&
-              users?.map((user, i) => {
+              nodes?.map((node, i) => {
                 return (
-                  <Fragment key={user.username}>
+                  <Fragment key={node.name}>
                     <Tr
                       onClick={toggleAccordion.bind(null, i)}
                       cursor="pointer"
                     >
                       <Td borderBottom={0} minW="100px" pl={4} pr={4}>
-                        <div className="flex-status">
-                          <OnlineBadge lastOnline={user.online_at} />
-                          {user.username}
-                        </div>
+                        {node.name}
                       </Td>
                       <Td borderBottom={0} minW="50px" pl={0} pr={0}>
                         <StatusBadge
                           compact
                           showDetail={false}
-                          expiryDate={user.expire}
-                          status={user.status}
+                          status={node.status}
                         />
                       </Td>
                       <Td borderBottom={0} minW="100px" pr={0}>
-                        <UsageSliderCompact
-                          totalUsedTraffic={user.lifetime_used_traffic}
-                          dataLimitResetStrategy={
-                            user.data_limit_reset_strategy
-                          }
-                          used={user.used_traffic}
-                          total={user.data_limit}
-                          colorScheme={statusColors[user.status].bandWidthColor}
-                        />
+                        {node.xray_version}
                       </Td>
                       <Td p={0} borderBottom={0} w="32px" minW="32px">
                         <AccordionArrowIcon
@@ -255,37 +257,17 @@ export const UsersTable: FC<UsersTableProps> = (props) => {
                                     color: 'gray.400',
                                   }}
                                 >
-                                  {t('usersTable.dataUsage')}
+                                  {t('nodesTable.ipPort')}
                                 </Text>
                                 <Box width="full" minW="230px">
-                                  <UsageSlider
-                                    totalUsedTraffic={
-                                      user.lifetime_used_traffic
-                                    }
-                                    dataLimitResetStrategy={
-                                      user.data_limit_reset_strategy
-                                    }
-                                    used={user.used_traffic}
-                                    total={user.data_limit}
-                                    colorScheme={
-                                      statusColors[user.status].bandWidthColor
-                                    }
-                                  />
+                                  {node.address}:{node.port}
                                 </Box>
                               </VStack>
                               <HStack w="full" justifyContent="space-between">
-                                <Box width="full">
-                                  <StatusBadge
-                                    compact
-                                    expiryDate={user.expire}
-                                    status={user.status}
-                                  />
-                                  <OnlineStatus lastOnline={user.online_at} />
-                                </Box>
                                 <HStack>
-                                  <ActionButtons user={user} />
+                                  <ActionButtons />
                                   <Tooltip
-                                    label={t('userDialog.editUser')}
+                                    label={t('nodesDialog.editNode')}
                                     placement="top"
                                   >
                                     <IconButton
@@ -303,7 +285,7 @@ export const UsersTable: FC<UsersTableProps> = (props) => {
                                       }}
                                       onClick={(e) => {
                                         e.stopPropagation();
-                                        onEditingUser(user);
+                                        onEditingNodes(node);
                                       }}
                                     >
                                       <EditIcon />
@@ -334,11 +316,11 @@ export const UsersTable: FC<UsersTableProps> = (props) => {
               top={{ base: 'unset', md: top }}
               minW="140px"
               cursor={'pointer'}
-              onClick={handleSort.bind(null, 'username')}
+              onClick={handleSort.bind(null, 'name')}
             >
               <HStack>
-                <span>{t('username')}</span>
-                <Sort sort={filters.sort} column="username" />
+                <span>{t('name')}</span>
+                <Sort sort={filters.sort} column="name" />
               </HStack>
             </Th>
             <Th
@@ -362,10 +344,10 @@ export const UsersTable: FC<UsersTableProps> = (props) => {
                   zIndex={1}
                   w="100%"
                 >
-                  {t('usersTable.status')}
+                  {t('nodesTable.status')}
                   {filters.status ? ': ' + filters.status : ''}
                 </Text>
-                <StatusSortSelect filters={filters} handleStatusFilter={handleStatusFilter} options={['active', 'disabled', 'limited', 'expired', 'on_hold']} />
+                <StatusSortSelectNodes />
               </HStack>
             </Th>
             <Th
@@ -374,11 +356,24 @@ export const UsersTable: FC<UsersTableProps> = (props) => {
               width="350px"
               minW="230px"
               cursor={'pointer'}
-              onClick={handleSort.bind(null, 'used_traffic')}
+              onClick={handleSort.bind(null, 'xray_version')}
             >
               <HStack>
-                <span>{t('usersTable.dataUsage')}</span>
-                <Sort sort={filters.sort} column="used_traffic" />
+                <span>{t('nodesTable.xrayVersion')}</span>
+                <Sort sort={filters.sort} column="xray_version" />
+              </HStack>
+            </Th>
+            <Th
+              position="sticky"
+              top={{ base: 'unset', md: top }}
+              width="350px"
+              minW="230px"
+              cursor={'pointer'}
+              onClick={handleSort.bind(null, 'xray_version')}
+            >
+              <HStack>
+                <span>{t('nodesTable.ipPort')}</span>
+                <Sort sort={filters.sort} column="address" />
               </HStack>
             </Th>
             <Th
@@ -391,52 +386,46 @@ export const UsersTable: FC<UsersTableProps> = (props) => {
         </Thead>
         <Tbody>
           {useTable &&
-            users?.map((user, i) => {
+            nodes?.map((node, i) => {
               return (
                 <Tr
-                  key={user.username}
+                  key={node.name}
                   className={classNames('interactive', {
-                    'last-row': i === users.length - 1,
+                    'last-row': i === nodes.length - 1,
                   })}
-                  onClick={() => onEditingUser(user)}
+                  onClick={() => onEditingNodes(node)}
                 >
                   <Td minW="140px">
                     <div className="flex-status">
-                      <OnlineBadge lastOnline={user.online_at} />
-                      {user.username}
-                      <OnlineStatus lastOnline={user.online_at} />
+                      {node.name}
                     </div>
                   </Td>
                   <Td width="400px" minW="150px">
                     <StatusBadge
-                      expiryDate={user.expire}
-                      status={user.status}
+                      status={node.status}
                     />
                   </Td>
-                  <Td width="350px" minW="230px">
-                    <UsageSlider
-                      totalUsedTraffic={user.lifetime_used_traffic}
-                      dataLimitResetStrategy={user.data_limit_reset_strategy}
-                      used={user.used_traffic}
-                      total={user.data_limit}
-                      colorScheme={statusColors[user.status].bandWidthColor}
-                    />
+                  <Td width="350px" minW="150px">
+                    {node.xray_version}
+                  </Td>
+                  <Td width="350px" minW="150px">
+                    {node.address}:{node.port}
                   </Td>
                   <Td width="200px" minW="180px">
-                    <ActionButtons user={user} />
+                    <ActionButtons />
                   </Td>
                 </Tr>
               );
             })}
-          {users.length == 0 && (
+          {nodes.length == 0 && (
             <Tr>
-              <Td colSpan={4}>
+              <Td colSpan={5}>
                 <EmptySection
-                  isFiltered={isFiltered}
-                  noObjectT="usersTable.noUser"
-                  noObjectMatchedT='usersTable.noUserMatched'
-                  createObjectT="createUser"
-                  onCreateObject={onCreateUser}
+                  isFiltered={/* isFiltered */ false}
+                  noObjectT="nodesTable.noNode"
+                  noObjectMatchedT='nodesTable.noNodeMatched'
+                  createObjectT="addNode"
+                  onCreateObject={onCreateNodes}
                 />
               </Td>
             </Tr>
@@ -448,23 +437,9 @@ export const UsersTable: FC<UsersTableProps> = (props) => {
   );
 };
 
-type ActionButtonsProps = {
-  user: User;
-};
+type ActionButtonsProps = {};
 
-const ActionButtons: FC<ActionButtonsProps> = ({ user }) => {
-  const { setQRCode, setSubLink } = useUsers();
-
-  const proxyLinks = user.links.join('\r\n');
-
-  const [copied, setCopied] = useState([-1, false]);
-  useEffect(() => {
-    if (copied[1]) {
-      setTimeout(() => {
-        setCopied([-1, false]);
-      }, 1000);
-    }
-  }, [copied]);
+const ActionButtons: FC<ActionButtonsProps> = () => {
   return (
     <HStack
       justifyContent="flex-end"
@@ -473,86 +448,15 @@ const ActionButtons: FC<ActionButtonsProps> = ({ user }) => {
         e.stopPropagation();
       }}
     >
-      <CopyToClipboard
-        text={
-          user.subscription_url.startsWith('/')
-            ? window.location.origin + user.subscription_url
-            : user.subscription_url
+      <Tooltip
+        label={
+          t('nodesTable.coreSettings')
         }
-        onCopy={() => {
-          setCopied([0, true]);
-        }}
+        placement="top"
       >
-        <div>
-          <Tooltip
-            label={
-              copied[0] == 0 && copied[1]
-                ? t('usersTable.copied')
-                : t('usersTable.copyLink')
-            }
-            placement="top"
-          >
-            <IconButton
-              p="0 !important"
-              aria-label="copy subscription link"
-              bg="transparent"
-              _dark={{
-                _hover: {
-                  bg: 'gray.700',
-                },
-              }}
-              size={{
-                base: 'sm',
-                md: 'md',
-              }}
-            >
-              {copied[0] == 0 && copied[1] ? (
-                <CopiedIcon />
-              ) : (
-                <SubscriptionLinkIcon />
-              )}
-            </IconButton>
-          </Tooltip>
-        </div>
-      </CopyToClipboard>
-      <CopyToClipboard
-        text={proxyLinks}
-        onCopy={() => {
-          setCopied([1, true]);
-        }}
-      >
-        <div>
-          <Tooltip
-            label={
-              copied[0] == 1 && copied[1]
-                ? t('usersTable.copied')
-                : t('usersTable.copyConfigs')
-            }
-            placement="top"
-          >
-            <IconButton
-              p="0 !important"
-              aria-label="copy configs"
-              bg="transparent"
-              _dark={{
-                _hover: {
-                  bg: 'gray.700',
-                },
-              }}
-              size={{
-                base: 'sm',
-                md: 'md',
-              }}
-            >
-              {copied[0] == 1 && copied[1] ? <CopiedIcon /> : <CopyIcon />}
-            </IconButton>
-          </Tooltip>
-        </div>
-      </CopyToClipboard>
-      <Tooltip label="QR Code" placement="top">
         <IconButton
           p="0 !important"
-          aria-label="qr code"
+          aria-label="core settings"
           bg="transparent"
           _dark={{
             _hover: {
@@ -563,12 +467,8 @@ const ActionButtons: FC<ActionButtonsProps> = ({ user }) => {
             base: 'sm',
             md: 'md',
           }}
-          onClick={() => {
-            setQRCode(user.links);
-            setSubLink(user.subscription_url);
-          }}
         >
-          <QRIcon />
+          <CoreSettingsIcon />
         </IconButton>
       </Tooltip>
     </HStack >

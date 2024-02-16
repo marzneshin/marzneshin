@@ -1,4 +1,4 @@
-import { chakra, ChakraComponent} from '@chakra-ui/react';
+import { chakra, ChakraComponent } from '@chakra-ui/react';
 import {
   ClockIcon,
   ExclamationCircleIcon,
@@ -62,6 +62,11 @@ export const statusColors: {
     bandWidthColor: 'primary',
     icon: ActiveStatusIcon,
   },
+  healthy: {
+    statusColor: 'green',
+    bandWidthColor: 'primary',
+    icon: ActiveStatusIcon,
+  },
   disabled: {
     statusColor: 'gray',
     bandWidthColor: 'gray',
@@ -81,6 +86,11 @@ export const statusColors: {
     statusColor: 'orange',
     bandWidthColor: 'orange',
     icon: ExpiredStatusIcon,
+  },
+  unhealthy: {
+    statusColor: 'red',
+    bandWidthColor: 'red',
+    icon: LimitedStatusIcon,
   },
   limited: {
     statusColor: 'red',

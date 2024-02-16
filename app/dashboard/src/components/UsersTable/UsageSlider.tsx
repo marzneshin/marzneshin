@@ -1,5 +1,5 @@
 import { HStack, Text, SliderTrack, SliderFilledTrack, Slider, SliderProps } from '@chakra-ui/react';
-import { resetStrategy } from 'constants/UserSettings';
+import { resetStrategy } from 'constants/Settings';
 import { formatBytes } from 'utils/formatByte';
 import { useTranslation } from 'react-i18next';
 import { FC } from 'react';
@@ -21,7 +21,7 @@ export const UsageSliderCompact: FC<UsageSliderProps> = (props) => {
         {formatBytes(used)} /{' '}
         {isUnlimited ? (
           <Text as="span" fontFamily="system-ui">
-                        ∞
+            ∞
           </Text>
         ) : (
           formatBytes(total)
@@ -32,10 +32,10 @@ export const UsageSliderCompact: FC<UsageSliderProps> = (props) => {
 };
 
 type UsageSliderProps = {
-    used: number;
-    total: number | null;
-    dataLimitResetStrategy: string | null;
-    totalUsedTraffic: number;
+  used: number;
+  total: number | null;
+  dataLimitResetStrategy: string | null;
+  totalUsedTraffic: number;
 } & SliderProps;
 
 const getResetStrategy = (strategy: string): string => {
@@ -84,17 +84,17 @@ export const UsageSlider: FC<UsageSliderProps> = (props) => {
           {formatBytes(used)} /{' '}
           {isUnlimited ? (
             <Text as="span" fontFamily="system-ui">
-                            ∞
+              ∞
             </Text>
           ) : (
             formatBytes(total) +
-                        (dataLimitResetStrategy && dataLimitResetStrategy !== 'no_reset'
-                          ? ' ' +
-                            t(
-                              'userDialog.resetStrategy' +
-                                getResetStrategy(dataLimitResetStrategy)
-                            )
-                          : '')
+            (dataLimitResetStrategy && dataLimitResetStrategy !== 'no_reset'
+              ? ' ' +
+              t(
+                'userDialog.resetStrategy' +
+                getResetStrategy(dataLimitResetStrategy)
+              )
+              : '')
           )}
         </Text>
         <Text>

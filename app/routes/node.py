@@ -15,7 +15,7 @@ from app.models.node import (NodeCreate, NodeModify, NodeResponse,
                              NodeSettings, NodeStatus, NodesUsageResponse)
 
 logger = logging.getLogger(__name__)
-router = APIRouter(prefix="/node", tags=['Node'], dependencies=[Depends(sudo_admin)])
+router = APIRouter(prefix="/nodes", tags=['Node'], dependencies=[Depends(sudo_admin)])
 
 
 @router.get("/settings", response_model=NodeSettings)
@@ -95,7 +95,7 @@ async def node_logs(node_id: int,
         await websocket.send_text(l)
 
 
-@router.get("s", response_model=List[NodeResponse])
+@router.get("", response_model=List[NodeResponse])
 def get_nodes(db: DBDep,
               admin: SudoAdminDep):
     return crud.get_nodes(db)
@@ -149,7 +149,7 @@ async def remove_node(node_id: int,
     return {}
 
 
-@router.get("s/usage", response_model=NodesUsageResponse)
+@router.get("/usage", response_model=NodesUsageResponse)
 def get_usage(db: DBDep,
               admin: SudoAdminDep,
               start_date: StartDateDep,

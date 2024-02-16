@@ -37,8 +37,8 @@ function App() {
         </GridItem>
         <GridItem area={'main'}>
           <Routes>
-            {pages.map((route: PageRoute) =>
-              <Route {...route} errorElement={<Login />} loader={fetchAdminLoader} />
+            {pages.map((route: PageRoute, i) =>
+              <Route {...route} errorElement={<Login />} loader={fetchAdminLoader} key={i} />
 
             )}
           </Routes>
