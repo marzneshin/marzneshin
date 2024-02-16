@@ -34,7 +34,7 @@ import {
 } from 'components/Table/Icons';
 import { Sort } from 'components/Table/Sort';
 import { StatusSortSelect } from 'components/Table/StatusSortSelect';
-import { useNodes } from 'contexts/NodesContext';
+import { NodeCreate, useNodes } from 'contexts/NodesContext';
 import { Cog6ToothIcon } from '@heroicons/react/24/outline';
 
 const iconProps = {
@@ -419,7 +419,7 @@ export const NodesTable: FC<NodesTableProps> = (props) => {
             })}
           {nodes.length == 0 && (
             <Tr>
-              <Td colSpan={4}>
+              <Td colSpan={5}>
                 <EmptySection
                   isFiltered={/* isFiltered */ false}
                   noObjectT="nodesTable.noNode"
