@@ -6,7 +6,7 @@ import { getUsersPerPageLimitSize } from 'utils/userPreferenceStorage';
 import { fetch } from 'service/http';
 import { useDashboard } from 'contexts/DashboardContext';
 import { StatisticsQueryKey } from 'components/Statistics';
-import { queryClient } from 'utils/react-query';
+import { queryClient } from 'service/react-query';
 import { useServices } from './ServicesContext';
 import { UsersFilterType, FilterUsageType } from 'types/Filter';
 

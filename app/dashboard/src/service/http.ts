@@ -1,5 +1,5 @@
 import { FetchOptions, $fetch as ohMyFetch } from 'ohmyfetch';
-import { getAuthToken } from 'utils/authStorage';
+import { getAuthToken } from 'service/auth-storage';
 
 export const $fetch = ohMyFetch.create({
   baseURL: import.meta.env.VITE_BASE_API,
@@ -20,3 +20,11 @@ export const fetcher = <T = any>(
 };
 
 export const fetch = fetcher;
+
+export const fetchAdminLoader = () => {
+  return fetch('/admins', {
+    headers: {
+      Authorization: `Bearer ${getAuthToken()}`,
+    },
+  });
+};

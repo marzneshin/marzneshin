@@ -1,5 +1,4 @@
-
-import { queryClient } from 'utils/react-query';
+import { queryClient } from 'service/react-query';
 import { StatisticsQueryKey } from 'components/Statistics';
 import { Service, ServiceCreate } from 'types/Service';
 import { getServicesPerPageLimitSize } from 'utils/userPreferenceStorage';

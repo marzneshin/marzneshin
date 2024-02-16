@@ -36,7 +36,7 @@ import { useTranslation } from 'react-i18next';
 import { useMutation } from 'react-query';
 import { ReadyState } from 'react-use-websocket';
 import { useWebSocket } from 'react-use-websocket/dist/lib/use-websocket';
-import { getAuthToken } from 'utils/authStorage';
+import { getAuthToken } from 'service/auth-storage';
 import { Icon } from './Icon';
 import { JsonEditor } from './JsonEditor';
 import './JsonEditor/themes.js';
