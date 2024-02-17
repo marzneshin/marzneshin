@@ -18,8 +18,6 @@ import {
   CurrencyDollarIcon,
   DocumentMinusIcon,
   LinkIcon,
-  MoonIcon,
-  SunIcon,
 } from '@heroicons/react/24/outline';
 import { pages } from 'constants/Pages';
 import { DONATION_URL, REPO_URL } from 'constants/Project';
@@ -33,8 +31,8 @@ import { FC, ReactNode, useState } from 'react';
 import GitHubButton from 'react-github-btn';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { updateThemeColor } from 'utils/themeColor';
-import { Language } from './Language';
+import { Language } from '../Language';
+import { ThemeToggle } from '../theme-toggler';
 
 type HeaderProps = {
   actions?: ReactNode;
@@ -46,8 +44,6 @@ const iconProps = {
   },
 };
 
-const DarkIcon = chakra(MoonIcon, iconProps);
-const LightIcon = chakra(SunIcon, iconProps);
 const CoreSettingsIcon = chakra(Cog6ToothIcon, iconProps);
 const SettingsIcon = chakra(Bars3Icon, iconProps);
 const LogoutIcon = chakra(ArrowLeftStartOnRectangleIcon, iconProps);
@@ -96,7 +92,7 @@ export const Header: FC<HeaderProps> = () => {
     onShowingNodesUsage,
   } = useNodes();
   const { t } = useTranslation();
-  const { colorMode, toggleColorMode } = useColorMode();
+  const { colorMode } = useColorMode();
   const [showDonationNotif, setShowDonationNotif] = useState(
     shouldShowDonation()
   );
@@ -150,14 +146,6 @@ export const Header: FC<HeaderProps> = () => {
               <MenuItem
                 maxW="170px"
                 fontSize="sm"
-                icon={<NodesUsageIcon />}
-                onClick={onShowingNodesUsage.bind(null, true)}
-              >
-                {t('header.nodesUsage')}
-              </MenuItem>
-              <MenuItem
-                maxW="170px"
-                fontSize="sm"
                 icon={<ResetUsageIcon />}
                 onClick={onResetAllUsage.bind(null, true)}
               >
@@ -195,21 +183,8 @@ export const Header: FC<HeaderProps> = () => {
           >
             <CoreSettingsIcon />
           </IconButton>
-
           <Language />
-
-          <IconButton
-            size="sm"
-            variant="outline"
-            aria-label="switch theme"
-            onClick={() => {
-              updateThemeColor(colorMode == 'dark' ? 'light' : 'dark');
-              toggleColorMode();
-            }}
-          >
-            {colorMode === 'light' ? <DarkIcon /> : <LightIcon />}
-          </IconButton>
-
+          <ThemeToggle />
           <Box
             css={{ direction: 'ltr' }}
             display="flex"
@@ -226,7 +201,7 @@ export const Header: FC<HeaderProps> = () => {
               data-color-scheme={`no-preference: ${gBtnColor}; light: ${gBtnColor}; dark: ${gBtnColor};`}
               data-size="large"
               data-show-count="true"
-              aria-label="Star Marzban on GitHub"
+              aria-label="Star Marzneshin on GitHub"
             >
               Star
             </GitHubButton>
