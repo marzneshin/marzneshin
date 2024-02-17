@@ -15,19 +15,11 @@ import app.marznode.marznode_pb2
 class MarzServiceBase(abc.ABC):
 
     @abc.abstractmethod
-    async def AddUser(self, stream: 'grpclib.server.Stream[app.marznode.marznode_pb2.UserUpdate, app.marznode.marznode_pb2.Empty]') -> None:
+    async def SyncUsers(self, stream: 'grpclib.server.Stream[app.marznode.marznode_pb2.UserData, app.marznode.marznode_pb2.Empty]') -> None:
         pass
 
     @abc.abstractmethod
-    async def RemoveUser(self, stream: 'grpclib.server.Stream[app.marznode.marznode_pb2.UserUpdate, app.marznode.marznode_pb2.Empty]') -> None:
-        pass
-
-    @abc.abstractmethod
-    async def UpdateUserInbounds(self, stream: 'grpclib.server.Stream[app.marznode.marznode_pb2.UserUpdate, app.marznode.marznode_pb2.Empty]') -> None:
-        pass
-
-    @abc.abstractmethod
-    async def RepopulateUsers(self, stream: 'grpclib.server.Stream[app.marznode.marznode_pb2.UsersUpdate, app.marznode.marznode_pb2.Empty]') -> None:
+    async def RepopulateUsers(self, stream: 'grpclib.server.Stream[app.marznode.marznode_pb2.UsersData, app.marznode.marznode_pb2.Empty]') -> None:
         pass
 
     @abc.abstractmethod
@@ -40,28 +32,16 @@ class MarzServiceBase(abc.ABC):
 
     def __mapping__(self) -> typing.Dict[str, grpclib.const.Handler]:
         return {
-            '/marznode.MarzService/AddUser': grpclib.const.Handler(
-                self.AddUser,
-                grpclib.const.Cardinality.UNARY_UNARY,
-                app.marznode.marznode_pb2.UserUpdate,
-                app.marznode.marznode_pb2.Empty,
-            ),
-            '/marznode.MarzService/RemoveUser': grpclib.const.Handler(
-                self.RemoveUser,
-                grpclib.const.Cardinality.UNARY_UNARY,
-                app.marznode.marznode_pb2.UserUpdate,
-                app.marznode.marznode_pb2.Empty,
-            ),
-            '/marznode.MarzService/UpdateUserInbounds': grpclib.const.Handler(
-                self.UpdateUserInbounds,
-                grpclib.const.Cardinality.UNARY_UNARY,
-                app.marznode.marznode_pb2.UserUpdate,
+            '/marznode.MarzService/SyncUsers': grpclib.const.Handler(
+                self.SyncUsers,
+                grpclib.const.Cardinality.STREAM_UNARY,
+                app.marznode.marznode_pb2.UserData,
                 app.marznode.marznode_pb2.Empty,
             ),
             '/marznode.MarzService/RepopulateUsers': grpclib.const.Handler(
                 self.RepopulateUsers,
                 grpclib.const.Cardinality.UNARY_UNARY,
-                app.marznode.marznode_pb2.UsersUpdate,
+                app.marznode.marznode_pb2.UsersData,
                 app.marznode.marznode_pb2.Empty,
             ),
             '/marznode.MarzService/FetchInbounds': grpclib.const.Handler(
@@ -82,28 +62,16 @@ class MarzServiceBase(abc.ABC):
 class MarzServiceStub:
 
     def __init__(self, channel: grpclib.client.Channel) -> None:
-        self.AddUser = grpclib.client.UnaryUnaryMethod(
+        self.SyncUsers = grpclib.client.StreamUnaryMethod(
             channel,
-            '/marznode.MarzService/AddUser',
-            app.marznode.marznode_pb2.UserUpdate,
-            app.marznode.marznode_pb2.Empty,
-        )
-        self.RemoveUser = grpclib.client.UnaryUnaryMethod(
-            channel,
-            '/marznode.MarzService/RemoveUser',
-            app.marznode.marznode_pb2.UserUpdate,
-            app.marznode.marznode_pb2.Empty,
-        )
-        self.UpdateUserInbounds = grpclib.client.UnaryUnaryMethod(
-            channel,
-            '/marznode.MarzService/UpdateUserInbounds',
-            app.marznode.marznode_pb2.UserUpdate,
+            '/marznode.MarzService/SyncUsers',
+            app.marznode.marznode_pb2.UserData,
             app.marznode.marznode_pb2.Empty,
         )
         self.RepopulateUsers = grpclib.client.UnaryUnaryMethod(
             channel,
             '/marznode.MarzService/RepopulateUsers',
-            app.marznode.marznode_pb2.UsersUpdate,
+            app.marznode.marznode_pb2.UsersData,
             app.marznode.marznode_pb2.Empty,
         )
         self.FetchInbounds = grpclib.client.UnaryUnaryMethod(

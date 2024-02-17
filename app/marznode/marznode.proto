@@ -19,14 +19,13 @@ message User {
   string key = 3;
 }
 
-message UserUpdate {
+message UserData {
   User user = 1;
-  repeated Inbound inbound_additions = 2;
-  repeated Inbound inbound_reductions = 3;
+  repeated Inbound inbounds = 2;
 }
 
-message UsersUpdate {
-  repeated UserUpdate users_updates = 1;
+message UsersData {
+  repeated UserData users_data = 1;
 }
 
 message UsersStats {
@@ -38,10 +37,8 @@ message UsersStats {
 }
 
 service MarzService {
-  rpc AddUser(UserUpdate) returns (Empty);
-  rpc RemoveUser(UserUpdate) returns (Empty);
-  rpc UpdateUserInbounds(UserUpdate) returns (Empty);
-  rpc RepopulateUsers(UsersUpdate) returns (Empty);
+  rpc SyncUsers(stream UserData) returns (Empty);
+  rpc RepopulateUsers(UsersData) returns (Empty);
   rpc FetchInbounds(Empty) returns (InboundsResponse);
   rpc FetchUsersStats(Empty) returns (UsersStats);
 }
