@@ -1,4 +1,6 @@
+import asyncio
 import atexit
+import logging
 import ssl
 import tempfile
 
@@ -10,7 +12,10 @@ from grpclib.health.v1.health_pb2 import HealthCheckResponse, HealthCheckRequest
 
 from .base import MarzNodeBase
 from .marznode_grpc import MarzServiceStub
-from .marznode_pb2 import UserUpdate, UsersUpdate, Empty, User, Inbound
+from .marznode_pb2 import UserData, UsersData, Empty, User, Inbound
+
+
+logger = logging.getLogger(__name__)
 
 
 def string_to_temp_file(content: str):
@@ -35,13 +40,14 @@ class MarzNodeGRPC(MarzNodeBase):
         self._channel = Channel(self._address, self._port, ssl=ctx)
         self._stub = MarzServiceStub(self._channel)
         self._health = HealthStub(self._channel)
+        self._updates_queue = asyncio.Queue(1)
         self.synced = False
 
         self.usage_coefficient = usage_coefficient
         atexit.register(self._channel.close)
 
     @staticmethod
-    def catch_connection_problem(func):
+    def _catch_connection_problem(func):
         async def catcher(self, *args, **kwargs):
             try:
                 await func(self, *args, **kwargs)
@@ -49,46 +55,34 @@ class MarzNodeGRPC(MarzNodeBase):
                 self.synced = False
         return catcher
 
-    @catch_connection_problem
-    async def add_user(self, user, inbounds: list[str] | None = None) -> None:
+    async def _stream_user_updates(self):
+        try:
+            async with self._stub.SyncUsers.open() as stream:
+                logger.info("opened the stream")
+                while True:
+                    user_update = await self._updates_queue.get()
+                    logger.info("got something from queue")
+                    user = user_update["user"]
+                    await stream.send_message(
+                        UserData(user=User(id=user.id, username=user.username, key=user.key),
+                                 inbounds=[Inbound(tag=t) for t in user_update["inbounds"]]))
+        except (OSError, ConnectionError, GRPCError, StreamTerminatedError):
+            logger.info("node detached")
+            self.synced = False
+
+    async def update_user(self, user, inbounds: set[str] | None = None):
         if inbounds is None:
-            inbounds = []
+            inbounds = set()
 
-        async with self._stub.AddUser.open() as stm:
-            await stm.send_message(UserUpdate(user=User(id=user.id, username=user.username, key=user.key),
-                                              inbound_additions=[Inbound(tag=i) for i in inbounds]))
-            await stm.recv_message()
+        if self.synced:
+            await self._updates_queue.put({"user": user, "inbounds": inbounds})
 
-    @catch_connection_problem
-    async def remove_user(self, user, inbounds: list[str] | None = None) -> None:
-        if inbounds is None:
-            inbounds = []
-        async with self._stub.RemoveUser.open() as stm:
-            await stm.send_message(UserUpdate(user=User(id=user.id, username=user.username, key=user.key),
-                                              inbound_reductions=[Inbound(tag=i) for i in inbounds]))
-            await stm.recv_message()
-
-    @catch_connection_problem
-    async def update_user_inbounds(self, user,
-                                   inbound_additions: list[str] | None = None,
-                                   inbound_reductions: list[str] | None = None) -> None:
-        if inbound_reductions is None:
-            inbound_reductions = []
-        if inbound_additions is None:
-            inbound_additions = []
-
-        async with self._stub.UpdateUserInbounds.open() as stm:
-            await stm.send_message(UserUpdate(user=User(id=user.id, username=user.username, key=user.key),
-                                              inbound_additions=[Inbound(tag=i) for i in inbound_additions],
-                                              inbound_reductions=[Inbound(tag=i) for i in inbound_reductions]))
-            await stm.recv_message()
-
-    @catch_connection_problem
-    async def repopulate_users(self, user_updates: list[dict]) -> None:
+    @_catch_connection_problem
+    async def repopulate_users(self, users_data: list[dict]) -> None:
         async with self._stub.RepopulateUsers.open() as stream:
-            updates = [UserUpdate(user=User(id=u["id"], username=u["username"], key=u["key"]),
-                                  inbound_additions=[Inbound(tag=t) for t in u["inbounds"]]) for u in user_updates]
-            await stream.send_message(UsersUpdate(users_updates=updates))
+            updates = [UserData(user=User(id=u["id"], username=u["username"], key=u["key"]),
+                                inbounds=[Inbound(tag=t) for t in u["inbounds"]]) for u in users_data]
+            await stream.send_message(UsersData(users_data=updates))
 
     async def fetch_users_stats(self):
         async with self._stub.FetchUsersStats.open() as stream:

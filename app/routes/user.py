@@ -40,7 +40,7 @@ async def add_user(new_user: UserCreate,
         raise HTTPException(status_code=409, detail="User already exists")
 
     user = UserResponse.model_validate(db_user)
-    await marznode.operations.add_user(user=db_user)
+    await marznode.operations.update_user(user=db_user)
     asyncio.create_task(
         report.user_created(
             user=user,
@@ -119,7 +119,8 @@ async def remove_user(db_user: UserDep,
     """
     Remove a user
     """
-    await marznode.operations.remove_user(db_user)
+    db_user.inbounds = []
+    await marznode.operations.update_user(db_user)
 
     crud.remove_user(db, db_user)
     db.flush()

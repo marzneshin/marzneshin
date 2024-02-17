@@ -14,7 +14,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1b\x61pp/marznode/marznode.proto\x12\x08marznode\"\x07\n\x05\x45mpty\"6\n\x07Inbound\x12\x0b\n\x03tag\x18\x01 \x01(\t\x12\x13\n\x06\x63onfig\x18\x02 \x01(\tH\x00\x88\x01\x01\x42\t\n\x07_config\"7\n\x10InboundsResponse\x12#\n\x08inbounds\x18\x01 \x03(\x0b\x32\x11.marznode.Inbound\"1\n\x04User\x12\n\n\x02id\x18\x01 \x01(\r\x12\x10\n\x08username\x18\x02 \x01(\t\x12\x0b\n\x03key\x18\x03 \x01(\t\"\x87\x01\n\nUserUpdate\x12\x1c\n\x04user\x18\x01 \x01(\x0b\x32\x0e.marznode.User\x12,\n\x11inbound_additions\x18\x02 \x03(\x0b\x32\x11.marznode.Inbound\x12-\n\x12inbound_reductions\x18\x03 \x03(\x0b\x32\x11.marznode.Inbound\":\n\x0bUsersUpdate\x12+\n\rusers_updates\x18\x01 \x03(\x0b\x32\x14.marznode.UserUpdate\"j\n\nUsersStats\x12\x33\n\x0busers_stats\x18\x01 \x03(\x0b\x32\x1e.marznode.UsersStats.UserStats\x1a\'\n\tUserStats\x12\x0b\n\x03uid\x18\x01 \x01(\r\x12\r\n\x05usage\x18\x02 \x01(\x04\x32\xe4\x02\n\x0bMarzService\x12\x30\n\x07\x41\x64\x64User\x12\x14.marznode.UserUpdate\x1a\x0f.marznode.Empty\x12\x33\n\nRemoveUser\x12\x14.marznode.UserUpdate\x1a\x0f.marznode.Empty\x12;\n\x12UpdateUserInbounds\x12\x14.marznode.UserUpdate\x1a\x0f.marznode.Empty\x12\x39\n\x0fRepopulateUsers\x12\x15.marznode.UsersUpdate\x1a\x0f.marznode.Empty\x12<\n\rFetchInbounds\x12\x0f.marznode.Empty\x1a\x1a.marznode.InboundsResponse\x12\x38\n\x0f\x46\x65tchUsersStats\x12\x0f.marznode.Empty\x1a\x14.marznode.UsersStatsb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1b\x61pp/marznode/marznode.proto\x12\x08marznode\"\x07\n\x05\x45mpty\"6\n\x07Inbound\x12\x0b\n\x03tag\x18\x01 \x01(\t\x12\x13\n\x06\x63onfig\x18\x02 \x01(\tH\x00\x88\x01\x01\x42\t\n\x07_config\"7\n\x10InboundsResponse\x12#\n\x08inbounds\x18\x01 \x03(\x0b\x32\x11.marznode.Inbound\"1\n\x04User\x12\n\n\x02id\x18\x01 \x01(\r\x12\x10\n\x08username\x18\x02 \x01(\t\x12\x0b\n\x03key\x18\x03 \x01(\t\"M\n\x08UserData\x12\x1c\n\x04user\x18\x01 \x01(\x0b\x32\x0e.marznode.User\x12#\n\x08inbounds\x18\x02 \x03(\x0b\x32\x11.marznode.Inbound\"3\n\tUsersData\x12&\n\nusers_data\x18\x01 \x03(\x0b\x32\x12.marznode.UserData\"j\n\nUsersStats\x12\x33\n\x0busers_stats\x18\x01 \x03(\x0b\x32\x1e.marznode.UsersStats.UserStats\x1a\'\n\tUserStats\x12\x0b\n\x03uid\x18\x01 \x01(\r\x12\r\n\x05usage\x18\x02 \x01(\x04\x32\xf2\x01\n\x0bMarzService\x12\x32\n\tSyncUsers\x12\x12.marznode.UserData\x1a\x0f.marznode.Empty(\x01\x12\x37\n\x0fRepopulateUsers\x12\x13.marznode.UsersData\x1a\x0f.marznode.Empty\x12<\n\rFetchInbounds\x12\x0f.marznode.Empty\x1a\x1a.marznode.InboundsResponse\x12\x38\n\x0f\x46\x65tchUsersStats\x12\x0f.marznode.Empty\x1a\x14.marznode.UsersStatsb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -29,14 +29,14 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _globals['_INBOUNDSRESPONSE']._serialized_end=161
   _globals['_USER']._serialized_start=163
   _globals['_USER']._serialized_end=212
-  _globals['_USERUPDATE']._serialized_start=215
-  _globals['_USERUPDATE']._serialized_end=350
-  _globals['_USERSUPDATE']._serialized_start=352
-  _globals['_USERSUPDATE']._serialized_end=410
-  _globals['_USERSSTATS']._serialized_start=412
-  _globals['_USERSSTATS']._serialized_end=518
-  _globals['_USERSSTATS_USERSTATS']._serialized_start=479
-  _globals['_USERSSTATS_USERSTATS']._serialized_end=518
-  _globals['_MARZSERVICE']._serialized_start=521
-  _globals['_MARZSERVICE']._serialized_end=877
+  _globals['_USERDATA']._serialized_start=214
+  _globals['_USERDATA']._serialized_end=291
+  _globals['_USERSDATA']._serialized_start=293
+  _globals['_USERSDATA']._serialized_end=344
+  _globals['_USERSSTATS']._serialized_start=346
+  _globals['_USERSSTATS']._serialized_end=452
+  _globals['_USERSSTATS_USERSTATS']._serialized_start=413
+  _globals['_USERSSTATS_USERSTATS']._serialized_end=452
+  _globals['_MARZSERVICE']._serialized_start=455
+  _globals['_MARZSERVICE']._serialized_end=697
 # @@protoc_insertion_point(module_scope)
