@@ -561,7 +561,8 @@ def get_nodes_usage(db: Session, start: datetime, end: datetime) -> List[NodeUsa
 def create_node(db: Session, node: NodeCreate):
     dbnode = Node(name=node.name,
                   address=node.address,
-                  port=node.port)
+                  port=node.port,
+                  connection_backend=node.connection_backend)
 
     db.add(dbnode)
     db.commit()
