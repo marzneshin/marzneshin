@@ -1,8 +1,10 @@
 from collections import defaultdict
 from typing import TYPE_CHECKING
 
-from .base import MarzNodeBase
+from .grpclib import MarzNodeGRPCLIB
+from .grpcio import MarzNodeGRPCIO
 from app import marznode
+from ..models.node import NodeConnectionBackend
 from ..models.user import UserStatus
 
 if TYPE_CHECKING:
@@ -35,9 +37,14 @@ async def remove_node(node_id: int):
         del marznode.nodes[node_id]
 
 
-async def add_node(node_id: int, node: MarzNodeBase):
-    await remove_node(node_id)
-    marznode.nodes[node_id] = node
+async def add_node(db_node, certificate):
+    await remove_node(db_node.id)
+    if db_node.connection_backend == NodeConnectionBackend.grpcio:
+        node = MarzNodeGRPCIO(db_node.id, db_node.address, db_node.port)
+    else:
+        node = MarzNodeGRPCLIB(db_node.id, db_node.address, db_node.port, certificate.key,
+                               certificate.certificate)
+    marznode.nodes[db_node.id] = node
 
 
 __all__ = [

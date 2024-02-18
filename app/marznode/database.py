@@ -1,8 +1,4 @@
-from sqlalchemy import update
-
 from app.db import crud, GetDB
-from app.db.models import Node
-from app.marznode import MarzNodeBase
 from app.models.node import NodeStatus
 from app.models.user import UserStatus
 
