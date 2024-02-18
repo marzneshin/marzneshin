@@ -16,11 +16,6 @@ class NodeConnectionBackend(str, Enum):
     grpclib = "grpclib"
 
 
-class NodeConnectionBackend(str, Enum):
-    grpcio = "grpcio"
-    grpclib = "grpclib"
-
-
 class NodeSettings(BaseModel):
     min_node_version: str = "v0.2.0"
     certificate: str

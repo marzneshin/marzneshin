@@ -63,10 +63,14 @@ class MarzNodeGRPCLIB(MarzNodeBase, MarzNodeDB):
                 continue
             else:
                 if not self.synced:
-                    await self._sync()
-                    self._streaming_task = asyncio.create_task(self._stream_user_updates())
-                    self.set_status(NodeStatus.healthy)
-                    logger.info("Connected to node %i", self.id)
+                    try:
+                        await self._sync()
+                        self._streaming_task = asyncio.create_task(self._stream_user_updates())
+                        self.set_status(NodeStatus.healthy)
+                        logger.info("Connected to node %i", self.id)
+                    except:
+                        await asyncio.sleep(10)
+                        continue
                 await asyncio.sleep(30)
 
     async def _stream_user_updates(self):
