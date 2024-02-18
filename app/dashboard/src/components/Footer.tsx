@@ -20,7 +20,7 @@ export const Footer: FC<BoxProps> = (props) => {
         {version ? ` (v${version}), ` : ', '}
         Made in{' '}
         <Link color="blue.400" href={ORGANIZATION_URL}>
-          khodedawosh
+          khodedawsh
         </Link>
       </Text>
     </HStack>

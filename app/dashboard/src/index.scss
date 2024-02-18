@@ -1,5 +1,9 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
 
+body {
+  overflow: hidden;
+}
+
 .bg-blue-animate {
   animation: blur-animate 200ms ease-in;
   backdrop-filter: blur(10px);
@@ -227,13 +231,16 @@ table thead {
 .pulse {
   animation: pulse-animation 3s infinite;
 }
+
 .pulse.green {
   animation: green-pulse-animation 3s infinite;
 }
-.pulse.red{
+
+.pulse.red {
   animation: red-pulse-animation 3s infinite;
 }
-.pulse.orange{
+
+.pulse.orange {
   animation: orange-pulse-animation 3s infinite;
 }
 
@@ -246,6 +253,7 @@ table thead {
     box-shadow: 0 0 0 10px rgba(0, 0, 0, 0);
   }
 }
+
 @keyframes green-pulse-animation {
   0% {
     box-shadow: 0 0 0 0px #66ff9975;
@@ -255,6 +263,7 @@ table thead {
     box-shadow: 0 0 0 10px #66ff9900;
   }
 }
+
 @keyframes red-pulse-animation {
   0% {
     box-shadow: 0 0 0 0px #e53e3e8c;
@@ -264,6 +273,7 @@ table thead {
     box-shadow: 0 0 0 10px #e53e3e00;
   }
 }
+
 @keyframes orange-pulse-animation {
   0% {
     box-shadow: 0 0 0 0px #fbd38d85;
