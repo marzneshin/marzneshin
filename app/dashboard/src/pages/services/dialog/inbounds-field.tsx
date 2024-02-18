@@ -2,7 +2,7 @@ import { FormControl, FormLabel, FormErrorMessage, Center, Spinner, Text, Spacer
 import { Inbounds, InboundType } from 'types/Inbounds';
 import { TFunction } from 'i18next';
 import { Controller } from 'react-hook-form';
-import { InboundsSelectList } from './InboundsSelectList';
+import { InboundsSelectList } from './inbounds-select-list';
 
 
 interface InboundsFieldProps {

@@ -1,6 +1,6 @@
 
 
-import { FormType } from './FormSchema';
+import { FormType } from './form-schema';
 
 export const getDefaultValues = (): FormType => {
   return {

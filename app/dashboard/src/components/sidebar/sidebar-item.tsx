@@ -3,7 +3,7 @@ import { Flex, Text } from '@chakra-ui/react'
 import { useDashboard } from 'contexts/DashboardContext';
 import { Link as ReactRouterLink } from 'react-router-dom'
 import { Link as ChakraLink } from '@chakra-ui/react'
-import { Icon } from 'components/Icon';
+import { Icon } from 'components/icon';
 import { FC, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PageType } from 'types/Page';

@@ -8,13 +8,13 @@ import { i18n, TFunction } from 'i18next';
 import ReactDatePicker from 'react-datepicker';
 import { Controller } from 'react-hook-form';
 import { relativeExpiryDate } from 'utils/dateFormatter';
-import { Input } from '../Input';
+import { Input } from 'components/Input';
 
 interface ExpireDateFieldProps {
-    form: any;
-    disabled: boolean;
-    t: TFunction<'translation', undefined, 'translation'>;
-    i18n: i18n;
+  form: any;
+  disabled: boolean;
+  t: TFunction<'translation', undefined, 'translation'>;
+  i18n: i18n;
 }
 
 export const ExpireDateField = ({ form, t, i18n, disabled }: ExpireDateFieldProps) => {

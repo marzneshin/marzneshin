@@ -7,13 +7,13 @@ type SidebarGroupProps = {
 }
 
 export const SidebarGroup: FC<PropsWithChildren<SidebarGroupProps>> = ({ titleT, children }) => {
-    const { t } = useTranslation();
-    return (
-        <Box>
-            <VStack gap="2">
-                <Text w="85%" fontWeight="bold" textTransform="uppercase" fontSize="xs" color="gray.500" >{t(titleT)}</Text>
-                {children}
-            </VStack>
-        </Box>
-    );
+  const { t } = useTranslation();
+  return (
+    <Box>
+      <VStack gap="2">
+        <Text w="85%" fontWeight="bold" textTransform="uppercase" fontSize="xs" color="gray.500" >{t(titleT)}</Text>
+        {children}
+      </VStack>
+    </Box>
+  );
 }

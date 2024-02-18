@@ -4,7 +4,7 @@ import {
 import { useServices } from 'contexts/ServicesContext';
 import { FC, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { DeleteModal } from './delete-modal';
+import { DeleteModal } from 'components/delete-modal';
 
 export const DeleteServiceModal: FC = () => {
   const { deleteService, refetchServices, deletingService, onDeletingService } = useServices();

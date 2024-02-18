@@ -37,9 +37,9 @@ import { useMutation } from 'react-query';
 import { ReadyState } from 'react-use-websocket';
 import { useWebSocket } from 'react-use-websocket/dist/lib/use-websocket';
 import { getAuthToken } from 'service/auth-storage';
-import { Icon } from './Icon';
-import { JsonEditor } from './JsonEditor';
-import './JsonEditor/themes.js';
+import { Icon } from 'components/icon';
+import { JsonEditor } from 'components/json-editor';
+import 'components/json-editor/themes.js';
 
 export const MAX_NUMBER_OF_LOGS = 500;
 

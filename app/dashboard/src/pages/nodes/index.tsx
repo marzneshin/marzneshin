@@ -1,11 +1,11 @@
 
 import { FC, useEffect } from 'react';
-import { CoreSettingsModal } from 'components/CoreSettingsModal';
+import { CoreSettingsModal } from './modals/core-settings-modal';
 import { NodesDialog } from './dialog';
 import { NodesUsage } from './usage';
 import { NodesTable } from './table';
 import { NodesFilters } from './filters';
-import { DeleteNodeModal } from './delete-modal';
+import { DeleteNodeModal } from './modals/delete-modal';
 import { useDashboard } from 'contexts/DashboardContext';
 import { useNodes } from 'contexts/NodesContext';
 import { pages } from 'constants/Pages';
@@ -19,11 +19,11 @@ const NodesPage: FC = () => {
   }, []);
   return (
     <Page>
+      <NodesUsage />
       <NodesFilters />
       <NodesTable />
       <NodesDialog />
       <DeleteNodeModal />
-      <NodesUsage />
       <CoreSettingsModal />
     </Page>
   );

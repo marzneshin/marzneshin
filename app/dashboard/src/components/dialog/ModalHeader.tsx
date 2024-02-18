@@ -1,7 +1,7 @@
 
 import { Text, HStack, ModalHeader } from '@chakra-ui/react';
 import { ChakraIcon } from 'types/ChakraIcon';
-import { Icon } from '../Icon';
+import { Icon } from '../icon';
 
 export const DialogModalHeader = ({ HeaderIcon, title }: { HeaderIcon: ChakraIcon, title: string }) => {
   return (

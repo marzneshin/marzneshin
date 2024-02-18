@@ -15,16 +15,16 @@ import {
 import { FC } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { DeleteIcon } from 'components/dialog/Icons';
-import { Icon } from 'components/Icon';
+import { Icon } from 'components/icon';
 
 type DeleteModalProps = {
-    onDelete: () => void,
-    deleteObjectPromptT: string,
-    deleteObjectTitleT: string,
-    deletingObjectName?: string,
-    isOpen: boolean,
-    onClose: () => void,
-    loading: boolean,
+  onDelete: () => void,
+  deleteObjectPromptT: string,
+  deleteObjectTitleT: string,
+  deletingObjectName?: string,
+  isOpen: boolean,
+  onClose: () => void,
+  loading: boolean,
 }
 
 export const DeleteModal: FC<DeleteModalProps> = ({

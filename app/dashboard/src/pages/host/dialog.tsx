@@ -56,7 +56,7 @@ import 'slick-carousel/slick/slick-theme.css';
 import 'slick-carousel/slick/slick.css';
 import { z } from 'zod';
 import { DeleteIcon } from 'components/dialog/Icons';
-import { Icon } from 'components/Icon';
+import { Icon } from 'components/icon';
 import { Input as CustomInput } from 'components/Input';
 
 const Select = chakra(ChakraSelect, {

@@ -1,12 +1,12 @@
 
 import { FC, useEffect } from 'react';
-import { ServicesFilters } from 'components/ServicesFilters';
-import { ServicesTable } from 'components/ServicesTable';
+import { ServicesFilters } from './filters';
+import { ServicesTable } from './table';
 import { pages } from 'constants/Pages';
-import { ServiceDialog } from 'components/service-dialog';
+import { ServiceDialog } from './dialog';
 import { useServices } from 'contexts/ServicesContext';
 import { useDashboard } from 'contexts/DashboardContext';
-import { DeleteServiceModal } from 'components/DeleteServiceModal';
+import { DeleteServiceModal } from './modals/delete-modal';
 import Page from 'components/page';
 
 

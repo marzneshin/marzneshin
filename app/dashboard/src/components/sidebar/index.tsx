@@ -1,7 +1,7 @@
 import { HamburgerIcon } from '@chakra-ui/icons';
-import { chakra, Flex, Text, VStack } from '@chakra-ui/react'
+import { chakra, Flex } from '@chakra-ui/react'
 import { pages } from 'constants/Pages';
-import { FC, useEffect } from 'react';
+import { FC } from 'react';
 import { Logo } from './logo';
 import { SidebarGroup } from './sidebar-group';
 import { SidebarItem, SideBarItemProps } from './sidebar-item';

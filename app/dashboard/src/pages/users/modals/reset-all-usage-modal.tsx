@@ -14,7 +14,7 @@ import {
 } from '@chakra-ui/react';
 import { FC, useState } from 'react';
 import { DocumentMinusIcon } from '@heroicons/react/24/outline';
-import { Icon } from 'components/Icon';
+import { Icon } from 'components/icon';
 import { useTranslation } from 'react-i18next';
 import { useUsers } from 'contexts/UsersContext';
 

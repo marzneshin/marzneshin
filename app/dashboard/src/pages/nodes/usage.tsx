@@ -1,15 +1,6 @@
 import {
   Box,
   CircularProgress,
-  HStack,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  Text,
   VStack,
   chakra,
   useColorMode,
@@ -21,8 +12,9 @@ import dayjs from 'dayjs';
 import { FC, Suspense, useEffect, useState } from 'react';
 import ReactApexChart from 'react-apexcharts';
 import { useTranslation } from 'react-i18next';
-import { Icon } from 'components/Icon';
+import { Icon } from 'components/icon';
 import { UsageFilter, createUsageConfig } from 'components/UsageFilter';
+import { StatisticsCardWide } from 'components/statistics-card';
 
 const UsageIcon = chakra(ChartPieIcon, {
   baseStyle: {
@@ -34,11 +26,9 @@ const UsageIcon = chakra(ChartPieIcon, {
 export type NodesUsageProps = {};
 
 export const NodesUsage: FC<NodesUsageProps> = () => {
-  const { isShowingNodesUsage, onShowingNodesUsage } = useNodes();
+  const { isShowingNodesUsage } = useNodes();
   const { fetchNodesUsage } = useNodes();
   const { t } = useTranslation();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [loading, _] = useState(false);
   const { colorMode } = useColorMode();
 
   const usageTitle = t('userDialog.total');
@@ -65,51 +55,32 @@ export const NodesUsage: FC<NodesUsageProps> = () => {
     }
   }, [isShowingNodesUsage]);
 
-  const onClose = () => {
-    onShowingNodesUsage(false);
-    setUsageFilter('1m');
-  };
-
-  const disabled = loading;
-
   return (
-    <Modal isOpen={isShowingNodesUsage} onClose={onClose} size="2xl">
-      <ModalOverlay bg="blackAlpha.300" backdropFilter="blur(10px)" />
-      <ModalContent mx="3" w="full">
-        <ModalHeader pt={6}>
-          <HStack gap={2}>
-            <Icon color="primary">
-              <UsageIcon color="white" />
-            </Icon>
-            <Text fontWeight="semibold" fontSize="lg">
-              {t('header.nodesUsage')}
-            </Text>
-          </HStack>
-        </ModalHeader>
-        <ModalCloseButton mt={3} disabled={disabled} />
-        <ModalBody>
-          <VStack gap={4}>
-            <UsageFilter
-              defaultValue={usageFilter}
-              onChange={(filter, query) => {
-                setUsageFilter(filter);
-                fetchUsageWithFilter(query);
-              }}
-            />
-            <Box justifySelf="center" w="full" maxW="300px" mt="4">
-              <Suspense fallback={<CircularProgress isIndeterminate />}>
-                <ReactApexChart
-                  options={usage.options}
-                  series={usage.series}
-                  type="donut"
-                  height="500px"
-                />
-              </Suspense>
-            </Box>
-          </VStack>
-        </ModalBody>
-        <ModalFooter mt="3"></ModalFooter>
-      </ModalContent>
-    </Modal>
+    <StatisticsCardWide
+      title={t('header.nodesUsage')}
+      icon={<Icon color="primary">
+        <UsageIcon color="white" /> </Icon>}
+      content={
+        <VStack gap={4}>
+          <UsageFilter
+            defaultValue={usageFilter}
+            onChange={(filter, query) => {
+              setUsageFilter(filter);
+              fetchUsageWithFilter(query);
+            }}
+          />
+          <Box justifySelf="center" w="full" maxW="300px" mt="4">
+            <Suspense fallback={<CircularProgress isIndeterminate />}>
+              <ReactApexChart
+                options={usage.options}
+                series={usage.series}
+                type="donut"
+                height="500px"
+              />
+            </Suspense>
+          </Box>
+        </VStack>
+
+      } />
   );
 };

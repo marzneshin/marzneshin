@@ -27,10 +27,10 @@ import { FC, Fragment, useEffect, useState } from 'react';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { useTranslation } from 'react-i18next';
 import { User } from 'types/User';
-import { OnlineBadge } from '../OnlineBadge';
-import { OnlineStatus } from '../OnlineStatus';
+import { OnlineBadge } from 'components/OnlineBadge';
+import { OnlineStatus } from 'components/OnlineStatus';
 import { Pagination } from 'components/Table/Pagination';
-import { StatusBadge } from '../StatusBadge';
+import { StatusBadge } from 'components/StatusBadge';
 import { EmptySection } from 'components/Table/EmptySection';
 import {
   AccordionArrowIcon,
@@ -41,7 +41,7 @@ import {
   SubscriptionLinkIcon
 } from 'components/Table/Icons';
 import { Sort } from 'components/Table/Sort';
-import { UsageSlider, UsageSliderCompact } from './UsageSlider';
+import { UsageSlider, UsageSliderCompact } from './usage-slider';
 import { StatusSortSelect } from 'components/Table/StatusSortSelect';
 import { useUsers } from 'contexts/UsersContext';
 

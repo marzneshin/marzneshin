@@ -16,7 +16,7 @@ import { ArrowPathIcon } from '@heroicons/react/24/outline';
 import { useUsers } from 'contexts/UsersContext';
 import { FC, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { Icon } from 'components/Icon';
+import { Icon } from 'components/icon';
 
 const ResetIcon = chakra(ArrowPathIcon, {
   baseStyle: {

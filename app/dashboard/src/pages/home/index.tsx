@@ -1,7 +1,7 @@
 
 import Page from 'components/page';
 import { FC } from 'react';
-import { Statistics } from 'components/Statistics';
+import { Statistics } from './statistics';
 
 export const Home: FC = () => {
   return (
