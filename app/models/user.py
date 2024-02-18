@@ -67,7 +67,6 @@ class UserBase(BaseModel):
     on_hold_expire_duration: Optional[int] = Field(None, nullable=True)
     on_hold_timeout: Optional[Union[datetime, None]] = Field(None, nullable=True)
 
-
     @field_validator("username")
     @classmethod
     def validate_username(cls, v: str):

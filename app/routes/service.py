@@ -4,6 +4,7 @@ import sqlalchemy
 from fastapi import APIRouter, Depends
 from fastapi import HTTPException
 
+from app import marznode
 from app.db import crud
 from app.dependencies import DBDep, sudo_admin
 from app.models.service import (ServiceCreate, ServiceModify,
@@ -16,12 +17,10 @@ router = APIRouter(prefix="/services", dependencies=[Depends(sudo_admin)], tags=
 def add_service(new_service: ServiceCreate,
                 db: DBDep):
     """
-    Add a new user template
+    Add a new service
 
-    - **name** can be up to 64 characters
-    - **data_limit** must be in bytes and larger or equal to 0
-    - **expire_duration** must be in seconds and larger or equal to 0
-    - **inbounds** dictionary of protocol:inbound_tags, empty means all inbounds
+    - **name** service name
+    - **inbounds** list of inbound ids
     """
     try:
         return crud.create_service(db, new_service)
@@ -43,15 +42,13 @@ def get_service(id: int, db: DBDep):
 
 
 @router.put("/{id}", response_model=ServiceResponse)
-def modify_service(id: int,
+async def modify_service(id: int,
                    modification: ServiceModify,
                    db: DBDep):
     """
     Modify Service
 
     - **name** can be up to 64 characters
-    - **data_limit** must be in bytes and larger or equal to 0
-    - **expire_duration** must be in seconds and larger or equat to 0
     - **inbounds** list of inbound ids. if not specified no change will be applied;
     in case of an empty list all inbounds would be removed.
     """
@@ -59,12 +56,16 @@ def modify_service(id: int,
     dbservice = crud.get_service(db, id)
     if not dbservice:
         raise HTTPException(status_code=404, detail="Service not found") 
-
+    old_inbounds = {(i.node_id, i.protocol, i.tag) for i in dbservice.inbounds}
     try:
-        return crud.update_service(db, dbservice, modification)
+        response = crud.update_service(db, dbservice, modification)
     except sqlalchemy.exc.IntegrityError:
         db.rollback()
-        raise HTTPException(status_code=409, detail="Service by this name already exists")
+        raise HTTPException(status_code=409, detail="problem updating the service")
+    else:
+        for user in response.users:
+            await marznode.operations.update_user(user, old_inbounds=old_inbounds)
+        return response
 
 
 @router.delete("/{id}")

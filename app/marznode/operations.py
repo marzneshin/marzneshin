@@ -29,7 +29,16 @@ async def update_user(user: "DBUser", old_inbounds: set | None = None):
         node_inbounds[inb[0]]
 
     for node_id, tags in node_inbounds.items():
-        await marznode.nodes[node_id].update_user(user=user, inbounds=tags)
+        if marznode.nodes.get(node_id):
+            await marznode.nodes[node_id].update_user(user=user, inbounds=tags)
+
+
+async def remove_user(user: "DBUser"):
+    node_ids = set(inb.id for inb in user.inbounds)
+
+    for node_id in node_ids:
+        if marznode.nodes.get(node_id):
+            await marznode.nodes[node_id].update_user(user=user, inbounds=[])
 
 
 async def remove_node(node_id: int):
