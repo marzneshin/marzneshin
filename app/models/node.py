@@ -11,6 +11,11 @@ class NodeStatus(str, Enum):
     none = "none"
 
 
+class NodeConnectionBackend(str, Enum):
+    grpcio = "grpcio"
+    grpclib = "grpclib"
+
+
 class NodeSettings(BaseModel):
     min_node_version: str = "v0.2.0"
     certificate: str
@@ -21,6 +26,7 @@ class NodeBase(BaseModel):
     name: str
     address: str
     port: int = 62050
+    connection_backend: NodeConnectionBackend = Field(default=NodeConnectionBackend.grpclib)
     usage_coefficient: float = Field(ge=0, default=1.0)
     model_config = ConfigDict(from_attributes=True)
 
@@ -47,6 +53,7 @@ class NodeModify(Node):
     name: Optional[str] = Field(None)
     address: Optional[str] = Field(None)
     port: Optional[int] = Field(None)
+    connection_backend: Optional[NodeConnectionBackend] = Field(None)
     status: Optional[NodeStatus] = Field(None)
     usage_coefficient: Optional[float] = Field(None)
     model_config = ConfigDict(json_schema_extra={

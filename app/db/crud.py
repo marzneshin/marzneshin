@@ -561,7 +561,8 @@ def get_nodes_usage(db: Session, start: datetime, end: datetime) -> List[NodeUsa
 def create_node(db: Session, node: NodeCreate):
     dbnode = Node(name=node.name,
                   address=node.address,
-                  port=node.port)
+                  port=node.port,
+                  connection_backend=node.connection_backend)
 
     db.add(dbnode)
     db.commit()
@@ -600,14 +601,13 @@ def update_node(db: Session, dbnode: Node, modify: NodeModify):
     return dbnode
 
 
-def update_node_status(db: Session, dbnode: Node, status: NodeStatus, message: str = None, version: str = None):
-    dbnode.status = status
-    dbnode.message = message
-    dbnode.xray_version = version
-    dbnode.last_status_change = datetime.utcnow()
+def update_node_status(db: Session, node_id: int, status: NodeStatus, message: str = None, version: str = None):
+    db_node = db.query(Node).where(Node.id == node_id).first()
+    db_node.status = status
+    if message:
+        db_node.message = message
+    db_node.last_status_change = datetime.utcnow()
     db.commit()
-    db.refresh(dbnode)
-    return dbnode
 
 
 def create_notification_reminder(

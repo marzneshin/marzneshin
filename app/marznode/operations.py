@@ -1,54 +1,35 @@
 from collections import defaultdict
 from typing import TYPE_CHECKING
 
-from .base import MarzNodeBase
+from .grpclib import MarzNodeGRPCLIB
+from .grpcio import MarzNodeGRPCIO
 from app import marznode
+from ..models.node import NodeConnectionBackend
+from ..models.user import UserStatus
 
 if TYPE_CHECKING:
     from app.db import User as DBUser
 
 
-async def add_user(user: "DBUser"):
+async def update_user(user: "DBUser", old_inbounds: set | None = None):
+    """updates a user on all nodes
+    even though this isn't efficient it is extremely precise"""
+    if old_inbounds is None:
+        old_inbounds = set()
+
     node_inbounds = defaultdict(list)
-    for inb in user.inbounds:
-        node_inbounds[inb.node_id].append(inb.tag)
+    if user.status in (UserStatus.on_hold, UserStatus.active):
+        for inb in user.inbounds:
+            node_inbounds[inb.node_id].append(inb.tag)
+    else:
+        for inb in user.inbounds:
+            node_inbounds[inb.node_id]
+
+    for inb in old_inbounds:
+        node_inbounds[inb[0]]
 
     for node_id, tags in node_inbounds.items():
-        await marznode.nodes[node_id].add_user(user=user, inbounds=tags)
-
-
-async def remove_user(user: "DBUser"):
-    nodes_set = set()
-
-    for inb in user.inbounds:
-        nodes_set.add(inb.node_id)
-
-    for n in nodes_set:
-        await marznode.nodes[n].remove_user(user)
-
-
-async def update_user_inbounds(user: "DBUser", new_inbounds: set, old_inbounds: set) -> None:
-    """
-    updates user inbounds by finding out inbound additions and reductions
-    it then calculates all inbound additions and reductions for each node separately,
-    and then sends requests to affected nodes
-    :param user: the user
-    :param new_inbounds: a set of all the new inbounds
-    :param old_inbounds: a set of all the old inbounds
-    :return: nothing
-    """
-    inbound_additions = new_inbounds - old_inbounds
-    inbound_reductions = old_inbounds - new_inbounds
-
-    node_inbounds = defaultdict(lambda: tuple((list(), list())))
-
-    for inbound_addition in inbound_additions:
-        node_inbounds[inbound_addition[0]][0].append(inbound_addition[2])
-    for inbound_reduction in inbound_reductions:
-        node_inbounds[inbound_reduction[0]][1].append(inbound_reduction[2])
-
-    for node, inbound_change in node_inbounds.items():
-        await marznode.nodes[node].update_user_inbounds(user, inbound_change[0], inbound_change[1])
+        await marznode.nodes[node_id].update_user(user=user, inbounds=tags)
 
 
 async def remove_node(node_id: int):
@@ -56,15 +37,18 @@ async def remove_node(node_id: int):
         del marznode.nodes[node_id]
 
 
-async def add_node(node_id: int, node: MarzNodeBase):
-    await remove_node(node_id)
-    marznode.nodes[node_id] = node
+async def add_node(db_node, certificate):
+    await remove_node(db_node.id)
+    if db_node.connection_backend == NodeConnectionBackend.grpcio:
+        node = MarzNodeGRPCIO(db_node.id, db_node.address, db_node.port)
+    else:
+        node = MarzNodeGRPCLIB(db_node.id, db_node.address, db_node.port, certificate.key,
+                               certificate.certificate)
+    marznode.nodes[db_node.id] = node
 
 
 __all__ = [
-    "add_user",
-    "remove_user",
-    "update_user_inbounds",
+    "update_user",
     "add_node",
     "remove_node"
 ]

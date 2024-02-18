@@ -21,9 +21,9 @@ from config import DOCS, DEBUG, UVICORN_SSL_KEYFILE, UVICORN_SSL_CERTFILE, UVICO
 from config import HOME_PAGE_TEMPLATE
 from . import __version__, telegram
 from .dashboard import build_dir, build, base_dir
-from .tasks import record_user_usages, review_users, reset_user_data_usage, nodes_health_check, \
-    record_realtime_bandwidth, send_notifications, delete_expired_reminders, nodes_startup
 from .routes import api_router
+from .tasks import record_user_usages, review_users, reset_user_data_usage, \
+    record_realtime_bandwidth, send_notifications, delete_expired_reminders, nodes_startup
 
 logger = logging.getLogger(__name__)
 dashboard_path = "/dashboard/"
@@ -56,12 +56,16 @@ scheduler = AsyncIOScheduler(timezone="UTC")
 scheduler.add_job(record_user_usages, 'interval', coalesce=True, seconds=30)
 scheduler.add_job(review_users, 'interval', seconds=600, coalesce=True, max_instances=1)
 scheduler.add_job(reset_user_data_usage, 'interval', coalesce=True, hours=1)
-scheduler.add_job(nodes_health_check, 'interval', seconds=5, coalesce=True, max_instances=1)
 scheduler.add_job(record_realtime_bandwidth, 'interval', seconds=1, coalesce=True, max_instances=1)
 
 if config.WEBHOOK_ADDRESS:
     scheduler.add_job(send_notifications, "interval", seconds=30, replace_existing=True)
     scheduler.add_job(delete_expired_reminders, "interval", hours=2, start_date=dt.utcnow() + td(minutes=1))
+
+
+@app.on_event("startup")
+async def on_start():
+    await nodes_startup()
 
 
 @app.on_event("shutdown")
@@ -103,7 +107,6 @@ async def main():
         )
     scheduler.start()
     asyncio.create_task(telegram.start_bot())
-    await nodes_startup()
     cfg = Config(
         app=app,
         host=UVICORN_HOST,

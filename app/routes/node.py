@@ -9,7 +9,7 @@ from fastapi import HTTPException, WebSocket
 from app import marznode
 from app.db import crud, get_tls_certificate
 from app.dependencies import DBDep, SudoAdminDep, sudo_admin, EndDateDep, StartDateDep
-from app.marznode import MarzNodeGRPC
+from app.marznode import MarzNodeGRPCIO
 from app.models.admin import Admin
 from app.models.node import (NodeCreate, NodeModify, NodeResponse,
                              NodeSettings, NodeStatus, NodesUsageResponse)
@@ -39,10 +39,7 @@ async def add_node(new_node: NodeCreate,
         raise HTTPException(status_code=409, detail=f"Node \"{new_node.name}\" already exists")
     certificate = get_tls_certificate(db)
 
-    node = MarzNodeGRPC(db_node.address, db_node.port,
-                        ssl_key=certificate.key, ssl_cert=certificate.certificate)
-
-    await marznode.operations.add_node(db_node.id, node)
+    await marznode.operations.add_node(db_node, certificate)
 
     logger.info("New node `%s` added", db_node.name)
     return db_node
@@ -115,9 +112,7 @@ async def modify_node(node_id: int,
     await marznode.operations.remove_node(db_node.id)
     if db_node.status != NodeStatus.disabled:
         certificate = get_tls_certificate(db)
-        node = MarzNodeGRPC(db_node.address, db_node.port,
-                            ssl_key=certificate.key, ssl_cert=certificate.certificate)
-        await marznode.operations.add_node(db_node.id, node)
+        await marznode.operations.add_node(db_node, certificate)
 
     logger.info("Node `%s` modified", db_node.name)
     return db_node

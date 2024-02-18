@@ -82,7 +82,7 @@ async def get_users_stats(node_id: int, node: MarzNodeBase) -> tuple[int, list[d
             if stat.usage:
                 params.append({"uid": stat.uid, "value": stat.usage})
         return node_id, params
-    except (GRPCError, ConnectionError, OSError):
+    except:
         return node_id, []
 
 

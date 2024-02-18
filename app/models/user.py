@@ -7,7 +7,6 @@ from typing import List, Optional, Union, Annotated
 from pydantic import field_validator, ConfigDict, BaseModel, Field, validator, computed_field, ValidationInfo, constr, \
     StringConstraints
 
-from app.models.proxy import InboundBase
 from config import XRAY_SUBSCRIPTION_URL_PREFIX
 
 USERNAME_REGEXP = re.compile(r"^(?=\w{3,32}\b)[a-zA-Z0-9-_@.]+(?:_[a-zA-Z0-9-_@.]+)*$")
@@ -96,6 +95,7 @@ class UserBase(BaseModel):
 
 
 from app.models.service import ServiceBase
+from app.models.proxy import InboundBase
 
 
 class User(UserBase):

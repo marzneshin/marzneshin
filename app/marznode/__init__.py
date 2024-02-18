@@ -3,7 +3,8 @@ from typing import Dict
 
 from . import operations
 from .base import MarzNodeBase
-from .grpc import MarzNodeGRPC
+from .grpcio import MarzNodeGRPCIO
+from .grpclib import MarzNodeGRPCLIB
 
 nodes: Dict[int, MarzNodeBase] = {}
 
@@ -11,6 +12,7 @@ nodes: Dict[int, MarzNodeBase] = {}
 __all__ = [
     "nodes",
     "operations",
-    "MarzNodeGRPC",
+    "MarzNodeGRPCIO",
+    "MarzNodeGRPCLIB",
     "MarzNodeBase"
 ]
