@@ -13,18 +13,13 @@ import {
 import {
   ArrowLeftStartOnRectangleIcon,
   Bars3Icon,
-  ChartPieIcon,
   Cog6ToothIcon,
   CurrencyDollarIcon,
-  DocumentMinusIcon,
-  LinkIcon,
 } from '@heroicons/react/24/outline';
 import { pages } from 'constants/Pages';
 import { DONATION_URL, REPO_URL } from 'constants/Project';
 import { useDashboard } from 'contexts/DashboardContext';
-import { useHosts } from 'contexts/HostsContext';
 import { useNodes } from 'contexts/NodesContext';
-import { useUsers } from 'contexts/UsersContext';
 import differenceInDays from 'date-fns/differenceInDays';
 import isValid from 'date-fns/isValid';
 import { FC, ReactNode, useState } from 'react';
@@ -48,9 +43,6 @@ const CoreSettingsIcon = chakra(Cog6ToothIcon, iconProps);
 const SettingsIcon = chakra(Bars3Icon, iconProps);
 const LogoutIcon = chakra(ArrowLeftStartOnRectangleIcon, iconProps);
 const DonationIcon = chakra(CurrencyDollarIcon, iconProps);
-const HostsIcon = chakra(LinkIcon, iconProps);
-const NodesUsageIcon = chakra(ChartPieIcon, iconProps);
-const ResetUsageIcon = chakra(DocumentMinusIcon, iconProps);
 const NotificationCircle = chakra(Box, {
   baseStyle: {
     bg: 'yellow.500',
@@ -82,15 +74,6 @@ export const Header: FC<HeaderProps> = () => {
   const {
     activePage,
   } = useDashboard();
-  const {
-    onResetAllUsage,
-  } = useUsers();
-  const {
-    onEditingHosts,
-  } = useHosts();
-  const {
-    onShowingNodesUsage,
-  } = useNodes();
   const { t } = useTranslation();
   const { colorMode } = useColorMode();
   const [showDonationNotif, setShowDonationNotif] = useState(
@@ -135,22 +118,15 @@ export const Header: FC<HeaderProps> = () => {
               position="relative"
             ></MenuButton>
             <MenuList minW="170px" zIndex={99999} className="menuList">
-              <MenuItem
-                maxW="170px"
-                fontSize="sm"
-                icon={<HostsIcon />}
-                onClick={onEditingHosts.bind(null, true)}
-              >
-                {t('header.hostSettings')}
-              </MenuItem>
-              <MenuItem
-                maxW="170px"
-                fontSize="sm"
-                icon={<ResetUsageIcon />}
-                onClick={onResetAllUsage.bind(null, true)}
-              >
-                {t('resetAllUsage')}
-              </MenuItem>
+              {/* NOTE: Host settings trigger */}
+              {/* <MenuItem */}
+              {/*   maxW="170px" */}
+              {/*   fontSize="sm" */}
+              {/*   icon={<HostsIcon />} */}
+              {/*   onClick={onEditingHosts.bind(null, true)} */}
+              {/* > */}
+              {/*   {t('header.hostSettings')} */}
+              {/* </MenuItem> */}
               <Link to={DONATION_URL} target="_blank">
                 <MenuItem
                   maxW="170px"
