@@ -22,7 +22,7 @@ import {
   NodeCreate,
   NodeCreateSchema,
   useNodes,
-} from 'contexts/NodesContext';
+} from 'stores';
 import { FC, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';

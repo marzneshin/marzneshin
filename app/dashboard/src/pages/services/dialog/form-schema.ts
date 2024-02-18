@@ -1,6 +1,6 @@
 
 import { z } from 'zod';
-import { ServiceCreate } from 'types/Service';
+import { ServiceCreate } from 'types';
 
 export type FormType = Pick<ServiceCreate, 'name' | 'inbounds'>;
 export const schema = z.object({

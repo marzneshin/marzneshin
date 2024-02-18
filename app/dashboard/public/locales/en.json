@@ -1,4 +1,6 @@
 {
+  "home": "Home",
+  "hosts": "Hosts",
   "password": "Password",
   "cancel": "Cancel",
   "apply": "Apply",
@@ -35,13 +37,6 @@
     "nodesUsage": "Nodes Usage",
     "donation": "Donation",
     "logout": "Log out"
-  },
-  "pageHeaderTitle": {
-    "Home": "Home",
-    "Users": "Users",
-    "Services": "Services",
-    "Host": "Host",
-    "Nodes": "Nodes"
   },
   "deleteUser": {
     "title": "Delete User",

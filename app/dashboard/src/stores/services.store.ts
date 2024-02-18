@@ -1,13 +1,12 @@
 import { queryClient } from 'service/react-query';
 import { StatisticsQueryKey } from 'components/statistics-card';
-import { Service, ServiceCreate } from 'types/Service';
+import { Service, ServiceCreate } from 'types/service';
 import { getServicesPerPageLimitSize } from 'utils/userPreferenceStorage';
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
-import { useDashboard } from 'contexts/DashboardContext';
 import { fetch } from 'service/http';
-import { ServicesFilterType } from 'types/Filter';
-import { useUsers } from './UsersContext';
+import { ServicesFilterType } from 'types/filter';
+import { useDashboard, useUsers } from 'stores';
 
 type ServicesStateType = {
   services: Service[],

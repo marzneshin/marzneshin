@@ -27,8 +27,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { joinPaths } from '@remix-run/router';
 import classNames from 'classnames';
-import { useCoreSettings } from 'contexts/CoreSettingsContext';
-import { useNodes } from 'contexts/NodesContext';
+import { useNodes, useCoreSettings } from 'stores';
 import debounce from 'lodash.debounce';
 import { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';

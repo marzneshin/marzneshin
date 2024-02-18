@@ -1,13 +1,12 @@
-import { User, UserCreate } from 'types/User';
+import { User, UserCreate } from 'types/user';
 import { subscribeWithSelector } from 'zustand/middleware';
 import { create } from 'zustand';
 import { getUsersPerPageLimitSize } from 'utils/userPreferenceStorage';
 import { fetch } from 'service/http';
-import { useDashboard } from 'contexts/DashboardContext';
+import { useServices, useDashboard } from 'stores';
 import { StatisticsQueryKey } from 'components/statistics-card';
 import { queryClient } from 'service/react-query';
-import { useServices } from './ServicesContext';
-import { UsersFilterType, FilterUsageType } from 'types/Filter';
+import { UsersFilterType, FilterUsageType } from 'types/filter';
 
 type UsersStateType = {
   isCreatingNewUser: boolean;
