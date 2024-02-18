@@ -82,14 +82,8 @@ async def modify_user(db_user: UserDep,
     user = UserResponse.model_validate(db_user)
 
     inbound_change = old_inbounds != new_inbounds
-    if (user.status in {UserStatus.active, UserStatus.on_hold}
-            and (not status_change or old_status == UserStatus.on_hold)):
-        if inbound_change:
-            await marznode.operations.update_user_inbounds(
-                user=new_user, new_inbounds=new_inbounds, old_inbounds=old_inbounds)
-    elif (user.status in {UserStatus.active, UserStatus.on_hold} and status_change and
-            old_status not in {UserStatus.active, UserStatus.on_hold}):
-        await marznode.operations.add_user(new_user)
+    if inbound_change and user.status in {UserStatus.active, UserStatus.on_hold}:
+        await marznode.operations.update_user(new_user, old_inbounds)
 
     asyncio.create_task(report.user_updated(
         user=user,
@@ -119,8 +113,7 @@ async def remove_user(db_user: UserDep,
     """
     Remove a user
     """
-    db_user.inbounds = []
-    await marznode.operations.update_user(db_user)
+    await marznode.operations.remove_user(db_user)
 
     crud.remove_user(db, db_user)
     db.flush()
@@ -145,7 +138,7 @@ async def reset_user_data_usage(db_user: UserDep,
     db_user = crud.reset_user_data_usage(db, db_user)
 
     if db_user.status == UserStatus.active and previous_status == UserStatus.limited:
-        await marznode.operations.add_user(db_user)
+        await marznode.operations.update_user(db_user)
 
     user = UserResponse.model_validate(db_user)
     asyncio.create_task(report.user_data_usage_reset(
@@ -168,7 +161,7 @@ async def revoke_user_subscription(db_user: UserDep,
 
     if db_user.status in [UserStatus.active, UserStatus.on_hold]:
         await marznode.operations.remove_user(db_user)
-        await marznode.operations.add_user(db_user)
+        await marznode.operations.update_user(db_user)
     user = UserResponse.model_validate(db_user)
     asyncio.create_task(
         report.user_subscription_revoked(
@@ -220,15 +213,11 @@ def get_users(db: DBDep,
 async def reset_users_data_usage(db: DBDep,
                                  admin: SudoAdminDep):
     """
-    Reset all users data usage
+    Reset all users data usage,
+    You will need to restart for this to take effect for now
     """
     dbadmin = crud.get_admin(db, admin.username)
     crud.reset_all_users_data_usage(db=db, admin=dbadmin)
-    # startup_config = xray.config.include_db_users()
-    await xray.core.restart(xray.config.include_db_users(node_id=0))
-    for node_id, node in list(xray.nodes.items()):
-        if node.connected:
-            xray.operations.restart_node(node_id, xray.config.include_db_users(node_id=node_id))
     return {}
 
 
