@@ -56,6 +56,7 @@ class MarzNodeGRPCIO(MarzNodeBase, MarzNodeDB):
                 await self._sync()
                 self._streaming_task = asyncio.create_task(self._stream_user_updates())
                 self.set_status(NodeStatus.healthy)
+                logger.info("Connected to node %i", self.id)
             else:
                 self.synced = False
                 self.set_status(NodeStatus.unhealthy)

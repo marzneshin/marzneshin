@@ -43,6 +43,7 @@ def upgrade() -> None:
     sa.Column('name', sa.String(length=256), nullable=True),
     sa.Column('address', sa.String(length=256), nullable=True),
     sa.Column('port', sa.Integer(), nullable=True),
+    sa.Column('connection_backend', sa.String(), nullable=True),
     sa.Column('xray_version', sa.String(length=32), nullable=True),
     sa.Column('status', sa.Enum('healthy', 'unhealthy', 'disabled', name='nodestatus'), nullable=False),
     sa.Column('last_status_change', sa.DateTime(), nullable=True),

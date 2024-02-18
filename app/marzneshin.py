@@ -63,6 +63,11 @@ if config.WEBHOOK_ADDRESS:
     scheduler.add_job(delete_expired_reminders, "interval", hours=2, start_date=dt.utcnow() + td(minutes=1))
 
 
+@app.on_event("startup")
+async def on_start():
+    await nodes_startup()
+
+
 @app.on_event("shutdown")
 async def on_shutdown():
     scheduler.shutdown()
@@ -102,7 +107,6 @@ async def main():
         )
     scheduler.start()
     asyncio.create_task(telegram.start_bot())
-    await nodes_startup()
     cfg = Config(
         app=app,
         host=UVICORN_HOST,

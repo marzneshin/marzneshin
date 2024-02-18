@@ -198,6 +198,7 @@ class Node(Base):
     )
     id = Column(Integer, primary_key=True)
     name = Column(String(256), unique=True)
+    connection_backend = Column(String())
     address = Column(String(256))
     port = Column(Integer)
     xray_version = Column(String(32))
