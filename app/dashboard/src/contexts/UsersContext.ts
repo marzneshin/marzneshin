@@ -1,12 +1,11 @@
-
 import { User, UserCreate } from 'types/User';
 import { subscribeWithSelector } from 'zustand/middleware';
 import { create } from 'zustand';
 import { getUsersPerPageLimitSize } from 'utils/userPreferenceStorage';
 import { fetch } from 'service/http';
 import { useDashboard } from 'contexts/DashboardContext';
-import { StatisticsQueryKey } from 'components/Statistics';
-import { queryClient } from 'utils/react-query';
+import { StatisticsQueryKey } from 'components/statistics-card';
+import { queryClient } from 'service/react-query';
 import { useServices } from './ServicesContext';
 import { UsersFilterType, FilterUsageType } from 'types/Filter';
 
@@ -111,14 +110,14 @@ export const useUsers = create(subscribeWithSelector<UsersStateType>((set, get) 
   },
   deleteUser: async (user: User) => {
     set({ editingUser: null });
-    return fetch(`/user/${user.username}`, { method: 'DELETE' }).then(() => {
+    return fetch(`/users/${user.username}`, { method: 'DELETE' }).then(() => {
       set({ deletingUser: null });
       get().refetchUsers();
       queryClient.invalidateQueries(StatisticsQueryKey);
     });
   },
   createUser: async (body: UserCreate) => {
-    return fetch('/user', { method: 'POST', body }).then(() => {
+    return fetch('/users', { method: 'POST', body }).then(() => {
       set({ editingUser: null });
       get().refetchUsers();
       useServices.getState().refetchServices();
@@ -126,7 +125,7 @@ export const useUsers = create(subscribeWithSelector<UsersStateType>((set, get) 
     });
   },
   editUser: async (body: UserCreate) => {
-    return fetch(`/user/${body.username}`, { method: 'PUT', body }).then(
+    return fetch(`/users/${body.username}`, { method: 'PUT', body }).then(
       () => {
         get().onEditingUser(null);
         get().refetchUsers();
@@ -139,10 +138,10 @@ export const useUsers = create(subscribeWithSelector<UsersStateType>((set, get) 
       if (!query[key as keyof FilterUsageType])
         delete query[key as keyof FilterUsageType];
     }
-    return fetch(`/user/${body.username}/usage`, { method: 'GET', query });
+    return fetch(`/users/${body.username}/usage`, { method: 'GET', query });
   },
   resetDataUsage: async (user) => {
-    return fetch(`/user/${user.username}/reset`, { method: 'POST' }).then(
+    return fetch(`/users/${user.username}/reset`, { method: 'POST' }).then(
       () => {
         set({ resetUsageUser: null });
         get().refetchUsers();
@@ -150,7 +149,7 @@ export const useUsers = create(subscribeWithSelector<UsersStateType>((set, get) 
     );
   },
   revokeSubscription: async (user) => {
-    return fetch(`/user/${user.username}/revoke_sub`, {
+    return fetch(`/users/${user.username}/revoke_sub`, {
       method: 'POST',
     }).then((user) => {
       set({ revokeSubscriptionUser: null, editingUser: user });

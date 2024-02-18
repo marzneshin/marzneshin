@@ -7,6 +7,9 @@ type DashboardStateType = {
   version: string | null;
   loading: boolean;
   activePage: number;
+  isCollapsed: boolean;
+  collapseSidebar: () => void;
+  expandSidebar: () => void;
   activatePage: (pageId: PageId) => void;
 };
 
@@ -15,6 +18,13 @@ export const useDashboard = create(
     version: null,
     loading: true,
     activePage: 0,
+    isCollapsed: false,
+    expandSidebar: () => {
+      set({ isCollapsed: false })
+    },
+    collapseSidebar: () => {
+      set({ isCollapsed: true })
+    },
     activatePage: (pageId: number) => {
       set({ activePage: pageId });
     },

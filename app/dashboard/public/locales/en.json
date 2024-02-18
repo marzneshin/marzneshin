@@ -17,6 +17,12 @@
   "services": "Services",
   "inbound": "Inbound",
   "inbounds": "Inbounds",
+  "sidebar": {
+    "groups": {
+      "management": "Management",
+      "settings": "Settings"
+    }
+  },
   "login": {
     "login": "Login",
     "loginYourAccount": "Login to your account",
