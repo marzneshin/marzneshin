@@ -34,7 +34,7 @@ async def update_user(user: "DBUser", old_inbounds: set | None = None):
 
 
 async def remove_user(user: "DBUser"):
-    node_ids = set(inb.id for inb in user.inbounds)
+    node_ids = set(inb.node_id for inb in user.inbounds)
 
     for node_id in node_ids:
         if marznode.nodes.get(node_id):
