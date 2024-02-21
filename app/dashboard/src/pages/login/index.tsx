@@ -22,7 +22,7 @@ import { fetch } from 'service/http';
 import { ReactComponent as Logo } from 'assets/logo.svg';
 import { useTranslation } from 'react-i18next';
 import { Language } from 'components/Language';
-import { useAdmin } from 'contexts/AdminContext';
+import { useAdmin } from 'stores';
 
 const schema = z.object({
   username: z.string().min(1, 'login.fieldRequired'),
