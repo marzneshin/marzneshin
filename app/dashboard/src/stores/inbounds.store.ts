@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
 import { useDashboard } from './dashboard.store';
 import { fetch } from 'service/http';
-import { Inbounds } from 'types/inbounds';
+import { Inbounds, InboundType } from 'types/inbounds';
 import { z } from 'zod';
 
 const isPortThenValue = (value: number) => (value <= 65535 && value !== 0) ? value : null;
@@ -22,13 +22,14 @@ export const hostSchema = z.object({
   path: z.string(),
   sni: z.string(),
   host: z.string(),
-  security: z.string(),
+  security: z.enum(['inbound_default', 'none', 'tls']),
   alpn: z.string().optional(),
   fingerprint: z.string().optional(),
 });
 
-type HostType = z.infer<typeof hostSchema>;
-type Hosts = HostType[];
+export type HostSchema = z.infer<typeof hostSchema>;
+export type HostType = HostSchema & { id?: number };
+export type Hosts = HostType[];
 
 export const fetchInbounds = async () => {
   useDashboard.setState({ loading: true });
@@ -41,8 +42,6 @@ export const fetchInbounds = async () => {
     });
 };
 
-
-
 export const fetchInboundHosts = async (id: string): Promise<Hosts> => {
   useDashboard.setState({ loading: true });
   return fetch(`/inbounds/${id}/hosts`)
@@ -52,7 +51,6 @@ export const fetchInboundHosts = async (id: string): Promise<Hosts> => {
     });
 };
 
-
 type InboundsStateType = {
   // Loading
   loading: boolean;
@@ -60,15 +58,17 @@ type InboundsStateType = {
   // Inbounds
   inbounds: Inbounds;
   refetchInbounds: () => void;
+  selectedInbound: InboundType | null;
+  selectInbound: (inbound: InboundType) => void;
   // Hosts
-  host: HostType | null;
-  setHost: (hosts: HostType) => void;
+  selectedHost: HostType | null;
+  selectHost: (host: HostType) => void;
   isEditingHost: boolean;
-  onEditingHost: (isEditingHost: boolean, host: HostType) => void;
-  editHost: (inboundId: number, host: HostType) => void;
+  onEditingHost: (isEditingHost: boolean, host: HostType | null) => void;
+  editHost: (inboundId: number | undefined, host: HostType) => Promise<boolean | void>;
   isCreatingHost: boolean;
-  onCreatingHost: (isCreatingHost: boolean, host: HostType) => void;
-  createHost: (inboundId: number, host: HostType) => Promise<boolean>;
+  onCreatingHost: (isCreatingHost: boolean) => void;
+  createHost: (inboundId: number | undefined, host: HostSchema) => Promise<boolean | void>;
   isDeletingHost: boolean;
   onDeletingHost: (isDeletingHost: boolean, host: HostType) => void;
   deleteHost: (hostId: number) => void;
@@ -77,7 +77,8 @@ type InboundsStateType = {
 export const useInbounds = create(
   subscribeWithSelector<InboundsStateType>((set,) => ({
     inbounds: [],
-    host: null,
+    selectedHost: null,
+    selectedInbound: null,
     loading: false,
     isDeletingHost: false,
     isCreatingHost: false,
@@ -88,35 +89,42 @@ export const useInbounds = create(
     refetchInbounds: () => {
       fetchInbounds();
     },
-    setHost: (host: HostType): void => {
-      set({ host })
+    selectInbound: (host): void => {
+      set({ selectedInbound: host })
     },
-    onEditingHost: (isEditingHost: boolean, host: HostType) => {
-      set({ isEditingHost, host });
+    selectHost: (host: HostType): void => {
+      set({ selectedHost: host })
     },
-    editHost: async (inboundId: number, body: HostType): Promise<boolean> => {
-      useDashboard.setState({ loading: true });
-      return fetch(`/inbounds/${inboundId}/hosts`, { method: 'DELETE', body })
-        .then(() => true)
-        .catch(() => false)
-        .finally(() => {
-          useDashboard.setState({ loading: false });
-        });
+    onEditingHost: (isEditingHost: boolean, host: HostType | null) => {
+      set({ isEditingHost, selectedHost: host });
     },
-    onCreatingHost: (isCreatingHost: boolean, host: HostType) => {
-      set({ isCreatingHost, host });
+    editHost: async (hostId: number | undefined, body: HostSchema): Promise<boolean | void> => {
+      if (hostId !== undefined) {
+        useDashboard.setState({ loading: true });
+        return fetch(`/inbounds/hosts/${hostId}`, { method: 'PUT', body })
+          .then(() => true)
+          .catch(() => false)
+          .finally(() => {
+            useDashboard.setState({ loading: false });
+          });
+      }
     },
-    createHost: async (inboundId: number, body: HostType): Promise<boolean> => {
-      useDashboard.setState({ loading: true });
-      return fetch(`/inbounds/${inboundId}/hosts`, { method: 'POST', body })
-        .then(() => true)
-        .catch(() => false)
-        .finally(() => {
-          useDashboard.setState({ loading: false });
-        });
+    onCreatingHost: (isCreatingHost: boolean) => {
+      set({ isCreatingHost });
     },
-    onDeletingHost: (isDeletingHost: boolean, host: HostType) => {
-      set({ isDeletingHost, host });
+    createHost: async (inboundId: number | undefined, body: HostSchema): Promise<boolean | void> => {
+      if (inboundId !== undefined) {
+        useDashboard.setState({ loading: true });
+        return fetch(`/inbounds/${inboundId}/hosts/${body}`, { method: 'POST', body })
+          .then(() => true)
+          .catch(() => false)
+          .finally(() => {
+            useDashboard.setState({ loading: false });
+          });
+      }
+    },
+    onDeletingHost: (isDeletingHost: boolean, host: HostType | null) => {
+      set({ isDeletingHost, selectedHost: host });
     },
     deleteHost: async (hostId: number): Promise<boolean> => {
       useDashboard.setState({ loading: true });
