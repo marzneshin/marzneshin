@@ -133,7 +133,7 @@ export const NodesDialog: FC = () => {
                   <HStack w="full">
                     <FormControl>
                       <CustomInput
-                        label={t('nodes.nodeName')}
+                        label={t('nodeDialog.nodeName')}
                         size="sm"
                         placeholder="Marzn-Node-2"
                         {...form.register('name')}
@@ -177,7 +177,7 @@ export const NodesDialog: FC = () => {
                   <HStack alignItems="flex-start">
                     <Box w="65%">
                       <CustomInput
-                        label={t('nodes.nodeAddress')}
+                        label={t('nodeDialog.nodeAddress')}
                         size="sm"
                         placeholder="51.20.12.13"
                         {...form.register('address')}
@@ -186,7 +186,7 @@ export const NodesDialog: FC = () => {
                     </Box>
                     <Box w="35%">
                       <CustomInput
-                        label={t('nodes.nodePort')}
+                        label={t('nodeDialog.nodePort')}
                         size="sm"
                         placeholder="62050"
                         {...form.register('port')}
@@ -197,7 +197,7 @@ export const NodesDialog: FC = () => {
                   {!editingNode && (
                     <FormControl py={1}>
                       <Checkbox {...form.register('add_as_new_host')}>
-                        <FormLabel m={0}>{t('nodes.addHostForEveryInbound')}</FormLabel>
+                        <FormLabel m={0}>{t('nodeDialog.addHostForEveryInbound')}</FormLabel>
                       </Checkbox>
                     </FormControl>
                   )}
