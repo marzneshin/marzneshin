@@ -49,7 +49,7 @@ class MarzNodeGRPCLIB(MarzNodeBase, MarzNodeDB):
         atexit.register(self._channel.close)
 
     async def _monitor_channel(self):
-        while state := self._channel.state:
+        while state := self._channel._state:
             logger.debug("node %i channel state: %s", self.id, state.value)
             try:
                 await asyncio.wait_for(self._channel.__connect__(), timeout=2)
