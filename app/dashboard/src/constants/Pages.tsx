@@ -1,4 +1,4 @@
-import { PageType } from 'types/Page';
+import { PageType } from 'types';
 import { chakra } from '@chakra-ui/react';
 import { CubeIcon, HomeIcon, ServerIcon, ServerStackIcon, UsersIcon } from '@heroicons/react/24/outline';
 import { IconBaseStyle } from 'constants/IconBaseStyle';

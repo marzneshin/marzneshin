@@ -13,7 +13,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { ChangeEvent, FC } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FilterType } from 'types/Filter';
+import { FilterType } from 'types';
 import { setUsersPerPageLimitSize } from 'utils/userPreferenceStorage';
 
 const PrevIcon = chakra(ArrowLongLeftIcon, {

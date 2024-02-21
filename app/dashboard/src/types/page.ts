@@ -1,4 +1,4 @@
-import { ChakraIcon } from 'types/ChakraIcon'
+import { ChakraIcon } from 'types'
 
 export interface PageType {
     path: string;

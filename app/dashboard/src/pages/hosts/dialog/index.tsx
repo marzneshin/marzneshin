@@ -442,8 +442,8 @@ export const HostsDialog: FC = () => {
                       size="sm"
                       aria-label="delete node"
                       onClick={() => {
-                        if (selectedHost !== null && selectedHost.id !== undefined) {
-                          onDeletingHost(true, selectedHost.id);
+                        if (selectedHost !== null) {
+                          onDeletingHost(true, selectedHost);
                           onClose();
                         }
                       }}
