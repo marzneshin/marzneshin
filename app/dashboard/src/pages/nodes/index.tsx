@@ -6,8 +6,7 @@ import { NodesUsage } from './usage';
 import { NodesTable } from './table';
 import { NodesFilters } from './filters';
 import { DeleteNodeModal } from './modals/delete-modal';
-import { useDashboard } from 'contexts/DashboardContext';
-import { useNodes } from 'contexts/NodesContext';
+import { useNodes, useDashboard } from 'stores';
 import { pages } from 'constants/Pages';
 import Page from 'components/page';
 

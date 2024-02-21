@@ -17,7 +17,6 @@ import {
   IconButton,
 } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { InboundType } from 'types/Inbounds';
 import { FC, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -28,9 +27,8 @@ import { getDefaultValues } from './default-values';
 import { schema, FormType } from './form-schema';
 import { InboundsField } from './inbounds-field';
 import { NameField } from './name-field';
-import { Service, ServiceCreate } from 'types/Service';
-import { useServices } from 'contexts/ServicesContext';
-import { useInbounds } from 'contexts/InboundsContext';
+import { InboundType, Service, ServiceCreate } from 'types';
+import { useInbounds, useServices } from 'stores';
 
 const formatService = (service: Service): FormType => {
   const inbounds: number[] = service.inbounds.map((inbound: number | InboundType): number => {

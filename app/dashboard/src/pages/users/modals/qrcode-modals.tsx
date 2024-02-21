@@ -24,7 +24,7 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick-theme.css';
 import 'slick-carousel/slick/slick.css';
 import { Icon } from 'components/icon';
-import { useUsers } from 'contexts/UsersContext';
+import { useUsers } from 'stores';
 
 const QRCode = chakra(QRCodeCanvas);
 const NextIcon = chakra(ChevronRightIcon, {

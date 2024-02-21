@@ -15,10 +15,12 @@ import {
 import classNames from 'classnames';
 import { FC, Fragment, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { EmptySection } from 'components/Table/EmptySection';
-import { Pagination } from 'components/Table/Pagination';
-import { Sort } from 'components/Table/Sort';
-import { useServices } from 'contexts/ServicesContext';
+import {
+  EmptySection,
+  Pagination,
+  Sort
+} from 'components/table';
+import { useServices } from 'stores';
 
 type ServicesTableProps = {} & TableProps;
 

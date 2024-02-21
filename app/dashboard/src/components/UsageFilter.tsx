@@ -20,7 +20,7 @@ import {
 } from '@chakra-ui/react';
 import { CalendarIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import { ApexOptions } from 'apexcharts';
-import { FilterUsageType } from 'types/Filter';
+import { FilterUsageType } from 'types/filter';
 import dayjs, { ManipulateType } from 'dayjs';
 import { FC, useRef, useState } from 'react';
 import ReactDatePicker from 'react-datepicker';

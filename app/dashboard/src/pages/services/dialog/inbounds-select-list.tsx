@@ -5,7 +5,7 @@ import {
   Stack,
 } from '@chakra-ui/react';
 import { ListCheckBox } from 'components/list-check-box';
-import { Inbounds, InboundType } from 'types/Inbounds';
+import { Inbounds, InboundType } from 'types';
 import { forwardRef, ReactNode } from 'react';
 import {
   useFormContext,

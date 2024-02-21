@@ -4,7 +4,7 @@ import {
   ChartPieIcon,
   UsersIcon,
 } from '@heroicons/react/24/outline';
-import { useDashboard } from 'contexts/DashboardContext';
+import { useDashboard } from 'stores';
 import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
@@ -75,7 +75,7 @@ export const Statistics: FC<BoxProps> = (props) => {
                 display="inline-block"
                 pb="5px"
               >
-                                / {numberWithCommas(systemData.total_user)}
+                / {numberWithCommas(systemData.total_user)}
               </Text>
             </HStack>
           )
@@ -86,9 +86,9 @@ export const Statistics: FC<BoxProps> = (props) => {
         title={t('dataUsage')}
         content={
           systemData &&
-                    formatBytes(
-                      systemData.incoming_bandwidth + systemData.outgoing_bandwidth
-                    )
+          formatBytes(
+            systemData.incoming_bandwidth + systemData.outgoing_bandwidth
+          )
         }
         icon={<NetworkIcon />}
       />

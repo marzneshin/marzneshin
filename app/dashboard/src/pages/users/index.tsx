@@ -1,6 +1,6 @@
 import { UserDialog } from './dialog';
 import { UsersTable } from './table';
-import { useDashboard } from 'contexts/DashboardContext';
+import { useUsers, useDashboard } from 'stores';
 import { useEffect } from 'react';
 import { UsersFilters } from './filters';
 import {
@@ -11,7 +11,6 @@ import {
   RevokeSubscriptionModal
 } from './modals';
 import { pages } from 'constants/Pages';
-import { useUsers } from 'contexts/UsersContext';
 import Page from 'components/page';
 
 

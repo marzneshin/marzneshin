@@ -25,16 +25,16 @@ import classNames from 'classnames';
 import { t } from 'i18next';
 import { FC, Fragment, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Pagination } from 'components/Table/Pagination';
 import { StatusBadge } from 'components/StatusBadge';
-import { EmptySection } from 'components/Table/EmptySection';
 import {
+  Pagination,
+  EmptySection,
   AccordionArrowIcon,
   EditIcon,
-} from 'components/Table/Icons';
-import { Sort } from 'components/Table/Sort';
-import { StatusSortSelect } from 'components/Table/StatusSortSelect';
-import { useNodes } from 'contexts/NodesContext';
+  Sort,
+  StatusSortSelect,
+} from 'components/table';
+import { useNodes } from 'stores';
 import { Cog6ToothIcon } from '@heroicons/react/24/outline';
 
 const iconProps = {

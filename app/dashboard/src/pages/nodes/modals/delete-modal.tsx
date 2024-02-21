@@ -1,7 +1,7 @@
 import {
   useToast,
 } from '@chakra-ui/react';
-import { useNodes } from 'contexts/NodesContext';
+import { useNodes } from 'stores';
 import { FC, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { DeleteModal } from 'components/delete-modal';

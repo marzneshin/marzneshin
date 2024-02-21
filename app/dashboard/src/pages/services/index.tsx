@@ -4,8 +4,7 @@ import { ServicesFilters } from './filters';
 import { ServicesTable } from './table';
 import { pages } from 'constants/Pages';
 import { ServiceDialog } from './dialog';
-import { useServices } from 'contexts/ServicesContext';
-import { useDashboard } from 'contexts/DashboardContext';
+import { useDashboard, useServices } from 'stores';
 import { DeleteServiceModal } from './modals/delete-modal';
 import Page from 'components/page';
 

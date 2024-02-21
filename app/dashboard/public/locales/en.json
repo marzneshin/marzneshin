@@ -1,4 +1,6 @@
 {
+  "home": "Home",
+  "hosts": "Hosts",
   "password": "Password",
   "cancel": "Cancel",
   "apply": "Apply",
@@ -9,6 +11,7 @@
   "username": "Username",
   "name": "Name",
   "node": "Node",
+  "nodes": "Nodes",
   "xrayVersion": "xray version",
   "addNode": "Add Node",
   "expires": "Expires in {{time}}",
@@ -35,13 +38,6 @@
     "nodesUsage": "Nodes Usage",
     "donation": "Donation",
     "logout": "Log out"
-  },
-  "pageHeaderTitle": {
-    "Home": "Home",
-    "Users": "Users",
-    "Services": "Services",
-    "Host": "Host",
-    "Nodes": "Nodes"
   },
   "deleteUser": {
     "title": "Delete User",
@@ -121,8 +117,6 @@
   },
   "nodeDialog": {
     "editNodeTitle": "Edit node",
-    "editNode": "Edit node",
-    "addNode": "Add node",
     "createNewNode": "Create node",
     "nodeEdited": "Node {{name}} edited.",
     "nodeCreated": "Node {{name}} created.",
@@ -130,7 +124,25 @@
     "optional": "optional",
     "total": "Total: ",
     "updateSubmit": "Submit update",
-    "addSubmit": "Submit"
+    "addSubmit": "Submit",
+    "title": "Using Marzban-Node, you are able to scale up your connection quality by adding different nodes on different servers.",
+    "addNewMarzbanNode": "Add New Marzban Node",
+    "certificate": "Certificate",
+    "connection-hint": "To setup a Marzban Node, you need to set this certificate on the node to initialize a secure connection between main server and the node",
+    "download-certificate": "Download certificate",
+    "show-certificate": "Show certificate",
+    "hide-certificate": "Hide certificate",
+    "addHostForEveryInbound": "Add this node as a new host for every inbound",
+    "addNode": "Add Node",
+    "addNodeSuccess": "Node {{name}} added successfully",
+    "apply": "editNode",
+    "nodeName": "Name",
+    "nodeAddress": "Address",
+    "nodePort": "Port",
+    "nodeAPIPort": "API Port",
+    "editNode": "Update Node",
+    "reconnecting": "Reconnecting...",
+    "reconnect": "Reconnect"
   },
   "serviceDialog": {
     "editServiceTitle": "Edit service",
@@ -179,26 +191,6 @@
     "host.wildcard": "Use <badge>*</badge> to generate a random string (works for wildcard domain names)"
   },
   "revoke": "Revoke",
-  "nodes": {
-    "title": "Using Marzban-Node, you are able to scale up your connection quality by adding different nodes on different servers.",
-    "addNewMarzbanNode": "Add New Marzban Node",
-    "certificate": "Certificate",
-    "connection-hint": "To setup a Marzban Node, you need to set this certificate on the node to initialize a secure connection between main server and the node",
-    "download-certificate": "Download certificate",
-    "show-certificate": "Show certificate",
-    "hide-certificate": "Hide certificate",
-    "addHostForEveryInbound": "Add this node as a new host for every inbound",
-    "addNode": "Add Node",
-    "addNodeSuccess": "Node {{name}} added successfully",
-    "apply": "editNode",
-    "nodeName": "Name",
-    "nodeAddress": "Address",
-    "nodePort": "Port",
-    "nodeAPIPort": "API Port",
-    "editNode": "Update Node",
-    "reconnecting": "Reconnecting...",
-    "reconnect": "Reconnect"
-  },
   "deleteNode.title": "Delete Node",
   "deleteNode.prompt": "Are you sure you want to delete the <b>{{name}}</b> node?",
   "deleteNode.deleteSuccess": "Node {{name}} removed successfully",

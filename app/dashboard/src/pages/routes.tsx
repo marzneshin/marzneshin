@@ -4,7 +4,7 @@ import { fetchAdminLoader } from 'service/http';
 
 const ConsoleLayout = lazy(() => import('layouts/console-layout'));
 const Home = lazy(() => import('./home'));
-const Host = lazy(() => import('./host'));
+const Hosts = lazy(() => import('./hosts'));
 const Users = lazy(() => import('./users'));
 const Login = lazy(() => import('./login'));
 const Nodes = lazy(() => import('./nodes'));
@@ -34,8 +34,8 @@ export const router = createHashRouter([
         element: <Nodes />,
       },
       {
-        path: '/host',
-        element: <Host />,
+        path: '/hosts',
+        element: <Hosts />,
       },
     ],
   },

@@ -6,7 +6,7 @@ import {
   WifiIcon,
 } from '@heroicons/react/24/outline';
 import { ForwardRefExoticComponent, SVGProps } from 'react';
-import { DataLimitResetStrategy } from 'types/User';
+import { DataLimitResetStrategy } from 'types';
 
 const iconProps = {
   baseStyle: {
