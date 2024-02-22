@@ -130,7 +130,7 @@ export const ServiceDialog: FC<ServiceDialogProps> = () => {
   const disabled = loading;
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="2xl">
+    <Modal isOpen={isOpen} onClose={onClose} size="lg">
       <ModalOverlay bg="blackAlpha.300" backdropFilter="blur(10px)" />
       <FormProvider {...form} formState={form.formState}>
         <ModalContent mx="3">
