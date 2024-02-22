@@ -4,7 +4,7 @@ import { IconBaseStyle } from 'constants/IconBaseStyle';
 import { TFunction } from 'i18next';
 import { Controller } from 'react-hook-form';
 import { Service } from 'types';
-import { ServicePropertyStatus } from './service-property-status';
+import { SystemPropertyStatus } from 'components/system-property-status';
 import { ServicesSelectList } from './services-select-list';
 
 const UsersServiceIcon = chakra(UsersIcon, IconBaseStyle);
@@ -39,9 +39,9 @@ export const ServicesField = ({ form, t, services }: ServicesFieldProps) => {
                     {service.name}
                   </Text>
                   <Flex flexDirection="row" alignItems="center">
-                    <ServicePropertyStatus value={service.users.length} StatusIcon={UsersServiceIcon} />
+                    <SystemPropertyStatus value={service.users.length} StatusIcon={UsersServiceIcon} />
                     <Text color="primary.600" _dark={{ color: 'gray.100' }} mx="8px" fontSize="sm">/</Text>
-                    <ServicePropertyStatus value={service.inbounds.length} StatusIcon={InboundsServiceIcon} />
+                    <SystemPropertyStatus value={service.inbounds.length} StatusIcon={InboundsServiceIcon} />
                   </Flex>
                 </Flex>
               )}

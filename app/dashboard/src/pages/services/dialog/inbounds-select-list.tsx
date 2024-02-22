@@ -1,12 +1,10 @@
 
 import {
-  Box,
-  Flex,
   Stack,
 } from '@chakra-ui/react';
 import { ListCheckBox } from 'components/list-check-box';
 import { Inbounds, InboundType } from 'types';
-import { forwardRef, ReactNode } from 'react';
+import { forwardRef, Fragment, ReactNode } from 'react';
 import {
   useFormContext,
 } from 'react-hook-form';
@@ -36,16 +34,14 @@ export const InboundsSelectList = forwardRef<HTMLDivElement, InboundsSelectListP
     return (
       <Stack spacing={3} ref={ref}>
         {list.map((inbound: InboundType) => (
-          <Box key={inbound.id}>
-            <Flex align="center">
-              <ListCheckBox
-                isChecked={form.getValues('inbounds').includes(inbound.id)}
-                onChange={() => handleInboundToggle(inbound.id)}
-                value={String(inbound.id)}
-                renderContent={() => renderCheckboxContent(inbound)}
-              />
-            </Flex>
-          </Box>
+          <Fragment key={inbound.id}>
+            <ListCheckBox
+              isChecked={form.getValues('inbounds').includes(inbound.id)}
+              onChange={() => handleInboundToggle(inbound.id)}
+              value={String(inbound.id)}
+              renderContent={() => renderCheckboxContent(inbound)}
+            />
+          </Fragment>
         ))}
       </Stack>
     );
