@@ -1,8 +1,9 @@
-import { FormControl, FormLabel, FormErrorMessage, Center, Spinner, Text, Spacer, Flex } from '@chakra-ui/react';
+import { FormControl, FormLabel, FormErrorMessage, Center, Spinner } from '@chakra-ui/react';
 import { Inbounds, InboundType } from 'types';
 import { TFunction } from 'i18next';
 import { Controller } from 'react-hook-form';
 import { InboundsSelectList } from './inbounds-select-list';
+import { InboundCard } from 'components/inbounds-card';
 
 
 interface InboundsFieldProps {
@@ -29,14 +30,7 @@ export const InboundsField = ({ form, t, inbounds }: InboundsFieldProps) => {
             <InboundsSelectList
               list={inbounds}
               renderCheckboxContent={(inbound: InboundType) => (
-                <>
-                  <Text fontSize="sm" color="gray.700" _dark={{ color: 'gray.100' }} fontWeight="medium">
-                    {inbound.tag} {inbound.protocol}
-                  </Text>
-                  <Spacer />
-                  <Flex flexDirection="row" alignItems="center">
-                  </Flex>
-                </>
+                <InboundCard tag={inbound.tag} protocol={inbound.protocol} nodeName={inbound.node.name} />
               )}
             />
           );
