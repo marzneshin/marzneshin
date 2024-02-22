@@ -9,7 +9,7 @@ from pydantic import field_validator, ConfigDict, BaseModel, Field, validator, c
 
 from config import XRAY_SUBSCRIPTION_URL_PREFIX
 
-USERNAME_REGEXP = re.compile(r"^(?=\w{3,32}\b)[a-zA-Z0-9-_@.]+(?:_[a-zA-Z0-9-_@.]+)*$")
+USERNAME_REGEXP = re.compile(r"^\w{3,32}$")
 
 
 class ReminderType(str, Enum):
@@ -72,7 +72,7 @@ class UserBase(BaseModel):
     def validate_username(cls, v: str):
         if not USERNAME_REGEXP.match(v):
             raise ValueError(
-                "Username only can be 3 to 32 characters and contain a-z, 0-9, and underscores in between."
+                "Username should be 3 to 32 characters containing A-Z, a-z, 0-9 and underscores in between."
             )
         return v
 
