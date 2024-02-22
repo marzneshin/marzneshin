@@ -1,6 +1,6 @@
 
 import { z } from 'zod';
-import { UserCreate } from 'types/User';
+import { UserCreate } from 'types';
 
 export type FormType = Pick<UserCreate, keyof UserCreate>;
 export const schema = z.object({

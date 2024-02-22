@@ -1,5 +1,5 @@
 import { FormControl, FormLabel, FormErrorMessage, Center, Spinner, Text, Spacer, Flex } from '@chakra-ui/react';
-import { Inbounds, InboundType } from 'types/Inbounds';
+import { Inbounds, InboundType } from 'types';
 import { TFunction } from 'i18next';
 import { Controller } from 'react-hook-form';
 import { InboundsSelectList } from './inbounds-select-list';

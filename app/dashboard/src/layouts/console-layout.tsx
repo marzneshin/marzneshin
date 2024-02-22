@@ -5,7 +5,7 @@ import { Header } from 'components/header';
 import { Sidebar } from 'components/sidebar';
 import { Suspense, useRef } from 'react';
 import { Outlet } from 'react-router-dom';
-import { useDashboard } from 'contexts/DashboardContext';
+import { useDashboard } from 'stores';
 
 export const ConsoleLayout = () => {
   const ref = useRef<ImperativePanelHandle>(null);

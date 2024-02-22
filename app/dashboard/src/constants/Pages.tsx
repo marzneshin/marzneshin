@@ -1,4 +1,4 @@
-import { PageType } from 'types/Page';
+import { PageType } from 'types';
 import { chakra } from '@chakra-ui/react';
 import { CubeIcon, HomeIcon, ServerIcon, ServerStackIcon, UsersIcon } from '@heroicons/react/24/outline';
 import { IconBaseStyle } from 'constants/IconBaseStyle';
@@ -11,28 +11,28 @@ const HomeSidebarItemIcon = chakra(HomeIcon, IconBaseStyle);
 
 export const pages: PageType[] = [
   {
-    name: 'pageHeaderTitle.Home',
+    name: 'home',
     path: '/',
     itemIcon: HomeSidebarItemIcon,
   },
   {
-    name: 'pageHeaderTitle.Users',
+    name: 'users',
     path: '/users',
     itemIcon: UsersSidebarItemIcon,
   },
   {
-    name: 'pageHeaderTitle.Services',
+    name: 'services',
     path: '/services',
     itemIcon: ServicesSidebarItemIcon,
   },
   {
-    name: 'pageHeaderTitle.Nodes',
+    name: 'nodes',
     path: '/nodes',
     itemIcon: NodesSidebarItemIcon,
   },
   {
-    name: 'pageHeaderTitle.Host',
-    path: '/host',
+    name: 'hosts',
+    path: '/hosts',
     itemIcon: HostSidebarItemIcon,
   },
 ];

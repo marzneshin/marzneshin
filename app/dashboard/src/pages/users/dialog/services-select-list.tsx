@@ -9,7 +9,7 @@ import { forwardRef, ReactNode } from 'react';
 import {
   useFormContext,
 } from 'react-hook-form';
-import { Service } from 'types/Service';
+import { Service } from 'types';
 
 interface ServicesSelectListProps {
   list: Service[];

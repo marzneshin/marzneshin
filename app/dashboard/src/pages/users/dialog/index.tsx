@@ -21,7 +21,6 @@ import {
   HStack,
 } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { FilterUsageType } from 'types/Filter';
 import dayjs from 'dayjs';
 import { FC, useEffect, useState } from 'react';
 import ReactApexChart from 'react-apexcharts';
@@ -29,8 +28,10 @@ import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import {
   User,
+  FilterUsageType,
   UserCreate,
-} from 'types/User';
+  Service
+} from 'types';
 import { UsageFilter, createUsageConfig } from 'components/UsageFilter';
 import { AddIcon, EditIcon } from 'components/dialog/Icons';
 import { DialogModalHeader } from 'components/dialog/ModalHeader';
@@ -45,9 +46,7 @@ import { DataLimitField } from './data-limit-field';
 import { PeriodicUsageReset } from './periodic-usage-reset';
 import { ExpireDateField } from './expire-date-field';
 import { NoteField } from './note-field';
-import { Service } from 'types/Service';
-import { useUsers } from 'contexts/UsersContext';
-import { useServices } from 'contexts/ServicesContext';
+import { useUsers, useServices } from 'stores';
 
 const formatUser = (user: User): FormType => {
   const services: number[] = user.services.map((service: number | Service): number => {

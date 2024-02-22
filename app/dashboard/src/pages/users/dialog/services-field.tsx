@@ -3,7 +3,7 @@ import { UsersIcon, ServerStackIcon } from '@heroicons/react/24/outline';
 import { IconBaseStyle } from 'constants/IconBaseStyle';
 import { TFunction } from 'i18next';
 import { Controller } from 'react-hook-form';
-import { Service } from 'types/Service';
+import { Service } from 'types';
 import { ServicePropertyStatus } from './service-property-status';
 import { ServicesSelectList } from './services-select-list';
 

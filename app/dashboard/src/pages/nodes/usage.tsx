@@ -6,8 +6,8 @@ import {
   useColorMode,
 } from '@chakra-ui/react';
 import { ChartPieIcon } from '@heroicons/react/24/outline';
-import { FilterUsageType } from 'types/Filter';
-import { useNodes } from 'contexts/NodesContext';
+import { FilterUsageType } from 'types/filter';
+import { useNodes } from 'stores';
 import dayjs from 'dayjs';
 import { FC, Suspense, useEffect, useState } from 'react';
 import ReactApexChart from 'react-apexcharts';

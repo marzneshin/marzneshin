@@ -1,9 +1,9 @@
-import { SortIcon } from './Icons';
+import { SortIcon } from './icons';
 import { FC } from 'react';
 
 type SortType = {
-    sort: string;
-    column: string;
+  sort: string;
+  column: string;
 };
 
 export const Sort: FC<SortType> = ({ sort, column }) => {

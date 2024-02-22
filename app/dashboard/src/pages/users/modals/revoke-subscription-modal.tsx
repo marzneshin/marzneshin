@@ -13,7 +13,7 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { ArrowPathIcon } from '@heroicons/react/24/outline';
-import { useUsers } from 'contexts/UsersContext';
+import { useUsers } from 'stores';
 import { FC, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Icon } from 'components/icon';

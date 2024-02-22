@@ -2,9 +2,9 @@ import { useQuery } from 'react-query';
 import { fetch } from 'service/http';
 import { create } from 'zustand';
 import { z } from 'zod';
-import { FilterUsageType, NodesFilterType } from 'types/Filter';
+import { FilterUsageType, NodesFilterType } from 'types/filter';
 import { getNodesPerPageLimitSize } from 'utils/userPreferenceStorage';
-import { useDashboard } from './DashboardContext';
+import { useDashboard } from './dashboard.store';
 
 export const NodeSchema = z.object({
   name: z.string().min(1),

@@ -18,8 +18,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { pages } from 'constants/Pages';
 import { DONATION_URL, REPO_URL } from 'constants/Project';
-import { useDashboard } from 'contexts/DashboardContext';
-import { useNodes } from 'contexts/NodesContext';
+import { useNodes, useDashboard } from 'stores';
 import differenceInDays from 'date-fns/differenceInDays';
 import isValid from 'date-fns/isValid';
 import { FC, ReactNode, useState } from 'react';

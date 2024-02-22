@@ -26,24 +26,24 @@ import { t } from 'i18next';
 import { FC, Fragment, useEffect, useState } from 'react';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { useTranslation } from 'react-i18next';
-import { User } from 'types/User';
+import { User } from 'types';
 import { OnlineBadge } from 'components/OnlineBadge';
 import { OnlineStatus } from 'components/OnlineStatus';
-import { Pagination } from 'components/Table/Pagination';
 import { StatusBadge } from 'components/StatusBadge';
-import { EmptySection } from 'components/Table/EmptySection';
 import {
+  Pagination,
+  EmptySection,
   AccordionArrowIcon,
   EditIcon,
   CopiedIcon,
   CopyIcon,
+  StatusSortSelect,
+  Sort,
   QRIcon,
   SubscriptionLinkIcon
-} from 'components/Table/Icons';
-import { Sort } from 'components/Table/Sort';
+} from 'components/table';
 import { UsageSlider, UsageSliderCompact } from './usage-slider';
-import { StatusSortSelect } from 'components/Table/StatusSortSelect';
-import { useUsers } from 'contexts/UsersContext';
+import { useUsers } from 'stores';
 
 type ExpandedIndex = number | number[];
 

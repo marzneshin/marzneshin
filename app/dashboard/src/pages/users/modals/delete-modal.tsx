@@ -3,7 +3,7 @@ import {
 } from '@chakra-ui/react';
 import { FC, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useUsers } from 'contexts/UsersContext';
+import { useUsers } from 'stores';
 import { DeleteModal } from 'components/delete-modal';
 
 type DeleteUserModalProps = {

@@ -3,7 +3,7 @@ import { Badge, Text } from '@chakra-ui/react';
 import { statusColors } from 'constants/Settings';
 import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Status as StatusType } from 'types/User';
+import { Status as StatusType } from 'types';
 import { relativeExpiryDate } from 'utils/dateFormatter';
 
 type StatusProps = {

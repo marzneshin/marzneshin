@@ -1,4 +1,4 @@
-import { ProtocolType } from './Protocol';
+import { ProtocolType } from './protocol';
 
 export type InboundType = {
     id: number;

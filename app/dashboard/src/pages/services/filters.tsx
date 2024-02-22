@@ -18,8 +18,7 @@ import {
   XMarkIcon,
 } from '@heroicons/react/24/outline';
 import classNames from 'classnames';
-import { useDashboard } from 'contexts/DashboardContext';
-import { useServices } from 'contexts/ServicesContext';
+import { useDashboard, useServices } from 'stores';
 import debounce from 'lodash.debounce';
 import React, { FC, useState } from 'react';
 import { useTranslation } from 'react-i18next';

@@ -1,6 +1,6 @@
 import { BoxProps, HStack, Link, Text } from '@chakra-ui/react';
 import { ORGANIZATION_URL, REPO_URL } from 'constants/Project';
-import { useDashboard } from 'contexts/DashboardContext';
+import { useDashboard } from 'stores';
 import { FC } from 'react';
 
 export const Footer: FC<BoxProps> = (props) => {

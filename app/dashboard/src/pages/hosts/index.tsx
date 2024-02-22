@@ -1,7 +1,7 @@
 import { HostsDialog } from './dialog';
 import Page from 'components/page';
 
-const HostPage = () => {
+const HostsPage = () => {
   return (
     <Page>
       <HostsDialog />
@@ -9,4 +9,4 @@ const HostPage = () => {
   )
 }
 
-export default HostPage;
+export default HostsPage;

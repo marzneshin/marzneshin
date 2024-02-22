@@ -1,6 +1,6 @@
 
 import { Select } from '@chakra-ui/react'
-import { FilterType } from 'types/Filter';
+import { FilterType } from 'types';
 import React from 'react'
 
 interface StatusSortSelectProps {
