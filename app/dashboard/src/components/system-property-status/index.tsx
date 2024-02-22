@@ -8,11 +8,11 @@ type SystemPropertyStatusProps = {
 }
 
 export const SystemPropertyStatus: FC<SystemPropertyStatusProps> = ({ value, StatusIcon }) => {
-    const [valueState,] = useState(value);
-    return (
-        <Flex flexDirection="row">
-            <StatusIcon />
-            <span>{valueState}</span>
-        </Flex>
-    );
+  const [valueState,] = useState(value);
+  return (
+    <Flex flexDirection="row">
+      <StatusIcon />
+      <span>{valueState}</span>
+    </Flex>
+  );
 };
