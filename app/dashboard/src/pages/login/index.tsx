@@ -17,11 +17,11 @@ import { FieldValues, useForm } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 import { Footer } from 'components/footer';
-import { Input } from 'components/Input';
+import { Input } from 'components/input';
 import { fetch } from 'service/http';
 import { ReactComponent as Logo } from 'assets/logo.svg';
 import { useTranslation } from 'react-i18next';
-import { Language } from 'components/Language';
+import { Language } from 'components/language';
 import { useAdmin } from 'stores';
 
 const schema = z.object({

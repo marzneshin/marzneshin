@@ -20,9 +20,13 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { FC, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { AddIcon, DeleteIcon, EditIcon } from 'components/dialog/Icons';
-import { DialogModalHeader } from 'components/dialog/ModalHeader';
-import { DialogModalFooter } from 'components/dialog/ModalFooter';
+import {
+  AddIcon,
+  DialogModalHeader,
+  DialogModalFooter,
+  DeleteIcon,
+  EditIcon
+} from 'components/dialog';
 import { getDefaultValues } from './default-values';
 import { schema, FormType } from './form-schema';
 import { InboundsField } from './inbounds-field';

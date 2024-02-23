@@ -62,6 +62,7 @@ export const ServicesTable: FC<ServicesTableProps> = (props) => {
       sort: newSort,
     });
   };
+
   refetchServices();
   return (
     <Box id="services-table" h="45vh" overflowX={{ base: 'unset', md: 'unset' }} >

@@ -28,9 +28,8 @@ import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import 'slick-carousel/slick/slick-theme.css';
 import 'slick-carousel/slick/slick.css';
-import { DeleteIcon, AddIcon, EditIcon } from 'components/dialog/Icons';
-import { Input } from 'components/Input';
-import { DialogModalHeader } from 'components/dialog/ModalHeader';
+import { DialogModalHeader, DeleteIcon, AddIcon, EditIcon } from 'components/dialog';
+import { Input } from 'components/input';
 
 const CustomInput = chakra(Input, {
   baseStyle: {

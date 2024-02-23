@@ -8,7 +8,7 @@ import { i18n, TFunction } from 'i18next';
 import ReactDatePicker from 'react-datepicker';
 import { Controller } from 'react-hook-form';
 import { relativeExpiryDate } from 'utils/dateFormatter';
-import { Input } from 'components/Input';
+import { Input } from 'components/input';
 
 interface ExpireDateFieldProps {
   form: any;

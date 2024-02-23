@@ -25,7 +25,7 @@ import classNames from 'classnames';
 import { t } from 'i18next';
 import { FC, Fragment, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { StatusBadge } from 'components/StatusBadge';
+import { StatusBadge } from 'components/status-badge';
 import {
   Pagination,
   EmptySection,
@@ -67,18 +67,7 @@ export const NodesTable: FC<NodesTableProps> = (props) => {
     undefined
   );
 
-  // const marginTop = useBreakpointValue({ base: 120, lg: 72 }) || 72;
-  // const [top, setTop] = useState(`${marginTop}px`);
   const useTable = useBreakpointValue({ base: false, md: true });
-
-  // useEffect(() => {
-  //   const calcTop = () => {
-  //     const el = document.querySelectorAll('#filters')[0] as HTMLElement;
-  //     setTop(`${el.offsetHeight}px`);
-  //   };
-  //   window.addEventListener('scroll', calcTop);
-  //   () => window.removeEventListener('scroll', calcTop);
-  // }, []);
 
   // TODO: Find a different mechancism to to detect ftiler
   // const isFiltered = users.length !== total;

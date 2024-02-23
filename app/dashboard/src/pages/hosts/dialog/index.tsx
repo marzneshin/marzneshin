@@ -36,9 +36,8 @@ import { getDefaultValues } from './default-values';
 import { useForm } from 'react-hook-form';
 import 'slick-carousel/slick/slick-theme.css';
 import 'slick-carousel/slick/slick.css';
-import { AddIcon, DeleteIcon } from 'components/dialog/Icons';
-import { Input as CustomInput } from 'components/Input';
-import { DialogModalHeader, } from 'components/dialog/ModalHeader';
+import { DialogModalHeader, AddIcon, DeleteIcon } from 'components/dialog';
+import { Input as CustomInput } from 'components/input';
 import { EditIcon } from 'components/table';
 import { InfoIcon } from './icons';
 import {

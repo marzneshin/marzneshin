@@ -6,8 +6,8 @@ import {
 import { useDashboard } from 'stores';
 import { FC, ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Language } from '../Language';
-import { ThemeToggle } from '../theme-toggler';
+import { Language } from 'components/language';
+import { ThemeToggle } from 'components/theme-toggler';
 
 type HeaderProps = {
   actions?: ReactNode;
