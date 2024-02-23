@@ -1,5 +1,5 @@
 import { FormControl, FormLabel } from '@chakra-ui/react';
-import { Input } from 'components/Input';
+import { Input } from 'components/input';
 import { TFunction } from 'i18next';
 import { Controller } from 'react-hook-form';
 

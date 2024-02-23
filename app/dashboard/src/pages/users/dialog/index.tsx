@@ -32,11 +32,14 @@ import {
   UserCreate,
   Service
 } from 'types';
-import { UsageFilter, createUsageConfig } from 'components/UsageFilter';
-import { AddIcon, EditIcon } from 'components/dialog/Icons';
-import { DialogModalHeader } from 'components/dialog/ModalHeader';
-import { DialogModalFooter } from 'components/dialog/ModalFooter';
-import { DeleteIcon } from 'components/dialog/Icons';
+import { UsageFilter, createUsageConfig } from 'components/usage-filter';
+import {
+  AddIcon,
+  EditIcon,
+  DialogModalHeader,
+  DialogModalFooter,
+  DeleteIcon
+} from 'components/dialog';
 import { UserUsageIcon } from './icons';
 import { getDefaultValues } from './default-values';
 import { schema, FormType } from './form-schema';

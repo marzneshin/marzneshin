@@ -1,6 +1,6 @@
 import { Box } from '@chakra-ui/react';
 import { PanelGroup, Panel, PanelResizeHandle, ImperativePanelHandle } from 'react-resizable-panels';
-import { Footer } from 'components/Footer';
+import { Footer } from 'components/footer';
 import { Header } from 'components/header';
 import { Sidebar } from 'components/sidebar';
 import { Suspense, useRef } from 'react';
@@ -18,9 +18,9 @@ export const ConsoleLayout = () => {
       </Panel>
       <PanelResizeHandle />
       <Panel minSize={30} >
-        <Box overflowY="auto" p="6" >
+        <Box overflowY="auto" h="100vh" >
           <Header />
-          <Box >
+          <Box p="6">
             <Suspense>
               <Outlet />
             </Suspense>

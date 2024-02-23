@@ -8,19 +8,16 @@ import { FC, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PageType } from 'types';
 
-export type SideBarItemProps = Pick<
-  PageType,
-  | 'name'
-  | 'path'
-  | 'itemIcon'
->
+export type SideBarItemProps = {
+  page: PageType,
+}
 
-export const SidebarItem: FC<SideBarItemProps & { index: number }> = ({ itemIcon: ItemIcon, name, path, index }) => {
+export const SidebarItem: FC<SideBarItemProps> = ({ page }) => {
   const { t } = useTranslation();
   const { activePage, activatePage, isCollapsed } = useDashboard();
-  const [active, activate] = useState(index === activePage);
+  const [active, activate] = useState(page === activePage);
 
-  useEffect(() => { activate(index === activePage) }, [active, activePage]);
+  useEffect(() => { activate(page === activePage) }, [active, activePage]);
 
   const darkStyle = { bg: active ? 'primary.900' : 'transparent' };
   const hoverStyle = {
@@ -31,21 +28,20 @@ export const SidebarItem: FC<SideBarItemProps & { index: number }> = ({ itemIcon
     },
     transition: 'background-color 0.9s',
   };
-
+  const ItemIcon = page.itemIcon;
   return (
     <ChakraLink
       as={ReactRouterLink}
       borderRadius={10}
       bg={active ? 'primary.500' : 'transparent'}
       border="4px"
-      // ps="4px"
       borderColor="transparent"
       _dark={darkStyle}
-      to={path}
+      to={page.path}
       w="85%"
       _hover={hoverStyle}
       onClick={() => {
-        activatePage(index);
+        activatePage(page);
       }}
     >
       <Flex flexDir="row" alignItems="center" justifyContent={isCollapsed ? 'center' : undefined} >
@@ -56,7 +52,7 @@ export const SidebarItem: FC<SideBarItemProps & { index: number }> = ({ itemIcon
           color={active ? 'gray.100' : 'gray.700'}
           _dark={{ color: 'gray.100' }} fontSize="xl"
           display={isCollapsed ? 'none' : 'block'}>
-          {t(name)}
+          {t(page.name)}
         </Text>
       </Flex>
     </ChakraLink>

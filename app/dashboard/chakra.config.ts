@@ -6,6 +6,7 @@ export const theme = extendTheme({
   },
   colors: {
     'light-border': '#d2d2d4',
+    'dark-bg': '#1A202C',
     primary: {
       50: '#9cb7f2',
       100: '#88a9ef',

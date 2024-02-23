@@ -13,7 +13,7 @@ import { FC, Suspense, useEffect, useState } from 'react';
 import ReactApexChart from 'react-apexcharts';
 import { useTranslation } from 'react-i18next';
 import { Icon } from 'components/icon';
-import { UsageFilter, createUsageConfig } from 'components/UsageFilter';
+import { UsageFilter, createUsageConfig } from 'components/usage-filter';
 import { StatisticsCardWide } from 'components/statistics-card';
 
 const UsageIcon = chakra(ChartPieIcon, {

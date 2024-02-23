@@ -1,6 +1,7 @@
 import { lazy } from 'react';
 import { createHashRouter } from 'react-router-dom';
 import { fetchAdminLoader } from 'service/http';
+import { pages } from 'stores';
 
 const ConsoleLayout = lazy(() => import('layouts/console-layout'));
 const Home = lazy(() => import('./home'));
@@ -18,23 +19,23 @@ export const router = createHashRouter([
     element: <ConsoleLayout />,
     children: [
       {
-        path: '/',
+        path: pages.home.path,
         element: <Home />,
       },
       {
-        path: '/users',
+        path: pages.users.path,
         element: <Users />,
       },
       {
-        path: '/services',
+        path: pages.services.path,
         element: <Services />,
       },
       {
-        path: '/nodes',
+        path: pages.nodes.path,
         element: <Nodes />,
       },
       {
-        path: '/hosts',
+        path: pages.hosts.path,
         element: <Hosts />,
       },
     ],

@@ -31,6 +31,7 @@ export const ServicesTable: FC<ServicesTableProps> = (props) => {
     onEditingService,
     onCreateService,
     onFilterChange,
+    refetchServices,
   } = useServices();
 
   const { t } = useTranslation();
@@ -62,8 +63,9 @@ export const ServicesTable: FC<ServicesTableProps> = (props) => {
     });
   };
 
+  refetchServices();
   return (
-    <Box id="services-table" overflowX={{ base: 'unset', md: 'unset' }} >
+    <Box id="services-table" h="45vh" overflowX={{ base: 'unset', md: 'unset' }} >
       <Table orientation="vertical" zIndex="docked" {...props}>
         <Thead zIndex="docked" position="relative">
           <Tr>

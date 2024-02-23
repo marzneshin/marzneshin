@@ -1,90 +1,24 @@
 import {
   Box,
-  chakra,
   HStack,
-  IconButton,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
   Text,
-  useColorMode,
 } from '@chakra-ui/react';
-import {
-  ArrowLeftStartOnRectangleIcon,
-  Bars3Icon,
-  Cog6ToothIcon,
-  CurrencyDollarIcon,
-} from '@heroicons/react/24/outline';
-import { pages } from 'constants/Pages';
-import { DONATION_URL, REPO_URL } from 'constants/Project';
-import { useNodes, useDashboard } from 'stores';
-import differenceInDays from 'date-fns/differenceInDays';
-import isValid from 'date-fns/isValid';
-import { FC, ReactNode, useState } from 'react';
-import GitHubButton from 'react-github-btn';
+import { useDashboard } from 'stores';
+import { FC, ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
-import { Language } from '../Language';
-import { ThemeToggle } from '../theme-toggler';
+import { Language } from 'components/language';
+import { ThemeToggle } from 'components/theme-toggler';
 
 type HeaderProps = {
   actions?: ReactNode;
 };
-const iconProps = {
-  baseStyle: {
-    w: 4,
-    h: 4,
-  },
-};
 
-const CoreSettingsIcon = chakra(Cog6ToothIcon, iconProps);
-const SettingsIcon = chakra(Bars3Icon, iconProps);
-const LogoutIcon = chakra(ArrowLeftStartOnRectangleIcon, iconProps);
-const DonationIcon = chakra(CurrencyDollarIcon, iconProps);
-const NotificationCircle = chakra(Box, {
-  baseStyle: {
-    bg: 'yellow.500',
-    w: '2',
-    h: '2',
-    rounded: 'full',
-    position: 'absolute',
-  },
-});
-
-const NOTIFICATION_KEY = 'marzban-menu-notification';
-
-export const shouldShowDonation = (): boolean => {
-  const date = localStorage.getItem(NOTIFICATION_KEY);
-  if (!date) return true;
-  try {
-    if (date && isValid(parseInt(date))) {
-      if (differenceInDays(new Date(), new Date(parseInt(date))) >= 7)
-        return true;
-      return false;
-    }
-    return true;
-  } catch (err) {
-    return true;
-  }
-};
+import { GithubMenuButton } from './github-button';
+import { HeaderMenu } from './menu';
 
 export const Header: FC<HeaderProps> = () => {
-  const {
-    activePage,
-  } = useDashboard();
+  const { activePage, } = useDashboard();
   const { t } = useTranslation();
-  const { colorMode } = useColorMode();
-  const [showDonationNotif, setShowDonationNotif] = useState(
-    shouldShowDonation()
-  );
-  const gBtnColor = colorMode === 'dark' ? 'dark_dimmed' : colorMode;
-
-  const handleOnClose = () => {
-    localStorage.setItem(NOTIFICATION_KEY, new Date().getTime().toString());
-    setShowDonationNotif(false);
-  };
-
   return (
     <HStack
       gap={2}
@@ -94,93 +28,23 @@ export const Header: FC<HeaderProps> = () => {
           direction: 'ltr',
         },
       }}
-      position="relative"
+      bg='white'
+      _dark={{ bg: 'dark-bg' }}
+      p="6"
+      borderBottom={'1px solid gray.600'}
+      position="sticky"
+      zIndex={999}
+      top={0}
     >
       <Text as="h1" fontWeight="bold" fontSize="2xl" m="0">
-        {t(pages[activePage]?.name)}
+        {t(activePage.name)}
       </Text>
-      {showDonationNotif && (
-        <NotificationCircle top="0" right="0" zIndex={9999} />
-      )}
-      <Box overflow="auto" css={{ direction: 'rtl' }}>
+      <Box css={{ direction: 'rtl' }}>
         <HStack alignItems="center">
-          <Menu>
-            <MenuButton
-              as={IconButton}
-              size="sm"
-              variant="outline"
-              icon={
-                <>
-                  <SettingsIcon />
-                </>
-              }
-              position="relative"
-            ></MenuButton>
-            <MenuList minW="170px" zIndex={99999} className="menuList">
-              {/* NOTE: Host settings trigger */}
-              {/* <MenuItem */}
-              {/*   maxW="170px" */}
-              {/*   fontSize="sm" */}
-              {/*   icon={<HostsIcon />} */}
-              {/*   onClick={onEditingHosts.bind(null, true)} */}
-              {/* > */}
-              {/*   {t('header.hostSettings')} */}
-              {/* </MenuItem> */}
-              <Link to={DONATION_URL} target="_blank">
-                <MenuItem
-                  maxW="170px"
-                  fontSize="sm"
-                  icon={<DonationIcon />}
-                  position="relative"
-                  onClick={handleOnClose}
-                >
-                  {t('header.donation')}{' '}
-                  {showDonationNotif && (
-                    <NotificationCircle top="3" right="2" />
-                  )}
-                </MenuItem>
-              </Link>
-              <Link to="/login">
-                <MenuItem maxW="170px" fontSize="sm" icon={<LogoutIcon />}>
-                  {t('header.logout')}
-                </MenuItem>
-              </Link>
-            </MenuList>
-          </Menu>
-
-          <IconButton
-            size="sm"
-            variant="outline"
-            aria-label="core settings"
-            onClick={() => {
-              useNodes.setState({ isEditingCore: true });
-            }}
-          >
-            <CoreSettingsIcon />
-          </IconButton>
+          <HeaderMenu />
           <Language />
           <ThemeToggle />
-          <Box
-            css={{ direction: 'ltr' }}
-            display="flex"
-            alignItems="center"
-            pr="2"
-            __css={{
-              '&  span': {
-                display: 'inline-flex',
-              },
-            }}
-          >
-            <GitHubButton
-              href={REPO_URL}
-              data-color-scheme={`no-preference: ${gBtnColor}; light: ${gBtnColor}; dark: ${gBtnColor};`}
-              data-size="large"
-              data-show-count="true"
-              aria-label="Star Marzneshin on GitHub"
-            >
-              Star
-            </GitHubButton>
-          </Box>
+          <GithubMenuButton />
         </HStack>
       </Box>
     </HStack>
