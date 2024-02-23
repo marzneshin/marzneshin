@@ -16,7 +16,7 @@ import { FC, useEffect, useState } from 'react';
 import { FieldValues, useForm } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { z } from 'zod';
-import { Footer } from 'components/Footer';
+import { Footer } from 'components/footer';
 import { Input } from 'components/Input';
 import { fetch } from 'service/http';
 import { ReactComponent as Logo } from 'assets/logo.svg';

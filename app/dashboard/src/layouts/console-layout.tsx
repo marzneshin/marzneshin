@@ -1,6 +1,6 @@
 import { Box } from '@chakra-ui/react';
 import { PanelGroup, Panel, PanelResizeHandle, ImperativePanelHandle } from 'react-resizable-panels';
-import { Footer } from 'components/Footer';
+import { Footer } from 'components/footer';
 import { Header } from 'components/header';
 import { Sidebar } from 'components/sidebar';
 import { Suspense, useRef } from 'react';
