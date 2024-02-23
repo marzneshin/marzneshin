@@ -14,7 +14,7 @@ import {
 } from '@chakra-ui/react';
 import { FC } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { DeleteIcon } from 'components/dialog/Icons';
+import { DeleteIcon } from 'components/dialog';
 import { Icon } from 'components/icon';
 
 type DeleteModalProps = {

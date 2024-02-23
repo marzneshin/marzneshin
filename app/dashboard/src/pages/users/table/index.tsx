@@ -27,9 +27,9 @@ import { FC, Fragment, useEffect, useState } from 'react';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { useTranslation } from 'react-i18next';
 import { User } from 'types';
-import { OnlineBadge } from 'components/OnlineBadge';
-import { OnlineStatus } from 'components/OnlineStatus';
-import { StatusBadge } from 'components/StatusBadge';
+import { OnlineBadge } from 'components/online-badge';
+import { OnlineStatus } from 'components/online-status';
+import { StatusBadge } from 'components/status-badge';
 import {
   Pagination,
   EmptySection,
