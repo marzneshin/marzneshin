@@ -14,7 +14,7 @@ export const GithubMenuButton = () => {
       data-show-count="true"
       aria-label="Star Marzneshin on GitHub"
     >
-            Star
+      Star
     </GitHubButton>
   )
 }

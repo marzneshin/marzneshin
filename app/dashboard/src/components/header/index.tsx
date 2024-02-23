@@ -33,18 +33,19 @@ export const Header: FC<HeaderProps> = () => {
       p="6"
       borderBottom={'1px solid gray.600'}
       position="sticky"
+      alignItems="center"
       zIndex={999}
       top={0}
     >
       <Text as="h1" fontWeight="bold" fontSize="2xl" m="0">
         {t(activePage.name)}
       </Text>
-      <Box css={{ direction: 'rtl' }}>
+      <Box css={{ direction: 'ltr' }}>
         <HStack alignItems="center">
-          <HeaderMenu />
+          <GithubMenuButton />
           <Language />
           <ThemeToggle />
-          <GithubMenuButton />
+          <HeaderMenu />
         </HStack>
       </Box>
     </HStack>

@@ -5,7 +5,6 @@ import {
   AccordionItem,
   AccordionPanel,
   Box,
-  chakra,
   HStack,
   IconButton,
   Table,
@@ -21,8 +20,8 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import classNames from 'classnames';
+import { ActionButtons } from './action-buttons';
 
-import { t } from 'i18next';
 import { FC, Fragment, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StatusBadge } from 'components/status-badge';
@@ -33,18 +32,9 @@ import {
   EditIcon,
   Sort,
   StatusSortSelect,
+  handleSort,
 } from 'components/table';
 import { useNodes } from 'stores';
-import { Cog6ToothIcon } from '@heroicons/react/24/outline';
-
-const iconProps = {
-  baseStyle: {
-    w: 4,
-    h: 4,
-  },
-};
-
-const CoreSettingsIcon = chakra(Cog6ToothIcon, iconProps);
 
 type ExpandedIndex = number | number[];
 
@@ -57,7 +47,6 @@ export const NodesTable: FC<NodesTableProps> = (props) => {
     onEditingNode,
     onAddingNode,
     onFilterChange,
-    refetchNodes,
   } = useNodes();
 
   const total = nodes.length;
@@ -71,22 +60,6 @@ export const NodesTable: FC<NodesTableProps> = (props) => {
 
   // TODO: Find a different mechancism to to detect ftiler
   // const isFiltered = users.length !== total;
-
-  const handleSort = (column: string) => {
-    let newSort = filters.sort;
-    if (newSort.includes(column)) {
-      if (newSort.startsWith('-')) {
-        newSort = '-created_at';
-      } else {
-        newSort = '-' + column;
-      }
-    } else {
-      newSort = column;
-    }
-    onFilterChange({
-      sort: newSort,
-    });
-  };
 
   const handleStatusFilter = (e: any) => {
     onFilterChange({
@@ -106,7 +79,6 @@ export const NodesTable: FC<NodesTableProps> = (props) => {
     />
   );
 
-  refetchNodes();
   return (
     <Box id="node-table" overflowX={{ base: 'unset', md: 'unset' }} >
       <Accordion
@@ -123,7 +95,7 @@ export const NodesTable: FC<NodesTableProps> = (props) => {
                 pl={4}
                 pr={4}
                 cursor={'pointer'}
-                onClick={handleSort.bind(null, 'name')}
+                onClick={handleSort.bind(null, filters, 'name', onFilterChange)}
               >
                 <HStack>
                   <span>{t('name')}</span>
@@ -163,7 +135,7 @@ export const NodesTable: FC<NodesTableProps> = (props) => {
                 minW="100px"
                 cursor={'pointer'}
                 pr={0}
-                onClick={handleSort.bind(null, 'xray_version')}
+                onClick={handleSort.bind(null, filters, 'xray_version', onFilterChange)}
               >
                 <HStack>
                   <span>{t('nodesTable.xrayVersion')}</span>
@@ -306,9 +278,9 @@ export const NodesTable: FC<NodesTableProps> = (props) => {
         <Thead zIndex="docked" position="relative">
           <Tr>
             <Th
-              minW="140px"
+              minW="200px"
               cursor={'pointer'}
-              onClick={handleSort.bind(null, 'name')}
+              onClick={handleSort.bind(null, filters, 'name', onFilterChange)}
             >
               <HStack>
                 <span>{t('name')}</span>
@@ -316,8 +288,8 @@ export const NodesTable: FC<NodesTableProps> = (props) => {
               </HStack>
             </Th>
             <Th
-              width="400px"
-              minW="150px"
+              width="100px"
+              minW="70px"
               cursor={'pointer'}
             >
               <HStack spacing={0} position="relative">
@@ -341,10 +313,10 @@ export const NodesTable: FC<NodesTableProps> = (props) => {
               </HStack>
             </Th>
             <Th
-              width="350px"
-              minW="230px"
+              width="100px"
+              minW="70px"
               cursor={'pointer'}
-              onClick={handleSort.bind(null, 'xray_version')}
+              onClick={handleSort.bind(null, filters, 'xray_version', onFilterChange)}
             >
               <HStack>
                 <span>{t('nodesTable.xrayVersion')}</span>
@@ -352,10 +324,10 @@ export const NodesTable: FC<NodesTableProps> = (props) => {
               </HStack>
             </Th>
             <Th
-              width="350px"
-              minW="230px"
+              width="100px"
+              minW="70px"
               cursor={'pointer'}
-              onClick={handleSort.bind(null, 'xray_version')}
+              onClick={handleSort.bind(null, filters, 'address', onFilterChange)}
             >
               <HStack>
                 <span>{t('nodesTable.ipPort')}</span>
@@ -363,8 +335,8 @@ export const NodesTable: FC<NodesTableProps> = (props) => {
               </HStack>
             </Th>
             <Th
-              width="200px"
-              minW="180px"
+              width="60px"
+              minW="50px"
             />
           </Tr>
         </Thead>
@@ -418,43 +390,5 @@ export const NodesTable: FC<NodesTableProps> = (props) => {
       </Table>
       <Pagination filters={filters} total={total} onFilterChange={onFilterChange} />
     </Box>
-  );
-};
-
-type ActionButtonsProps = {};
-
-const ActionButtons: FC<ActionButtonsProps> = () => {
-  return (
-    <HStack
-      justifyContent="flex-end"
-      onClick={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
-      }}
-    >
-      <Tooltip
-        label={
-          t('nodesTable.coreSettings')
-        }
-        placement="top"
-      >
-        <IconButton
-          p="0 !important"
-          aria-label="core settings"
-          bg="transparent"
-          _dark={{
-            _hover: {
-              bg: 'gray.700',
-            },
-          }}
-          size={{
-            base: 'sm',
-            md: 'md',
-          }}
-        >
-          <CoreSettingsIcon />
-        </IconButton>
-      </Tooltip>
-    </HStack >
   );
 };

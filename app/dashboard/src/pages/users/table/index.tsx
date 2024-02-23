@@ -20,13 +20,9 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import classNames from 'classnames';
-
 import { statusColors } from 'constants/Settings';
-import { t } from 'i18next';
-import { FC, Fragment, useEffect, useState } from 'react';
-import CopyToClipboard from 'react-copy-to-clipboard';
+import { FC, Fragment, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { User } from 'types';
 import { OnlineBadge } from 'components/online-badge';
 import { OnlineStatus } from 'components/online-status';
 import { StatusBadge } from 'components/status-badge';
@@ -34,16 +30,14 @@ import {
   Pagination,
   EmptySection,
   AccordionArrowIcon,
+  handleSort,
   EditIcon,
-  CopiedIcon,
-  CopyIcon,
   StatusSortSelect,
   Sort,
-  QRIcon,
-  SubscriptionLinkIcon
 } from 'components/table';
 import { UsageSlider, UsageSliderCompact } from './usage-slider';
 import { useUsers } from 'stores';
+import { ActionButtons } from './action-buttons';
 
 type ExpandedIndex = number | number[];
 
@@ -54,7 +48,6 @@ export const UsersTable: FC<UsersTableProps> = (props) => {
     usersFilters: filters,
     users: { users },
     users: { total },
-    refetchUsers,
     onEditingUser,
     onCreateUser,
     onFilterChange,
@@ -64,36 +57,9 @@ export const UsersTable: FC<UsersTableProps> = (props) => {
   const [selectedRow, setSelectedRow] = useState<ExpandedIndex | undefined>(
     undefined
   );
-  const marginTop = useBreakpointValue({ base: 120, lg: 72 }) || 72;
-  const [top, setTop] = useState(`${marginTop}px`);
   const useTable = useBreakpointValue({ base: false, md: true });
 
-  useEffect(() => {
-    const calcTop = () => {
-      const el = document.querySelectorAll('#filters')[0] as HTMLElement;
-      setTop(`${el.offsetHeight}px`);
-    };
-    window.addEventListener('scroll', calcTop);
-    () => window.removeEventListener('scroll', calcTop);
-  }, []);
-
   const isFiltered = users.length !== total;
-
-  const handleSort = (column: string) => {
-    let newSort = filters.sort;
-    if (newSort.includes(column)) {
-      if (newSort.startsWith('-')) {
-        newSort = '-created_at';
-      } else {
-        newSort = '-' + column;
-      }
-    } else {
-      newSort = column;
-    }
-    onFilterChange({
-      sort: newSort,
-    });
-  };
 
   const handleStatusFilter = (e: any) => {
     onFilterChange({
@@ -104,7 +70,6 @@ export const UsersTable: FC<UsersTableProps> = (props) => {
   const toggleAccordion = (index: number) => {
     setSelectedRow(index === selectedRow ? undefined : index);
   };
-  refetchUsers();
   return (
     <Box id="users-table" overflowX={{ base: 'unset', md: 'unset' }}>
       <Accordion
@@ -117,12 +82,11 @@ export const UsersTable: FC<UsersTableProps> = (props) => {
             <Tr>
               <Th
                 position="sticky"
-                top={top}
                 minW="120px"
                 pl={4}
                 pr={4}
                 cursor={'pointer'}
-                onClick={handleSort.bind(null, 'username')}
+                onClick={handleSort.bind(null, filters, 'username', onFilterChange)}
               >
                 <HStack>
                   <span>{t('users')}</span>
@@ -131,7 +95,6 @@ export const UsersTable: FC<UsersTableProps> = (props) => {
               </Th>
               <Th
                 position="sticky"
-                top={top}
                 minW="50px"
                 pl={0}
                 pr={0}
@@ -160,11 +123,10 @@ export const UsersTable: FC<UsersTableProps> = (props) => {
               </Th>
               <Th
                 position="sticky"
-                top={top}
                 minW="100px"
                 cursor={'pointer'}
                 pr={0}
-                onClick={handleSort.bind(null, 'used_traffic')}
+                onClick={handleSort.bind(null, filters, 'used_traffic', onFilterChange)}
               >
                 <HStack>
                   <span>{t('usersTable.dataUsage')}</span>
@@ -173,7 +135,6 @@ export const UsersTable: FC<UsersTableProps> = (props) => {
               </Th>
               <Th
                 position="sticky"
-                top={top}
                 minW="32px"
                 w="32px"
                 p={0}
@@ -332,10 +293,9 @@ export const UsersTable: FC<UsersTableProps> = (props) => {
           <Tr>
             <Th
               position="sticky"
-              top={{ base: 'unset', md: top }}
               minW="140px"
               cursor={'pointer'}
-              onClick={handleSort.bind(null, 'username')}
+              onClick={handleSort.bind(null, filters, 'username', onFilterChange)}
             >
               <HStack>
                 <span>{t('username')}</span>
@@ -344,7 +304,6 @@ export const UsersTable: FC<UsersTableProps> = (props) => {
             </Th>
             <Th
               position="sticky"
-              top={{ base: 'unset', md: top }}
               width="400px"
               minW="150px"
               cursor={'pointer'}
@@ -371,11 +330,10 @@ export const UsersTable: FC<UsersTableProps> = (props) => {
             </Th>
             <Th
               position="sticky"
-              top={{ base: 'unset', md: top }}
               width="350px"
               minW="230px"
               cursor={'pointer'}
-              onClick={handleSort.bind(null, 'used_traffic')}
+              onClick={handleSort.bind(null, filters, 'used_traffic', onFilterChange)}
             >
               <HStack>
                 <span>{t('usersTable.dataUsage')}</span>
@@ -384,7 +342,6 @@ export const UsersTable: FC<UsersTableProps> = (props) => {
             </Th>
             <Th
               position="sticky"
-              top={{ base: 'unset', md: top }}
               width="200px"
               minW="180px"
             />
@@ -446,132 +403,5 @@ export const UsersTable: FC<UsersTableProps> = (props) => {
       </Table>
       <Pagination filters={filters} total={total} onFilterChange={onFilterChange} />
     </Box>
-  );
-};
-
-type ActionButtonsProps = {
-  user: User;
-};
-
-const ActionButtons: FC<ActionButtonsProps> = ({ user }) => {
-  const { setQRCode, setSubLink } = useUsers();
-
-  const proxyLinks = user.links.join('\r\n');
-
-  const [copied, setCopied] = useState([-1, false]);
-  useEffect(() => {
-    if (copied[1]) {
-      setTimeout(() => {
-        setCopied([-1, false]);
-      }, 1000);
-    }
-  }, [copied]);
-  return (
-    <HStack
-      justifyContent="flex-end"
-      onClick={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
-      }}
-    >
-      <CopyToClipboard
-        text={
-          user.subscription_url.startsWith('/')
-            ? window.location.origin + user.subscription_url
-            : user.subscription_url
-        }
-        onCopy={() => {
-          setCopied([0, true]);
-        }}
-      >
-        <div>
-          <Tooltip
-            label={
-              copied[0] == 0 && copied[1]
-                ? t('usersTable.copied')
-                : t('usersTable.copyLink')
-            }
-            placement="top"
-          >
-            <IconButton
-              p="0 !important"
-              aria-label="copy subscription link"
-              bg="transparent"
-              _dark={{
-                _hover: {
-                  bg: 'gray.700',
-                },
-              }}
-              size={{
-                base: 'sm',
-                md: 'md',
-              }}
-            >
-              {copied[0] == 0 && copied[1] ? (
-                <CopiedIcon />
-              ) : (
-                <SubscriptionLinkIcon />
-              )}
-            </IconButton>
-          </Tooltip>
-        </div>
-      </CopyToClipboard>
-      <CopyToClipboard
-        text={proxyLinks}
-        onCopy={() => {
-          setCopied([1, true]);
-        }}
-      >
-        <div>
-          <Tooltip
-            label={
-              copied[0] == 1 && copied[1]
-                ? t('usersTable.copied')
-                : t('usersTable.copyConfigs')
-            }
-            placement="top"
-          >
-            <IconButton
-              p="0 !important"
-              aria-label="copy configs"
-              bg="transparent"
-              _dark={{
-                _hover: {
-                  bg: 'gray.700',
-                },
-              }}
-              size={{
-                base: 'sm',
-                md: 'md',
-              }}
-            >
-              {copied[0] == 1 && copied[1] ? <CopiedIcon /> : <CopyIcon />}
-            </IconButton>
-          </Tooltip>
-        </div>
-      </CopyToClipboard>
-      <Tooltip label="QR Code" placement="top">
-        <IconButton
-          p="0 !important"
-          aria-label="qr code"
-          bg="transparent"
-          _dark={{
-            _hover: {
-              bg: 'gray.700',
-            },
-          }}
-          size={{
-            base: 'sm',
-            md: 'md',
-          }}
-          onClick={() => {
-            setQRCode(user.links);
-            setSubLink(user.subscription_url);
-          }}
-        >
-          <QRIcon />
-        </IconButton>
-      </Tooltip>
-    </HStack >
   );
 };
