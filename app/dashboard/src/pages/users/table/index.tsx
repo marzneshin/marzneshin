@@ -22,7 +22,7 @@ import {
 import classNames from 'classnames';
 
 import { statusColors } from 'constants/Settings';
-import { FC, Fragment, useEffect, useState } from 'react';
+import { FC, Fragment, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { OnlineBadge } from 'components/online-badge';
 import { OnlineStatus } from 'components/online-status';
@@ -31,6 +31,7 @@ import {
   Pagination,
   EmptySection,
   AccordionArrowIcon,
+  handleSort,
   EditIcon,
   StatusSortSelect,
   Sort,
@@ -58,36 +59,9 @@ export const UsersTable: FC<UsersTableProps> = (props) => {
   const [selectedRow, setSelectedRow] = useState<ExpandedIndex | undefined>(
     undefined
   );
-  const marginTop = useBreakpointValue({ base: 120, lg: 72 }) || 72;
-  const [top, setTop] = useState(`${marginTop}px`);
   const useTable = useBreakpointValue({ base: false, md: true });
 
-  useEffect(() => {
-    const calcTop = () => {
-      const el = document.querySelectorAll('#filters')[0] as HTMLElement;
-      setTop(`${el.offsetHeight}px`);
-    };
-    window.addEventListener('scroll', calcTop);
-    () => window.removeEventListener('scroll', calcTop);
-  }, []);
-
   const isFiltered = users.length !== total;
-
-  const handleSort = (column: string) => {
-    let newSort = filters.sort;
-    if (newSort.includes(column)) {
-      if (newSort.startsWith('-')) {
-        newSort = '-created_at';
-      } else {
-        newSort = '-' + column;
-      }
-    } else {
-      newSort = column;
-    }
-    onFilterChange({
-      sort: newSort,
-    });
-  };
 
   const handleStatusFilter = (e: any) => {
     onFilterChange({
@@ -111,12 +85,11 @@ export const UsersTable: FC<UsersTableProps> = (props) => {
             <Tr>
               <Th
                 position="sticky"
-                top={top}
                 minW="120px"
                 pl={4}
                 pr={4}
                 cursor={'pointer'}
-                onClick={handleSort.bind(null, 'username')}
+                onClick={handleSort.bind(null, filters, 'username', onFilterChange)}
               >
                 <HStack>
                   <span>{t('users')}</span>
@@ -125,7 +98,6 @@ export const UsersTable: FC<UsersTableProps> = (props) => {
               </Th>
               <Th
                 position="sticky"
-                top={top}
                 minW="50px"
                 pl={0}
                 pr={0}
@@ -154,11 +126,10 @@ export const UsersTable: FC<UsersTableProps> = (props) => {
               </Th>
               <Th
                 position="sticky"
-                top={top}
                 minW="100px"
                 cursor={'pointer'}
                 pr={0}
-                onClick={handleSort.bind(null, 'used_traffic')}
+                onClick={handleSort.bind(null, filters, 'used_traffic', onFilterChange)}
               >
                 <HStack>
                   <span>{t('usersTable.dataUsage')}</span>
@@ -167,7 +138,6 @@ export const UsersTable: FC<UsersTableProps> = (props) => {
               </Th>
               <Th
                 position="sticky"
-                top={top}
                 minW="32px"
                 w="32px"
                 p={0}
@@ -326,7 +296,6 @@ export const UsersTable: FC<UsersTableProps> = (props) => {
           <Tr>
             <Th
               position="sticky"
-              top={{ base: 'unset', md: top }}
               minW="140px"
               cursor={'pointer'}
               onClick={handleSort.bind(null, 'username')}
@@ -338,7 +307,6 @@ export const UsersTable: FC<UsersTableProps> = (props) => {
             </Th>
             <Th
               position="sticky"
-              top={{ base: 'unset', md: top }}
               width="400px"
               minW="150px"
               cursor={'pointer'}
@@ -365,7 +333,6 @@ export const UsersTable: FC<UsersTableProps> = (props) => {
             </Th>
             <Th
               position="sticky"
-              top={{ base: 'unset', md: top }}
               width="350px"
               minW="230px"
               cursor={'pointer'}
@@ -378,7 +345,6 @@ export const UsersTable: FC<UsersTableProps> = (props) => {
             </Th>
             <Th
               position="sticky"
-              top={{ base: 'unset', md: top }}
               width="200px"
               minW="180px"
             />

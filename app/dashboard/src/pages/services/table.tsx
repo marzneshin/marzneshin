@@ -9,14 +9,14 @@ import {
   Th,
   Thead,
   Tr,
-  useBreakpointValue,
 } from '@chakra-ui/react';
 
 import classNames from 'classnames';
-import { FC, Fragment, useEffect, useState } from 'react';
+import { FC, Fragment, } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   EmptySection,
+  handleSort,
   Pagination,
   Sort
 } from 'components/table';
@@ -35,33 +35,6 @@ export const ServicesTable: FC<ServicesTableProps> = (props) => {
   } = useServices();
 
   const { t } = useTranslation();
-  const marginTop = useBreakpointValue({ base: 120, lg: 72 }) || 72;
-  const [top, setTop] = useState(`${marginTop}px`);
-
-  useEffect(() => {
-    const calcTop = () => {
-      const el = document.querySelectorAll('#filters')[0] as HTMLElement;
-      setTop(`${el.offsetHeight}px`);
-    };
-    window.addEventListener('scroll', calcTop);
-    () => window.removeEventListener('scroll', calcTop);
-  }, []);
-
-  const handleSort = (column: string) => {
-    let newSort = filters.sort;
-    if (newSort.includes(column)) {
-      if (newSort.startsWith('-')) {
-        newSort = '-created_at';
-      } else {
-        newSort = '-' + column;
-      }
-    } else {
-      newSort = column;
-    }
-    onFilterChange({
-      sort: newSort,
-    });
-  };
 
   refetchServices();
   return (
@@ -71,12 +44,11 @@ export const ServicesTable: FC<ServicesTableProps> = (props) => {
           <Tr>
             <Th
               position="sticky"
-              top={top}
               minW="100px"
               pl={4}
               pr={4}
               cursor={'pointer'}
-              onClick={handleSort.bind(null, 'name')}
+              onClick={handleSort.bind(null, filters, 'name', onFilterChange)}
             >
               <HStack>
                 <span>{t('services')}</span>
@@ -85,11 +57,10 @@ export const ServicesTable: FC<ServicesTableProps> = (props) => {
             </Th>
             <Th
               position="sticky"
-              top={top}
               minW="50px"
               cursor={'pointer'}
               pr={0}
-              onClick={handleSort.bind(null, 'users_number')}
+              onClick={handleSort.bind(null, filters, 'users_number', onFilterChange)}
             >
               <HStack>
                 <span>{t('servicesTable.usersNumber')}</span>
@@ -98,11 +69,10 @@ export const ServicesTable: FC<ServicesTableProps> = (props) => {
             </Th>
             <Th
               position="sticky"
-              top={top}
               minW="50px"
               cursor={'pointer'}
               pr={0}
-              onClick={handleSort.bind(null, 'inbounds_number')}
+              onClick={handleSort.bind(null, filters, 'inbounds_number', onFilterChange)}
             >
               <HStack>
                 <span>{t('servicesTable.inboundsNumber')}</span>

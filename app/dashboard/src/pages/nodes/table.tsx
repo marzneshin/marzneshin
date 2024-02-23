@@ -33,6 +33,7 @@ import {
   EditIcon,
   Sort,
   StatusSortSelect,
+  handleSort,
 } from 'components/table';
 import { useNodes } from 'stores';
 import { Cog6ToothIcon } from '@heroicons/react/24/outline';
@@ -72,22 +73,6 @@ export const NodesTable: FC<NodesTableProps> = (props) => {
   // TODO: Find a different mechancism to to detect ftiler
   // const isFiltered = users.length !== total;
 
-  const handleSort = (column: string) => {
-    let newSort = filters.sort;
-    if (newSort.includes(column)) {
-      if (newSort.startsWith('-')) {
-        newSort = '-created_at';
-      } else {
-        newSort = '-' + column;
-      }
-    } else {
-      newSort = column;
-    }
-    onFilterChange({
-      sort: newSort,
-    });
-  };
-
   const handleStatusFilter = (e: any) => {
     onFilterChange({
       status: e.target.value.length > 0 ? e.target.value : undefined,
@@ -123,7 +108,7 @@ export const NodesTable: FC<NodesTableProps> = (props) => {
                 pl={4}
                 pr={4}
                 cursor={'pointer'}
-                onClick={handleSort.bind(null, 'name')}
+                onClick={handleSort.bind(null, filters, 'name', onFilterChange)}
               >
                 <HStack>
                   <span>{t('name')}</span>
@@ -163,7 +148,7 @@ export const NodesTable: FC<NodesTableProps> = (props) => {
                 minW="100px"
                 cursor={'pointer'}
                 pr={0}
-                onClick={handleSort.bind(null, 'xray_version')}
+                onClick={handleSort.bind(null, filters, 'xray_version', onFilterChange)}
               >
                 <HStack>
                   <span>{t('nodesTable.xrayVersion')}</span>
@@ -308,7 +293,7 @@ export const NodesTable: FC<NodesTableProps> = (props) => {
             <Th
               minW="140px"
               cursor={'pointer'}
-              onClick={handleSort.bind(null, 'name')}
+              onClick={handleSort.bind(null, filters, 'name', onFilterChange)}
             >
               <HStack>
                 <span>{t('name')}</span>
@@ -344,7 +329,7 @@ export const NodesTable: FC<NodesTableProps> = (props) => {
               width="350px"
               minW="230px"
               cursor={'pointer'}
-              onClick={handleSort.bind(null, 'xray_version')}
+              onClick={handleSort.bind(null, filters, 'xray_version', onFilterChange)}
             >
               <HStack>
                 <span>{t('nodesTable.xrayVersion')}</span>
@@ -355,7 +340,7 @@ export const NodesTable: FC<NodesTableProps> = (props) => {
               width="350px"
               minW="230px"
               cursor={'pointer'}
-              onClick={handleSort.bind(null, 'xray_version')}
+              onClick={handleSort.bind(null, filters, 'address', onFilterChange)}
             >
               <HStack>
                 <span>{t('nodesTable.ipPort')}</span>
