@@ -23,7 +23,7 @@ import {
 import classNames from 'classnames';
 
 import { t } from 'i18next';
-import { FC, Fragment, useEffect, useState } from 'react';
+import { FC, Fragment, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StatusBadge } from 'components/StatusBadge';
 import {
@@ -43,6 +43,7 @@ const iconProps = {
     h: 4,
   },
 };
+
 const CoreSettingsIcon = chakra(Cog6ToothIcon, iconProps);
 
 type ExpandedIndex = number | number[];
@@ -53,9 +54,10 @@ export const NodesTable: FC<NodesTableProps> = (props) => {
   const {
     nodesFilters: filters,
     nodes,
-    onEditingNode: onEditingNodes,
-    onAddingNode: onCreateNodes,
+    onEditingNode,
+    onAddingNode,
     onFilterChange,
+    refetchNodes,
   } = useNodes();
 
   const total = nodes.length;
@@ -64,18 +66,19 @@ export const NodesTable: FC<NodesTableProps> = (props) => {
   const [selectedRow, setSelectedRow] = useState<ExpandedIndex | undefined>(
     undefined
   );
-  const marginTop = useBreakpointValue({ base: 120, lg: 72 }) || 72;
-  const [top, setTop] = useState(`${marginTop}px`);
+
+  // const marginTop = useBreakpointValue({ base: 120, lg: 72 }) || 72;
+  // const [top, setTop] = useState(`${marginTop}px`);
   const useTable = useBreakpointValue({ base: false, md: true });
 
-  useEffect(() => {
-    const calcTop = () => {
-      const el = document.querySelectorAll('#filters')[0] as HTMLElement;
-      setTop(`${el.offsetHeight}px`);
-    };
-    window.addEventListener('scroll', calcTop);
-    () => window.removeEventListener('scroll', calcTop);
-  }, []);
+  // useEffect(() => {
+  //   const calcTop = () => {
+  //     const el = document.querySelectorAll('#filters')[0] as HTMLElement;
+  //     setTop(`${el.offsetHeight}px`);
+  //   };
+  //   window.addEventListener('scroll', calcTop);
+  //   () => window.removeEventListener('scroll', calcTop);
+  // }, []);
 
   // TODO: Find a different mechancism to to detect ftiler
   // const isFiltered = users.length !== total;
@@ -106,8 +109,15 @@ export const NodesTable: FC<NodesTableProps> = (props) => {
     setSelectedRow(index === selectedRow ? undefined : index);
   };
 
-  const StatusSortSelectNodes = () => (<StatusSortSelect filters={filters} options={['healthy', 'unhealthy', 'disabled']} handleStatusFilter={handleStatusFilter} />);
+  const StatusSortSelectNodes = () => (
+    <StatusSortSelect
+      filters={filters}
+      options={['healthy', 'unhealthy', 'disabled']}
+      handleStatusFilter={handleStatusFilter}
+    />
+  );
 
+  refetchNodes();
   return (
     <Box id="node-table" overflowX={{ base: 'unset', md: 'unset' }} >
       <Accordion
@@ -119,8 +129,7 @@ export const NodesTable: FC<NodesTableProps> = (props) => {
           <Thead zIndex="docked" position="relative">
             <Tr>
               <Th
-                position="sticky"
-                top={top}
+                position="fixed"
                 minW="120px"
                 pl={4}
                 pr={4}
@@ -133,8 +142,7 @@ export const NodesTable: FC<NodesTableProps> = (props) => {
                 </HStack>
               </Th>
               <Th
-                position="sticky"
-                top={top}
+                position="fixed"
                 minW="50px"
                 pl={0}
                 pr={0}
@@ -162,8 +170,7 @@ export const NodesTable: FC<NodesTableProps> = (props) => {
                 </HStack>
               </Th>
               <Th
-                position="sticky"
-                top={top}
+                position="fixed"
                 minW="100px"
                 cursor={'pointer'}
                 pr={0}
@@ -175,8 +182,7 @@ export const NodesTable: FC<NodesTableProps> = (props) => {
                 </HStack>
               </Th>
               <Th
-                position="sticky"
-                top={top}
+                position="fixed"
                 minW="100px"
                 cursor={'pointer'}
                 pr={0}
@@ -185,8 +191,7 @@ export const NodesTable: FC<NodesTableProps> = (props) => {
               </Th>
               {/* Action buttons (certificate, core settings)*/}
               <Th
-                position="sticky"
-                top={top}
+                position="fixed"
                 minW="32px"
                 w="32px"
                 p={0}
@@ -285,7 +290,7 @@ export const NodesTable: FC<NodesTableProps> = (props) => {
                                       }}
                                       onClick={(e) => {
                                         e.stopPropagation();
-                                        onEditingNodes(node);
+                                        onEditingNode(node);
                                       }}
                                     >
                                       <EditIcon />
@@ -312,8 +317,6 @@ export const NodesTable: FC<NodesTableProps> = (props) => {
         <Thead zIndex="docked" position="relative">
           <Tr>
             <Th
-              position="sticky"
-              top={{ base: 'unset', md: top }}
               minW="140px"
               cursor={'pointer'}
               onClick={handleSort.bind(null, 'name')}
@@ -324,8 +327,6 @@ export const NodesTable: FC<NodesTableProps> = (props) => {
               </HStack>
             </Th>
             <Th
-              position="sticky"
-              top={{ base: 'unset', md: top }}
               width="400px"
               minW="150px"
               cursor={'pointer'}
@@ -351,8 +352,6 @@ export const NodesTable: FC<NodesTableProps> = (props) => {
               </HStack>
             </Th>
             <Th
-              position="sticky"
-              top={{ base: 'unset', md: top }}
               width="350px"
               minW="230px"
               cursor={'pointer'}
@@ -364,8 +363,6 @@ export const NodesTable: FC<NodesTableProps> = (props) => {
               </HStack>
             </Th>
             <Th
-              position="sticky"
-              top={{ base: 'unset', md: top }}
               width="350px"
               minW="230px"
               cursor={'pointer'}
@@ -377,14 +374,12 @@ export const NodesTable: FC<NodesTableProps> = (props) => {
               </HStack>
             </Th>
             <Th
-              position="sticky"
-              top={{ base: 'unset', md: top }}
               width="200px"
               minW="180px"
             />
           </Tr>
         </Thead>
-        <Tbody>
+        <Tbody overflowY="auto">
           {useTable &&
             nodes?.map((node, i) => {
               return (
@@ -393,7 +388,7 @@ export const NodesTable: FC<NodesTableProps> = (props) => {
                   className={classNames('interactive', {
                     'last-row': i === nodes.length - 1,
                   })}
-                  onClick={() => onEditingNodes(node)}
+                  onClick={() => onEditingNode(node)}
                 >
                   <Td minW="140px">
                     <div className="flex-status">
@@ -425,7 +420,7 @@ export const NodesTable: FC<NodesTableProps> = (props) => {
                   noObjectT="nodesTable.noNode"
                   noObjectMatchedT='nodesTable.noNodeMatched'
                   createObjectT="addNode"
-                  onCreateObject={onCreateNodes}
+                  onCreateObject={onAddingNode}
                 />
               </Td>
             </Tr>

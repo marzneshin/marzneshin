@@ -1,10 +1,10 @@
 import { HamburgerIcon } from '@chakra-ui/icons';
 import { chakra, Flex } from '@chakra-ui/react'
-import { pages } from 'constants/Pages';
+import { pages } from 'stores';
 import { FC } from 'react';
 import { Logo } from './logo';
 import { SidebarGroup } from './sidebar-group';
-import { SidebarItem, SideBarItemProps } from './sidebar-item';
+import { SidebarItem } from './sidebar-item';
 
 export const SidebarMenuIcon = chakra(HamburgerIcon, {
   baseStyle: {
@@ -30,8 +30,12 @@ export const Sidebar: FC = () => {
       >
         <Logo />
         <SidebarGroup titleT={'sidebar.groups.management'}>
-          {pages.map((item: SideBarItemProps, index: number) =>
-            <SidebarItem path={item.path} name={item.name} itemIcon={item.itemIcon} index={index} key={index} />)}
+          {Object.entries(pages).map(([pageKey, page]) =>
+            <SidebarItem
+              page={page}
+              key={pageKey}
+            />
+          )}
         </SidebarGroup>
       </Flex>
     </aside>

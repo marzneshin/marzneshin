@@ -18,9 +18,9 @@ export const ConsoleLayout = () => {
       </Panel>
       <PanelResizeHandle />
       <Panel minSize={30} >
-        <Box overflowY="auto" p="6" >
+        <Box overflowY="auto" h="100vh" >
           <Header />
-          <Box >
+          <Box p="6">
             <Suspense>
               <Outlet />
             </Suspense>
