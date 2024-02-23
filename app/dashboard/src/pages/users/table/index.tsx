@@ -20,7 +20,6 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import classNames from 'classnames';
-
 import { statusColors } from 'constants/Settings';
 import { FC, Fragment, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -49,7 +48,6 @@ export const UsersTable: FC<UsersTableProps> = (props) => {
     usersFilters: filters,
     users: { users },
     users: { total },
-    refetchUsers,
     onEditingUser,
     onCreateUser,
     onFilterChange,
@@ -72,7 +70,6 @@ export const UsersTable: FC<UsersTableProps> = (props) => {
   const toggleAccordion = (index: number) => {
     setSelectedRow(index === selectedRow ? undefined : index);
   };
-  refetchUsers();
   return (
     <Box id="users-table" overflowX={{ base: 'unset', md: 'unset' }}>
       <Accordion

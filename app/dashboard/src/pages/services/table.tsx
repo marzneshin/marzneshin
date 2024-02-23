@@ -1,5 +1,6 @@
 
 import {
+  Accordion,
   Box,
   HStack,
   Table,
@@ -9,10 +10,11 @@ import {
   Th,
   Thead,
   Tr,
+  useBreakpointValue,
 } from '@chakra-ui/react';
 
 import classNames from 'classnames';
-import { FC, Fragment, } from 'react';
+import { FC, useState, } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   EmptySection,
@@ -22,6 +24,7 @@ import {
 } from 'components/table';
 import { useServices } from 'stores';
 
+type ExpandedIndex = number | number[];
 type ServicesTableProps = {} & TableProps;
 
 export const ServicesTable: FC<ServicesTableProps> = (props) => {
@@ -31,20 +34,100 @@ export const ServicesTable: FC<ServicesTableProps> = (props) => {
     onEditingService,
     onCreateService,
     onFilterChange,
-    refetchServices,
   } = useServices();
-
+  const useTable = useBreakpointValue({ base: false, md: true });
   const { t } = useTranslation();
+  const [selectedRow,] = useState<ExpandedIndex | undefined>(
+    undefined
+  );
 
-  refetchServices();
   return (
     <Box id="services-table" h="45vh" overflowX={{ base: 'unset', md: 'unset' }} >
+      <Accordion
+        allowMultiple
+        display={{ base: 'block', md: 'none' }}
+        index={selectedRow}
+      >
+        <Table orientation="vertical" zIndex="docked" {...props}>
+          <Thead zIndex="docked" position="relative">
+            <Tr>
+              <Tr>
+                <Th
+                  position="sticky"
+                  minW="200px"
+                  pl={4}
+                  pr={4}
+                  cursor={'pointer'}
+                  onClick={handleSort.bind(null, filters, 'name', onFilterChange)}
+                >
+                  <HStack>
+                    <span>{t('services')}</span>
+                    <Sort sort={filters.sort} column="name" />
+                  </HStack>
+                </Th>
+                <Th
+                  position="sticky"
+                  minW="50px"
+                  cursor={'pointer'}
+                  pr={0}
+                  onClick={handleSort.bind(null, filters, 'users_number', onFilterChange)}
+                >
+                  <HStack>
+                    <span>{t('servicesTable.usersNumber')}</span>
+                    <Sort sort={filters.sort} column="users_number" />
+                  </HStack>
+                </Th>
+                <Th
+                  position="sticky"
+                  minW="50px"
+                  cursor={'pointer'}
+                  pr={0}
+                  onClick={handleSort.bind(null, filters, 'inbounds_number', onFilterChange)}
+                >
+                  <HStack>
+                    <span>{t('servicesTable.inboundsNumber')}</span>
+                    <Sort sort={filters.sort} column="inbounds_number" />
+                  </HStack>
+                </Th>
+              </Tr>
+            </Tr>
+          </Thead>
+          <Tbody>
+            {!useTable &&
+              services?.map((service, i) => {
+                return (
+                  <Tr
+                    cursor="pointer"
+                    key={service.id}
+                    className={classNames('interactive', {
+                      'last-row': i === (services.length - 1),
+                    })}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onEditingService(service);
+                    }}
+                  >
+                    <Td borderBottom={0} minW="100px" pl={4} pr={4}>
+                      {service.name}
+                    </Td>
+                    <Td borderBottom={0} minW="50px" pl={6} pr={6}>
+                      {service.users.length}
+                    </Td>
+                    <Td borderBottom={0} minW="50px" pr={0}>
+                      {service.inbounds.length}
+                    </Td>
+                  </Tr>
+                );
+              })}
+          </Tbody>
+        </Table>
+      </Accordion>
       <Table orientation="vertical" zIndex="docked" {...props}>
         <Thead zIndex="docked" position="relative">
           <Tr>
             <Th
               position="sticky"
-              minW="100px"
+              minW="200px"
               pl={4}
               pr={4}
               cursor={'pointer'}
@@ -82,9 +165,9 @@ export const ServicesTable: FC<ServicesTableProps> = (props) => {
           </Tr>
         </Thead>
         <Tbody>
-          {services.length !== 0 ? services.map((service, i) => {
-            return (
-              <Fragment key={service.name}>
+          {useTable &&
+            services?.map((service, i) => {
+              return (
                 <Tr
                   cursor="pointer"
                   key={service.id}
@@ -106,9 +189,9 @@ export const ServicesTable: FC<ServicesTableProps> = (props) => {
                     {service.inbounds.length}
                   </Td>
                 </Tr>
-              </Fragment>
-            );
-          }) :
+              );
+            })}
+          {services.length == 0 && (
             <Tr>
               <Td colSpan={3}>
                 <EmptySection
@@ -120,7 +203,7 @@ export const ServicesTable: FC<ServicesTableProps> = (props) => {
                 />
               </Td>
             </Tr>
-          }
+          )}
         </Tbody>
       </Table>
       <Pagination total={services.length} onFilterChange={onFilterChange} filters={filters} />

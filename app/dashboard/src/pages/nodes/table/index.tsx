@@ -47,7 +47,6 @@ export const NodesTable: FC<NodesTableProps> = (props) => {
     onEditingNode,
     onAddingNode,
     onFilterChange,
-    refetchNodes,
   } = useNodes();
 
   const total = nodes.length;
@@ -80,7 +79,6 @@ export const NodesTable: FC<NodesTableProps> = (props) => {
     />
   );
 
-  refetchNodes();
   return (
     <Box id="node-table" overflowX={{ base: 'unset', md: 'unset' }} >
       <Accordion
@@ -280,7 +278,7 @@ export const NodesTable: FC<NodesTableProps> = (props) => {
         <Thead zIndex="docked" position="relative">
           <Tr>
             <Th
-              minW="140px"
+              minW="200px"
               cursor={'pointer'}
               onClick={handleSort.bind(null, filters, 'name', onFilterChange)}
             >
@@ -290,8 +288,8 @@ export const NodesTable: FC<NodesTableProps> = (props) => {
               </HStack>
             </Th>
             <Th
-              width="400px"
-              minW="150px"
+              width="100px"
+              minW="70px"
               cursor={'pointer'}
             >
               <HStack spacing={0} position="relative">
@@ -315,8 +313,8 @@ export const NodesTable: FC<NodesTableProps> = (props) => {
               </HStack>
             </Th>
             <Th
-              width="350px"
-              minW="230px"
+              width="100px"
+              minW="70px"
               cursor={'pointer'}
               onClick={handleSort.bind(null, filters, 'xray_version', onFilterChange)}
             >
@@ -326,8 +324,8 @@ export const NodesTable: FC<NodesTableProps> = (props) => {
               </HStack>
             </Th>
             <Th
-              width="350px"
-              minW="230px"
+              width="100px"
+              minW="70px"
               cursor={'pointer'}
               onClick={handleSort.bind(null, filters, 'address', onFilterChange)}
             >
@@ -337,8 +335,8 @@ export const NodesTable: FC<NodesTableProps> = (props) => {
               </HStack>
             </Th>
             <Th
-              width="200px"
-              minW="180px"
+              width="60px"
+              minW="50px"
             />
           </Tr>
         </Thead>
