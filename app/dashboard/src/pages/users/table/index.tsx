@@ -295,7 +295,7 @@ export const UsersTable: FC<UsersTableProps> = (props) => {
               position="sticky"
               minW="140px"
               cursor={'pointer'}
-              onClick={handleSort.bind(null, 'username')}
+              onClick={handleSort.bind(null, filters, 'username', onFilterChange)}
             >
               <HStack>
                 <span>{t('username')}</span>
@@ -333,7 +333,7 @@ export const UsersTable: FC<UsersTableProps> = (props) => {
               width="350px"
               minW="230px"
               cursor={'pointer'}
-              onClick={handleSort.bind(null, 'used_traffic')}
+              onClick={handleSort.bind(null, filters, 'used_traffic', onFilterChange)}
             >
               <HStack>
                 <span>{t('usersTable.dataUsage')}</span>
