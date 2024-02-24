@@ -27,7 +27,12 @@ export type NodesFilterType = FilterType & {
     address?: string;
     port?: number;
     xray_version?: number;
-    message?: string | null;
-    add_as_new_host?: boolean;
     status?: 'healthy' | 'disabled' | 'healthy';
+}
+
+export type HostsFilterType = FilterType & {
+    name?: string;
+    address?: string;
+    port?: number;
+    security?: number;
 }
