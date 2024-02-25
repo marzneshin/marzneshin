@@ -211,7 +211,7 @@ export const ServicesTable: FC<ServicesTableProps> = (props) => {
         total={services.length} 
         onFilterChange={onFilterChange}
         filters={filters}
-      pageSizeManager={pageSizeManagers.services}
+        pageSizeManager={pageSizeManagers.services}
       />
     </Box>
   );
