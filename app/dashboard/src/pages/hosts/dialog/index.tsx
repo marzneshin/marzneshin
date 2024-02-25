@@ -74,7 +74,6 @@ export const HostsDialog: FC = () => {
   } = useInbounds();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>('');
-
   const { t } = useTranslation();
   const toast = useToast();
   const defaultValueHost: HostSchema = (isEditingHost === true && selectedHost !== null) ? selectedHost : getDefaultValues();
@@ -379,58 +378,54 @@ export const HostsDialog: FC = () => {
                   * - Slowly increasing the opacity 
                   * Related issue: #95
                   */}
-              {form.getValues().security === 'tls' && (
-                <>
-                  <FormControl height="66px">
-                    <FormLabel
-                      display="flex"
-                      pb={1}
-                      alignItems="center"
-                      gap={1}
-                      justifyContent="space-between"
-                      m="0"
-                    >
-                      <span>{t('hostsDialog.alpn')}</span>
-                    </FormLabel>
-                    <Select
-                      size="sm"
-                      {...form.register('alpn')}
-                    >
-                      {proxyALPN.map((s) => {
-                        return (
-                          <option key={s.value} value={s.value}>
-                            {s.title}
-                          </option>
-                        );
-                      })}
-                    </Select>
-                  </FormControl>
-                  <FormControl height="66px">
-                    <FormLabel
-                      display="flex"
-                      pb={1}
-                      alignItems="center"
-                      gap={1}
-                      justifyContent="space-between"
-                      m="0"
-                    >
-                      <span>{t('hostsDialog.fingerprint')}</span>
-                    </FormLabel>
-                    <Select
-                      size="sm"
-                      {...form.register('fingerprint')}
-                    >
-                      {proxyFingerprint.map((s) => {
-                        return (
-                          <option key={s.value} value={s.value}>
-                            {s.title}
-                          </option>
-                        );
-                      })}
-                    </Select>
-                  </FormControl>
-                </>
-              )}
+              <FormControl height="66px">
+                <FormLabel
+                  display="flex"
+                  pb={1}
+                  alignItems="center"
+                  gap={1}
+                  justifyContent="space-between"
+                  m="0"
+                >
+                  <span>{t('hostsDialog.alpn')}</span>
+                </FormLabel>
+                <Select
+                  size="sm"
+                  {...form.register('alpn')}
+                >
+                  {proxyALPN.map((s) => {
+                    return (
+                      <option key={s.value} value={s.value}>
+                        {s.title}
+                      </option>
+                    );
+                  })}
+                </Select>
+              </FormControl>
+              <FormControl height="66px">
+                <FormLabel
+                  display="flex"
+                  pb={1}
+                  alignItems="center"
+                  gap={1}
+                  justifyContent="space-between"
+                  m="0"
+                >
+                  <span>{t('hostsDialog.fingerprint')}</span>
+                </FormLabel>
+                <Select
+                  size="sm"
+                  {...form.register('fingerprint')}
+                >
+                  {proxyFingerprint.map((s) => {
+                    return (
+                      <option key={s.value} value={s.value}>
+                        {s.title}
+                      </option>
+                    );
+                  })}
+                </Select>
+              </FormControl>
               <Spacer m={2}></Spacer>
               <HStack w="full">
                 <Tooltip label={t('delete')} placement="top">
