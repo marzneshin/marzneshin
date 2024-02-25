@@ -4,8 +4,9 @@ import { useDashboard } from './dashboard.store';
 import { fetch } from 'service/http';
 import { Inbounds, InboundType } from 'types/inbounds';
 import { z } from 'zod';
-import { HostsFilterType } from 'types';
+import { HostsFilterType, InboundsFilterType } from 'types';
 import { pageSizeManagers } from 'utils/userPreferenceStorage';
+import { queryClient } from 'service/react-query';
 
 const isPortThenValue = (value: number) => (value <= 65535 && value !== 0) ? value : null;
 
@@ -63,8 +64,11 @@ type InboundsStateType = {
   selectedInbound: InboundType | null;
   selectInbound: (inbound: InboundType) => void;
   // Hosts
+  refetchHosts: () => void;
   hostsFilters: HostsFilterType;
-  onFilterChange: (filters: Partial<HostsFilterType>) => void;
+  inboundsFilters: InboundsFilterType;
+  onHostsFilterChange: (filters: Partial<HostsFilterType>) => void;
+  onInboundsFilterChange: (filters: Partial<InboundsFilterType>) => void;
   selectedHost: HostType | null;
   selectHost: (host: HostType) => void;
   isEditingHost: boolean;
@@ -92,20 +96,35 @@ export const useInbounds = create(
       limit: pageSizeManagers.hosts.getPageSize(),
       sort: '-created_at',
     },
-    onFilterChange: (filters) => {
+    inboundsFilters: {
+      name: '',
+      limit: pageSizeManagers.inbounds.getPageSize(),
+      sort: '-created_at',
+    },
+    onHostsFilterChange: (filters) => {
       set({
         hostsFilters: {
           ...get().hostsFilters,
           ...filters,
         },
       });
-      get().refetchNodes();
+    },
+    onInboundsFilterChange: (filters) => {
+      set({
+        hostsFilters: {
+          ...get().inboundsFilters,
+          ...filters,
+        },
+      });
     },
     setLoading: (value) => {
       set({ loading: value })
     },
     refetchInbounds: () => {
       fetchInbounds();
+    },
+    refetchHosts: () => {
+      queryClient.invalidateQueries('hosts');
     },
     selectInbound: (host): void => {
       set({ selectedInbound: host })

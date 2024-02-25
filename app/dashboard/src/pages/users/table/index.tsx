@@ -38,6 +38,7 @@ import {
 import { UsageSlider, UsageSliderCompact } from './usage-slider';
 import { useUsers } from 'stores';
 import { ActionButtons } from './action-buttons';
+import { pageSizeManagers } from 'utils/userPreferenceStorage';
 
 type ExpandedIndex = number | number[];
 
@@ -401,7 +402,7 @@ export const UsersTable: FC<UsersTableProps> = (props) => {
           )}
         </Tbody>
       </Table>
-      <Pagination filters={filters} total={total} onFilterChange={onFilterChange} />
+      <Pagination filters={filters} total={total} onFilterChange={onFilterChange} pageSizeManager={pageSizeManagers.users} />
     </Box>
   );
 };

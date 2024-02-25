@@ -24,14 +24,10 @@ export class PageSizeManager {
   }
 }
 
-const usersPageSizeManager = new PageSizeManager('users', 10);
-const servicesPageSizeManager = new PageSizeManager('services', 10);
-const nodesPageSizeManager = new PageSizeManager('nodes', 10);
-const hostsPageSizeManager = new PageSizeManager('hosts', 10);
-
 export const pageSizeManagers = {
-  users: usersPageSizeManager,
-  nodes: nodesPageSizeManager,
-  hosts: hostsPageSizeManager,
-  services: servicesPageSizeManager,
+  users: new PageSizeManager('users', 10),
+  inbounds: new PageSizeManager('inbounds', 10),
+  nodes: new PageSizeManager('nodes', 10),
+  hosts: new PageSizeManager('hosts', 10),
+  services: new PageSizeManager('services', 10),
 }

@@ -36,3 +36,7 @@ export type HostsFilterType = FilterType & {
     port?: number;
     security?: number;
 }
+
+export type InboundsFilterType = FilterType & {
+    tag?: string;
+}
