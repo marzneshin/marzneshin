@@ -24,10 +24,10 @@ export const ConsoleLayout = () => {
             <Suspense>
               <Outlet />
             </Suspense>
-            <Footer />
           </Box>
         </Box>
       </Panel>
+      <Footer bottom={3} />
     </PanelGroup>
   );
 };

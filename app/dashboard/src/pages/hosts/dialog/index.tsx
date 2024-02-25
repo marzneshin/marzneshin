@@ -102,7 +102,7 @@ export const HostsDialog: FC = () => {
       .then(() => {
         toast({
           title: t(
-            isEditingHost ? 'hostDialog.editHost' : 'hostDialog.createNewHost',
+            isEditingHost ? 'hostsDialog.editHost' : 'hostsDialog.createNewHost',
             { hoshtName: values.host }
           ),
           status: 'success',
@@ -137,243 +137,242 @@ export const HostsDialog: FC = () => {
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay bg="blackAlpha.300" backdropFilter="blur(10px)" />
-      <ModalContent mx="3" w="fit-content" maxW="3xl">
-        <DialogModalHeader HeaderIcon={isEditingHost ? EditIcon : AddIcon} title={isEditingHost ? t('nodeDialog.editNode') : t('nodeDialog.addNode')} />
+      <ModalContent mx="3" w="lg" >
+        <DialogModalHeader HeaderIcon={isEditingHost ? EditIcon : AddIcon} title={isEditingHost ? t('hostsDialog.editHost') : t('hostsDialog.createHost')} />
         <ModalCloseButton mt={3} />
-        <ModalBody w="440px" pb={6} pt={3}>
-          <VStack>
-            {loading && 'loading...'}
-            <form onSubmit={form.handleSubmit((v) => submit(v))}>
-              <VStack>
-                <HStack w="100%" alignItems="flex-start">
-                  <FormControl
-                    position="relative"
-                    zIndex={10}
-                  >
-                    <InputGroup>
-                      <Input
-                        {...form.register('remark')}
-                        size="sm"
-                        borderRadius="4px"
-                        placeholder="Remark"
-                      />
-                      <InputRightElement>
-                        <RemarkFieldPopover />
-                      </InputRightElement>
-                    </InputGroup>
-                  </FormControl>
-                </HStack>
-                <FormControl>
+        <ModalBody pb={4} pt={3}>
+          {loading && 'loading...'}
+          <form onSubmit={form.handleSubmit((v) => submit(v))}>
+            <VStack>
+              <HStack w="100%" alignItems="flex-start">
+                <FormControl
+                  position="relative"
+                  zIndex={10}
+                >
                   <InputGroup>
                     <Input
+                      {...form.register('remark')}
                       size="sm"
                       borderRadius="4px"
-                      placeholder="Address (e.g. example.com)"
-                      {...form.register('address')}
+                      placeholder="Remark"
                     />
                     <InputRightElement>
                       <RemarkFieldPopover />
                     </InputRightElement>
                   </InputGroup>
                 </FormControl>
-                <FormControl>
-                  <FormLabel
-                    display="flex"
-                    pb={1}
-                    alignItems="center"
-                    justifyContent="space-between"
-                    gap={1}
-                    m="0"
-                  >
-                    <span>{t('hostsDialog.port')}</span>
-                    <Popover isLazy placement="right">
-                      <PopoverTrigger>
-                        <InfoIcon />
-                      </PopoverTrigger>
-                      <Portal>
-                        <PopoverContent p={2}>
-                          <PopoverArrow />
-                          <PopoverCloseButton />
-                          <Text fontSize="xs" pr={5}>
-                            {t('hostsDialog.port.info')}
-                          </Text>
-                        </PopoverContent>
-                      </Portal>
-                    </Popover>
-                  </FormLabel>
+              </HStack>
+              <FormControl>
+                <InputGroup>
                   <Input
                     size="sm"
                     borderRadius="4px"
-                    placeholder={String(selectedInbound?.port || '8080')}
-                    type="number"
-                    {...form.register('port')}
+                    placeholder="Address (e.g. example.com)"
+                    {...form.register('address')}
                   />
-                </FormControl>
-                <FormControl>
-                  <FormLabel
-                    display="flex"
-                    pb={1}
-                    alignItems="center"
-                    gap={1}
-                    justifyContent="space-between"
-                    m="0"
-                  >
-                    <span>{t('hostsDialog.sni')}</span>
-                    <Popover isLazy placement="right">
-                      <PopoverTrigger>
-                        <InfoIcon />
-                      </PopoverTrigger>
-                      <Portal>
-                        <PopoverContent p={2}>
-                          <PopoverArrow />
-                          <PopoverCloseButton />
-                          <Text fontSize="xs" pr={5}>
-                            {t('hostsDialog.sni.info')}
-                          </Text>
-                          <Text fontSize="xs" mt="2">
-                            <Trans
-                              i18nKey="hostsDialog.host.wildcard"
-                              components={{
-                                badge: <Badge />,
-                              }}
-                            />
-                          </Text>
-                          <Text fontSize="xs">
-                            <Trans
-                              i18nKey="hostsDialog.host.multiHost"
-                              components={{
-                                badge: <Badge />,
-                              }}
-                            />
-                          </Text>
-                        </PopoverContent>
-                      </Portal>
-                    </Popover>
-                  </FormLabel>
-                  <Input
-                    size="sm"
-                    borderRadius="4px"
-                    placeholder="SNI (e.g. example.com)"
-                    {...form.register('sni')}
-                  />
-                </FormControl>
-                <FormControl>
-                  <FormLabel
-                    display="flex"
-                    pb={1}
-                    alignItems="center"
-                    gap={1}
-                    justifyContent="space-between"
-                    m="0"
-                  >
-                    <span>{t('hostsDialog.host')}</span>
+                  <InputRightElement>
+                    <RemarkFieldPopover />
+                  </InputRightElement>
+                </InputGroup>
+              </FormControl>
+              <FormControl>
+                <FormLabel
+                  display="flex"
+                  pb={1}
+                  alignItems="center"
+                  justifyContent="space-between"
+                  gap={1}
+                  m="0"
+                >
+                  <span>{t('hostsDialog.port')}</span>
+                  <Popover isLazy placement="right">
+                    <PopoverTrigger>
+                      <InfoIcon />
+                    </PopoverTrigger>
+                    <Portal>
+                      <PopoverContent p={2}>
+                        <PopoverArrow />
+                        <PopoverCloseButton />
+                        <Text fontSize="xs" pr={5}>
+                          {t('hostsDialog.port.info')}
+                        </Text>
+                      </PopoverContent>
+                    </Portal>
+                  </Popover>
+                </FormLabel>
+                <Input
+                  size="sm"
+                  borderRadius="4px"
+                  placeholder={String(selectedInbound?.port || '8080')}
+                  type="number"
+                  {...form.register('port')}
+                />
+              </FormControl>
+              <FormControl>
+                <FormLabel
+                  display="flex"
+                  pb={1}
+                  alignItems="center"
+                  gap={1}
+                  justifyContent="space-between"
+                  m="0"
+                >
+                  <span>{t('hostsDialog.sni')}</span>
+                  <Popover isLazy placement="right">
+                    <PopoverTrigger>
+                      <InfoIcon />
+                    </PopoverTrigger>
+                    <Portal>
+                      <PopoverContent p={2}>
+                        <PopoverArrow />
+                        <PopoverCloseButton />
+                        <Text fontSize="xs" pr={5}>
+                          {t('hostsDialog.sni.info')}
+                        </Text>
+                        <Text fontSize="xs" mt="2">
+                          <Trans
+                            i18nKey="hostsDialog.host.wildcard"
+                            components={{
+                              badge: <Badge />,
+                            }}
+                          />
+                        </Text>
+                        <Text fontSize="xs">
+                          <Trans
+                            i18nKey="hostsDialog.host.multiHost"
+                            components={{
+                              badge: <Badge />,
+                            }}
+                          />
+                        </Text>
+                      </PopoverContent>
+                    </Portal>
+                  </Popover>
+                </FormLabel>
+                <Input
+                  size="sm"
+                  borderRadius="4px"
+                  placeholder="SNI (e.g. example.com)"
+                  {...form.register('sni')}
+                />
+              </FormControl>
+              <FormControl>
+                <FormLabel
+                  display="flex"
+                  pb={1}
+                  alignItems="center"
+                  gap={1}
+                  justifyContent="space-between"
+                  m="0"
+                >
+                  <span>{t('hostsDialog.host')}</span>
 
-                    <Popover isLazy placement="right">
-                      <PopoverTrigger>
-                        <InfoIcon />
-                      </PopoverTrigger>
-                      <Portal>
-                        <PopoverContent p={2}>
-                          <PopoverArrow />
-                          <PopoverCloseButton />
-                          <Text fontSize="xs" pr={5}>
-                            {t('hostsDialog.host.info')}
-                          </Text>
-                          <Text fontSize="xs" mt="2">
-                            <Trans
-                              i18nKey="hostsDialog.host.wildcard"
-                              components={{
-                                badge: <Badge />,
-                              }}
-                            />
-                          </Text>
-                          <Text fontSize="xs">
-                            <Trans
-                              i18nKey="hostsDialog.host.multiHost"
-                              components={{
-                                badge: <Badge />,
-                              }}
-                            />
-                          </Text>
-                        </PopoverContent>
-                      </Portal>
-                    </Popover>
-                  </FormLabel>
-                  <Input
-                    size="sm"
-                    borderRadius="4px"
-                    placeholder="Host (e.g. example.com)"
-                    {...form.register('host')}
-                  />
-                </FormControl>
-                <FormControl>
-                  <FormLabel
-                    display="flex"
-                    pb={1}
-                    alignItems="center"
-                    gap={1}
-                    justifyContent="space-between"
-                    m="0"
-                  >
-                    <span>{t('hostsDialog.path')}</span>
-                    <Popover isLazy placement="right">
-                      <PopoverTrigger>
-                        <InfoIcon />
-                      </PopoverTrigger>
-                      <Portal>
-                        <PopoverContent p={2}>
-                          <PopoverArrow />
-                          <PopoverCloseButton />
-                          <Text fontSize="xs" pr={5}>
-                            {t('hostsDialog.path.info')}
-                          </Text>
-                        </PopoverContent>
-                      </Portal>
-                    </Popover>
-                  </FormLabel>
-                  <Input
-                    size="sm"
-                    borderRadius="4px"
-                    placeholder="path (e.g. /vless)"
-                    {...form.register('path')}
-                  />
-                </FormControl>
-                <FormControl height="66px">
-                  <FormLabel
-                    display="flex"
-                    pb={1}
-                    alignItems="center"
-                    gap={1}
-                    justifyContent="space-between"
-                    m="0"
-                  >
-                    <span>{t('hostsDialog.security')}</span>
-                    <Popover isLazy placement="right">
-                      <PopoverTrigger>
-                        <InfoIcon />
-                      </PopoverTrigger>
-                      <Portal>
-                        <PopoverContent p={2}>
-                          <PopoverArrow />
-                          <PopoverCloseButton />
-                          <Text fontSize="xs" pr={5}>
-                            {t('hostsDialog.security.info')}
-                          </Text>
-                        </PopoverContent>
-                      </Portal>
-                    </Popover>
-                  </FormLabel>
-                  <Select size="sm" {...form.register('security')} >
-                    {proxyHostSecurity.map((s) => {
-                      return (
-                        <option key={s.value} value={s.value}>
-                          {s.title}
-                        </option>
-                      );
-                    })}
-                  </Select>
-                </FormControl>
-                {/* TODO: Add ALPN and fingerprint fields smooth entrance and
+                  <Popover isLazy placement="right">
+                    <PopoverTrigger>
+                      <InfoIcon />
+                    </PopoverTrigger>
+                    <Portal>
+                      <PopoverContent p={2}>
+                        <PopoverArrow />
+                        <PopoverCloseButton />
+                        <Text fontSize="xs" pr={5}>
+                          {t('hostsDialog.host.info')}
+                        </Text>
+                        <Text fontSize="xs" mt="2">
+                          <Trans
+                            i18nKey="hostsDialog.host.wildcard"
+                            components={{
+                              badge: <Badge />,
+                            }}
+                          />
+                        </Text>
+                        <Text fontSize="xs">
+                          <Trans
+                            i18nKey="hostsDialog.host.multiHost"
+                            components={{
+                              badge: <Badge />,
+                            }}
+                          />
+                        </Text>
+                      </PopoverContent>
+                    </Portal>
+                  </Popover>
+                </FormLabel>
+                <Input
+                  size="sm"
+                  borderRadius="4px"
+                  placeholder="Host (e.g. example.com)"
+                  {...form.register('host')}
+                />
+              </FormControl>
+              <FormControl>
+                <FormLabel
+                  display="flex"
+                  pb={1}
+                  alignItems="center"
+                  gap={1}
+                  justifyContent="space-between"
+                  m="0"
+                >
+                  <span>{t('hostsDialog.path')}</span>
+                  <Popover isLazy placement="right">
+                    <PopoverTrigger>
+                      <InfoIcon />
+                    </PopoverTrigger>
+                    <Portal>
+                      <PopoverContent p={2}>
+                        <PopoverArrow />
+                        <PopoverCloseButton />
+                        <Text fontSize="xs" pr={5}>
+                          {t('hostsDialog.path.info')}
+                        </Text>
+                      </PopoverContent>
+                    </Portal>
+                  </Popover>
+                </FormLabel>
+                <Input
+                  size="sm"
+                  borderRadius="4px"
+                  placeholder="path (e.g. /vless)"
+                  {...form.register('path')}
+                />
+              </FormControl>
+              <FormControl height="66px">
+                <FormLabel
+                  display="flex"
+                  pb={1}
+                  alignItems="center"
+                  gap={1}
+                  justifyContent="space-between"
+                  m="0"
+                >
+                  <span>{t('hostsDialog.security')}</span>
+                  <Popover isLazy placement="right">
+                    <PopoverTrigger>
+                      <InfoIcon />
+                    </PopoverTrigger>
+                    <Portal>
+                      <PopoverContent p={2}>
+                        <PopoverArrow />
+                        <PopoverCloseButton />
+                        <Text fontSize="xs" pr={5}>
+                          {t('hostsDialog.security.info')}
+                        </Text>
+                      </PopoverContent>
+                    </Portal>
+                  </Popover>
+                </FormLabel>
+                <Select size="sm" {...form.register('security')} >
+                  {proxyHostSecurity.map((s) => {
+                    return (
+                      <option key={s.value} value={s.value}>
+                        {s.title}
+                      </option>
+                    );
+                  })}
+                </Select>
+              </FormControl>
+              {/* TODO: Add ALPN and fingerprint fields smooth entrance and
                   * pushing down animation when security field is TLS
                   * - Insertion and pushing down the below element 
                   * - Slowly increasing the opacity 
@@ -434,25 +433,40 @@ export const HostsDialog: FC = () => {
                     colorScheme="red"
                     variant="ghost"
                     size="sm"
-                    px={5}
-                    w="full"
-                    isLoading={loading}
+                    aria-label="delete host"
+                    onClick={() => {
+                      if (selectedHost !== null) {
+                        onDeletingHost(true, selectedHost);
+                        onClose();
+                      }
+                    }}
                   >
-                    {isEditingHost ? t('hostDialog.editSubmit') : t('hostDialog.createSubmit')}
-                  </Button>
-                </HStack>
-                {error && (
-                  <Alert
-                    status="error"
-                    display={{ base: 'none', md: 'flex' }}
-                  >
-                    <AlertIcon />
-                    {error}
-                  </Alert>
-                )}
-              </VStack>
-            </form>
-          </VStack>
+                    <DeleteIcon />
+                  </IconButton>
+                </Tooltip>
+                <Button
+                  flexGrow={1}
+                  type="submit"
+                  colorScheme="primary"
+                  size="sm"
+                  px={5}
+                  w="full"
+                  isLoading={loading}
+                >
+                  {isEditingHost ? t('hostsDialog.editSubmit') : t('hostsDialog.createSubmit')}
+                </Button>
+              </HStack>
+              {error && (
+                <Alert
+                  status="error"
+                  display={{ base: 'none', md: 'flex' }}
+                >
+                  <AlertIcon />
+                  {error}
+                </Alert>
+              )}
+            </VStack>
+          </form>
         </ModalBody>
       </ModalContent>
     </Modal>

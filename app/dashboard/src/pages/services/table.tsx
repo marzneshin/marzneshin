@@ -23,6 +23,7 @@ import {
   Sort
 } from 'components/table';
 import { useServices } from 'stores';
+import { pageSizeManagers } from 'utils/userPreferenceStorage';
 
 type ExpandedIndex = number | number[];
 type ServicesTableProps = {} & TableProps;
@@ -206,7 +207,12 @@ export const ServicesTable: FC<ServicesTableProps> = (props) => {
           )}
         </Tbody>
       </Table>
-      <Pagination total={services.length} onFilterChange={onFilterChange} filters={filters} />
+      <Pagination 
+        total={services.length} 
+        onFilterChange={onFilterChange}
+        filters={filters}
+        pageSizeManager={pageSizeManagers.services}
+      />
     </Box>
   );
 };

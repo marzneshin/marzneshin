@@ -3,7 +3,7 @@ import { fetch } from 'service/http';
 import { create } from 'zustand';
 import { z } from 'zod';
 import { FilterUsageType, NodesFilterType } from 'types/filter';
-import { getNodesPerPageLimitSize } from 'utils/userPreferenceStorage';
+import { pageSizeManagers } from 'utils/userPreferenceStorage';
 import { useDashboard } from './dashboard.store';
 
 export const NodeSchema = z.object({
@@ -109,7 +109,7 @@ export const useNodes = create<NodeStore>((set, get) => ({
   isEditingCore: false,
   nodesFilters: {
     name: '',
-    limit: getNodesPerPageLimitSize(),
+    limit: pageSizeManagers.nodes.getPageSize(),
     sort: '-created_at',
   },
   onFilterChange: (filters) => {

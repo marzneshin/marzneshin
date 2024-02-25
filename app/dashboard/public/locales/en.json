@@ -75,6 +75,16 @@
     "copyConfigs": "Copy Configs",
     "total": "Total"
   },
+  "hostsTable": {
+    "status": "status",
+    "editHost": "Edit host",
+    "createHosts": "Create host",
+    "address": "Address",
+    "noHostMatched": "It seems there is no host matched with what you are looking for",
+    "noHost": "There is no host in the system",
+    "port": "Port",
+    "total": "Total"
+  },
   "userDialog": {
     "dataLimit": "Data Limit",
     "periodicUsageReset": "Periodic Usage Reset",
@@ -175,8 +185,9 @@
     "port": "Port",
     "path": "Path",
     "sni": "SNI",
-    "advancedOptions": "Advanced options",
-    "addHost": "Add host",
+    "createSubmit": "Submit",
+    "editSubmit": "Submit",
+    "createHost": "Create host",
     "savedSuccess": "Hosts saved successfully",
     "loading": "loading...",
     "apply": "Apply",

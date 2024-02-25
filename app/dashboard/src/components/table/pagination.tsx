@@ -14,7 +14,7 @@ import {
 import { ChangeEvent, FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FilterType } from 'types';
-import { setUsersPerPageLimitSize } from 'utils/userPreferenceStorage';
+import { PageSizeManager } from 'utils/userPreferenceStorage';
 
 const PrevIcon = chakra(ArrowLongLeftIcon, {
   baseStyle: {
@@ -43,35 +43,41 @@ const MINIMAL_PAGE_ITEM_COUNT = 5;
  *   - Always include first and last page
  *   - Add ellipsis if needed
  */
-function generatePageItems(total: number, current: number, width: number) {
-  if (width < MINIMAL_PAGE_ITEM_COUNT) {
-    throw new Error(
-      `Must allow at least ${MINIMAL_PAGE_ITEM_COUNT} page items`
-    );
+interface PageItem {
+  value: string | number;
+  isPlaceholder?: boolean;
+}
+
+function validateWidth(width: number): void {
+  if (width < MINIMAL_PAGE_ITEM_COUNT || width % 2 === 0) {
+    throw new Error(`Must allow at least ${MINIMAL_PAGE_ITEM_COUNT} odd page items`);
   }
-  if (width % 2 === 0) {
-    throw new Error('Must allow odd number of page items');
-  }
+}
+
+function generatePageItems(total: number, current: number, width: number): PageItem[] {
+  validateWidth(width);
+
   if (total < width) {
-    return [...new Array(total).keys()];
+    return Array.from({ length: total }, (_, index) => ({ value: index }));
   }
-  const left = Math.max(
-    0,
-    Math.min(total - width, current - Math.floor(width / 2))
-  );
-  const items: (string | number)[] = new Array(width);
-  for (let i = 0; i < width; i += 1) {
-    items[i] = i + left;
+
+  const left = Math.max(0, Math.min(total - width, current - Math.floor(width / 2)));
+  const right = Math.min(left + width, total);
+
+  const items: PageItem[] = [];
+
+  if (left > 0) {
+    items.push({ value: 0 }, { value: 'prev-more', isPlaceholder: true });
   }
-  // replace non-ending items with placeholders
-  if (items[0] > 0) {
-    items[0] = 0;
-    items[1] = 'prev-more';
+
+  for (let i = left; i < right; i++) {
+    items.push({ value: i });
   }
-  if (items[items.length - 1] < total - 1) {
-    items[items.length - 1] = total - 1;
-    items[items.length - 2] = 'next-more';
+
+  if (right < total) {
+    items.push({ value: 'next-more', isPlaceholder: true }, { value: total - 1 });
   }
+
   return items;
 }
 
@@ -79,9 +85,17 @@ type PaginationProps = {
   total: number;
   onFilterChange: (filters: Partial<FilterType>) => void;
   filters: FilterType;
+  pageSizeManager: PageSizeManager;
+  pageListsNumbers?: number[];
 }
 
-export const Pagination: FC<PaginationProps> = ({ filters, total, onFilterChange }) => {
+export const Pagination: FC<PaginationProps> = ({
+  filters,
+  total,
+  onFilterChange,
+  pageSizeManager,
+  pageListsNumbers = [10, 20, 30],
+}) => {
   const { limit: perPage, offset } = filters;
 
   const page = (offset || 0) / (perPage || 1);
@@ -100,7 +114,7 @@ export const Pagination: FC<PaginationProps> = ({ filters, total, onFilterChange
       ...filters,
       limit: parseInt(e.target.value),
     });
-    setUsersPerPageLimitSize(e.target.value);
+    pageSizeManager.setPageSize(e.target.value);
   };
 
   const { t } = useTranslation();
@@ -124,9 +138,9 @@ export const Pagination: FC<PaginationProps> = ({ filters, total, onFilterChange
             size="sm"
             rounded="md"
           >
-            <option>10</option>
-            <option>20</option>
-            <option>30</option>
+            {pageListsNumbers.map((list, i) => {
+              return (<option key={i}>{list}</option>)
+            })}
           </Select>
           <Text whiteSpace={'nowrap'} fontSize="sm">
             {t('itemsPerPage')}
@@ -142,20 +156,19 @@ export const Pagination: FC<PaginationProps> = ({ filters, total, onFilterChange
         >
           {t('previous')}
         </Button>
-        {pages.map((pageIndex) => {
-          if (typeof pageIndex === 'string')
-            return <Button key={pageIndex}>...</Button>;
-          return (
-            <Button
-              key={pageIndex}
-              variant={(pageIndex as number) === page ? 'solid' : 'outline'}
-              onClick={changePage.bind(null, pageIndex)}
-            >
-              {(pageIndex as number) + 1}
-            </Button>
-          );
-        })}
-
+        {pages.map((pageItem) => (
+          <Button
+            key={String(pageItem.value)}
+            variant={String(pageItem.value) === String(page) ? 'solid' : 'outline'}
+            onClick={() =>
+              typeof pageItem.value === 'number' && changePage(pageItem.value)
+            }
+          >
+            {String(pageItem.value) === 'prev-more' || String(pageItem.value) === 'next-more'
+              ? '...'
+              : (pageItem.value as number) + 1}
+          </Button>
+        ))}
         <Button
           rightIcon={<NextIcon />}
           onClick={changePage.bind(null, page + 1)}
