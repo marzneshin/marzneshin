@@ -1,4 +1,3 @@
-
 import {
   Accordion,
   AccordionButton,
@@ -20,10 +19,9 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import classNames from 'classnames';
-import { FC, Fragment, useState } from 'react';
+import { FC, Fragment, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
-  Pagination,
   EmptySection,
   AccordionArrowIcon,
   EditIcon,
@@ -32,7 +30,6 @@ import {
 } from 'components/table';
 import { useInbounds, fetchInboundHosts } from 'stores';
 import { useQuery } from 'react-query';
-import { pageSizeManagers } from 'utils/userPreferenceStorage';
 
 type ExpandedIndex = number | number[];
 
@@ -44,15 +41,16 @@ export const HostsTable: FC<NodesTableProps> = (props) => {
     selectedInbound,
     onEditingHost,
     onCreatingHost,
-    onFilterChange,
+    onHostsFilterChange,
+    refetchHosts,
   } = useInbounds();
-
   const { data: hosts } = useQuery('hosts', () => {
     if (selectedInbound !== null) {
-
       return fetchInboundHosts(selectedInbound.id);
     }
   });
+
+  useEffect(() => { refetchHosts() }, [selectedInbound]);
 
   const { t } = useTranslation();
   const [selectedRow, setSelectedRow] = useState<ExpandedIndex | undefined>(
@@ -68,7 +66,7 @@ export const HostsTable: FC<NodesTableProps> = (props) => {
   };
 
   return (
-    <Box id="node-table" overflowX={{ base: 'unset', md: 'unset' }} >
+    <Box id="hosts-table" borderTopStartRadius="0" overflowX={{ base: 'unset', md: 'unset' }} >
       <Accordion
         allowMultiple
         display={{ base: 'block', md: 'none' }}
@@ -78,11 +76,11 @@ export const HostsTable: FC<NodesTableProps> = (props) => {
           <Thead zIndex="docked" position="relative">
             <Tr>
               <Th
-                minW="120px"
+                minW="220px"
                 pl={4}
                 pr={4}
                 cursor={'pointer'}
-                onClick={handleSort.bind(null, filters, 'remark', onFilterChange)}
+                onClick={handleSort.bind(null, filters, 'remark', onHostsFilterChange)}
               >
                 <HStack>
                   <span>{t('remark')}</span>
@@ -93,7 +91,7 @@ export const HostsTable: FC<NodesTableProps> = (props) => {
                 minW="100px"
                 cursor={'pointer'}
                 pr={0}
-                onClick={handleSort.bind(null, filters, 'address', onFilterChange)}
+                onClick={handleSort.bind(null, filters, 'address', onHostsFilterChange)}
               >
                 <HStack>
                   <span>{t('hostsTable.address')}</span>
@@ -104,7 +102,7 @@ export const HostsTable: FC<NodesTableProps> = (props) => {
                 minW="100px"
                 cursor={'pointer'}
                 pr={0}
-                onClick={handleSort.bind(null, filters, 'port', onFilterChange)}
+                onClick={handleSort.bind(null, filters, 'port', onHostsFilterChange)}
               >
                 <HStack>
                   <span>{t('hostsTable.port')}</span>
@@ -112,12 +110,6 @@ export const HostsTable: FC<NodesTableProps> = (props) => {
                 </HStack>
               </Th>
               {/* Action buttons (certificate, core settings)*/}
-              <Th
-                minW="32px"
-                w="32px"
-                p={0}
-                cursor={'pointer'}
-              ></Th>
             </Tr>
           </Thead>
           <Tbody>
@@ -233,7 +225,7 @@ export const HostsTable: FC<NodesTableProps> = (props) => {
               pl={4}
               pr={4}
               cursor={'pointer'}
-              onClick={handleSort.bind(null, filters, 'remark', onFilterChange)}
+              onClick={handleSort.bind(null, filters, 'remark', onHostsFilterChange)}
             >
               <HStack>
                 <span>{t('remark')}</span>
@@ -244,7 +236,7 @@ export const HostsTable: FC<NodesTableProps> = (props) => {
               minW="100px"
               cursor={'pointer'}
               pr={0}
-              onClick={handleSort.bind(null, filters, 'address', onFilterChange)}
+              onClick={handleSort.bind(null, filters, 'address', onHostsFilterChange)}
             >
               <HStack>
                 <span>{t('hostsTable.address')}</span>
@@ -255,14 +247,13 @@ export const HostsTable: FC<NodesTableProps> = (props) => {
               minW="100px"
               cursor={'pointer'}
               pr={0}
-              onClick={handleSort.bind(null, filters, 'port', onFilterChange)}
+              onClick={handleSort.bind(null, filters, 'port', onHostsFilterChange)}
             >
               <HStack>
                 <span>{t('hostsTable.port')}</span>
                 <Sort sort={filters.sort} column="port" />
               </HStack>
             </Th>
-            {/* Action buttons (certificate, core settings)*/}
           </Tr>
         </Thead>
         <Tbody overflowY="auto">
@@ -286,9 +277,6 @@ export const HostsTable: FC<NodesTableProps> = (props) => {
                 <Td width="350px" minW="150px">
                   {host.port}
                 </Td>
-                <Td width="350px" minW="150px">
-                  {host.port}
-                </Td>
               </Tr>
             );
           })}
@@ -307,7 +295,9 @@ export const HostsTable: FC<NodesTableProps> = (props) => {
           )}
         </Tbody>
       </Table>
-      <Pagination filters={filters} total={hosts === undefined ? 0 : hosts.length} onFilterChange={onFilterChange} pageSizeManager={pageSizeManagers.hosts} />
+      {/* TODO:
+        * <Pagination filters={filters} total={hosts === undefined ? 0 : hosts.length} onHostsFilterChange={onFilterChange} pageSizeManager={pageSizeManagers.hosts} /> 
+        */}
     </Box>
   );
 };

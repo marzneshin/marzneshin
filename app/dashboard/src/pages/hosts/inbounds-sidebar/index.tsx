@@ -1,14 +1,26 @@
 import { Table, Thead, Tbody, Th, Td, Tr, HStack } from '@chakra-ui/react';
+import classNames from 'classnames';
 import { InboundCard } from 'components/inbounds-card';
+import { handleSort } from 'components/table';
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useInbounds } from 'stores';
 
 export const InboundsSidebar = () => {
-  const { inbounds, selectInbound, refetchInbounds } = useInbounds();
+  const {
+    inbounds,
+    onInboundsFilterChange,
+    inboundsFilters: filters,
+    selectedInbound,
+    selectInbound,
+    refetchInbounds
+  } = useInbounds();
   const { t } = useTranslation();
-  inbounds.length === 0 && refetchInbounds();
+  useEffect(() => {
+    inbounds.length === 0 && refetchInbounds();
+  }, [inbounds.length])
   return (
-    <Table orientation="vertical" zIndex="docked" >
+    <Table orientation="vertical" zIndex="docked" pr="3" >
       <Thead zIndex="docked" position="relative">
         <Tr>
           <Th
@@ -16,19 +28,23 @@ export const InboundsSidebar = () => {
             pl={4}
             pr={4}
             cursor={'pointer'}
-            // onClick={handleSort.bind(null, filters, 'remark', onFilterChange)}
+            onClick={handleSort.bind(null, filters, 'tag', onInboundsFilterChange)}
           >
             <HStack>
               <span>{t('inbounds')}</span>
-              {/* <Sort sort={filters.sort} column="remark" /> */}
             </HStack>
           </Th>
         </Tr>
       </Thead>
       <Tbody>
         {inbounds.map((inbound, i) => {
+          const active = inbounds[i] == selectedInbound
           return (
-            <Tr key={i} onClick={() => { selectInbound(inbound) }}>
+            <Tr key={i}
+              className={classNames('interactive')}
+              bg={active ? 'gray.300' : undefined}
+              _dark={{ bg: active ? 'gray.700' : undefined }}
+              onClick={() => { selectInbound(inbound) }}>
               <Td>
                 <InboundCard
 
