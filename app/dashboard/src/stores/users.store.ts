@@ -1,7 +1,7 @@
 import { User, UserCreate } from 'types/user';
 import { subscribeWithSelector } from 'zustand/middleware';
 import { create } from 'zustand';
-import { getUsersPerPageLimitSize } from 'utils/userPreferenceStorage';
+import { pageSizeManagers } from 'utils/userPreferenceStorage';
 import { fetch } from 'service/http';
 import { useServices, useDashboard } from 'stores';
 import { StatisticsQueryKey } from 'components/statistics-card';
@@ -70,7 +70,7 @@ export const useUsers = create(subscribeWithSelector<UsersStateType>((set, get) 
   isResetingAllUsage: false,
   usersFilters: {
     username: '',
-    limit: getUsersPerPageLimitSize(),
+    limit: pageSizeManagers.users.getPageSize(),
     sort: '-created_at',
   },
   QRcodeLinks: null,

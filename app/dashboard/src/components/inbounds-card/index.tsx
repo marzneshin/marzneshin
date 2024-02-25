@@ -22,7 +22,7 @@ const InboundsIcon = chakra(ServerStackIcon, IconBaseStyle);
 
 export const BadgeTag: FC<PropsWithChildren> = ({ children }) => {
   return (
-    <Text fontSize="sm" color="primary.700" _dark={{ color: 'gray.100' }} bg="gray.100" pl="3px" pr="3px" border="1px" borderRadius="md" borderColor="primary.700" fontWeight="light">
+    <Text fontSize="sm" color="primary.700" _dark={{ color: 'gray.100', bg: 'primary.700' }} bg="gray.100" pl="3px" pr="3px" border="1px" borderRadius="md" borderColor="primary.700" fontWeight="light">
       {children}
     </Text>
   )

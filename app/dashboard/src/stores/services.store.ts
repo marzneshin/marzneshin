@@ -1,7 +1,7 @@
 import { queryClient } from 'service/react-query';
 import { StatisticsQueryKey } from 'components/statistics-card';
 import { Service, ServiceCreate } from 'types/service';
-import { getServicesPerPageLimitSize } from 'utils/userPreferenceStorage';
+import { pageSizeManagers } from 'utils/userPreferenceStorage';
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
 import { fetch } from 'service/http';
@@ -49,7 +49,7 @@ export const useServices = create(
     services: [],
     servicesFilters: {
       name: '',
-      limit: getServicesPerPageLimitSize(),
+      limit: pageSizeManagers.services.getPageSize(),
       sort: '-created_at',
     },
     onFilterChange: (filters) => {

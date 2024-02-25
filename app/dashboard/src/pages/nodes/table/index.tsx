@@ -21,7 +21,7 @@ import {
 } from '@chakra-ui/react';
 import classNames from 'classnames';
 import { ActionButtons } from './action-buttons';
-
+import { pageSizeManagers } from 'utils/userPreferenceStorage';
 import { FC, Fragment, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StatusBadge } from 'components/status-badge';
@@ -388,7 +388,7 @@ export const NodesTable: FC<NodesTableProps> = (props) => {
           )}
         </Tbody>
       </Table>
-      <Pagination filters={filters} total={total} onFilterChange={onFilterChange} />
+      <Pagination filters={filters} total={total} onFilterChange={onFilterChange} pageSizeManager={pageSizeManagers.nodes} />
     </Box>
   );
 };
