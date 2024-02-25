@@ -140,7 +140,7 @@ export const Login: FC = () => {
           </Box>
         </HStack>
       </Box>
-      <Footer />
+      <Footer bottom={3} />
     </VStack>
   );
 };
