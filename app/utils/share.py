@@ -935,15 +935,20 @@ def process_inbounds_and_tags(
             hosts = crud.get_inbound_hosts(db, inb_id)
         # for host in xray.hosts.get(tag, []):
         for host in hosts:
-            sni = ""
-            sni_list = host.sni or inbound["sni"]
+            host_snis = host.sni.split(",") if host.sni else []
+            sni_list = host_snis or inbound["sni"]
             if sni_list:
                 sni = random.choice(sni_list).replace("*", salt)
+            else:
+                sni = ""
 
-            req_host = ""
-            req_host_list = host.host or inbound["host"]
+            host_hosts = host.host.split(",") if host.host else []
+            req_host_list = host_hosts or inbound["host"]
             if req_host_list:
                 req_host = random.choice(req_host_list).replace("*", salt)
+            else:
+                req_host = ""
+            
             host_tls = None if host.security == InboundHostSecurity.inbound_default else host.security.value
             host_inbound.update(
                 {
