@@ -87,19 +87,7 @@ def validation_exception_handler(request: Request, exc: RequestValidationError):
 
 
 async def main():
-    if DEBUG:
-        proc = await asyncio.create_subprocess_exec(
-            'npm',
-            'run', 'dev', '--', '--host', '0.0.0.0', '--base',
-            dashboard_path, '--clearScreen', 'false',
-            env={**os.environ, 'VITE_BASE_API': config.VITE_BASE_API},
-            cwd=base_dir
-        )
-        atexit.register(proc.terminate)
-    else:
-        if not build_dir.is_dir():
-            build()
-
+    if not DEBUG:
         app.mount(
             "/dashboard/",
             StaticFiles(directory=build_dir, html=True),
