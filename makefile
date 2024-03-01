@@ -1,11 +1,17 @@
 
 start:
-	alembic upgrade
+	alembic upgrade head
 	python main.py
 
 dashboard-build:
-	sh ./tools/dashboard-build.sh
+	cd app/dashboard/
+	npm install --prefix './app/dashboard'
+	VITE_BASE_API=/api/ npm run build --prefix './app/dashboard' --if-present -- --outDir dist --base '/dashboard/'
+	ls
+	cp ./app/dashboard/dist/index.html ./app/dashboard/dist/404.html
 
 dashboard-dev:
-	sh ./tools/dashboard-run-dev.sh
-	python ./main.py
+	npm run dev \
+    	-- --host 0.0.0.0 \
+    	--base ../app/dashboard/ \
+    	--clearScreen false
