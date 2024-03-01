@@ -160,7 +160,6 @@ xray-core
 *-debug.*
 
 # Python virtual environment
-venv
 bin
 pyvenv.cfg
 lib64
