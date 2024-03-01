@@ -10,20 +10,21 @@ from fastapi import FastAPI, Request, status
 from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import HTMLResponse
-from fastapi.responses import JSONResponse
+from fastapi.responses import HTMLResponse, JSONResponse
 from starlette.staticfiles import StaticFiles
-from uvicorn import Server, Config
+from uvicorn import Config, Server
 
 import config
 from app.templates import render_template
-from config import DOCS, DEBUG, UVICORN_SSL_KEYFILE, UVICORN_SSL_CERTFILE, UVICORN_UDS, UVICORN_PORT, UVICORN_HOST
-from config import HOME_PAGE_TEMPLATE
+from config import (DEBUG, DOCS, HOME_PAGE_TEMPLATE, UVICORN_HOST,
+                    UVICORN_PORT, UVICORN_SSL_CERTFILE, UVICORN_SSL_KEYFILE,
+                    UVICORN_UDS)
+
 from . import __version__, telegram
-from .dashboard import build_dir, build, base_dir
 from .routes import api_router
-from .tasks import record_user_usages, review_users, reset_user_data_usage, \
-    record_realtime_bandwidth, send_notifications, delete_expired_reminders, nodes_startup
+from .tasks import (delete_expired_reminders, nodes_startup,
+                    record_realtime_bandwidth, record_user_usages,
+                    reset_user_data_usage, review_users, send_notifications)
 
 logger = logging.getLogger(__name__)
 dashboard_path = "/dashboard/"
@@ -53,14 +54,21 @@ app.add_middleware(
 )
 
 scheduler = AsyncIOScheduler(timezone="UTC")
-scheduler.add_job(record_user_usages, 'interval', coalesce=True, seconds=30)
-scheduler.add_job(review_users, 'interval', seconds=600, coalesce=True, max_instances=1)
-scheduler.add_job(reset_user_data_usage, 'interval', coalesce=True, hours=1)
-scheduler.add_job(record_realtime_bandwidth, 'interval', seconds=1, coalesce=True, max_instances=1)
+scheduler.add_job(record_user_usages, "interval", coalesce=True, seconds=30)
+scheduler.add_job(review_users, "interval", seconds=600, coalesce=True, max_instances=1)
+scheduler.add_job(reset_user_data_usage, "interval", coalesce=True, hours=1)
+scheduler.add_job(
+    record_realtime_bandwidth, "interval", seconds=1, coalesce=True, max_instances=1
+)
 
 if config.WEBHOOK_ADDRESS:
     scheduler.add_job(send_notifications, "interval", seconds=30, replace_existing=True)
-    scheduler.add_job(delete_expired_reminders, "interval", hours=2, start_date=dt.utcnow() + td(minutes=1))
+    scheduler.add_job(
+        delete_expired_reminders,
+        "interval",
+        hours=2,
+        start_date=dt.utcnow() + td(minutes=1),
+    )
 
 
 @app.on_event("startup")
@@ -90,7 +98,7 @@ async def main():
     if not DEBUG:
         app.mount(
             "/dashboard/",
-            StaticFiles(directory=build_dir, html=True),
+            StaticFiles(directory="app/dashboard/dist", html=True),
             name="dashboard"
         )
     scheduler.start()
