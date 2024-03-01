@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import os
-import sys
 
 import typer
 from typer._completion_shared import Shells
@@ -9,8 +8,6 @@ from typer._completion_shared import Shells
 import cli.admin
 import cli.subscription
 import cli.user
-
-sys.path.insert(0, os.getcwd())
 
 app = typer.Typer(no_args_is_help=True, add_completion=False)
 app.add_typer(cli.admin.app, name="admin")
