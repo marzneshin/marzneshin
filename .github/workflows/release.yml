@@ -16,6 +16,11 @@ jobs:
         uses: TriPSs/conventional-changelog-action@v3.7.1
         with:
           github-token: ${{ secrets.CHANGELOG_RELEASE }}
+          git-message: 'chore(release): {version}'
+          git-user-name: 'krr0ption'
+          git-user-email: 'info@mardin.cc'
+          preset: 'angular'
+          tag-prefix: 'v'
 
       - name: Create release
         uses: actions/create-release@v1
