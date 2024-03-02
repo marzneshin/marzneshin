@@ -3,7 +3,7 @@ anyio==4.2.0
 APScheduler==3.10.4
 commentjson==0.9.0
 cryptography==41.0.7
-fastapi==0.109.0
+fastapi==0.109.1
 fastapi_responses==0.2.1
 grpclib==0.4.7
 jdatetime==4.1.1
