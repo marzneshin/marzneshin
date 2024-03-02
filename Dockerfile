@@ -7,7 +7,7 @@ WORKDIR /app
 COPY . /app
 
 RUN apt-get update -y \
-    && apt-get install npm make -y --no-install-recommends \
+    && apt-get install npm make gcc python3-dev -y --no-install-recommends \
     && make dashboard-build \
     && rm -rf /var/lib/apt/lists/* \
     && pip install --no-cache-dir --upgrade -r /app/requirements.txt
