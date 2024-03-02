@@ -15,3 +15,6 @@ dashboard-dev:
     	-- --host 0.0.0.0 \
     	--base ../app/dashboard/ \
     	--clearScreen false
+
+dashboard-cleanup:
+	rm -rf app/dashboard/node_modules/
