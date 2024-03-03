@@ -1,37 +1,28 @@
-<p align="center">
-  <a href="https://github.com/khodedawsh/marzneshin" target="_blank" rel="noopener noreferrer">
-    <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="">
-      <img width="160" height="160" src="">
-    </picture>
-  </a>
-</p>
-
 <h1 align="center"/>Marzneshin</h1>
 
 <p align="center">
-    Unified GUI Censorship Resistant Solution Powered by <a href="https://github.com/XTLS/Xray-core">Xray</a>
+    A Fork of Marzban aiming for scalability
 </p>
 
 <br/>
 <p align="center">
     <a href="#">
-        <img src="https://img.shields.io/github/actions/workflow/status/gozargah/marzban/build.yml?style=flat-square" />
+        <img src="https://img.shields.io/github/actions/workflow/status/khodedawsh/marzneshin/build.yml?style=flat-square" />
     </a>
-    <a href="https://hub.docker.com/r/gozargah/marzban" target="_blank">
-        <img src="https://img.shields.io/docker/pulls/gozargah/marzban?style=flat-square&logo=docker" />
+    <a href="https://hub.docker.com/r/gozargah/marzneshin" target="_blank">
+        <img src="https://img.shields.io/docker/pulls/dawsh/marzneshin?style=flat-square&logo=docker" />
     </a>
     <a href="#">
-        <img src="https://img.shields.io/github/license/gozargah/marzban?style=flat-square" />
+        <img src="https://img.shields.io/github/license/khodedawsh/marzneshin?style=flat-square" />
     </a>
-    <a href="https://t.me/gozargah_marzban" target="_blank">
+    <a href="https://t.me/marzneshins" target="_blank">
         <img src="https://img.shields.io/badge/telegram-group-blue?style=flat-square&logo=telegram" />
     </a>
     <a href="#">
         <img src="https://img.shields.io/badge/twitter-commiunity-blue?style=flat-square&logo=twitter" />
     </a>
     <a href="#">
-        <img src="https://img.shields.io/github/stars/gozargah/marzban?style=social" />
+        <img src="https://img.shields.io/github/stars/khodedawsh/marzneshin?style=social" />
     </a>
 </p>
 
@@ -54,7 +45,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/gozargah/marzban" target="_blank" rel="noopener noreferrer" >
+  <a href="https://github.com/gozargah/marzneshin" target="_blank" rel="noopener noreferrer" >
     <img src="https://github.com/Gozargah/Marzban-docs/raw/master/screenshots/preview.png" alt="Marzban screenshots" width="600" height="auto">
   </a>
 </p>
@@ -62,15 +53,16 @@
 ## Table of Contents
 
 - [Overview](#overview)
-	- [Why using Marzban?](#why-using-marzban)
-		- [Features](#features)
+	- [How it works](#how-it-works)
+		- [Legacy features](#marzbans-legacy-features)
+		- [New features](#new-features)
 - [Installation guide](#installation-guide)
 - [Configuration](#configuration)
 - [API](#api)
 - [Backup](#backup)
 - [Telegram Bot](#telegram-bot)
-- [Marzban CLI](#marzban-cli)
-- [Marzban Node](#marzban-node)
+- [Marzneshin CLI](#marzneshin-cli)
+- [Marzneshin Node](#marzneshin-node)
 - [Webhook notifications](#webhook-notifications)
 - [Donation](#donation)
 - [License](#license)
@@ -78,60 +70,65 @@
 
 # Overview
 
-Marzban (the Persian word for "border guard" - pronounced /mærz'ban/) is a proxy management tool that provides a simple and easy-to-use user interface for managing hundreds of proxy accounts powered by [Xray-core](https://github.com/XTLS/Xray-core) and built using Python and Reactjs.
+Marzneshin is simply an interface for managing marznode users and services.
 
-## Why using Marzban?
+## How it works 
 
-Marzban is user-friendly, feature-rich and reliable. It lets you to create different proxies for your users without any complicated configuration. Using its built-in web UI, you are able to monitor, modify and limit users.
+Marzneshin controls the nodes connected to it; monitoring/disabling/enabling users on marznode instances
+while marznode manages vpn backends (such as xray)
 
-### Features
+### Marzban's legacy Features
 
 - Built-in **Web UI**
-- [**Multiple Nodes**](#marzban-node) support (for infrastructure distribution & scalability)
+- [**Multiple Nodes**](#marznode) support (for infrastructure distribution & scalability)
 - Supports protocols **Vmess**, **VLESS**, **Trojan** and **Shadowsocks**
 - **Multi-protocol** for a single user
 - **Multi-user** on a single inbound
-- **Multi-inbound** on a **single port** (fallbacks support)
-- **Traffic** and **expiry date** limitations
-- **Periodic** traffic limit (e.g. daily, weekly, etc.)
+- Restfull api
+- limit users' data and set exire dates
+- reset traffic periodically (daily, weekly,...)
 - **Subscription link** compatible with **V2ray** _(such as V2RayNG, OneClick, Nekoray, etc.)_, **Clash** and **ClashMeta**
 - Automated **Share link** and **QRcode** generator
 - System monitoring and **traffic statistics**
-- Customizable xray configuration
-- **TLS** and **REALITY** support
 - Integrated **Telegram Bot**
 - Integrated **Command Line Interface (CLI)**
 - **Multi-language**
 - **Multi-admin** support (WIP)
+
+### New Features
+- Manage users' access to inbounds separately
+- Better UI with navigation bar
+- Marzneshin runs independent of any vpn backend(xray/...)
+- In case Marzneshin goes down nodes continue working normally as if nothing has happened.
+- shorter subscription links LOL
 
 # Installation guide
 
 Run the following command
 
 ```bash
-sudo bash -c "$(curl -sL https://github.com/Gozargah/Marzban-scripts/raw/master/marzban.sh)" @ install
+sudo bash -c "$(curl -sL https://github.com/khodedawsh/Marzneshin/raw/master/script.sh)" @ install
 ```
 
 Once the installation is complete:
 
-- You will see the logs that you can stop watching them by closing the terminal or pressing `Ctrl+C`
-- The Marzban files will be located at `/opt/marzban`
-- The configuration file can be found at `/opt/marzban/.env` (refer to [configurations](#configuration) section to see variables)
-- The data files will be placed at `/var/lib/marzban`
-- You can access the Marzban dashboard by opening a web browser and navigating to `http://YOUR_SERVER_IP:8000/dashboard/` (replace YOUR_SERVER_IP with the actual IP address of your server)
+- You'd notice the logs, which you could stop watching by pressing `Ctrl+C`; The process will continue running normally.
+- the configuration file can be found at `/etc/opt/marzneshin/.env` (refer to [configurations](#configuration) section to see variables)
+- Data files will be placed at `/var/lib/marzneshin`; e.g. the sqlite database.
+- You can access the Marzneshin dashboard by opening a web browser and navigating to `http://<SERVER_IP>:8000/dashboard/`
 
-Next, you need to create a sudo admin for logging into the Marzban dashboard by the following command
+Next, you need to create a sudo admin for logging into the Marzneshin dashboard by the following command
 
 ```bash
-marzban cli admin create --sudo
+marzneshin cli admin create --sudo
 ```
 
 That's it! You can login to your dashboard using these credentials
 
-To see the help message of the Marzban script, run the following command
+To see the help message of the Marzneshin script, run the following command
 
 ```bash
-marzban --help
+marzneshin --help
 ```
 
 If you are eager to run the project using the source code, check the section below
@@ -146,11 +143,11 @@ You can install it using [Xray-install](https://github.com/XTLS/Xray-install)
 bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install
 ```
 
-Clone this project and install the dependencies (you need Python >= 3.8)
+Clone this project and install the dependencies (you'd need Python >= 3.10)
 
 ```bash
-git clone https://github.com/Gozargah/Marzban.git
-cd Marzban
+git clone https://github.com/khodedawsh/Marzneshin
+cd Marzneshin/
 wget -qO- https://bootstrap.pypa.io/get-pip.py | python3 -
 python3 -m pip install -r requirements.txt
 ```
@@ -163,12 +160,12 @@ Then run the following command to run the database migration scripts
 alembic upgrade head
 ```
 
-If you want to use `marzban-cli`, you should link it to a file in your `$PATH`, make it executable, and install the auto-completion:
+If you want to use `marzneshin-cli`, you should link it to a file in your `$PATH`, make it executable, and install the auto-completion:
 
 ```bash
-sudo ln -s $(pwd)/marzban-cli.py /usr/bin/marzban-cli
-sudo chmod +x /usr/bin/marzban-cli
-marzban-cli completion install
+sudo ln -s $(pwd)/marzneshin-cli.py /usr/bin/marzneshin-cli
+sudo chmod +x /usr/bin/marzneshin-cli
+marzneshin-cli completion install
 ```
 
 Now it's time to configuration
@@ -190,11 +187,11 @@ Eventually, launch the application using command below
 python3 main.py
 ```
 
-To launch with linux systemctl (copy marzban.service file to `/var/lib/marzban/marzban.service`)
+To launch with linux systemctl (copy marzneshin.service file to `/var/lib/marzneshin/marzneshin.service`)
 
 ```
-systemctl enable /var/lib/marzban/marzban.service
-systemctl start marzban
+systemctl enable /var/lib/marzneshin/marzneshin.service
+systemctl start marzneshin
 ```
 
 To use with nginx
@@ -216,13 +213,13 @@ server {
     }
 
     # xray-core ws-path: /
-    # client ws-path: /marzban/me/2087
+    # client ws-path: /marzneshin/me/2087
     #
     # All traffic is proxed through port 443, and send to the xray port(2087, 2088 etc.).
-    # The '/marzban' in location regex path can changed any characters by yourself.
+    # The '/marzneshin' in location regex path can changed any characters by yourself.
     #
     # /${path}/${username}/${xray-port}
-    location ~* /marzban/.+/(.+)$ {
+    location ~* /marzneshin/.+/(.+)$ {
         proxy_redirect off;
         proxy_pass http://127.0.0.1:$1/;
         proxy_http_version 1.1;
@@ -241,7 +238,7 @@ or
 server {
     listen 443 ssl http2;
     listen [::]:443 ssl http2;
-    server_name  marzban.example.com;
+    server_name  marzneshin.example.com;
 
     ssl_certificate      /etc/letsencrypt/live/example.com/fullchain.pem;
     ssl_certificate_key  /etc/letsencrypt/live/example.com/privkey.pem;
@@ -272,12 +269,7 @@ By default the app will be run on `http://localhost:8000/dashboard`. You can con
 | UVICORN_UDS                       | Bind application to a UNIX domain socket                                                              |
 | UVICORN_SSL_CERTFILE              | SSL certificate file to have application on https                                                     |
 | UVICORN_SSL_KEYFILE               | SSL key file to have application on https                                                             |
-| XRAY_JSON                         | Path of Xray's json config file (default: `xray_config.json`)                                         |
-| XRAY_EXECUTABLE_PATH              | Path of Xray binary (default: `/usr/local/bin/xray`)                                                  |
-| XRAY_ASSETS_PATH                  | Path of Xray assets (default: `/usr/local/share/xray`)                                                |
 | XRAY_SUBSCRIPTION_URL_PREFIX      | Prefix of subscription URLs                                                                           |
-| XRAY_FALLBACKS_INBOUND_TAG        | Tag of the inbound that includes fallbacks, needed in the case you're using fallbacks                 |
-| XRAY_EXCLUDE_INBOUND_TAGS         | Tags of the inbounds that shouldn't be managed and included in links by application                   |
 | CUSTOM_TEMPLATES_DIRECTORY        | Customized templates directory (default: `app/templates`)                                             |
 | CLASH_SUBSCRIPTION_TEMPLATE       | The template that will be used for generating clash configs (default: `clash/default.yml`)            |
 | SUBSCRIPTION_PAGE_TEMPLATE        | The template used for generating subscription info page (default: `subscription/index.html`)          |
@@ -297,50 +289,49 @@ By default the app will be run on `http://localhost:8000/dashboard`. You can con
 
 # API
 
-Marzban provides a REST API that enables developers to interact with Marzban services programmatically. To view the API documentation in Swagger UI or ReDoc, set the configuration variable `DOCS=True` and navigate to the `/docs` and `/redoc`.
+Marzneshin provides a REST API that enables developers to interact with Marzneshin services programmatically. To view the API documentation in Swagger UI or ReDoc, set the configuration variable `DOCS=True` and navigate to the `/docs` and `/redoc`.
 
 # Backup
 
-It's always a good idea to backup your Marzban files regularly to prevent data loss in case of system failures or accidental deletion. Here are the steps to backup Marzban:
+It's always a good idea to backup your Marzneshin files regularly to prevent data loss in case of system failures or accidental deletion. Here are the steps to backup Marzneshin:
 
-1. By default, all Marzban important files are saved in `/var/lib/marzban` (Docker versions). Copy the entire `/var/lib/marzban` directory to a backup location of your choice, such as an external hard drive or cloud storage.
-2. Additionally, make sure to backup your env file, which contains your configuration variables, and also, your Xray config file. If you installed Marzban using marzban-scripts (recommended installation approach), the env and other configurations should be inside `/opt/marzban/` directory.
+1. By default, all Marzneshin important files are saved in `/var/lib/marzneshin` (Docker versions). Copy the entire `/var/lib/marzneshin` directory to a backup location of your choice, such as an external hard drive or cloud storage.
+2. Additionally, make sure to backup your env file, which contains your configuration variables. If you installed Marzneshin using the script (recommended installation approach), the env and other configurations should be inside `/etc/opt/marzneshin/` directory.
 
-By following these steps, you can ensure that you have a backup of all your Marzban files and data, as well as your configuration variables and Xray configuration, in case you need to restore them in the future. Remember to update your backups regularly to keep them up-to-date.
+By following these steps, you can ensure that you have a backup of all your Marzneshin files and data, as well as your configuration variables and Xray configuration, in case you need to restore them in the future. Remember to update your backups regularly to keep them up-to-date.
 
 # Telegram Bot
 
-Marzban comes with an integrated Telegram bot that can handle server management, user creation and removal, and send notifications. This bot can be easily enabled by following a few simple steps, and it provides a convenient way to interact with Marzban without having to log in to the server every time.
+Marzneshin comes with an integrated Telegram bot that can handle server management, user creation and removal, and send notifications. This bot can be easily enabled by following a few simple steps, and it provides a convenient way to interact with Marzneshin without having to log in to the server every time.
 
 To enable Telegram Bot:
 
 1. set `TELEGRAM_API_TOKEN` to your bot's API Token
 2. set `TELEGRAM_ADMIN_ID` to your Telegram account's numeric ID, you can get your ID from [@userinfobot](https://t.me/userinfobot)
 
-# Marzban CLI
+# Marzneshin CLI
 
-Marzban comes with an integrated CLI named `marzban-cli` which allows administrators to have direct interaction with it.
+Marzneshin comes with an integrated CLI named `marzneshin-cli` which allows administrators to have direct interaction with it.
 
-If you've installed Marzban using easy install script, you can access the cli commands by running
+If you've installed Marzneshin using the installation script, you can access the cli commands by running
 
 ```bash
-marzban cli [OPTIONS] COMMAND [ARGS]...
+marzneshin cli [OPTIONS] COMMAND [ARGS]...
 ```
 
-For more information, You can read [Marzban CLI's documentation](./cli/README.md).
+For more information, You can read [Marzneshin CLI's documentation](./cli/README.md).
 
-# Marzban Node
+# marznode
 
-The Marzban project introduces the [Marzban-node](https://github.com/gozargah/marzban-node), which revolutionizes infrastructure distribution. With Marzban-node, you can distribute your infrastructure across multiple locations, unlocking benefits such as redundancy, high availability, scalability, flexibility. Marzban-node empowers users to connect to different servers, offering them the flexibility to choose and connect to multiple servers instead of being limited to only one server.
-For more detailed information and installation instructions, please refer to the [Marzban-node official documentation](https://github.com/gozargah/marzban-node)
+[marznode](https://github.com/khodedawsh/marznode) is the backend needed to run proxy servers.
 
 # Webhook notifications
 
-You can set a webhook address and Marzban will send the notifications to that address.
+You can set a webhook address and Marzneshin will send the notifications to that address.
 
 the requests will be sent as a post request to the adress provided by `WEBHOOK_ADDRESS` with `WEBHOOK_SECRET` as `x-webhook-secret` in the headers.
 
-Example request sent from Marzban:
+Example request sent from Marzneshin:
 
 ```
 Headers:
@@ -356,20 +347,20 @@ Content-Type: application/json
 
 
 Body:
-{"username": "marzban_test_user", "action": "user_updated", "enqueued_at": 1680506457.636369, "tries": 0}
+{"username": "marzneshin_test_user", "action": "user_updated", "enqueued_at": 1680506457.636369, "tries": 0}
 ```
 
 Different action typs are: `user_created`, `user_updated`, `user_deleted`, `user_limited`, `user_expired`, `user_disabled`, `user_enabled`
 
 # Donation
 
-If you found Marzban useful and would like to support its development, you can make a donation in one of the following crypto networks:
+If you found Marzneshin useful and would like to support its development, you can't make a donation in one of the following crypto networks:
 
-- TRON network (TRC20): `TX8kJoDcowQPBFTYHAJR36GyoUKP1Xwzkb`
-- ETH, BNB, MATIC network (ERC20, BEP20): `0xFdc9ad32454FA4fc4733270FCc12ddBFb68b83F7`
-- Bitcoin network: `bc1qpys2nefgsjjgae3g3gqy9crsv3h3rm96tlkz0v`
-- Dogecoin network: `DJAocBAu8y6LwhDKUktLAyzV8xyoFeHH6R`
-- TON network: `EQAVf-7hAXHlF-jmrKE44oBwN7HGQFVBLAtrOsev5K4qR4P8`
+- TRON network (TRC20):
+- ETH, BNB, MATIC network (ERC20, BEP20):
+- Bitcoin network:
+- Dogecoin network:
+- TON network: 
 
 Thank you for your support!
 
@@ -379,16 +370,21 @@ Made in [Unknown!] and Published under [AGPL-3.0](./LICENSE).
 
 # Contributors
 
-We ❤️‍🔥 contributors! If you'd like to contribute, please check out our [Contributing Guidelines](CONTRIBUTING.md) and feel free to submit a pull request or open an issue. We also welcome you to join our [Telegram](https://t.me/gozargah_marzban) group for either support or contributing guidance.
+We ❤️‍🔥 contributors! If you'd like to contribute, please check out our [Contributing Guidelines](CONTRIBUTING.md) and feel free to submit a pull request or open an issue. We also welcome you to join our [Telegram](https://t.me/marzneshins) group for either support or contributing guidance.
 
-Check [open issues](https://github.com/gozargah/marzban/issues) to help the progress of this project.
+Check [open issues](https://github.com/khodedawsh/marzneshin/issues) to help the progress of this project.
 
 <p align="center">
-Thanks to the all contributors who have helped improve Marzban:
+Thanks to the all contributors who have helped improved Marzban & Marzneshin:
 </p>
 <p align="center">
 <a href="https://github.com/Gozargah/Marzban/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=Gozargah/Marzban" />
+</a>
+</p>
+<p align="center">
+<a href="https://github.com/khodedawsh/marzneshin/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=khodedawsh/marzneshin" />
 </a>
 </p>
 <p align="center">
