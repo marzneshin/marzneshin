@@ -7,7 +7,7 @@
 <br/>
 <p align="center">
     <a href="#">
-        <img src="https://img.shields.io/github/actions/workflow/status/khodedawsh/marzneshin/build.yml?style=flat-square" />
+        <img src="https://img.shields.io/github/actions/workflow/status/khodedawsh/marzneshin/package.yml?style=flat-square" />
     </a>
     <a href="https://hub.docker.com/r/gozargah/marzneshin" target="_blank">
         <img src="https://img.shields.io/docker/pulls/dawsh/marzneshin?style=flat-square&logo=docker" />
