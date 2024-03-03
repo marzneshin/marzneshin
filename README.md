@@ -9,7 +9,7 @@
     <a href="#">
         <img src="https://img.shields.io/github/actions/workflow/status/khodedawsh/marzneshin/package.yml?style=flat-square" />
     </a>
-    <a href="https://hub.docker.com/r/gozargah/marzneshin" target="_blank">
+    <a href="https://hub.docker.com/r/dawsh/marzneshin" target="_blank">
         <img src="https://img.shields.io/docker/pulls/dawsh/marzneshin?style=flat-square&logo=docker" />
     </a>
     <a href="#">
@@ -45,7 +45,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/gozargah/marzneshin" target="_blank" rel="noopener noreferrer" >
+  <a href="https://github.com/khodedawsh/marzneshin" target="_blank" rel="noopener noreferrer" >
     <img src="https://github.com/Gozargah/Marzban-docs/raw/master/screenshots/preview.png" alt="Marzban screenshots" width="600" height="auto">
   </a>
 </p>
