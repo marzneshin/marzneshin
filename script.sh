@@ -200,7 +200,7 @@ marzneshin_cli() {
 
 update_marzneshin_script() {
     FETCH_REPO="khodedawsh/marzneshin"
-    SCRIPT_URL="https://github.com/$FETCH_REPO/raw/master/install.sh"
+    SCRIPT_URL="https://github.com/$FETCH_REPO/raw/master/script.sh"
     colorized_echo blue "Updating marzneshin script"
     curl -sSL $SCRIPT_URL | install -m 755 /dev/stdin /usr/local/bin/marzneshin
     colorized_echo green "marzneshin script updated successfully"
