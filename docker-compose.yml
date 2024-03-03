@@ -1,6 +1,6 @@
 services:
   marzneshin:
-    image: marzneshin:latest
+    image: dawsh/marzneshin:latest
     restart: always
     env_file: .env
     network_mode: host
