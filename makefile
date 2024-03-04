@@ -11,9 +11,10 @@ dashboard-build:
 	cp ./app/dashboard/dist/index.html ./app/dashboard/dist/404.html
 
 dashboard-dev:
-	npm run dev \
+	VITE_BASE_API=http://0.0.0.0:8000/api/ npm run dev \
+		--prefix './app/dashboard/' \
     	-- --host 0.0.0.0 \
-    	--base ../app/dashboard/ \
+    	--base ./app/dashboard/ \
     	--clearScreen false
 
 dashboard-cleanup:
