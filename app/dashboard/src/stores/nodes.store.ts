@@ -63,7 +63,7 @@ export const getNodeCreateDefaultValues = (): NodeCreate => ({
 
 export const FetchNodesQueryKey = 'fetch-nodes-query-key';
 
-export function fetchNodes() {
+export function fetchNodes(): Promise<NodeType[]> {
   useDashboard.setState({ loading: true })
   return fetch('/nodes').then((nodes) => {
     return nodes;
