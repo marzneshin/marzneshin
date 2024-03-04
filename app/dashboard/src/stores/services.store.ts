@@ -7,9 +7,9 @@ import { subscribeWithSelector } from 'zustand/middleware';
 import { fetch } from 'service/http';
 import { ServicesFilterType } from 'types/filter';
 import { useDashboard, useUsers } from 'stores';
+import { queryIds } from 'constants/query-ids';
 
 type ServicesStateType = {
-  services: Service[],
   isCreatingNewService: boolean;
   editingService: Service | null | undefined;
   deletingService: Service | null;
@@ -33,7 +33,6 @@ export const fetchServices = async (query: ServicesFilterType): Promise<Service[
 
   return fetch('/services')
     .then((services) => {
-      useServices.setState({ services });
       return services;
     })
     .finally(() => {
@@ -46,7 +45,6 @@ export const useServices = create(
     editingService: null,
     deletingService: null,
     isCreatingNewService: false,
-    services: [],
     servicesFilters: {
       name: '',
       limit: pageSizeManagers.services.getPageSize(),
@@ -62,7 +60,7 @@ export const useServices = create(
       get().refetchServices();
     },
     refetchServices: () => {
-      fetchServices(get().servicesFilters);
+      queryClient.invalidateQueries(queryIds.services);
     },
     onCreateService: (isCreatingNewService) => set({ isCreatingNewService }),
     onEditingService: (editingService) => {

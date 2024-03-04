@@ -32,7 +32,8 @@ import { schema, FormType } from './form-schema';
 import { InboundsField } from './inbounds-field';
 import { NameField } from './name-field';
 import { InboundType, Service, ServiceCreate } from 'types';
-import { useInbounds, useServices } from 'stores';
+import { fetchInbounds, useServices } from 'stores';
+import { useQuery } from 'react-query';
 
 const formatService = (service: Service): FormType => {
   const inbounds: number[] = service.inbounds.map((inbound: number | InboundType): number => {
@@ -57,9 +58,8 @@ export const ServiceDialog: FC<ServiceDialogProps> = () => {
     onDeletingService,
   } = useServices();
   const {
-    inbounds,
-    refetchInbounds,
-  } = useInbounds();
+    data: inbounds,
+  } = useQuery(() => fetchInbounds());
   const isEditing = !!editingService;
   const isOpen = isCreatingNewService || isEditing;
   const [loading, setLoading] = useState(false);
