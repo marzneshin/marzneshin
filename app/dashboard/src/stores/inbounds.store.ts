@@ -60,6 +60,7 @@ type InboundsStateType = {
   // Inbounds
   selectedInbound: InboundType | null;
   selectInbound: (inbound: InboundType) => void;
+  refetchInbounds: () => void;
   // Hosts
   refetchHosts: () => void;
   hostsFilters: HostsFilterType;
@@ -115,6 +116,9 @@ export const useInbounds = create(
     },
     setLoading: (value) => {
       set({ loading: value })
+    },
+    refetchInbounds: () => {
+      queryClient.invalidateQueries(queryIds.inbounds);
     },
     refetchHosts: () => {
       queryClient.invalidateQueries(queryIds.hosts);
