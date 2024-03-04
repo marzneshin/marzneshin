@@ -7,15 +7,12 @@ import { useServices, useDashboard } from 'stores';
 import { StatisticsQueryKey } from 'components/statistics-card';
 import { queryClient } from 'service/react-query';
 import { UsersFilterType, FilterUsageType } from 'types/filter';
+import { queryIds } from 'constants/query-ids';
 
 type UsersStateType = {
   isCreatingNewUser: boolean;
   editingUser: User | null | undefined;
   deletingUser: User | null;
-  users: {
-    users: User[];
-    total: number;
-  };
   usersFilters: UsersFilterType;
   resetUsageUser: User | null;
   revokeSubscriptionUser: User | null;
@@ -39,7 +36,12 @@ type UsersStateType = {
   fetchUserUsage: (user: User, query: FilterUsageType) => Promise<void>;
 }
 
-export const fetchUsers = async (query: UsersFilterType): Promise<User[]> => {
+type UserResponse = {
+  total: number,
+  users: User[]
+}
+
+export const fetchUsers = async (query: UsersFilterType): Promise<UserResponse> => {
   for (const key in query) {
     if (!query[key as keyof UsersFilterType]) delete query[key as keyof UsersFilterType];
   }
@@ -49,7 +51,6 @@ export const fetchUsers = async (query: UsersFilterType): Promise<User[]> => {
       for (let i = 0; i < users.users.length; i++) {
         users.users[i].service = users.users[i].service_ids;
       }
-      useUsers.setState({ users });
       return users;
     })
     .finally(() => {
@@ -61,10 +62,6 @@ export const useUsers = create(subscribeWithSelector<UsersStateType>((set, get) 
   editingUser: null,
   deletingUser: null,
   isCreatingNewUser: false,
-  users: {
-    users: [],
-    total: 0,
-  },
   resetUsageUser: null,
   revokeSubscriptionUser: null,
   isResetingAllUsage: false,
@@ -82,7 +79,7 @@ export const useUsers = create(subscribeWithSelector<UsersStateType>((set, get) 
     set({ subscribeUrl });
   },
   refetchUsers: () => {
-    fetchUsers(get().usersFilters);
+    queryClient.invalidateQueries(queryIds.users);
   },
   resetAllUsage: async () => {
     return fetch('/users/reset', { method: 'POST' }).then(() => {

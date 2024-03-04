@@ -22,8 +22,10 @@ import {
   Pagination,
   Sort
 } from 'components/table';
-import { useServices } from 'stores';
+import { fetchServices, useServices } from 'stores';
 import { pageSizeManagers } from 'utils/userPreferenceStorage';
+import { useQuery } from 'react-query';
+import { queryIds } from 'constants/query-ids';
 
 type ExpandedIndex = number | number[];
 type ServicesTableProps = {} & TableProps;
@@ -31,11 +33,11 @@ type ServicesTableProps = {} & TableProps;
 export const ServicesTable: FC<ServicesTableProps> = (props) => {
   const {
     servicesFilters: filters,
-    services,
     onEditingService,
     onCreateService,
     onFilterChange,
   } = useServices();
+  const { data: services } = useQuery(queryIds.services, () => { return fetchServices(filters) });
   const useTable = useBreakpointValue({ base: false, md: true });
   const { t } = useTranslation();
   const [selectedRow,] = useState<ExpandedIndex | undefined>(
@@ -192,7 +194,7 @@ export const ServicesTable: FC<ServicesTableProps> = (props) => {
                 </Tr>
               );
             })}
-          {services.length == 0 && (
+          {services?.length == 0 && (
             <Tr>
               <Td colSpan={3}>
                 <EmptySection
@@ -207,8 +209,8 @@ export const ServicesTable: FC<ServicesTableProps> = (props) => {
           )}
         </Tbody>
       </Table>
-      <Pagination 
-        total={services.length} 
+      <Pagination
+        total={services?.length || 0}
         onFilterChange={onFilterChange}
         filters={filters}
         pageSizeManager={pageSizeManagers.services}

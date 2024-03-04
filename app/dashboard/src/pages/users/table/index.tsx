@@ -36,9 +36,12 @@ import {
   Sort,
 } from 'components/table';
 import { UsageSlider, UsageSliderCompact } from './usage-slider';
-import { useUsers } from 'stores';
+import { fetchUsers, useUsers } from 'stores';
 import { ActionButtons } from './action-buttons';
 import { pageSizeManagers } from 'utils/userPreferenceStorage';
+import { useQuery } from 'react-query';
+import { User } from 'types';
+import { queryIds } from 'constants/query-ids';
 
 type ExpandedIndex = number | number[];
 
@@ -47,27 +50,27 @@ type UsersTableProps = {} & TableProps;
 export const UsersTable: FC<UsersTableProps> = (props) => {
   const {
     usersFilters: filters,
-    users: { users },
-    users: { total },
     onEditingUser,
     onCreateUser,
     onFilterChange,
   } = useUsers();
-
+  const { data } = useQuery({
+    queryKey: queryIds.users,
+    queryFn: () => { return fetchUsers(filters) },
+    initialData: { total: 0, users: [] },
+  });
   const { t } = useTranslation();
   const [selectedRow, setSelectedRow] = useState<ExpandedIndex | undefined>(
     undefined
   );
   const useTable = useBreakpointValue({ base: false, md: true });
 
-  const isFiltered = users.length !== total;
-
   const handleStatusFilter = (e: any) => {
     onFilterChange({
       status: e.target.value.length > 0 ? e.target.value : undefined,
     });
   };
-
+  const isFiltered = data?.total !== data?.users.length;
   const toggleAccordion = (index: number) => {
     setSelectedRow(index === selectedRow ? undefined : index);
   };
@@ -145,7 +148,7 @@ export const UsersTable: FC<UsersTableProps> = (props) => {
           </Thead>
           <Tbody>
             {!useTable &&
-              users?.map((user, i) => {
+              data?.users.map((user, i) => {
                 return (
                   <Fragment key={user.username}>
                     <Tr
@@ -350,12 +353,12 @@ export const UsersTable: FC<UsersTableProps> = (props) => {
         </Thead>
         <Tbody>
           {useTable &&
-            users?.map((user, i) => {
+            data?.users.map((user: User, i) => {
               return (
                 <Tr
                   key={user.username}
                   className={classNames('interactive', {
-                    'last-row': i === users.length - 1,
+                    'last-row': i === data?.users.length - 1,
                   })}
                   onClick={() => onEditingUser(user)}
                 >
@@ -387,7 +390,7 @@ export const UsersTable: FC<UsersTableProps> = (props) => {
                 </Tr>
               );
             })}
-          {users.length == 0 && (
+          {data?.users.length == 0 && (
             <Tr>
               <Td colSpan={4}>
                 <EmptySection
@@ -402,7 +405,7 @@ export const UsersTable: FC<UsersTableProps> = (props) => {
           )}
         </Tbody>
       </Table>
-      <Pagination filters={filters} total={total} onFilterChange={onFilterChange} pageSizeManager={pageSizeManagers.users} />
+      <Pagination filters={filters} total={data?.total || 0} onFilterChange={onFilterChange} pageSizeManager={pageSizeManagers.users} />
     </Box>
   );
 };

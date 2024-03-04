@@ -49,7 +49,9 @@ import { DataLimitField } from './data-limit-field';
 import { PeriodicUsageReset } from './periodic-usage-reset';
 import { ExpireDateField } from './expire-date-field';
 import { NoteField } from './note-field';
-import { useUsers, useServices } from 'stores';
+import { useUsers, useServices, fetchServices } from 'stores';
+import { queryIds } from 'constants/query-ids';
+import { useQuery } from 'react-query';
 
 const formatUser = (user: User): FormType => {
   const services: number[] = user.services.map((service: number | Service): number => {
@@ -77,7 +79,14 @@ export const UserDialog: FC<UserDialogProps> = () => {
     createUser,
     onDeletingUser,
   } = useUsers();
-  const { refetchServices, services } = useServices();
+  const { refetchServices, servicesFilters: filters } = useServices();
+  const { data: services } = useQuery({
+    queryKey: queryIds.services,
+    initialData: [],
+    queryFn: () => {
+      return fetchServices(filters);
+    }
+  });
   const isEditing = !!editingUser;
   const isOpen = isCreatingNewUser || isEditing;
   const [loading, setLoading] = useState(false);
@@ -259,7 +268,7 @@ export const UserDialog: FC<UserDialogProps> = () => {
                 </GridItem>
 
                 <GridItem>
-                  <ServicesField t={t} services={services} form={form} />
+                  <ServicesField t={t} services={services || []} form={form} />
                 </GridItem>
 
                 {isEditing && usageVisible && (

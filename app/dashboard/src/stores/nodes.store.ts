@@ -5,6 +5,8 @@ import { z } from 'zod';
 import { FilterUsageType, NodesFilterType } from 'types/filter';
 import { pageSizeManagers } from 'utils/userPreferenceStorage';
 import { useDashboard } from './dashboard.store';
+import { queryClient } from 'service/react-query';
+import { queryIds } from 'constants/query-ids';
 
 export const NodeSchema = z.object({
   name: z.string().min(1),
@@ -61,12 +63,16 @@ export const getNodeCreateDefaultValues = (): NodeCreate => ({
 
 export const FetchNodesQueryKey = 'fetch-nodes-query-key';
 
-export function fetchNodes() {
-  return fetch('/nodes');
+export function fetchNodes(): Promise<NodeType[]> {
+  useDashboard.setState({ loading: true })
+  return fetch('/nodes').then((nodes) => {
+    return nodes;
+  }).finally(() => {
+    useDashboard.setState({ loading: false })
+  });
 }
 
 export type NodeStore = {
-  nodes: NodeType[];
   certificate: string,
   deletingNode?: NodeCreate | null;
   editingNode: NodeCreate | null;
@@ -99,7 +105,6 @@ export const useNodesQuery = () => {
 };
 
 export const useNodes = create<NodeStore>((set, get) => ({
-  nodes: [],
   certificate: '',
   editingNode: null,
   deletingNode: null,
@@ -125,11 +130,7 @@ export const useNodes = create<NodeStore>((set, get) => ({
     return fetch('/nodes', { method: 'POST', body }).then(() => { get().refetchCertificate() });
   },
   refetchNodes: () => {
-    useDashboard.setState({ loading: true })
-    fetchNodes().then((nodes) => {
-      useDashboard.setState({ loading: false })
-      set({ nodes });
-    })
+    queryClient.invalidateQueries(queryIds.nodes);
   },
   refetchCertificate: () => {
     fetch('/nodes/settings').then((res) => {

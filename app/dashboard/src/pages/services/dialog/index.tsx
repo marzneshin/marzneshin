@@ -32,7 +32,9 @@ import { schema, FormType } from './form-schema';
 import { InboundsField } from './inbounds-field';
 import { NameField } from './name-field';
 import { InboundType, Service, ServiceCreate } from 'types';
-import { useInbounds, useServices } from 'stores';
+import { fetchInbounds, useInbounds, useServices } from 'stores';
+import { useQuery } from 'react-query';
+import { queryIds } from 'constants/query-ids';
 
 const formatService = (service: Service): FormType => {
   const inbounds: number[] = service.inbounds.map((inbound: number | InboundType): number => {
@@ -56,10 +58,10 @@ export const ServiceDialog: FC<ServiceDialogProps> = () => {
     createService,
     onDeletingService,
   } = useServices();
+  const { refetchInbounds } = useInbounds();
   const {
-    inbounds,
-    refetchInbounds,
-  } = useInbounds();
+    data: inbounds,
+  } = useQuery(queryIds.inbounds, () => fetchInbounds());
   const isEditing = !!editingService;
   const isOpen = isCreatingNewService || isEditing;
   const [loading, setLoading] = useState(false);
@@ -149,7 +151,7 @@ export const ServiceDialog: FC<ServiceDialogProps> = () => {
                   w="full"
                 >
                   <NameField form={form} disabled={disabled} isEditing={isEditing} t={t} />
-                  <InboundsField t={t} inbounds={inbounds} form={form} />
+                  <InboundsField t={t} inbounds={inbounds || []} form={form} />
                 </Flex>
                 {error && (
                   <Alert
