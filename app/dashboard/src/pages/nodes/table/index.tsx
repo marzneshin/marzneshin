@@ -34,7 +34,9 @@ import {
   StatusSortSelect,
   handleSort,
 } from 'components/table';
-import { useNodes } from 'stores';
+import { fetchNodes, useNodes } from 'stores';
+import { useQuery } from 'react-query';
+import { queryIds } from 'constants/query-ids';
 
 type ExpandedIndex = number | number[];
 
@@ -43,13 +45,12 @@ type NodesTableProps = {} & TableProps;
 export const NodesTable: FC<NodesTableProps> = (props) => {
   const {
     nodesFilters: filters,
-    nodes,
     onEditingNode,
     onAddingNode,
     onFilterChange,
   } = useNodes();
-
-  const total = nodes.length;
+  const { data: nodes } = useQuery(queryIds.nodes, () => { return fetchNodes() })
+  const total = nodes?.length || 0;
 
   const { t } = useTranslation();
   const [selectedRow, setSelectedRow] = useState<ExpandedIndex | undefined>(
@@ -373,7 +374,7 @@ export const NodesTable: FC<NodesTableProps> = (props) => {
                 </Tr>
               );
             })}
-          {nodes.length == 0 && (
+          {nodes?.length == 0 && (
             <Tr>
               <Td colSpan={5}>
                 <EmptySection
