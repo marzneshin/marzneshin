@@ -54,13 +54,16 @@ export const UsersTable: FC<UsersTableProps> = (props) => {
     onCreateUser,
     onFilterChange,
   } = useUsers();
-  const { data } = useQuery(queryIds.users, () => { return fetchUsers(filters) });
+  const { data } = useQuery({
+    queryKey: queryIds.users,
+    queryFn: () => { return fetchUsers(filters) },
+    initialData: { total: 0, users: [] },
+  });
   const { t } = useTranslation();
   const [selectedRow, setSelectedRow] = useState<ExpandedIndex | undefined>(
     undefined
   );
   const useTable = useBreakpointValue({ base: false, md: true });
-  console.log(data);
 
   const handleStatusFilter = (e: any) => {
     onFilterChange({

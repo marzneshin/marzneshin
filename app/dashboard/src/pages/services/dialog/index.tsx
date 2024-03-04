@@ -151,7 +151,7 @@ export const ServiceDialog: FC<ServiceDialogProps> = () => {
                   w="full"
                 >
                   <NameField form={form} disabled={disabled} isEditing={isEditing} t={t} />
-                  <InboundsField t={t} inbounds={inbounds} form={form} />
+                  <InboundsField t={t} inbounds={inbounds || []} form={form} />
                 </Flex>
                 {error && (
                   <Alert

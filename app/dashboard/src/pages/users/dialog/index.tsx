@@ -80,8 +80,12 @@ export const UserDialog: FC<UserDialogProps> = () => {
     onDeletingUser,
   } = useUsers();
   const { refetchServices, servicesFilters: filters } = useServices();
-  const { data: services } = useQuery(queryIds.services, () => {
-    return fetchServices(filters);
+  const { data: services } = useQuery({
+    queryKey: queryIds.services,
+    initialData: [],
+    queryFn: () => {
+      return fetchServices(filters);
+    }
   });
   const isEditing = !!editingUser;
   const isOpen = isCreatingNewUser || isEditing;
@@ -264,7 +268,7 @@ export const UserDialog: FC<UserDialogProps> = () => {
                 </GridItem>
 
                 <GridItem>
-                  <ServicesField t={t} services={services} form={form} />
+                  <ServicesField t={t} services={services || []} form={form} />
                 </GridItem>
 
                 {isEditing && usageVisible && (
