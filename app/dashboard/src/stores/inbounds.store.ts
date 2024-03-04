@@ -7,6 +7,7 @@ import { z } from 'zod';
 import { HostsFilterType, InboundsFilterType } from 'types';
 import { pageSizeManagers } from 'utils/userPreferenceStorage';
 import { queryClient } from 'service/react-query';
+import { queryIds } from 'constants/query-ids';
 
 const isPortThenValue = (value: number) => (value <= 65535 && value !== 0) ? value : null;
 
@@ -37,9 +38,7 @@ export type Hosts = HostType[];
 export const fetchInbounds = async () => {
   useDashboard.setState({ loading: true });
   return fetch('/inbounds')
-    .then((inbounds: Inbounds) => {
-      useInbounds.setState({ inbounds });
-    })
+    .then((inbounds: Inbounds) => inbounds)
     .finally(() => {
       useDashboard.setState({ loading: false });
     });
@@ -59,8 +58,6 @@ type InboundsStateType = {
   loading: boolean;
   setLoading: (value: boolean) => void;
   // Inbounds
-  inbounds: Inbounds;
-  refetchInbounds: () => void;
   selectedInbound: InboundType | null;
   selectInbound: (inbound: InboundType) => void;
   // Hosts
@@ -84,7 +81,6 @@ type InboundsStateType = {
 
 export const useInbounds = create(
   subscribeWithSelector<InboundsStateType>((set, get) => ({
-    inbounds: [],
     selectedHost: null,
     selectedInbound: null,
     loading: false,
@@ -120,11 +116,8 @@ export const useInbounds = create(
     setLoading: (value) => {
       set({ loading: value })
     },
-    refetchInbounds: () => {
-      fetchInbounds();
-    },
     refetchHosts: () => {
-      queryClient.invalidateQueries('hosts');
+      queryClient.invalidateQueries(queryIds.hosts);
     },
     selectInbound: (host): void => {
       set({ selectedInbound: host })
