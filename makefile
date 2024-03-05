@@ -7,7 +7,7 @@ install-deps:
 	npm install --prefix './app/dashboard'
 
 dashboard-build: install-deps
-	VITE_BASE_API=/api/ npm run build --prefix './app/dashboard' --if-present -- --outDir dist 
+	VITE_BASE_API=/api/ npm run build --prefix './app/dashboard' --if-present -- --outDir dist --base '/dashboard/'
 	cp ./app/dashboard/dist/index.html ./app/dashboard/dist/404.html
 
 dashboard-dev:
