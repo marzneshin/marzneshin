@@ -151,7 +151,7 @@ export const useInbounds = create(
     createHost: async (inboundId: number | undefined, body: HostSchema): Promise<boolean | void> => {
       if (inboundId !== undefined) {
         useDashboard.setState({ loading: true });
-        return fetch(`/inbounds/${inboundId}/hosts/${body}`, { method: 'POST', body })
+        return fetch(`/inbounds/${inboundId}/hosts`, { method: 'POST', body })
           .then(() => true)
           .catch(() => false)
           .finally(() => {
