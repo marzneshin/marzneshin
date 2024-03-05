@@ -5,11 +5,11 @@ import { ReactComponent as AddFileIcon } from 'assets/add_file.svg';
 import { t } from 'i18next';
 
 type EmptySectionProps = {
-    isFiltered: boolean;
-    noObjectMatchedT: string;
-    noObjectT: string;
-    createObjectT: string;
-    onCreateObject: (isOpen: boolean) => void;
+  isFiltered: boolean;
+  noObjectMatchedT: string;
+  noObjectT: string;
+  createObjectT: string;
+  onCreateObject?: (isOpen: boolean) => void;
 };
 
 const EmptySectionIcon = chakra(AddFileIcon);
@@ -24,7 +24,9 @@ const EmptySectionIcon = chakra(AddFileIcon);
  * @param onCreateObject - Create object event handler on click
  *
  */
-export const EmptySection: FC<EmptySectionProps> = ({ isFiltered, noObjectT, noObjectMatchedT, createObjectT, onCreateObject }) => {
+export const EmptySection: FC<EmptySectionProps> = ({
+  isFiltered, noObjectT, noObjectMatchedT, createObjectT, onCreateObject
+}) => {
   return (
     <Box
       padding="5"
@@ -61,7 +63,7 @@ export const EmptySection: FC<EmptySectionProps> = ({ isFiltered, noObjectT, noO
       <Text fontWeight="medium" color="gray.600" _dark={{ color: 'gray.400' }}>
         {isFiltered ? t(noObjectMatchedT) : t(noObjectT)}
       </Text>
-      {!isFiltered && (
+      {(!isFiltered && onCreateObject !== undefined) && (
         <Button
           size="sm"
           colorScheme="primary"

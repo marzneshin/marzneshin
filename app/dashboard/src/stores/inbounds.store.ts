@@ -45,14 +45,16 @@ export const fetchInbounds = async () => {
 };
 
 export const fetchInboundHosts = async (id: number | undefined): Promise<Hosts> => {
-  useDashboard.setState({ loading: true });
-  return fetch(`/inbounds/${id}/hosts`)
-    .then((hosts: Hosts) => {
-      return hosts
-    })
-    .finally(() => {
-      useDashboard.setState({ loading: false });
-    });
+  if (id !== undefined) {
+    useDashboard.setState({ loading: true });
+    return fetch(`/inbounds/${id}/hosts`)
+      .then((hosts: Hosts) => {
+        return hosts
+      })
+      .finally(() => {
+        useDashboard.setState({ loading: false });
+      });
+  } else { return [] }
 };
 
 type InboundsStateType = {

@@ -11,6 +11,7 @@ import {
   InputLeftElement,
   InputRightElement,
   Spinner,
+  useToast,
 } from '@chakra-ui/react';
 import {
   ArrowPathIcon,
@@ -45,7 +46,28 @@ const setSearchField = debounce((tag: string) => {
 
 export const InboundsHostsFilters: FC<FilterProps> = ({ ...props }) => {
   const { loading } = useDashboard();
-  const { inboundsFilters: filters, onInboundsFilterChange, refetchHosts, onCreatingHost } = useInbounds();
+  const {
+    inboundsFilters: filters,
+    onInboundsFilterChange,
+    refetchHosts,
+    onCreatingHost,
+    selectedInbound,
+  } = useInbounds();
+  const toast = useToast();
+  const onCreateClick = () => {
+    if (selectedInbound) {
+      onCreatingHost(true);
+    } else {
+      toast({
+        title: t('hostsTable.inboundIsNotSelectedToCreate'),
+        status: 'error',
+        isClosable: true,
+        position: 'top',
+        duration: 3000,
+      });
+    }
+  }
+
   const { t } = useTranslation();
   const [search, setSearch] = useState('');
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -125,7 +147,7 @@ export const InboundsHostsFilters: FC<FilterProps> = ({ ...props }) => {
           <Button
             colorScheme="primary"
             size="sm"
-            onClick={() => onCreatingHost(true)}
+            onClick={() => onCreateClick()}
             px={5}
           >
             {t('hostsTable.createHosts')}

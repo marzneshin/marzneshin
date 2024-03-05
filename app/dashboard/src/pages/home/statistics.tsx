@@ -50,9 +50,9 @@ export const Statistics: FC<BoxProps> = (props) => {
   });
 
   useEffect(() => {
-    if (systemData?.version !== currentVersion)
+    if (systemData?.version !== currentVersion && systemData !== undefined)
       useDashboard.setState({ version: systemData.version })
-  } )
+  }, [systemData]);
 
   const { t } = useTranslation();
   return (
