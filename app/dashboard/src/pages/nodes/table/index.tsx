@@ -35,7 +35,7 @@ import {
   handleSort,
 } from 'components/table';
 import { fetchNodes, useNodes } from 'stores';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { queryIds } from 'constants/query-ids';
 
 type ExpandedIndex = number | number[];
@@ -49,7 +49,7 @@ export const NodesTable: FC<NodesTableProps> = (props) => {
     onAddingNode,
     onFilterChange,
   } = useNodes();
-  const { data: nodes } = useQuery(queryIds.nodes, () => { return fetchNodes() })
+  const { data: nodes } = useQuery({ queryKey: [queryIds.nodes], queryFn: fetchNodes });
   const total = nodes?.length || 0;
 
   const { t } = useTranslation();

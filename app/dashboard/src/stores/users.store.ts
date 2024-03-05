@@ -79,7 +79,7 @@ export const useUsers = create(subscribeWithSelector<UsersStateType>((set, get) 
     set({ subscribeUrl });
   },
   refetchUsers: () => {
-    queryClient.invalidateQueries(queryIds.users);
+    queryClient.invalidateQueries({ queryKey: [queryIds.users] });
   },
   resetAllUsage: async () => {
     return fetch('/users/reset', { method: 'POST' }).then(() => {
@@ -109,7 +109,7 @@ export const useUsers = create(subscribeWithSelector<UsersStateType>((set, get) 
     return fetch(`/users/${user.username}`, { method: 'DELETE' }).then(() => {
       set({ deletingUser: null });
       get().refetchUsers();
-      queryClient.invalidateQueries(StatisticsQueryKey);
+      queryClient.invalidateQueries({ queryKey: [StatisticsQueryKey] });
     });
   },
   createUser: async (body: UserCreate) => {
@@ -117,7 +117,7 @@ export const useUsers = create(subscribeWithSelector<UsersStateType>((set, get) 
       set({ editingUser: null });
       get().refetchUsers();
       useServices.getState().refetchServices();
-      queryClient.invalidateQueries(StatisticsQueryKey);
+      queryClient.invalidateQueries({ queryKey: [StatisticsQueryKey] });
     });
   },
   editUser: async (body: UserCreate) => {

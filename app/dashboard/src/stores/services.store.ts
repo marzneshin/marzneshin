@@ -1,5 +1,4 @@
 import { queryClient } from 'service/react-query';
-import { StatisticsQueryKey } from 'components/statistics-card';
 import { Service, ServiceCreate } from 'types/service';
 import { pageSizeManagers } from 'utils/userPreferenceStorage';
 import { create } from 'zustand';
@@ -60,7 +59,7 @@ export const useServices = create(
       get().refetchServices();
     },
     refetchServices: () => {
-      queryClient.invalidateQueries(queryIds.services);
+      queryClient.invalidateQueries({ queryKey: [queryIds.services] });
     },
     onCreateService: (isCreatingNewService) => set({ isCreatingNewService }),
     onEditingService: (editingService) => {
@@ -75,14 +74,12 @@ export const useServices = create(
         set({ deletingService: null });
         get().refetchServices();
         useUsers.getState().refetchUsers();
-        queryClient.invalidateQueries(StatisticsQueryKey);
       });
     },
     createService: async (body: ServiceCreate) => {
       return fetch('/services', { method: 'POST', body }).then(() => {
         set({ editingService: null });
         get().refetchServices();
-        queryClient.invalidateQueries(StatisticsQueryKey);
       });
     },
     editService: async (body: ServiceCreate) => {

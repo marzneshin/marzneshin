@@ -47,7 +47,9 @@ export const fetchInbounds = async () => {
 export const fetchInboundHosts = async (id: number): Promise<Hosts> => {
   useDashboard.setState({ loading: true });
   return fetch(`/inbounds/${id}/hosts`)
-    .then((hosts: Hosts) => hosts)
+    .then((hosts: Hosts) => {
+      return hosts
+    })
     .finally(() => {
       useDashboard.setState({ loading: false });
     });
@@ -118,10 +120,10 @@ export const useInbounds = create(
       set({ loading: value })
     },
     refetchInbounds: () => {
-      queryClient.invalidateQueries(queryIds.inbounds);
+      queryClient.invalidateQueries({ queryKey: [queryIds.inbounds] });
     },
     refetchHosts: () => {
-      queryClient.invalidateQueries(queryIds.hosts);
+      queryClient.invalidateQueries({ queryKey: [queryIds.hosts] });
     },
     selectInbound: (host): void => {
       set({ selectedInbound: host })

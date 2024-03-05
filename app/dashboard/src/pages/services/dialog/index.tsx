@@ -33,7 +33,7 @@ import { InboundsField } from './inbounds-field';
 import { NameField } from './name-field';
 import { InboundType, Service, ServiceCreate } from 'types';
 import { fetchInbounds, useInbounds, useServices } from 'stores';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { queryIds } from 'constants/query-ids';
 
 const formatService = (service: Service): FormType => {
@@ -61,7 +61,7 @@ export const ServiceDialog: FC<ServiceDialogProps> = () => {
   const { refetchInbounds } = useInbounds();
   const {
     data: inbounds,
-  } = useQuery(queryIds.inbounds, () => fetchInbounds());
+  } = useQuery({ queryKey: [queryIds.inbounds], queryFn: () => fetchInbounds() });
   const isEditing = !!editingService;
   const isOpen = isCreatingNewService || isEditing;
   const [loading, setLoading] = useState(false);

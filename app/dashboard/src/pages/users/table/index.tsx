@@ -39,7 +39,7 @@ import { UsageSlider, UsageSliderCompact } from './usage-slider';
 import { fetchUsers, useUsers } from 'stores';
 import { ActionButtons } from './action-buttons';
 import { pageSizeManagers } from 'utils/userPreferenceStorage';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { User } from 'types';
 import { queryIds } from 'constants/query-ids';
 
@@ -55,7 +55,7 @@ export const UsersTable: FC<UsersTableProps> = (props) => {
     onFilterChange,
   } = useUsers();
   const { data } = useQuery({
-    queryKey: queryIds.users,
+    queryKey: [queryIds.users],
     queryFn: () => { return fetchUsers(filters) },
     initialData: { total: 0, users: [] },
   });

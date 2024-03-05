@@ -51,7 +51,7 @@ import { ExpireDateField } from './expire-date-field';
 import { NoteField } from './note-field';
 import { useUsers, useServices, fetchServices } from 'stores';
 import { queryIds } from 'constants/query-ids';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 
 const formatUser = (user: User): FormType => {
   const services: number[] = user.services.map((service: number | Service): number => {
@@ -81,7 +81,7 @@ export const UserDialog: FC<UserDialogProps> = () => {
   } = useUsers();
   const { refetchServices, servicesFilters: filters } = useServices();
   const { data: services } = useQuery({
-    queryKey: queryIds.services,
+    queryKey: [queryIds.services],
     initialData: [],
     queryFn: () => {
       return fetchServices(filters);

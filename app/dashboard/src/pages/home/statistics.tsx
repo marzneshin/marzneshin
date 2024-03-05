@@ -7,9 +7,10 @@ import {
 import { useDashboard } from 'stores';
 import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { fetch } from 'service/http';
 import { formatBytes, numberWithCommas } from 'utils/formatByte';
+import { useEffect } from 'react';
 import { StatisticsCardInLine, StatisticsQueryKey } from 'components/statistics-card';
 
 const TotalUsersIcon = chakra(UsersIcon, {
@@ -41,16 +42,18 @@ const MemoryIcon = chakra(ChartPieIcon, {
 
 
 export const Statistics: FC<BoxProps> = (props) => {
-  const { version } = useDashboard();
+  const { version: currentVersion } = useDashboard();
   const { data: systemData } = useQuery({
-    queryKey: StatisticsQueryKey,
+    queryKey: [StatisticsQueryKey],
     queryFn: () => fetch('/system'),
     refetchInterval: 5000,
-    onSuccess: ({ version: currentVersion }) => {
-      if (version !== currentVersion)
-        useDashboard.setState({ version: currentVersion });
-    },
   });
+
+  useEffect(() => {
+    if (systemData?.version !== currentVersion)
+      useDashboard.setState({ version: systemData.version })
+  } )
+
   const { t } = useTranslation();
   return (
     <HStack

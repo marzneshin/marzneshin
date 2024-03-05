@@ -32,7 +32,7 @@ import debounce from 'lodash.debounce';
 import { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useMutation } from 'react-query';
+import { useMutation } from '@tanstack/react-query';
 import { ReadyState } from 'react-use-websocket';
 import { useWebSocket } from 'react-use-websocket/dist/lib/use-websocket';
 import { getAuthToken } from 'service/auth-storage';
@@ -169,8 +169,10 @@ const CoreSettingModalContent: FC = () => {
 
   const status = getStatus(readyState.toString());
 
-  const { mutate: handleRestartCore, isLoading: isRestarting } =
-    useMutation(restartCore);
+  const {
+    mutate: handleRestartCore,
+    isPending: isRestarting
+  } = useMutation({ mutationFn: restartCore });
 
   const handleOnSave = ({ config }: any) => {
     updateConfig(config)
