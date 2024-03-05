@@ -52,7 +52,7 @@ export const Statistics: FC<BoxProps> = (props) => {
   useEffect(() => {
     if (systemData?.version !== currentVersion)
       useDashboard.setState({ version: systemData.version })
-  } )
+  }, [systemData]);
 
   const { t } = useTranslation();
   return (
