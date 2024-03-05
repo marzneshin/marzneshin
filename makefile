@@ -4,7 +4,7 @@ start:
 	python main.py
 
 install-deps:
-	cd app/dashboard/ && npm install --prefix './app/dashboard'
+	npm install --prefix './app/dashboard'
 
 dashboard-build: install-deps
 	VITE_BASE_API=/api/ npm run build --prefix './app/dashboard' --if-present -- --outDir dist 
