@@ -44,10 +44,12 @@ export const fetchInbounds = async () => {
     });
 };
 
-export const fetchInboundHosts = async (id: number): Promise<Hosts> => {
+export const fetchInboundHosts = async (id: number | undefined): Promise<Hosts> => {
   useDashboard.setState({ loading: true });
   return fetch(`/inbounds/${id}/hosts`)
-    .then((hosts: Hosts) => hosts)
+    .then((hosts: Hosts) => {
+      return hosts
+    })
     .finally(() => {
       useDashboard.setState({ loading: false });
     });
@@ -58,7 +60,7 @@ type InboundsStateType = {
   loading: boolean;
   setLoading: (value: boolean) => void;
   // Inbounds
-  selectedInbound: InboundType | null;
+  selectedInbound: InboundType | undefined;
   selectInbound: (inbound: InboundType) => void;
   refetchInbounds: () => void;
   // Hosts
@@ -83,7 +85,7 @@ type InboundsStateType = {
 export const useInbounds = create(
   subscribeWithSelector<InboundsStateType>((set, get) => ({
     selectedHost: null,
-    selectedInbound: null,
+    selectedInbound: undefined,
     loading: false,
     isDeletingHost: false,
     isCreatingHost: false,
@@ -118,10 +120,10 @@ export const useInbounds = create(
       set({ loading: value })
     },
     refetchInbounds: () => {
-      queryClient.invalidateQueries(queryIds.inbounds);
+      queryClient.invalidateQueries({ queryKey: [queryIds.inbounds] });
     },
-    refetchHosts: () => {
-      queryClient.invalidateQueries(queryIds.hosts);
+    refetchHosts: async () => {
+      queryClient.invalidateQueries({ queryKey: [queryIds.hosts] });
     },
     selectInbound: (host): void => {
       set({ selectedInbound: host })
@@ -149,7 +151,7 @@ export const useInbounds = create(
     createHost: async (inboundId: number | undefined, body: HostSchema): Promise<boolean | void> => {
       if (inboundId !== undefined) {
         useDashboard.setState({ loading: true });
-        return fetch(`/inbounds/${inboundId}/hosts/${body}`, { method: 'POST', body })
+        return fetch(`/inbounds/${inboundId}/hosts`, { method: 'POST', body })
           .then(() => true)
           .catch(() => false)
           .finally(() => {

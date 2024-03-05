@@ -1,4 +1,4 @@
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { fetch } from 'service/http';
 import { create } from 'zustand';
 import { z } from 'zod';
@@ -95,9 +95,11 @@ export type NodeStore = {
   onShowingNodesUsage: (isShowingNodesUsage: boolean) => void;
 };
 
+// TODO: Refactor all useQuery for inbounds, hosts, 
+// services and uses to be a custom hook like this.
 export const useNodesQuery = () => {
   return useQuery({
-    queryKey: FetchNodesQueryKey,
+    queryKey: [FetchNodesQueryKey],
     queryFn: fetchNodes,
     refetchInterval: useNodes.getState().editingNode ? 3000 : undefined,
     refetchOnWindowFocus: false,
@@ -130,7 +132,7 @@ export const useNodes = create<NodeStore>((set, get) => ({
     return fetch('/nodes', { method: 'POST', body }).then(() => { get().refetchCertificate() });
   },
   refetchNodes: () => {
-    queryClient.invalidateQueries(queryIds.nodes);
+    queryClient.invalidateQueries({ queryKey: [queryIds.nodes] });
   },
   refetchCertificate: () => {
     fetch('/nodes/settings').then((res) => {
