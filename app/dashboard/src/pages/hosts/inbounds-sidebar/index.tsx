@@ -13,6 +13,7 @@ export const InboundsSidebar = () => {
     inboundsFilters: filters,
     selectedInbound,
     selectInbound,
+    refetchHosts,
   } = useInbounds();
 
   const { data: inbounds } = useQuery({
@@ -50,7 +51,8 @@ export const InboundsSidebar = () => {
               bg={active ? 'gray.300' : undefined}
               _dark={{ bg: active ? 'gray.700' : undefined }}
               onClick={() => {
-                selectInbound(inbound)
+                selectInbound(inbound);
+                refetchHosts();
               }}>
               <Td>
                 <InboundCard
