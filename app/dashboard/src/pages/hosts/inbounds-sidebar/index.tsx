@@ -3,8 +3,9 @@ import classNames from 'classnames';
 import { InboundCard } from 'components/inbounds-card';
 import { handleSort } from 'components/table';
 import { useTranslation } from 'react-i18next';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { fetchInbounds, useInbounds } from 'stores';
+import { queryIds } from 'constants/query-ids';
 
 export const InboundsSidebar = () => {
   const {
@@ -14,8 +15,11 @@ export const InboundsSidebar = () => {
     selectInbound,
   } = useInbounds();
 
-  const { data: inbounds } = useQuery('hosts', () => {
-    return fetchInbounds();
+  const { data: inbounds } = useQuery({
+    queryKey: [queryIds.inbounds],
+    queryFn: () => {
+      return fetchInbounds();
+    }
   });
 
   const { t } = useTranslation();
@@ -45,7 +49,9 @@ export const InboundsSidebar = () => {
               className={classNames('interactive')}
               bg={active ? 'gray.300' : undefined}
               _dark={{ bg: active ? 'gray.700' : undefined }}
-              onClick={() => { selectInbound(inbound) }}>
+              onClick={() => {
+                selectInbound(inbound)
+              }}>
               <Td>
                 <InboundCard
                   tag={inbound.tag}
