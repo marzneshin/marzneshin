@@ -2,25 +2,26 @@ import { Table, Thead, Tbody, Th, Td, Tr, HStack } from '@chakra-ui/react';
 import classNames from 'classnames';
 import { InboundCard } from 'components/inbounds-card';
 import { handleSort } from 'components/table';
+import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useQuery } from '@tanstack/react-query';
-import { fetchInbounds, useInbounds } from 'stores';
-import { queryIds } from 'constants/query-ids';
+import { useInbounds } from 'stores';
+import { InboundType } from 'types';
 
-export const InboundsSidebar = () => {
+type InboundsSidebarProps = {
+  inbounds: InboundType[];
+}
+
+export const InboundsSidebar: FC<InboundsSidebarProps> = ({
+  inbounds,
+}) => {
   const {
     onInboundsFilterChange,
     inboundsFilters: filters,
     selectedInbound,
     selectInbound,
+    refetchHosts,
   } = useInbounds();
 
-  const { data: inbounds } = useQuery({
-    queryKey: [queryIds.inbounds],
-    queryFn: () => {
-      return fetchInbounds();
-    }
-  });
 
   const { t } = useTranslation();
 
@@ -50,7 +51,8 @@ export const InboundsSidebar = () => {
               bg={active ? 'gray.300' : undefined}
               _dark={{ bg: active ? 'gray.700' : undefined }}
               onClick={() => {
-                selectInbound(inbound)
+                selectInbound(inbound);
+                refetchHosts();
               }}>
               <Td>
                 <InboundCard

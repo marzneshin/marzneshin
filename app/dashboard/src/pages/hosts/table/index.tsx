@@ -17,31 +17,22 @@ import {
   Sort,
   handleSort,
 } from 'components/table';
-import { useInbounds, fetchInboundHosts } from 'stores';
-import { useQuery } from '@tanstack/react-query';
-import { queryIds } from 'constants/query-ids';
+import { useInbounds, HostType } from 'stores';
 
 
-type NodesTableProps = {} & TableProps;
+type NodesTableProps = {
+  hosts: HostType[];
+} & TableProps;
 
-export const HostsTable: FC<NodesTableProps> = (props) => {
+export const HostsTable: FC<NodesTableProps> = ({ hosts }) => {
   const {
     hostsFilters: filters,
     selectedInbound,
+    refetchHosts,
+    onHostsFilterChange,
     onEditingHost,
     onCreatingHost,
-    onHostsFilterChange,
-    refetchHosts,
   } = useInbounds();
-  const { data: hosts } = useQuery({
-    queryKey: [queryIds.hosts],
-    initialData: [],
-    queryFn: () => {
-      if (selectedInbound !== null) {
-        return fetchInboundHosts(selectedInbound.id);
-      }
-    }
-  });
 
   useEffect(() => {
     refetchHosts();
@@ -53,7 +44,6 @@ export const HostsTable: FC<NodesTableProps> = (props) => {
     <Box id="hosts-table" borderTopStartRadius="0" overflowX={{ base: 'unset', md: 'unset' }} >
       <Table
         orientation="vertical"
-        {...props}
       >
         <Thead zIndex="docked" position="relative">
           <Tr>

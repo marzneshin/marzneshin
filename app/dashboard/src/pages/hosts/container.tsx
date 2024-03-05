@@ -1,20 +1,45 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels'
 import { InboundsHostsFilters } from './filters'
 import { InboundsSidebar } from './inbounds-sidebar'
 import { HostsTable } from './table'
+import { queryIds } from 'constants/query-ids';
+import { useQuery } from '@tanstack/react-query';
+import { fetchInbounds, fetchInboundHosts, useInbounds } from 'stores';
 
 export const InboundsHostsManager = () => {
+  const { selectedInbound, refetchHosts } = useInbounds();
+
+  const { data: inbounds } = useQuery({
+    queryKey: [queryIds.inbounds],
+    initialData: [],
+    queryFn: () => {
+      return fetchInbounds();
+    }
+  });
+
+  const { data: hosts } = useQuery({
+    queryKey: [queryIds.hosts, selectedInbound?.id],
+    initialData: [],
+    queryFn: () => {
+      return fetchInboundHosts(selectedInbound?.id);
+    }
+  });
+
+  useEffect(() => {
+    refetchHosts();
+  }, [selectedInbound])
+
   return (
     <>
       <InboundsHostsFilters />
       <PanelGroup direction="horizontal">
         <Panel id="sidebar" minSize={20} order={1}>
-          <InboundsSidebar />
+          <InboundsSidebar inbounds={inbounds} />
         </Panel>
         <PanelResizeHandle />
         <Panel minSize={60} order={2}>
-          <HostsTable />
+          <HostsTable hosts={hosts} />
         </Panel>
       </PanelGroup>
     </>

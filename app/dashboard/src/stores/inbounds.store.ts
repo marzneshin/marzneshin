@@ -44,7 +44,7 @@ export const fetchInbounds = async () => {
     });
 };
 
-export const fetchInboundHosts = async (id: number): Promise<Hosts> => {
+export const fetchInboundHosts = async (id: number | undefined): Promise<Hosts> => {
   useDashboard.setState({ loading: true });
   return fetch(`/inbounds/${id}/hosts`)
     .then((hosts: Hosts) => {
@@ -60,7 +60,7 @@ type InboundsStateType = {
   loading: boolean;
   setLoading: (value: boolean) => void;
   // Inbounds
-  selectedInbound: InboundType | null;
+  selectedInbound: InboundType | undefined;
   selectInbound: (inbound: InboundType) => void;
   refetchInbounds: () => void;
   // Hosts
@@ -85,7 +85,7 @@ type InboundsStateType = {
 export const useInbounds = create(
   subscribeWithSelector<InboundsStateType>((set, get) => ({
     selectedHost: null,
-    selectedInbound: null,
+    selectedInbound: undefined,
     loading: false,
     isDeletingHost: false,
     isCreatingHost: false,
@@ -122,7 +122,7 @@ export const useInbounds = create(
     refetchInbounds: () => {
       queryClient.invalidateQueries({ queryKey: [queryIds.inbounds] });
     },
-    refetchHosts: () => {
+    refetchHosts: async () => {
       queryClient.invalidateQueries({ queryKey: [queryIds.hosts] });
     },
     selectInbound: (host): void => {
