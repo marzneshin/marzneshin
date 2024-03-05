@@ -114,8 +114,7 @@ export const HostsTable: FC<NodesTableProps> = ({ hosts }) => {
                   isFiltered={/* isFiltered */ false}
                   noObjectT="hostsTable.noHost"
                   noObjectMatchedT='hostsTable.noHostMatched'
-                  createObjectT="addNode"
-                  onCreateObject={onCreatingHost}
+                  createObjectT="hostsTable.createHosts"
                 />
               </Td>
             </Tr>
