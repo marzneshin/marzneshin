@@ -1,14 +1,13 @@
-import React, { useEffect } from 'react'
-import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels'
 import { InboundsHostsFilters } from './filters'
 import { InboundsSidebar } from './inbounds-sidebar'
 import { HostsTable } from './table'
 import { queryIds } from 'constants/query-ids';
 import { useQuery } from '@tanstack/react-query';
 import { fetchInbounds, fetchInboundHosts, useInbounds } from 'stores';
+import { Grid, GridItem, } from '@chakra-ui/react';
 
 export const InboundsHostsManager = () => {
-  const { selectedInbound, refetchHosts } = useInbounds();
+  const { selectedInbound } = useInbounds();
 
   const { data: inbounds } = useQuery({
     queryKey: [queryIds.inbounds],
@@ -26,22 +25,21 @@ export const InboundsHostsManager = () => {
     }
   });
 
-  useEffect(() => {
-    refetchHosts();
-  }, [selectedInbound])
-
   return (
     <>
       <InboundsHostsFilters />
-      <PanelGroup direction="horizontal">
-        <Panel id="sidebar" minSize={20} order={1}>
+      <Grid
+        templateColumns='repeat(4, 1fr)'
+        gap="3"
+        h="10rem"
+      >
+        <GridItem colSpan={1}>
           <InboundsSidebar inbounds={inbounds} />
-        </Panel>
-        <PanelResizeHandle />
-        <Panel minSize={60} order={2}>
+        </GridItem>
+        <GridItem colSpan={3}>
           <HostsTable hosts={hosts} />
-        </Panel>
-      </PanelGroup>
+        </GridItem>
+      </Grid>
     </>
   )
 }

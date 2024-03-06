@@ -76,20 +76,22 @@ export const HostsDialog: FC = () => {
   const [error, setError] = useState<string | null>('');
   const { t } = useTranslation();
   const toast = useToast();
+
   const defaultValueHost: HostSchema = (isEditingHost === true && selectedHost !== null) ? selectedHost : getDefaultValues();
+
   const form = useForm<HostSchema>({
     resolver: zodResolver(hostSchema),
     defaultValues: defaultValueHost,
   });
+
   const isOpen = isEditingHost || isCreatingHost;
   const onClose = () => {
     onCreatingHost(false);
     onEditingHost(false, null);
   };
+
   useEffect(() => {
-    if (isOpen) {
-      form.reset(defaultValueHost);
-    }
+    (isOpen) && form.reset(defaultValueHost);
   }, [isOpen]);
 
   const submit = async (values: HostSchema | HostType) => {
@@ -110,7 +112,6 @@ export const HostsDialog: FC = () => {
           position: 'top',
           duration: 3000,
         });
-        // refetchNodes();
         onClose();
       })
       .catch((err) => {
