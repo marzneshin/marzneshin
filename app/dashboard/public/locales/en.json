@@ -86,6 +86,10 @@
     "port": "Port",
     "total": "Total"
   },
+  "noInboundsCallout": {
+    "header": "Nodes is not configured",
+    "body": "Please configure nodes to access inbounds hosts"
+  },
   "userDialog": {
     "dataLimit": "Data Limit",
     "periodicUsageReset": "Periodic Usage Reset",
