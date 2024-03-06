@@ -9,20 +9,12 @@ import { pageSizeManagers } from 'utils/userPreferenceStorage';
 import { queryClient } from 'service/react-query';
 import { queryIds } from 'constants/query-ids';
 
-const isPortThenValue = (value: number) => (value <= 65535 && value !== 0) ? value : null;
-
 export const hostSchema = z.object({
   remark: z.string().min(1, 'Remark is required'),
   address: z.string().min(1, 'Address is required'),
-  port: z
-    .string()
-    .or(z.number())
-    .nullable()
-    .transform((value) => {
-      if (typeof value === 'number') return isPortThenValue(value);
-      if (value !== null && !isNaN(parseInt(value))) return isPortThenValue(Number(parseInt(value)));
-      return null;
-    }),
+  port: z.coerce.number()
+    .gte(1, 'Port must be more than 1')
+    .lte(65535, 'Port can not be more than 65535'),
   path: z.string(),
   sni: z.string(),
   host: z.string(),
