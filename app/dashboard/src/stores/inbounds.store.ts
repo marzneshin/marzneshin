@@ -132,7 +132,10 @@ export const useInbounds = create(
       if (hostId !== undefined) {
         useDashboard.setState({ loading: true });
         return fetch(`/inbounds/hosts/${hostId}`, { method: 'PUT', body })
-          .then(() => true)
+          .then(() => {
+            get().refetchHosts();
+            return true;
+          })
           .catch(() => false)
           .finally(() => {
             useDashboard.setState({ loading: false });
@@ -146,7 +149,10 @@ export const useInbounds = create(
       if (inboundId !== undefined) {
         useDashboard.setState({ loading: true });
         return fetch(`/inbounds/${inboundId}/hosts`, { method: 'POST', body })
-          .then(() => true)
+          .then(() => {
+            get().refetchHosts();
+            return true;
+          })
           .catch(() => false)
           .finally(() => {
             useDashboard.setState({ loading: false });
@@ -159,7 +165,10 @@ export const useInbounds = create(
     deleteHost: async (hostId: number): Promise<boolean> => {
       useDashboard.setState({ loading: true });
       return fetch(`/inbounds/hosts/${hostId}`, { method: 'DELETE' })
-        .then(() => true)
+        .then(() => {
+          get().refetchHosts();
+          return true;
+        })
         .catch(() => false)
         .finally(() => {
           useDashboard.setState({ loading: false });
