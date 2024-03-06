@@ -31,7 +31,6 @@ export const HostsTable: FC<NodesTableProps> = ({ hosts }) => {
     refetchHosts,
     onHostsFilterChange,
     onEditingHost,
-    onCreatingHost,
   } = useInbounds();
 
   useEffect(() => {
