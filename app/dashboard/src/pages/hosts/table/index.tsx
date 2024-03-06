@@ -10,7 +10,7 @@ import {
   Tr,
 } from '@chakra-ui/react';
 import classNames from 'classnames';
-import { FC, useEffect, } from 'react';
+import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   EmptySection,
@@ -27,15 +27,9 @@ type NodesTableProps = {
 export const HostsTable: FC<NodesTableProps> = ({ hosts }) => {
   const {
     hostsFilters: filters,
-    selectedInbound,
-    refetchHosts,
     onHostsFilterChange,
     onEditingHost,
   } = useInbounds();
-
-  useEffect(() => {
-    refetchHosts();
-  }, [selectedInbound]);
 
   const { t } = useTranslation();
 

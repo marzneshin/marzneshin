@@ -1,4 +1,3 @@
-import React, { useEffect } from 'react'
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels'
 import { InboundsHostsFilters } from './filters'
 import { InboundsSidebar } from './inbounds-sidebar'
@@ -8,7 +7,7 @@ import { useQuery } from '@tanstack/react-query';
 import { fetchInbounds, fetchInboundHosts, useInbounds } from 'stores';
 
 export const InboundsHostsManager = () => {
-  const { selectedInbound, refetchHosts } = useInbounds();
+  const { selectedInbound } = useInbounds();
 
   const { data: inbounds } = useQuery({
     queryKey: [queryIds.inbounds],
@@ -25,10 +24,6 @@ export const InboundsHostsManager = () => {
       return fetchInboundHosts(selectedInbound?.id);
     }
   });
-
-  useEffect(() => {
-    refetchHosts();
-  }, [selectedInbound])
 
   return (
     <>
