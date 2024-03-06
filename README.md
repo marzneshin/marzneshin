@@ -6,12 +6,16 @@
 
 <br/>
 <p align="center">
-    <a href="#">
-        <img src="https://img.shields.io/github/actions/workflow/status/khodedawsh/marzneshin/package.yml?style=flat-square" />
+    <a href="https://github.com/khodedawsh/Marzneshin/actions/workflows/dashboard-ci.yml">
+        <img src="https://github.com/khodedawsh/Marzneshin/actions/workflows/dashboard-ci.yml/badge.svg" />
+    </a>
+    <a href="https://github.com/khodedawsh/Marzneshin/actions/workflows/package.yml" target="_blank">
+        <img src="https://github.com/khodedawsh/Marzneshin/actions/workflows/package.yml/badge.svg" />
     </a>
     <a href="https://hub.docker.com/r/dawsh/marzneshin" target="_blank">
         <img src="https://img.shields.io/docker/pulls/dawsh/marzneshin?style=flat-square&logo=docker" />
     </a>
+    <br>
     <a href="#">
         <img src="https://img.shields.io/github/license/khodedawsh/marzneshin?style=flat-square" />
     </a>
