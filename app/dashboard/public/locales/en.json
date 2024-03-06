@@ -87,7 +87,7 @@
     "total": "Total"
   },
   "noInboundsCallout": {
-    "header": "Nodes is not configured",
+    "header": "Configure Nodes!",
     "body": "Please configure nodes to access inbounds hosts"
   },
   "userDialog": {
