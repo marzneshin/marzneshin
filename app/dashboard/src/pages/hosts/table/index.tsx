@@ -34,7 +34,7 @@ export const HostsTable: FC<NodesTableProps> = ({ hosts }) => {
   const { t } = useTranslation();
 
   return (
-    <Box id="hosts-table" borderTopStartRadius="0" overflowX={{ base: 'unset', md: 'unset' }} >
+    <Box id="hosts-table" h="full" overflowX={{ base: 'unset', md: 'unset' }} >
       <Table
         orientation="vertical"
       >
