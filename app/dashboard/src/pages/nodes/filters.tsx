@@ -63,8 +63,8 @@ export const NodesFilters: FC<FilterProps> = ({ ...props }) => {
       name: '',
     });
   };
-  const { certificate } = useNodes();
 
+  const { certificate, refetchCertificate } = useNodes();
   const [copied, setCopied] = useState([-1, false]);
   useEffect(() => {
     if (copied[1]) {
@@ -73,6 +73,10 @@ export const NodesFilters: FC<FilterProps> = ({ ...props }) => {
       }, 1000);
     }
   }, [copied]);
+
+  useEffect(() => {
+    certificate === '' && refetchCertificate();
+  }, [certificate])
 
   return (
     <Grid
