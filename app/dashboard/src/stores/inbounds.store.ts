@@ -14,7 +14,8 @@ export const hostSchema = z.object({
   address: z.string().min(1, 'Address is required'),
   port: z.coerce.number()
     .gte(1, 'Port must be more than 1')
-    .lte(65535, 'Port can not be more than 65535'),
+    .lte(65535, 'Port can not be more than 65535')
+    .or(z.string().nullable()),
   path: z.string(),
   sni: z.string(),
   host: z.string(),
