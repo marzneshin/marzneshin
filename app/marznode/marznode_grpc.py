@@ -30,6 +30,18 @@ class MarzServiceBase(abc.ABC):
     async def FetchUsersStats(self, stream: 'grpclib.server.Stream[app.marznode.marznode_pb2.Empty, app.marznode.marznode_pb2.UsersStats]') -> None:
         pass
 
+    @abc.abstractmethod
+    async def FetchXrayConfig(self, stream: 'grpclib.server.Stream[app.marznode.marznode_pb2.Empty, app.marznode.marznode_pb2.XrayConfig]') -> None:
+        pass
+
+    @abc.abstractmethod
+    async def RestartXray(self, stream: 'grpclib.server.Stream[app.marznode.marznode_pb2.XrayConfig, app.marznode.marznode_pb2.InboundsResponse]') -> None:
+        pass
+
+    @abc.abstractmethod
+    async def StreamXrayLogs(self, stream: 'grpclib.server.Stream[app.marznode.marznode_pb2.XrayLogsRequest, app.marznode.marznode_pb2.LogLine]') -> None:
+        pass
+
     def __mapping__(self) -> typing.Dict[str, grpclib.const.Handler]:
         return {
             '/marznode.MarzService/SyncUsers': grpclib.const.Handler(
@@ -55,6 +67,24 @@ class MarzServiceBase(abc.ABC):
                 grpclib.const.Cardinality.UNARY_UNARY,
                 app.marznode.marznode_pb2.Empty,
                 app.marznode.marznode_pb2.UsersStats,
+            ),
+            '/marznode.MarzService/FetchXrayConfig': grpclib.const.Handler(
+                self.FetchXrayConfig,
+                grpclib.const.Cardinality.UNARY_UNARY,
+                app.marznode.marznode_pb2.Empty,
+                app.marznode.marznode_pb2.XrayConfig,
+            ),
+            '/marznode.MarzService/RestartXray': grpclib.const.Handler(
+                self.RestartXray,
+                grpclib.const.Cardinality.UNARY_UNARY,
+                app.marznode.marznode_pb2.XrayConfig,
+                app.marznode.marznode_pb2.InboundsResponse,
+            ),
+            '/marznode.MarzService/StreamXrayLogs': grpclib.const.Handler(
+                self.StreamXrayLogs,
+                grpclib.const.Cardinality.UNARY_STREAM,
+                app.marznode.marznode_pb2.XrayLogsRequest,
+                app.marznode.marznode_pb2.LogLine,
             ),
         }
 
@@ -85,4 +115,22 @@ class MarzServiceStub:
             '/marznode.MarzService/FetchUsersStats',
             app.marznode.marznode_pb2.Empty,
             app.marznode.marznode_pb2.UsersStats,
+        )
+        self.FetchXrayConfig = grpclib.client.UnaryUnaryMethod(
+            channel,
+            '/marznode.MarzService/FetchXrayConfig',
+            app.marznode.marznode_pb2.Empty,
+            app.marznode.marznode_pb2.XrayConfig,
+        )
+        self.RestartXray = grpclib.client.UnaryUnaryMethod(
+            channel,
+            '/marznode.MarzService/RestartXray',
+            app.marznode.marznode_pb2.XrayConfig,
+            app.marznode.marznode_pb2.InboundsResponse,
+        )
+        self.StreamXrayLogs = grpclib.client.UnaryStreamMethod(
+            channel,
+            '/marznode.MarzService/StreamXrayLogs',
+            app.marznode.marznode_pb2.XrayLogsRequest,
+            app.marznode.marznode_pb2.LogLine,
         )

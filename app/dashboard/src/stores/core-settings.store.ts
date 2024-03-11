@@ -1,5 +1,6 @@
 import { fetch } from 'service/http';
 import { create } from 'zustand';
+import { NodeType } from './nodes.store';
 
 type CoreSettingsStore = {
   isLoading: boolean;
@@ -7,31 +8,26 @@ type CoreSettingsStore = {
   fetchCoreSettings: () => void;
   updateConfig: (json: string) => Promise<void>;
   restartCore: () => Promise<void>;
-  version: string | null;
-  started: boolean | null;
-  logs_websocket: string | null;
   config: string;
+  selectedNode: NodeType | null;
+  isEditingCore: boolean;
 };
 
-export const useCoreSettings = create<CoreSettingsStore>((set) => ({
+export const useCoreSettings = create<CoreSettingsStore>((set, get) => ({
   isLoading: true,
   isPostLoading: false,
-  version: null,
-  started: false,
-  logs_websocket: null,
+  isEditingCore: false,
   config: '',
+  selectedNode: null,
   fetchCoreSettings: () => {
     set({ isLoading: true });
     Promise.all([
-      fetch('/core').then(({ version, started, logs_websocket }) =>
-        set({ version, started, logs_websocket })
-      ),
-      fetch('/core/config').then((config) => set({ config })),
+      fetch(`/nodes/${get().selectedNode?.id}/xray_config`).then((config) => set({ config })),
     ]).finally(() => set({ isLoading: false }));
   },
-  updateConfig: (body) => {
+  updateConfig: async (body) => {
     set({ isPostLoading: true });
-    return fetch('/core/config', { method: 'PUT', body }).finally(() => {
+    return fetch(`/nodes/${get().selectedNode?.id}/xray_config`, { method: 'PUT', body }).finally(() => {
       set({ isPostLoading: false });
     });
   },

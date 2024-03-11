@@ -1,115 +1,38 @@
 import {
-  Badge,
   Box,
   Button,
-  chakra,
   CircularProgress,
   FormControl,
   FormLabel,
   HStack,
   IconButton,
-  Modal,
   ModalBody,
-  ModalCloseButton,
-  ModalContent,
   ModalFooter,
-  ModalHeader,
-  ModalOverlay,
   Text,
-  Tooltip,
   useToast,
 } from '@chakra-ui/react';
-import {
-  ArrowPathIcon,
-  ArrowsPointingInIcon,
-  ArrowsPointingOutIcon,
-  Cog6ToothIcon,
-} from '@heroicons/react/24/outline';
-import { joinPaths } from '@remix-run/router';
-import classNames from 'classnames';
-import { useNodes, useCoreSettings } from 'stores';
+import { useCoreSettings } from 'stores';
 import debounce from 'lodash.debounce';
 import { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useMutation } from '@tanstack/react-query';
-import { ReadyState } from 'react-use-websocket';
 import { useWebSocket } from 'react-use-websocket/dist/lib/use-websocket';
-import { getAuthToken } from 'service/auth-storage';
-import { Icon } from 'components/icon';
 import { JsonEditor } from 'components/json-editor';
 import 'components/json-editor/themes.js';
-
-export const MAX_NUMBER_OF_LOGS = 500;
-
-const UsageIcon = chakra(Cog6ToothIcon, {
-  baseStyle: {
-    w: 5,
-    h: 5,
-  },
-});
-export const ReloadIcon = chakra(ArrowPathIcon, {
-  baseStyle: {
-    w: 4,
-    h: 4,
-  },
-});
-
-export const FullScreenIcon = chakra(ArrowsPointingOutIcon, {
-  baseStyle: {
-    w: 4,
-    h: 4,
-  },
-});
-export const ExitFullScreenIcon = chakra(ArrowsPointingInIcon, {
-  baseStyle: {
-    w: 3,
-    h: 3,
-  },
-});
-
-const getStatus = (status: string) => {
-  return {
-    [ReadyState.CONNECTING]: 'connecting',
-    [ReadyState.OPEN]: 'connected',
-    [ReadyState.CLOSING]: 'closed',
-    [ReadyState.CLOSED]: 'closed',
-    [ReadyState.UNINSTANTIATED]: 'closed',
-  }[status];
-};
-
-const getWebsocketUrl = () => {
-  try {
-    let baseURL = new URL(
-      import.meta.env.VITE_BASE_API.startsWith('/')
-        ? window.location.origin + import.meta.env.VITE_BASE_API
-        : import.meta.env.VITE_BASE_API
-    );
-
-    return (
-      (baseURL.protocol === 'https:' ? 'wss://' : 'ws://') +
-      joinPaths([baseURL.host + baseURL.pathname, '/core/logs']) +
-      '?interval=1&token=' +
-      getAuthToken()
-    );
-  } catch (e) {
-    console.error('Unable to generate websocket url');
-    console.error(e);
-    return null;
-  }
-};
+import { ExitFullScreenIcon, FullScreenIcon } from './icon';
+import { getStatus, getWebsocketUrl } from './helper';
+import { MAX_NUMBER_OF_LOGS } from '.';
 
 let logsTmp: string[] = [];
-const CoreSettingModalContent: FC = () => {
-  const { isEditingCore } = useNodes();
+
+export const CoreSettingModalContent: FC = () => {
   const {
     fetchCoreSettings,
     updateConfig,
     isLoading,
     config,
     isPostLoading,
-    version,
-    restartCore,
+    selectedNode,
   } = useCoreSettings();
   const logsDiv = useRef<HTMLDivElement | null>(null);
   const [logs, setLogs] = useState<string[]>([]);
@@ -124,8 +47,8 @@ const CoreSettingModalContent: FC = () => {
   }, [config]);
 
   useEffect(() => {
-    if (isEditingCore) fetchCoreSettings();
-  }, [isEditingCore]);
+    if (selectedNode) fetchCoreSettings();
+  }, [selectedNode]);
   ''.startsWith;
   const scrollShouldStayOnEnd = useRef(true);
   const updateLogs = useCallback(
@@ -144,7 +67,7 @@ const CoreSettingModalContent: FC = () => {
     []
   );
 
-  const { readyState } = useWebSocket(getWebsocketUrl(), {
+  const { readyState } = useWebSocket(selectedNode?.id ? getWebsocketUrl(selectedNode.id) : '', {
     onMessage: (e: any) => {
       logsTmp.push(e.data);
       if (logsTmp.length > MAX_NUMBER_OF_LOGS)
@@ -169,10 +92,10 @@ const CoreSettingModalContent: FC = () => {
 
   const status = getStatus(readyState.toString());
 
-  const {
-    mutate: handleRestartCore,
-    isPending: isRestarting
-  } = useMutation({ mutationFn: restartCore });
+  // const {
+  //   mutate: handleRestartCore,
+  //   isPending: isRestarting
+  // } = useMutation({ mutationFn: restartCore });
 
   const handleOnSave = ({ config }: any) => {
     updateConfig(config)
@@ -202,6 +125,7 @@ const CoreSettingModalContent: FC = () => {
         });
       });
   };
+
   const editorRef = useRef<HTMLDivElement>(null);
   const [isFullScreen, setFullScreen] = useState(false);
   const handleFullScreen = () => {
@@ -222,13 +146,6 @@ const CoreSettingModalContent: FC = () => {
               {t('core.configuration')}{' '}
               {isLoading && <CircularProgress isIndeterminate size="15px" />}
             </FormLabel>
-            <HStack gap={0}>
-              <Tooltip label="Xray Version" placement="top">
-                <Badge height="100%" textTransform="lowercase">
-                  {version && `v${version}`}
-                </Badge>
-              </Tooltip>
-            </HStack>
           </HStack>
           <Box position="relative" ref={editorRef} minHeight="300px">
             <Controller
@@ -282,19 +199,19 @@ const CoreSettingModalContent: FC = () => {
       <ModalFooter>
         <HStack w="full" justifyContent="space-between">
           <Box>
-            <Button
-              size="sm"
-              leftIcon={
-                <ReloadIcon
-                  className={classNames({
-                    'animate-spin': isRestarting,
-                  })}
-                />
-              }
-              onClick={() => handleRestartCore()}
-            >
-              {t(isRestarting ? 'core.restarting' : 'core.restartCore')}
-            </Button>
+            {/* <Button */}
+            {/*   size="sm" */}
+            {/*   leftIcon={ */}
+            {/*     <ReloadIcon */}
+            {/*       className={classNames({ */}
+            {/*         'animate-spin': isRestarting, */}
+            {/*       })} */}
+            {/*     /> */}
+            {/*   } */}
+            {/*   onClick={() => handleRestartCore()} */}
+            {/* > */}
+            {/*   {t(isRestarting ? 'core.restarting' : 'core.restartCore')} */}
+            {/* </Button> */}
           </Box>
           <HStack>
             <Button
@@ -312,30 +229,5 @@ const CoreSettingModalContent: FC = () => {
         </HStack>
       </ModalFooter>
     </form>
-  );
-};
-export const CoreSettingsModal: FC = () => {
-  const { isEditingCore } = useNodes();
-  const onClose = useNodes.setState.bind(null, { isEditingCore: false });
-  const { t } = useTranslation();
-
-  return (
-    <Modal isOpen={isEditingCore} onClose={onClose} size="3xl">
-      <ModalOverlay bg="blackAlpha.300" backdropFilter="blur(10px)" />
-      <ModalContent mx="3" w="full">
-        <ModalHeader pt={6}>
-          <HStack gap={2}>
-            <Icon color="primary">
-              <UsageIcon color="white" />
-            </Icon>
-            <Text fontWeight="semibold" fontSize="lg">
-              {t('core.title')}
-            </Text>
-          </HStack>
-        </ModalHeader>
-        <ModalCloseButton mt={3} />
-        <CoreSettingModalContent />
-      </ModalContent>
-    </Modal>
   );
 };

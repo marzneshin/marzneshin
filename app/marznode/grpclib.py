@@ -11,7 +11,7 @@ from grpclib.exceptions import StreamTerminatedError
 from .base import MarzNodeBase
 from .database import MarzNodeDB
 from .marznode_grpc import MarzServiceStub
-from .marznode_pb2 import UserData, UsersData, Empty, User, Inbound
+from .marznode_pb2 import UserData, UsersData, Empty, User, Inbound, XrayLogsRequest, XrayConfig
 from ..models.node import NodeStatus
 
 logger = logging.getLogger(__name__)
@@ -54,24 +54,18 @@ class MarzNodeGRPCLIB(MarzNodeBase, MarzNodeDB):
             try:
                 await asyncio.wait_for(self._channel.__connect__(), timeout=2)
             except Exception:
-                logger.info("timeout for node, id: %i", self.id)
+                logger.debug("timeout for node, id: %i", self.id)
                 self.set_status(NodeStatus.unhealthy, "timeout")
                 self.synced = False
                 if self._streaming_task:
                     self._streaming_task.cancel()
-                await asyncio.sleep(10)
-                continue
             else:
                 if not self.synced:
-                    try:
-                        await self._sync()
-                        self._streaming_task = asyncio.create_task(self._stream_user_updates())
-                        self.set_status(NodeStatus.healthy)
-                        logger.info("Connected to node %i", self.id)
-                    except:
-                        await asyncio.sleep(10)
-                        continue
-                await asyncio.sleep(30)
+                    await self._sync()
+                    self._streaming_task = asyncio.create_task(self._stream_user_updates())
+                    self.set_status(NodeStatus.healthy)
+                    logger.info("Connected to node %i", self.id)
+            await asyncio.sleep(10)
 
     async def _stream_user_updates(self):
         try:
@@ -114,3 +108,18 @@ class MarzNodeGRPCLIB(MarzNodeBase, MarzNodeDB):
         users = self.list_users()
         await self._repopulate_users(users)
         self.synced = True
+
+    async def get_logs(self, include_buffer=True):
+        async with self._stub.StreamXrayLogs.open() as stm:
+            await stm.send_message(XrayLogsRequest(include_buffer=include_buffer))
+            while True:
+                response = await stm.recv_message()
+                yield response.line
+
+    async def restart_xray(self, config: str):
+        await self._stub.RestartXray(XrayConfig(configuration=config))
+        await self._sync()
+
+    async def get_xray_config(self):
+        response = await self._stub.FetchXrayConfig(Empty())
+        return response.configuration

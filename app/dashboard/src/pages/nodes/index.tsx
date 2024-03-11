@@ -1,6 +1,6 @@
 
 import { FC } from 'react';
-import { CoreSettingsModal } from './modals/core-settings-modal';
+import { CoreSettingsModal } from './modals/core-settings';
 import { NodesDialog } from './dialog';
 import { NodesUsage } from './usage';
 import { NodesTable } from './table';

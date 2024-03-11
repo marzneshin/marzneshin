@@ -232,7 +232,7 @@ export const NodesTable: FC<NodesTableProps> = (props) => {
                               </VStack>
                               <HStack w="full" justifyContent="space-between">
                                 <HStack>
-                                  <ActionButtons />
+                                  <ActionButtons node={node} />
                                   <Tooltip
                                     label={t('nodesDialog.editNode')}
                                     placement="top"
@@ -369,7 +369,7 @@ export const NodesTable: FC<NodesTableProps> = (props) => {
                     {node.address}:{node.port}
                   </Td>
                   <Td width="200px" minW="180px">
-                    <ActionButtons />
+                    <ActionButtons node={node} />
                   </Td>
                 </Tr>
               );

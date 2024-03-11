@@ -4,7 +4,7 @@ from datetime import datetime
 from enum import Enum
 from typing import List, Optional, Tuple, Union
 
-from sqlalchemy import and_, delete
+from sqlalchemy import and_, delete, update, select
 from sqlalchemy.orm import Session
 
 from app.db.models import (JWT, TLS, Admin, Node, NodeUsage, NodeUserUsage,
@@ -33,21 +33,31 @@ def add_default_hosts(db: Session, inbounds: List[Inbound]):
 
 
 def assure_node_inbounds(db: Session, inbounds: List[Inbound], node_id: int):
-    existing_inbounds = set(
-        (i.protocol, i.tag, i.config) for i in db.query(Inbound).filter(Inbound.node_id == node_id).all())
-    inbounds_set = set((json.loads(i.config)["protocol"], i.tag, i.config) for i in list(inbounds))
-    new_inbounds = inbounds_set - existing_inbounds
-    deleted_inbounds = existing_inbounds - inbounds_set
-    # difference = [ i for i in existing_inbounds if (i.protocol, i.tag) not in existing_inbounds ]
-    if not new_inbounds and not deleted_inbounds:
-        return
-    """stmt = (
-            delete(Inbound)
-            .where(Inbound.node_id == node_id)
-            .execution_options(synchronize_session="fetch")
+    current_tags = [i[0] for i in db.execute(select(Inbound.tag).filter(Inbound.node_id == node_id)).all()]
+    updated_tags = set(i.tag for i in list(inbounds))
+    inbound_additions, tag_deletions = list(), set()
+    for tag in current_tags:
+        if tag not in updated_tags:
+            tag_deletions.add(tag)
+    db_inbounds = db.query(Inbound).where(and_(Inbound.node_id == node_id, Inbound.tag.in_(tag_deletions)))
+    for i in db_inbounds:
+        db.delete(i)
+
+    for inb in inbounds:
+        if inb.tag in current_tags:
+            stmt = update(Inbound).where(
+                and_(Inbound.node_id == node_id,
+                     Inbound.tag == inb.tag)
+            ).values(
+                protocol=json.loads(inb.config)["protocol"], config=inb.config
             )
-    db.execute(stmt)"""
-    new_inbounds = [Inbound(tag=i[1], protocol=i[0], config=i[2], node_id=node_id) for i in new_inbounds]
+            db.execute(stmt)
+        else:
+            inbound_additions.append(inb)
+    new_inbounds = [Inbound(tag=inb.tag,
+                            protocol=json.loads(inb.config)["protocol"],
+                            config=inb.config,
+                            node_id=node_id) for inb in inbound_additions]
     db.add_all(new_inbounds)
     db.flush()
     for i in new_inbounds:

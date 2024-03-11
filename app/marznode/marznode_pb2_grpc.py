@@ -34,6 +34,21 @@ class MarzServiceStub(object):
                 request_serializer=app_dot_marznode_dot_marznode__pb2.Empty.SerializeToString,
                 response_deserializer=app_dot_marznode_dot_marznode__pb2.UsersStats.FromString,
                 )
+        self.FetchXrayConfig = channel.unary_unary(
+                '/marznode.MarzService/FetchXrayConfig',
+                request_serializer=app_dot_marznode_dot_marznode__pb2.Empty.SerializeToString,
+                response_deserializer=app_dot_marznode_dot_marznode__pb2.XrayConfig.FromString,
+                )
+        self.RestartXray = channel.unary_unary(
+                '/marznode.MarzService/RestartXray',
+                request_serializer=app_dot_marznode_dot_marznode__pb2.XrayConfig.SerializeToString,
+                response_deserializer=app_dot_marznode_dot_marznode__pb2.InboundsResponse.FromString,
+                )
+        self.StreamXrayLogs = channel.unary_stream(
+                '/marznode.MarzService/StreamXrayLogs',
+                request_serializer=app_dot_marznode_dot_marznode__pb2.XrayLogsRequest.SerializeToString,
+                response_deserializer=app_dot_marznode_dot_marznode__pb2.LogLine.FromString,
+                )
 
 
 class MarzServiceServicer(object):
@@ -63,6 +78,24 @@ class MarzServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def FetchXrayConfig(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def RestartXray(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def StreamXrayLogs(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_MarzServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -85,6 +118,21 @@ def add_MarzServiceServicer_to_server(servicer, server):
                     servicer.FetchUsersStats,
                     request_deserializer=app_dot_marznode_dot_marznode__pb2.Empty.FromString,
                     response_serializer=app_dot_marznode_dot_marznode__pb2.UsersStats.SerializeToString,
+            ),
+            'FetchXrayConfig': grpc.unary_unary_rpc_method_handler(
+                    servicer.FetchXrayConfig,
+                    request_deserializer=app_dot_marznode_dot_marznode__pb2.Empty.FromString,
+                    response_serializer=app_dot_marznode_dot_marznode__pb2.XrayConfig.SerializeToString,
+            ),
+            'RestartXray': grpc.unary_unary_rpc_method_handler(
+                    servicer.RestartXray,
+                    request_deserializer=app_dot_marznode_dot_marznode__pb2.XrayConfig.FromString,
+                    response_serializer=app_dot_marznode_dot_marznode__pb2.InboundsResponse.SerializeToString,
+            ),
+            'StreamXrayLogs': grpc.unary_stream_rpc_method_handler(
+                    servicer.StreamXrayLogs,
+                    request_deserializer=app_dot_marznode_dot_marznode__pb2.XrayLogsRequest.FromString,
+                    response_serializer=app_dot_marznode_dot_marznode__pb2.LogLine.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -161,5 +209,56 @@ class MarzService(object):
         return grpc.experimental.unary_unary(request, target, '/marznode.MarzService/FetchUsersStats',
             app_dot_marznode_dot_marznode__pb2.Empty.SerializeToString,
             app_dot_marznode_dot_marznode__pb2.UsersStats.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def FetchXrayConfig(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/marznode.MarzService/FetchXrayConfig',
+            app_dot_marznode_dot_marznode__pb2.Empty.SerializeToString,
+            app_dot_marznode_dot_marznode__pb2.XrayConfig.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def RestartXray(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/marznode.MarzService/RestartXray',
+            app_dot_marznode_dot_marznode__pb2.XrayConfig.SerializeToString,
+            app_dot_marznode_dot_marznode__pb2.InboundsResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def StreamXrayLogs(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_stream(request, target, '/marznode.MarzService/StreamXrayLogs',
+            app_dot_marznode_dot_marznode__pb2.XrayLogsRequest.SerializeToString,
+            app_dot_marznode_dot_marznode__pb2.LogLine.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
