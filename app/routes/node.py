@@ -142,7 +142,19 @@ async def get_node_xray_config(node_id: int,
     return await node.get_xray_config()
 
 
-@router.put("/{node_id}/xray_config")
+@router.put("/{node_id}/xray_config",
+            openapi_extra={
+                "requestBody": {
+                    "content": {
+                        "text/plain": {
+                            "schema": {
+                            }
+                        }
+                    },
+                    "required": True,
+                },
+            },
+            )
 async def alter_node_xray_config(node_id: int,
                                  db: DBDep,
                                  admin: SudoAdminDep,
