@@ -10,11 +10,10 @@ import {
     ModalBody,
     ModalFooter,
     Text,
-    Tooltip,
     useToast,
 } from '@chakra-ui/react';
 import classNames from 'classnames';
-import { useNodes, useCoreSettings } from 'stores';
+import { useCoreSettings } from 'stores';
 import debounce from 'lodash.debounce';
 import { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -36,7 +35,6 @@ export const CoreSettingModalContent: FC = () => {
         isLoading,
         config,
         isPostLoading,
-        version,
         restartCore,
         selectedNode,
     } = useCoreSettings();
@@ -152,13 +150,6 @@ export const CoreSettingModalContent: FC = () => {
                             {t('core.configuration')}{' '}
                             {isLoading && <CircularProgress isIndeterminate size="15px" />}
                         </FormLabel>
-                        <HStack gap={0}>
-                            <Tooltip label="Xray Version" placement="top">
-                                <Badge height="100%" textTransform="lowercase">
-                                    {version && `v${version}`}
-                                </Badge>
-                            </Tooltip>
-                        </HStack>
                     </HStack>
                     <Box position="relative" ref={editorRef} minHeight="300px">
                         <Controller

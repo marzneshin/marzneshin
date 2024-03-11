@@ -369,7 +369,7 @@ export const NodesTable: FC<NodesTableProps> = (props) => {
                     {node.address}:{node.port}
                   </Td>
                   <Td width="200px" minW="180px">
-                    <ActionButtons />
+                    <ActionButtons node={node}/>
                   </Td>
                 </Tr>
               );
