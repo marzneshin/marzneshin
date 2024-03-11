@@ -11,7 +11,7 @@ from grpclib.exceptions import StreamTerminatedError
 from .base import MarzNodeBase
 from .database import MarzNodeDB
 from .marznode_grpc import MarzServiceStub
-from .marznode_pb2 import UserData, UsersData, Empty, User, Inbound, XrayLogsRequest
+from .marznode_pb2 import UserData, UsersData, Empty, User, Inbound, XrayLogsRequest, XrayConfig
 from ..models.node import NodeStatus
 
 logger = logging.getLogger(__name__)
@@ -121,3 +121,11 @@ class MarzNodeGRPCLIB(MarzNodeBase, MarzNodeDB):
             while True:
                 response = await stm.recv_message()
                 yield response.line
+
+    async def restart_xray(self, config: str):
+        await self._stub.RestartXray(XrayConfig(configuration=config))
+        await self._sync()
+
+    async def get_xray_config(self):
+        response = await self._stub.FetchXrayConfig(Empty())
+        return response.configuration
