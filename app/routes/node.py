@@ -6,6 +6,7 @@ import sqlalchemy
 from fastapi import APIRouter, Depends, Body
 from fastapi import HTTPException, WebSocket
 from starlette.requests import Request
+from starlette.responses import PlainTextResponse
 
 from app import marznode
 from app.db import crud, get_tls_certificate
@@ -133,10 +134,10 @@ async def reconnect_node(node_id: int,
     return {}
 
 
-@router.get("/{node_id}/xray_config")
+@router.get("/{node_id}/xray_config", response_class=PlainTextResponse)
 async def get_node_xray_config(node_id: int,
-                                 db: DBDep,
-                                 admin: SudoAdminDep):
+                               db: DBDep,
+                               admin: SudoAdminDep):
     if not (node := marznode.nodes.get(node_id)):
         raise HTTPException(status_code=404, detail="Node not found")
     return await node.get_xray_config()
