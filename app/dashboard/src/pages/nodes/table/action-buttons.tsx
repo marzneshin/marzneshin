@@ -2,6 +2,7 @@
 import { t } from 'i18next';
 import { Cog6ToothIcon } from '@heroicons/react/24/outline';
 import { chakra, HStack, IconButton, Tooltip } from '@chakra-ui/react';
+import { NodeType, useCoreSettings } from 'stores';
 import { FC } from 'react';
 
 const iconProps = {
@@ -11,9 +12,12 @@ const iconProps = {
   },
 };
 const CoreSettingsIcon = chakra(Cog6ToothIcon, iconProps);
-type ActionButtonsProps = {};
 
-export const ActionButtons: FC<ActionButtonsProps> = () => {
+type ActionButtonsProps = {
+  node: NodeType,
+};
+
+export const ActionButtons: FC<ActionButtonsProps> = ({ node }) => {
   return (
     <HStack
       justifyContent="flex-end"
@@ -41,6 +45,9 @@ export const ActionButtons: FC<ActionButtonsProps> = () => {
             base: 'sm',
             md: 'md',
           }}
+          onClick={() => {
+            useCoreSettings.setState({ selectedNode: node });
+          }}
         >
           <CoreSettingsIcon />
         </IconButton>
@@ -48,4 +55,3 @@ export const ActionButtons: FC<ActionButtonsProps> = () => {
     </HStack >
   );
 };
-

@@ -63,7 +63,7 @@ export const getNodeCreateDefaultValues = (): NodeCreate => ({
 
 export const FetchNodesQueryKey = 'fetch-nodes-query-key';
 
-export function fetchNodes(): Promise<NodeType[]> {
+export async function fetchNodes(): Promise<NodeType[]> {
   useDashboard.setState({ loading: true })
   return fetch('/nodes').then((nodes) => {
     return nodes;
@@ -79,7 +79,6 @@ export type NodeStore = {
   isAddingNode: boolean;
   isShowingNodesUsage: boolean;
   isEditingNode: boolean;
-  isEditingCore: boolean;
   nodesFilters: NodesFilterType;
   refetchNodes: () => void;
   refetchCertificate: () => void;

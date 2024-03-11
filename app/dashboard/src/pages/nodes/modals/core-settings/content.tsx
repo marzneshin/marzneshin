@@ -30,7 +30,6 @@ import { MAX_NUMBER_OF_LOGS } from '.';
 let logsTmp: string[] = [];
 
 export const CoreSettingModalContent: FC = () => {
-    const { isEditingCore } = useNodes();
     const {
         fetchCoreSettings,
         updateConfig,
@@ -39,6 +38,7 @@ export const CoreSettingModalContent: FC = () => {
         isPostLoading,
         version,
         restartCore,
+        selectedNode,
     } = useCoreSettings();
     const logsDiv = useRef<HTMLDivElement | null>(null);
     const [logs, setLogs] = useState<string[]>([]);
@@ -53,8 +53,8 @@ export const CoreSettingModalContent: FC = () => {
     }, [config]);
 
     useEffect(() => {
-        if (isEditingCore) fetchCoreSettings();
-    }, [isEditingCore]);
+        if (selectedNode) fetchCoreSettings();
+    }, [selectedNode]);
     ''.startsWith;
     const scrollShouldStayOnEnd = useRef(true);
     const updateLogs = useCallback(
@@ -73,7 +73,7 @@ export const CoreSettingModalContent: FC = () => {
         []
     );
 
-    const { readyState } = useWebSocket(getWebsocketUrl(), {
+    const { readyState } = useWebSocket(selectedNode?.id ? getWebsocketUrl(selectedNode.id) : '', {
         onMessage: (e: any) => {
             logsTmp.push(e.data);
             if (logsTmp.length > MAX_NUMBER_OF_LOGS)
@@ -131,6 +131,7 @@ export const CoreSettingModalContent: FC = () => {
                 });
             });
     };
+
     const editorRef = useRef<HTMLDivElement>(null);
     const [isFullScreen, setFullScreen] = useState(false);
     const handleFullScreen = () => {
