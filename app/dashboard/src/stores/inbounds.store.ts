@@ -133,13 +133,11 @@ export const useInbounds = create(
       if (hostId !== undefined) {
         useDashboard.setState({ loading: true });
         return fetch(`/inbounds/hosts/${hostId}`, { method: 'PUT', body })
-          .then(() => {
-            get().refetchHosts();
-            return true;
-          })
+          .then(() => true)
           .catch(() => false)
           .finally(() => {
             useDashboard.setState({ loading: false });
+            get().refetchHosts();
           });
       }
     },
@@ -150,13 +148,11 @@ export const useInbounds = create(
       if (inboundId !== undefined) {
         useDashboard.setState({ loading: true });
         return fetch(`/inbounds/${inboundId}/hosts`, { method: 'POST', body })
-          .then(() => {
-            get().refetchHosts();
-            return true;
-          })
+          .then(() => true)
           .catch(() => false)
           .finally(() => {
             useDashboard.setState({ loading: false });
+            get().refetchHosts();
           });
       }
     },
