@@ -1,3 +1,4 @@
+import json
 import logging
 from datetime import datetime
 from typing import List, Annotated
@@ -134,35 +135,23 @@ async def reconnect_node(node_id: int,
     return {}
 
 
-@router.get("/{node_id}/xray_config", response_class=PlainTextResponse)
+@router.get("/{node_id}/xray_config")
 async def get_node_xray_config(node_id: int,
                                db: DBDep,
                                admin: SudoAdminDep):
     if not (node := marznode.nodes.get(node_id)):
         raise HTTPException(status_code=404, detail="Node not found")
-    return await node.get_xray_config()
+    return json.loads(await node.get_xray_config())
 
 
-@router.put("/{node_id}/xray_config",
-            openapi_extra={
-                "requestBody": {
-                    "content": {
-                        "text/plain": {
-                            "schema": {
-                            }
-                        }
-                    },
-                    "required": True,
-                },
-            },
-            )
+@router.put("/{node_id}/xray_config")
 async def alter_node_xray_config(node_id: int,
                                  db: DBDep,
                                  admin: SudoAdminDep,
-                                 request: Request):
+                                 body: Annotated[dict, Body()]):
     if not (node := marznode.nodes.get(node_id)):
         raise HTTPException(status_code=404, detail="Node not found")
-    xray_config = await request.body()
+    xray_config = json.dumps(body)
     await node.restart_xray(xray_config)
     return {}
 
