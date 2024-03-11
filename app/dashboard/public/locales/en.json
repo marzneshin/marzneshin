@@ -208,12 +208,16 @@
     "host.wildcard": "Use <badge>*</badge> to generate a random string (works for wildcard domain names)"
   },
   "revoke": "Revoke",
-  "deleteNode.title": "Delete Node",
-  "deleteNode.prompt": "Are you sure you want to delete the <b>{{name}}</b> node?",
-  "deleteNode.deleteSuccess": "Node {{name}} removed successfully",
-  "deleteService.title": "Delete Service",
-  "deleteService.prompt": "Are you sure you want to delete the <b>{{name}}</b> node?",
-  "deleteService.deleteSuccess": "Service {{name}} removed successfully",
+  "deleteNode": {
+    "title": "Delete Node",
+    "prompt": "Are you sure you want to delete the <b>{{name}}</b> node?",
+    "deleteSuccess": "Node {{name}} removed successfully"
+  },
+  "deleteService": {
+    "title": "Delete Service",
+    "prompt": "Are you sure you want to delete the <b>{{name}}</b> node?",
+    "deleteSuccess": "Service {{name}} removed successfully"
+  },
   "users": "Users",
   "active": "active",
   "disabled": "disabled",
