@@ -59,3 +59,21 @@ class UsersStats(_message.Message):
     USERS_STATS_FIELD_NUMBER: _ClassVar[int]
     users_stats: _containers.RepeatedCompositeFieldContainer[UsersStats.UserStats]
     def __init__(self, users_stats: _Optional[_Iterable[_Union[UsersStats.UserStats, _Mapping]]] = ...) -> None: ...
+
+class LogLine(_message.Message):
+    __slots__ = ("line",)
+    LINE_FIELD_NUMBER: _ClassVar[int]
+    line: str
+    def __init__(self, line: _Optional[str] = ...) -> None: ...
+
+class XrayConfig(_message.Message):
+    __slots__ = ("configuration",)
+    CONFIGURATION_FIELD_NUMBER: _ClassVar[int]
+    configuration: str
+    def __init__(self, configuration: _Optional[str] = ...) -> None: ...
+
+class XrayLogsRequest(_message.Message):
+    __slots__ = ("include_buffer",)
+    INCLUDE_BUFFER_FIELD_NUMBER: _ClassVar[int]
+    include_buffer: bool
+    def __init__(self, include_buffer: bool = ...) -> None: ...

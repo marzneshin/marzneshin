@@ -8,14 +8,14 @@ from fastapi import HTTPException, WebSocket
 
 from app import marznode
 from app.db import crud, get_tls_certificate
-from app.dependencies import DBDep, SudoAdminDep, sudo_admin, EndDateDep, StartDateDep
+from app.dependencies import DBDep, SudoAdminDep, sudo_admin, EndDateDep, StartDateDep, get_admin
 from app.marznode import MarzNodeGRPCIO
 from app.models.admin import Admin
 from app.models.node import (NodeCreate, NodeModify, NodeResponse,
                              NodeSettings, NodeStatus, NodesUsageResponse)
 
 logger = logging.getLogger(__name__)
-router = APIRouter(prefix="/nodes", tags=['Node'], dependencies=[Depends(sudo_admin)])
+router = APIRouter(prefix="/nodes", tags=['Node'])
 
 
 @router.get("/settings", response_model=NodeSettings)
@@ -56,40 +56,30 @@ def get_node(node_id: int,
     return db_node
 
 
-@router.websocket("/{node_id}/logs", dependencies=None)
+@router.websocket("/{node_id}/logs")
 async def node_logs(node_id: int,
                     websocket: WebSocket,
-                    db: DBDep):
+                    db: DBDep,
+                    include_buffer: bool = True):
     token = (
         websocket.query_params.get('token')
         or
         websocket.headers.get('Authorization', '').removeprefix("Bearer ")
     )
-    admin = Admin.get_admin(token, db)
-    if not admin:
-        return await websocket.close(reason="Unauthorized", code=4401)
+    admin = get_admin(db, token)
 
-    if not admin.is_sudo:
+    if not admin or not admin.is_sudo:
         return await websocket.close(reason="You're not allowed", code=4403)
 
     if not marznode.nodes.get(node_id):
         return await websocket.close(reason="Node not found", code=4404)
 
-    if not await xray.nodes[node_id].is_healthy():
-        return await websocket.close(reason="Node is not connected", code=4400)
-
-    interval = websocket.query_params.get('interval')
-    if interval:
-        try:
-            interval = float(interval)
-        except ValueError:
-            return await websocket.close(reason="Invalid interval value", code=4400)
-        if interval > 10:
-            return await websocket.close(reason="Interval must be more than 0 and at most 10 seconds", code=4400)
+    # if not await marznode.nodes[node_id].is_healthy:
+    #    return await websocket.close(reason="Node is not connected", code=4400)
 
     await websocket.accept()
-    async for l in xray.nodes[node_id].get_logs():
-        await websocket.send_text(l)
+    async for line in marznode.nodes[node_id].get_logs(include_buffer=include_buffer):
+        await websocket.send_text(line)
 
 
 @router.get("", response_model=List[NodeResponse])
