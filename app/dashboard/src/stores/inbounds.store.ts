@@ -14,7 +14,8 @@ export const hostSchema = z.object({
   address: z.string().min(1, 'Address is required'),
   port: z.coerce.number()
     .gte(1, 'Port must be more than 1')
-    .lte(65535, 'Port can not be more than 65535'),
+    .lte(65535, 'Port can not be more than 65535')
+    .or(z.string().nullable()),
   path: z.string(),
   sni: z.string(),
   host: z.string(),
@@ -136,6 +137,7 @@ export const useInbounds = create(
           .catch(() => false)
           .finally(() => {
             useDashboard.setState({ loading: false });
+            get().refetchHosts();
           });
       }
     },
@@ -150,6 +152,7 @@ export const useInbounds = create(
           .catch(() => false)
           .finally(() => {
             useDashboard.setState({ loading: false });
+            get().refetchHosts();
           });
       }
     },
@@ -159,7 +162,10 @@ export const useInbounds = create(
     deleteHost: async (hostId: number): Promise<boolean> => {
       useDashboard.setState({ loading: true });
       return fetch(`/inbounds/hosts/${hostId}`, { method: 'DELETE' })
-        .then(() => true)
+        .then(() => {
+          get().refetchHosts();
+          return true;
+        })
         .catch(() => false)
         .finally(() => {
           useDashboard.setState({ loading: false });

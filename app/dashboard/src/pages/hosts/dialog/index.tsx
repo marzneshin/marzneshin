@@ -104,7 +104,7 @@ export const HostsDialog: FC = () => {
       .then(() => {
         toast({
           title: t(
-            isEditingHost ? 'hostsDialog.editHost' : 'hostsDialog.createNewHost',
+            isEditingHost ? 'hostsDialog.editHost' : 'hostsDialog.createHost',
             { hoshtName: values.host }
           ),
           status: 'success',

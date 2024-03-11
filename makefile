@@ -14,16 +14,15 @@ dashboard-dev:
 	VITE_BASE_API=http://0.0.0.0:8000/api/ npm run dev \
 		--prefix './app/dashboard/' \
     	-- --host 0.0.0.0 \
-    	--base ./app/dashboard/ \
+    	--base /dashboard/ \
     	--clearScreen false
 
 dashboard-preview:
 	VITE_BASE_API=http://0.0.0.0:8000/api/ npm run preview \
 		--prefix './app/dashboard/' \
     	-- --host 0.0.0.0 \
-    	--base ./app/dashboard/ \
+    	--base /dashboard/ \
     	--clearScreen false
-
 
 dashboard-cleanup:
 	rm -rf app/dashboard/node_modules/

@@ -4,6 +4,7 @@ import { InboundCard } from 'components/inbounds-card';
 import { handleSort } from 'components/table';
 import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useEffect } from 'react';
 import { useInbounds } from 'stores';
 import { InboundType } from 'types';
 
@@ -22,6 +23,9 @@ export const InboundsSidebar: FC<InboundsSidebarProps> = ({
     refetchHosts,
   } = useInbounds();
 
+  useEffect(() => {
+    selectedInbound === undefined && selectInbound(inbounds[0]);
+  }, [selectedInbound, inbounds]);
 
   const { t } = useTranslation();
 

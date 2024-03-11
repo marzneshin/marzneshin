@@ -210,7 +210,6 @@ export const NodesDialog: FC = () => {
                         aria-label="delete node"
                         onClick={() => {
                           if (editingNode !== null) {
-                            console.log('deleting')
                             onDeletingNode(editingNode);
                             onClose();
                           }

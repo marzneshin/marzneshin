@@ -3,7 +3,7 @@ export const getDefaultValues = (): HostSchema => {
   return {
     host: '',
     sni: '',
-    port: 1,
+    port: null,
     path: '',
     address: '',
     remark: '',
