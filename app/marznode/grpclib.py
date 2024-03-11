@@ -54,24 +54,18 @@ class MarzNodeGRPCLIB(MarzNodeBase, MarzNodeDB):
             try:
                 await asyncio.wait_for(self._channel.__connect__(), timeout=2)
             except Exception:
-                logger.info("timeout for node, id: %i", self.id)
+                logger.debug("timeout for node, id: %i", self.id)
                 self.set_status(NodeStatus.unhealthy, "timeout")
                 self.synced = False
                 if self._streaming_task:
                     self._streaming_task.cancel()
-                await asyncio.sleep(10)
-                continue
             else:
                 if not self.synced:
-                    try:
-                        await self._sync()
-                        self._streaming_task = asyncio.create_task(self._stream_user_updates())
-                        self.set_status(NodeStatus.healthy)
-                        logger.info("Connected to node %i", self.id)
-                    except:
-                        await asyncio.sleep(10)
-                        continue
-                await asyncio.sleep(30)
+                    await self._sync()
+                    self._streaming_task = asyncio.create_task(self._stream_user_updates())
+                    self.set_status(NodeStatus.healthy)
+                    logger.info("Connected to node %i", self.id)
+            await asyncio.sleep(10)
 
     async def _stream_user_updates(self):
         try:
