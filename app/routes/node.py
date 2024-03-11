@@ -28,6 +28,19 @@ def get_node_settings(db: DBDep,
     )
 
 
+@router.get("/usage", response_model=NodesUsageResponse)
+def get_usage(db: DBDep,
+              admin: SudoAdminDep,
+              start_date: StartDateDep,
+              end_date: EndDateDep):
+    """
+    Get nodes usage
+    """
+    usages = crud.get_nodes_usage(db, start_date, end_date)
+
+    return {"usages": usages}
+
+
 @router.post("", response_model=NodeResponse)
 async def add_node(new_node: NodeCreate,
                    db: DBDep,
@@ -132,16 +145,3 @@ async def remove_node(node_id: int,
 
     logger.info(f"Node `%s` deleted", db_node.name)
     return {}
-
-
-@router.get("/usage", response_model=NodesUsageResponse)
-def get_usage(db: DBDep,
-              admin: SudoAdminDep,
-              start_date: StartDateDep,
-              end_date: EndDateDep):
-    """
-    Get nodes usage
-    """
-    usages = crud.get_nodes_usage(db, start_date, end_date)
-
-    return {"usages": usages}
