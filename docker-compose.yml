@@ -6,3 +6,15 @@ services:
     network_mode: host
     volumes:
       - /var/lib/marzneshin:/var/lib/marzneshin
+  marznode:
+    image: dawsh/marznode:latest
+    restart: always
+    network_mode: host
+    environment:
+      XRAY_EXECUTABLE_PATH: "/usr/local/bin/xray"
+      XRAY_ASSETS_PATH: "/usr/local/lib/xray"
+      XRAY_CONFIG_PATH: "/var/lib/marznode/xray_config.json"
+      INSECURE: "1"
+
+    volumes:
+      - /var/lib/marznode:/var/lib/marznode
