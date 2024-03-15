@@ -3,9 +3,10 @@ services:
     image: dawsh/marzneshin:latest
     restart: always
     env_file: .env
-    network_mode: host
     volumes:
       - /var/lib/marzneshin:/var/lib/marzneshin
+    ports:
+      - "8000:8000"
 
   marznode:
     image: dawsh/marznode:latest
