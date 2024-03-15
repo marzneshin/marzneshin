@@ -145,6 +145,7 @@ install_marzneshin() {
 }
 
 install_marznode_xray_config() {
+    mkdir -p "$NODE_DATA_DIR"
     curl -sL "https://raw.githubusercontent.com/khodedawsh/marznode" -o "$NODE_DATA_DIR/xray_config.json"
     colorized_echo green "Sample xray config downloaded for marznode"
 }
