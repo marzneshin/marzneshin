@@ -38,7 +38,7 @@ def upgrade() -> None:
     )
     op.bulk_insert(jwttable, [{"id": 1, "secret_key": os.urandom(32).hex()}])
 
-    op.create_table('nodes',
+    nodestable = op.create_table('nodes',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=256), nullable=True),
     sa.Column('address', sa.String(length=256), nullable=True),
@@ -56,6 +56,7 @@ def upgrade() -> None:
     sa.UniqueConstraint('name'),
     sa.UniqueConstraint('address', 'port')
     )
+    op.bulk_insert(nodestable, [{"name": "local", "address": "127.0.0.1", "port": 53042, "connection_backend": "grpcio", "status": "unhealthy"}])
     op.create_table('services',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=64), nullable=True),

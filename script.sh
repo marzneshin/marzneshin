@@ -2,8 +2,10 @@
 set -e
 
 APP_NAME="marzneshin"
+NODE_NAME="marznode"
 CONFIG_DIR="/etc/opt/$APP_NAME"
 DATA_DIR="/var/lib/$APP_NAME"
+NODE_DATA_DIR="/var/lib/$NODE_NAME"
 COMPOSE_FILE="$CONFIG_DIR/docker-compose.yml"
 
 
@@ -142,6 +144,10 @@ install_marzneshin() {
     colorized_echo green "Marzneshin files downloaded successfully"
 }
 
+install_marznode_xray_config() {
+    curl -sL "https://raw.githubusercontent.com/khodedawsh/marznode" -o "$NODE_DATA_DIR/xray_config.json"
+    colorized_echo green "Sample xray config downloaded for marznode"
+}
 
 uninstall_marzneshin_script() {
     if [ -f "/usr/local/bin/marzneshin" ]; then
@@ -176,6 +182,14 @@ uninstall_marzneshin_data_files() {
         rm -r "$DATA_DIR"
     fi
 }
+
+uninstall_marznode_data_files() {
+    if [ -d "$NODE_DATA_DIR" ]; then
+        colorized_echo yellow "Removing directory: $NODE_DATA_DIR"
+        rm -r "$NODE_DATA_DIR"
+    fi
+}
+
 
 up_marzneshin() {
     $COMPOSE -f $COMPOSE_FILE -p "$APP_NAME" up -d --remove-orphans
@@ -250,6 +264,7 @@ install_command() {
     detect_compose
     install_marzneshin_script
     install_marzneshin
+    install_marznode_xray_config
     up_marzneshin
     follow_marzneshin_logs
 }
@@ -276,11 +291,12 @@ uninstall_command() {
     uninstall_marzneshin
     uninstall_marzneshin_docker_images
 
-    read -p "Do you want to remove Marzneshin's data files too ($DATA_DIR)? (y/n) "
+    read -p "Do you want to remove marzneshin & marznode data files too ($NODE_DATA_DIR, $DATA_DIR)? (y/n) "
     if [[ ! $REPLY =~ ^[Yy]$ ]]; then
         colorized_echo green "Marzneshin uninstalled successfully"
     else
         uninstall_marzneshin_data_files
+	uninstall_marznode_data_files
         colorized_echo green "Marzneshin uninstalled successfully"
     fi
 }
