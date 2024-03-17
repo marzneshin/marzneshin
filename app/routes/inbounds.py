@@ -1,27 +1,31 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query
 from fastapi import HTTPException
+from fastapi_pagination.ext.sqlalchemy import paginate
+from fastapi_pagination.links import Page
 
 from app.db import crud
+from app.db.models import InboundHost as DBInboundHost, Inbound as DBInbound
 from app.dependencies import DBDep, sudo_admin
 from app.models.proxy import Inbound, InboundHost, InboundHostResponse
-from app.db.models import InboundHost as DBInboundHost
 
 router = APIRouter(prefix="/inbounds", dependencies=[Depends(sudo_admin)], tags=['Inbounds'])
 
 
-@router.get("", response_model=list[Inbound])
-def get_inbounds(db: DBDep):
+@router.get("", response_model=Page[Inbound])
+def get_inbounds(db: DBDep, tag: str = Query(None)):
     """
     Get all inbounds
     """
-    inbounds = crud.get_all_inbounds(db)
+    query = db.query(DBInbound)
+    if tag:
+        query = query.filter(DBInbound.tag.ilike(f"%{tag}%"))
 
-    return inbounds
+    return paginate(db, query)
 
 
-@router.get('/hosts', response_model=list[InboundHost])
+@router.get('/hosts', response_model=Page[InboundHost])
 def get_hosts(db: DBDep):
-    return db.query(DBInboundHost).all()
+    return paginate(db.query(DBInboundHost))
 
 
 @router.put("/hosts/{id}", response_model=InboundHostResponse)
@@ -63,19 +67,16 @@ def get_inbound(id: int, db: DBDep):
     return inbound
 
 
-@router.get("/{id}/hosts", response_model=list[InboundHostResponse])
+@router.get("/{id}/hosts", response_model=Page[InboundHostResponse])
 def get_inbound_hosts(id: int | None, db: DBDep):
     """
     Get hosts of a specific inbound
     """
-    if not id:
-        print()
-        return
     inbound = crud.get_inbound(db, id)
     if not inbound:
         raise HTTPException(status_code=404, detail="Inbound not found")
 
-    return inbound.hosts
+    return paginate(db, db.query(DBInboundHost).filter(DBInboundHost.inbound_id == id))
 
 
 @router.post("/{id}/hosts", response_model=InboundHostResponse)
