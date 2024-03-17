@@ -23,8 +23,12 @@ router = APIRouter(prefix="/nodes", tags=['Node'])
 @router.get("", response_model=Page[NodeResponse])
 def get_nodes(db: DBDep,
               admin: SudoAdminDep,
-              status: list[NodeStatus] = Query(None)):
+              status: list[NodeStatus] = Query(None),
+              name: str = Query(None)):
     query = db.query(Node)
+
+    if name:
+        query = query.filter(Node.name.ilike(f"%{name}%"))
 
     if status:
         query = query.filter(Node.status.in_(status))
