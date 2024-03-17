@@ -1,19 +1,16 @@
 import json
 import logging
-from datetime import datetime
 from typing import List, Annotated
 
 import sqlalchemy
-from fastapi import APIRouter, Depends, Body
+from fastapi import APIRouter, Body
 from fastapi import HTTPException, WebSocket
-from starlette.requests import Request
-from starlette.responses import PlainTextResponse
+
 
 from app import marznode
 from app.db import crud, get_tls_certificate
-from app.dependencies import DBDep, SudoAdminDep, sudo_admin, EndDateDep, StartDateDep, get_admin
-from app.marznode import MarzNodeGRPCIO
-from app.models.admin import Admin
+from app.dependencies import DBDep, SudoAdminDep, EndDateDep, StartDateDep, get_admin
+
 from app.models.node import (NodeCreate, NodeModify, NodeResponse,
                              NodeSettings, NodeStatus, NodesUsageResponse)
 
