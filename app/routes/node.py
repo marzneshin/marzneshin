@@ -1,14 +1,16 @@
 import json
 import logging
-from typing import List, Annotated
+from typing import Annotated
 
 import sqlalchemy
-from fastapi import APIRouter, Body
+from fastapi import APIRouter, Body, Query
 from fastapi import HTTPException, WebSocket
-
+from fastapi_pagination.ext.sqlalchemy import paginate
+from fastapi_pagination.links import Page
 
 from app import marznode
 from app.db import crud, get_tls_certificate
+from app.db.models import Node
 from app.dependencies import DBDep, SudoAdminDep, EndDateDep, StartDateDep, get_admin
 
 from app.models.node import (NodeCreate, NodeModify, NodeResponse,
@@ -18,10 +20,16 @@ logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/nodes", tags=['Node'])
 
 
-@router.get("", response_model=List[NodeResponse])
+@router.get("", response_model=Page[NodeResponse])
 def get_nodes(db: DBDep,
-              admin: SudoAdminDep):
-    return crud.get_nodes(db)
+              admin: SudoAdminDep,
+              status: list[NodeStatus] = Query(None)):
+    query = db.query(Node)
+
+    if status:
+        query = query.filter(Node.status.in_(status))
+
+    return paginate(db, query)
 
 
 @router.post("", response_model=NodeResponse)
