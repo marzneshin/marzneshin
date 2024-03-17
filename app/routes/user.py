@@ -1,56 +1,68 @@
 import asyncio
 import logging
 from datetime import datetime, timezone
-from typing import List
+from enum import Enum
 
 import sqlalchemy
 from fastapi import APIRouter
 from fastapi import HTTPException, Query
+from fastapi_pagination.ext.sqlalchemy import paginate
+from fastapi_pagination.links import Page
 
 from app import marznode
-from app.db import crud
+from app.db import crud, User
 from app.dependencies import DBDep, AdminDep, SudoAdminDep, UserDep, StartDateDep, EndDateDep
 from app.models.user import (UserCreate, UserModify, UserResponse,
-                             UsersResponse, UserStatus, UserUsagesResponse)
+                             UserStatus, UserUsagesResponse)
 from app.utils import report
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/users", tags=['User'])
 
 
-@router.get("", response_model=UsersResponse)
+class UsersSortingOptions(str, Enum):
+    username = "username"
+    used_traffic = "used_traffic"
+    data_limit = "data_limit"
+    expire = "expire"
+    created_at = "created_at"
+
+
+@router.get("", response_model=Page[UserResponse])
 def get_users(db: DBDep,
               admin: AdminDep,
-              offset: int = None,
-              limit: int = None,
-              username: List[str] = Query(None),
-              status: UserStatus = None,
-              sort: str = None):
+              username: list[str] = Query(None),
+              status: list[UserStatus] = Query(None),
+              order_by: UsersSortingOptions = Query(None),
+              descending: bool = Query(False)):
     """
-    Get all users
+    Filters users based on the options
     """
     dbadmin = crud.get_admin(db, admin.username)
 
-    if sort is not None:
-        opts = sort.strip(',').split(',')
-        sort = []
-        for opt in opts:
-            try:
-                sort.append(crud.UsersSortingOptions[opt])
-            except KeyError:
-                raise HTTPException(status_code=400,
-                                    detail=f'"{opt}" is not a valid sort option')
+    query = db.query(User)
 
-    users, count = crud.get_users(db=db,
-                                  offset=offset,
-                                  limit=limit,
-                                  usernames=username,
-                                  status=status,
-                                  sort=sort,
-                                  admin=dbadmin if not admin.is_sudo else None,
-                                  return_with_count=True)
+    admin = dbadmin if not admin.is_sudo else None
 
-    return {"users": users, "total": count}
+    if username:
+        if len(username) > 1:
+            query = query.filter(User.username.in_(username))
+        else:
+            query = query.filter(User.username.ilike(f"%{username[0]}%"))
+
+    if status:
+        query = query.filter(User.status.in_(status))
+
+    if admin:
+        query = query.filter(User.admin == admin)
+
+    if order_by:
+        order_column = getattr(User, order_by)
+        if descending:
+            order_column = order_column.desc()
+        query = query.order_by(order_column)
+
+    return paginate(db, query)
 
 
 @router.post("", response_model=UserResponse)
