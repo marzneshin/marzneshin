@@ -1,11 +1,14 @@
-from typing import List, Optional, Annotated
+from typing import Optional, Annotated
 
 import sqlalchemy
 from fastapi import APIRouter
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
+from fastapi_pagination import Page
+from fastapi_pagination.ext.sqlalchemy import paginate
 
 from app.db import Session, crud
+from app.db.models import Admin as DBAdmin
 from app.dependencies import AdminDep, SudoAdminDep, DBDep
 from app.models.admin import Admin, AdminCreate, AdminInDB, AdminModify, Token
 from app.utils.jwt import create_admin_token
@@ -29,13 +32,14 @@ def authenticate_admin(db: Session, username: str, password: str) -> Optional[Ad
     return dbadmin if AdminInDB.model_validate(dbadmin).verify_password(password) else None
 
 
-@router.get("", response_model=List[Admin])
+@router.get("", response_model=Page[Admin])
 def get_admins(db: DBDep,
                admin: SudoAdminDep,
-               offset: int = None,
-               limit: int = None,
                username: str = None):
-    return crud.get_admins(db, offset, limit, username)
+    query = db.query(DBAdmin)
+    if username:
+        query = query.filter(DBAdmin.username.ilike(f'%{username}%'))
+    return paginate(db, query)
 
 
 @router.post("", response_model=Admin)
