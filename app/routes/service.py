@@ -13,6 +13,13 @@ from app.models.service import (ServiceCreate, ServiceModify,
 router = APIRouter(prefix="/services", dependencies=[Depends(sudo_admin)], tags=['Service'])
 
 
+@router.get("", response_model=List[ServiceResponse])
+def get_services(db: DBDep,
+                 offset: int = None,
+                 limit: int = None):
+    return crud.get_services(db)  # , offset, limit)
+
+
 @router.post("", response_model=ServiceResponse)
 def add_service(new_service: ServiceCreate,
                 db: DBDep):
@@ -77,10 +84,3 @@ def remove_service(id: int,
     
     crud.remove_service(db, dbservice)
     return dict()
-
-
-@router.get("", response_model=List[ServiceResponse])
-def get_services(db: DBDep,
-                 offset: int = None,
-                 limit: int = None):
-    return crud.get_services(db)  # , offset, limit)

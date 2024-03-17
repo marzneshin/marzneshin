@@ -29,6 +29,33 @@ def authenticate_admin(db: Session, username: str, password: str) -> Optional[Ad
     return dbadmin if AdminInDB.model_validate(dbadmin).verify_password(password) else None
 
 
+@router.get("", response_model=List[Admin])
+def get_admins(db: DBDep,
+               admin: SudoAdminDep,
+               offset: int = None,
+               limit: int = None,
+               username: str = None):
+    return crud.get_admins(db, offset, limit, username)
+
+
+@router.post("", response_model=Admin)
+def create_admin(new_admin: AdminCreate,
+                 db: DBDep,
+                 admin: SudoAdminDep):
+    try:
+        dbadmin = crud.create_admin(db, new_admin)
+    except sqlalchemy.exc.IntegrityError:
+        db.rollback()
+        raise HTTPException(status_code=409, detail="Admin already exists")
+
+    return dbadmin
+
+
+@router.get("/current", response_model=Admin)
+def get_current_admin(admin: AdminDep):
+    return admin
+
+
 @router.post("/token", response_model=Token)
 def admin_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
                 db: DBDep):
@@ -43,19 +70,6 @@ def admin_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
         detail="Incorrect username or password",
         headers={"WWW-Authenticate": "Bearer"},
     )
-
-
-@router.post("", response_model=Admin)
-def create_admin(new_admin: AdminCreate,
-                 db: DBDep,
-                 admin: SudoAdminDep):
-    try:
-        dbadmin = crud.create_admin(db, new_admin)
-    except sqlalchemy.exc.IntegrityError:
-        db.rollback()
-        raise HTTPException(status_code=409, detail="Admin already exists")
-
-    return dbadmin
 
 
 @router.put("/{username}", response_model=Admin)
@@ -101,17 +115,3 @@ def remove_admin(username: str,
 
     crud.remove_admin(db, dbadmin)
     return {}
-
-
-@router.get("/current", response_model=Admin)
-def get_current_admin(admin: AdminDep):
-    return admin
-
-
-@router.get("", response_model=List[Admin])
-def get_admins(db: DBDep,
-               admin: SudoAdminDep,
-               offset: int = None,
-               limit: int = None,
-               username: str = None):
-    return crud.get_admins(db, offset, limit, username)
