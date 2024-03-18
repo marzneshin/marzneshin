@@ -1,7 +1,5 @@
 import asyncio
-import atexit
 import logging
-import os
 from datetime import datetime as dt
 from datetime import timedelta as td
 
@@ -11,6 +9,7 @@ from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi_pagination import add_pagination
 from starlette.staticfiles import StaticFiles
 from uvicorn import Config, Server
 
@@ -19,7 +18,6 @@ from app.templates import render_template
 from config import (DEBUG, DOCS, HOME_PAGE_TEMPLATE, UVICORN_HOST,
                     UVICORN_PORT, UVICORN_SSL_CERTFILE, UVICORN_SSL_KEYFILE,
                     UVICORN_UDS)
-
 from . import __version__, telegram
 from .routes import api_router
 from .tasks import (delete_expired_reminders, nodes_startup,
@@ -38,6 +36,7 @@ app = FastAPI(
 )
 
 app.include_router(api_router)
+add_pagination(app)
 
 
 @app.get("/", response_class=HTMLResponse)

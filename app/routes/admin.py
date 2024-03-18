@@ -1,11 +1,14 @@
-from typing import List, Optional, Annotated
+from typing import Optional, Annotated
 
 import sqlalchemy
 from fastapi import APIRouter
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
+from fastapi_pagination import Page
+from fastapi_pagination.ext.sqlalchemy import paginate
 
 from app.db import Session, crud
+from app.db.models import Admin as DBAdmin
 from app.dependencies import AdminDep, SudoAdminDep, DBDep
 from app.models.admin import Admin, AdminCreate, AdminInDB, AdminModify, Token
 from app.utils.jwt import create_admin_token
@@ -29,6 +32,34 @@ def authenticate_admin(db: Session, username: str, password: str) -> Optional[Ad
     return dbadmin if AdminInDB.model_validate(dbadmin).verify_password(password) else None
 
 
+@router.get("", response_model=Page[Admin])
+def get_admins(db: DBDep,
+               admin: SudoAdminDep,
+               username: str = None):
+    query = db.query(DBAdmin)
+    if username:
+        query = query.filter(DBAdmin.username.ilike(f'%{username}%'))
+    return paginate(db, query)
+
+
+@router.post("", response_model=Admin)
+def create_admin(new_admin: AdminCreate,
+                 db: DBDep,
+                 admin: SudoAdminDep):
+    try:
+        dbadmin = crud.create_admin(db, new_admin)
+    except sqlalchemy.exc.IntegrityError:
+        db.rollback()
+        raise HTTPException(status_code=409, detail="Admin already exists")
+
+    return dbadmin
+
+
+@router.get("/current", response_model=Admin)
+def get_current_admin(admin: AdminDep):
+    return admin
+
+
 @router.post("/token", response_model=Token)
 def admin_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
                 db: DBDep):
@@ -43,19 +74,6 @@ def admin_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
         detail="Incorrect username or password",
         headers={"WWW-Authenticate": "Bearer"},
     )
-
-
-@router.post("", response_model=Admin)
-def create_admin(new_admin: AdminCreate,
-                 db: DBDep,
-                 admin: SudoAdminDep):
-    try:
-        dbadmin = crud.create_admin(db, new_admin)
-    except sqlalchemy.exc.IntegrityError:
-        db.rollback()
-        raise HTTPException(status_code=409, detail="Admin already exists")
-
-    return dbadmin
 
 
 @router.put("/{username}", response_model=Admin)
@@ -101,17 +119,3 @@ def remove_admin(username: str,
 
     crud.remove_admin(db, dbadmin)
     return {}
-
-
-@router.get("/current", response_model=Admin)
-def get_current_admin(admin: AdminDep):
-    return admin
-
-
-@router.get("", response_model=List[Admin])
-def get_admins(db: DBDep,
-               admin: SudoAdminDep,
-               offset: int = None,
-               limit: int = None,
-               username: str = None):
-    return crud.get_admins(db, offset, limit, username)

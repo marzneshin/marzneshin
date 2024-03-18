@@ -1,16 +1,26 @@
-from typing import List
-
 import sqlalchemy
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query
 from fastapi import HTTPException
+from fastapi_pagination.customization import UseParamsFields, CustomizedPage
+from fastapi_pagination.ext.sqlalchemy import paginate
+from fastapi_pagination.links import Page
 
 from app import marznode
 from app.db import crud
+from app.db.models import Service
 from app.dependencies import DBDep, sudo_admin
 from app.models.service import (ServiceCreate, ServiceModify,
                                 ServiceResponse)
 
 router = APIRouter(prefix="/services", dependencies=[Depends(sudo_admin)], tags=['Service'])
+
+
+@router.get("", response_model=Page[ServiceResponse])
+def get_services(db: DBDep, name: str = Query(None)):
+    query = db.query(Service)
+    if name:
+        query = query.filter(Service.name.ilike(f"%{name}%"))
+    return paginate(query)
 
 
 @router.post("", response_model=ServiceResponse)
@@ -77,10 +87,3 @@ def remove_service(id: int,
     
     crud.remove_service(db, dbservice)
     return dict()
-
-
-@router.get("", response_model=List[ServiceResponse])
-def get_services(db: DBDep,
-                 offset: int = None,
-                 limit: int = None):
-    return crud.get_services(db)  # , offset, limit)

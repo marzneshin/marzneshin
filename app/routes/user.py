@@ -1,21 +1,68 @@
 import asyncio
 import logging
 from datetime import datetime, timezone
-from typing import List
+from enum import Enum
 
 import sqlalchemy
 from fastapi import APIRouter
 from fastapi import HTTPException, Query
+from fastapi_pagination.ext.sqlalchemy import paginate
+from fastapi_pagination.links import Page
 
 from app import marznode
-from app.db import crud
+from app.db import crud, User
 from app.dependencies import DBDep, AdminDep, SudoAdminDep, UserDep, StartDateDep, EndDateDep
 from app.models.user import (UserCreate, UserModify, UserResponse,
-                             UsersResponse, UserStatus, UserUsagesResponse)
+                             UserStatus, UserUsagesResponse)
 from app.utils import report
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/users", tags=['User'])
+
+
+class UsersSortingOptions(str, Enum):
+    username = "username"
+    used_traffic = "used_traffic"
+    data_limit = "data_limit"
+    expire = "expire"
+    created_at = "created_at"
+
+
+@router.get("", response_model=Page[UserResponse])
+def get_users(db: DBDep,
+              admin: AdminDep,
+              username: list[str] = Query(None),
+              status: list[UserStatus] = Query(None),
+              order_by: UsersSortingOptions = Query(None),
+              descending: bool = Query(False)):
+    """
+    Filters users based on the options
+    """
+    dbadmin = crud.get_admin(db, admin.username)
+
+    query = db.query(User)
+
+    admin = dbadmin if not admin.is_sudo else None
+
+    if username:
+        if len(username) > 1:
+            query = query.filter(User.username.in_(username))
+        else:
+            query = query.filter(User.username.ilike(f"%{username[0]}%"))
+
+    if status:
+        query = query.filter(User.status.in_(status))
+
+    if admin:
+        query = query.filter(User.admin == admin)
+
+    if order_by:
+        order_column = getattr(User, order_by)
+        if descending:
+            order_column = order_column.desc()
+        query = query.order_by(order_column)
+
+    return paginate(db, query)
 
 
 @router.post("", response_model=UserResponse)
@@ -49,6 +96,55 @@ async def add_user(new_user: UserCreate,
         ))
     logger.info("New user `%s` added", db_user.username)
     return user
+
+
+@router.post("/reset")
+async def reset_users_data_usage(db: DBDep,
+                                 admin: SudoAdminDep):
+    """
+    Reset all users data usage,
+    You will need to restart for this to take effect for now
+    """
+    dbadmin = crud.get_admin(db, admin.username)
+    crud.reset_all_users_data_usage(db=db, admin=dbadmin)
+    return {}
+
+
+@router.delete("/expired")
+def delete_expired(passed_time: int,
+                   db: DBDep,
+                   admin: AdminDep):
+    """
+    Delete expired users
+    - **passed_time** must be a timestamp
+    - This function will delete all expired users that meet the specified number of days passed and can't be undone.
+    """
+
+    dbadmin = crud.get_admin(db, admin.username)
+
+    db_users = crud.get_users(db=db,
+                              status=[UserStatus.expired, UserStatus.limited],
+                              admin=dbadmin if not admin.is_sudo else None)
+
+    current_time = int(datetime.now(timezone.utc).timestamp())
+    expiration_threshold = current_time - passed_time
+    expired_users = [
+        user for user in db_users if user.expire is not None and user.expire <= expiration_threshold]
+    if not expired_users:
+        raise HTTPException(status_code=404, detail="No expired user found.")
+
+    for db_user in expired_users:
+        crud.remove_user(db, db_user)
+
+        asyncio.create_task(
+            report.user_deleted(
+                username=db_user.username,
+                by=admin
+            ))
+
+        logger.info("User `%s` removed", db_user.username)
+
+    return {}
 
 
 @router.get("/{username}", response_model=UserResponse)
@@ -174,53 +270,6 @@ async def revoke_user_subscription(db_user: UserDep,
     return user
 
 
-@router.get("", response_model=UsersResponse)
-def get_users(db: DBDep,
-              admin: AdminDep,
-              offset: int = None,
-              limit: int = None,
-              username: List[str] = Query(None),
-              status: UserStatus = None,
-              sort: str = None):
-    """
-    Get all users
-    """
-    dbadmin = crud.get_admin(db, admin.username)
-
-    if sort is not None:
-        opts = sort.strip(',').split(',')
-        sort = []
-        for opt in opts:
-            try:
-                sort.append(crud.UsersSortingOptions[opt])
-            except KeyError:
-                raise HTTPException(status_code=400,
-                                    detail=f'"{opt}" is not a valid sort option')
-
-    users, count = crud.get_users(db=db,
-                                  offset=offset,
-                                  limit=limit,
-                                  usernames=username,
-                                  status=status,
-                                  sort=sort,
-                                  admin=dbadmin if not admin.is_sudo else None,
-                                  return_with_count=True)
-
-    return {"users": users, "total": count}
-
-
-@router.post("/reset")
-async def reset_users_data_usage(db: DBDep,
-                                 admin: SudoAdminDep):
-    """
-    Reset all users data usage,
-    You will need to restart for this to take effect for now
-    """
-    dbadmin = crud.get_admin(db, admin.username)
-    crud.reset_all_users_data_usage(db=db, admin=dbadmin)
-    return {}
-
-
 @router.get("/{username}/usage", response_model=UserUsagesResponse)
 def get_user_usage(db: DBDep,
                    db_user: UserDep,
@@ -253,40 +302,3 @@ def set_owner(username: str,
     logger.info("`%s`'s owner successfully set to `%s`", user.username, admin.username)
 
     return user
-
-
-@router.delete("/expired")
-def delete_expired(passed_time: int,
-                   db: DBDep,
-                   admin: AdminDep):
-    """
-    Delete expired users
-    - **passed_time** must be a timestamp
-    - This function will delete all expired users that meet the specified number of days passed and can't be undone.
-    """
-
-    dbadmin = crud.get_admin(db, admin.username)
-
-    db_users = crud.get_users(db=db,
-                              status=[UserStatus.expired, UserStatus.limited],
-                              admin=dbadmin if not admin.is_sudo else None)
-
-    current_time = int(datetime.now(timezone.utc).timestamp())
-    expiration_threshold = current_time - passed_time
-    expired_users = [
-        user for user in db_users if user.expire is not None and user.expire <= expiration_threshold]
-    if not expired_users:
-        raise HTTPException(status_code=404, detail="No expired user found.")
-
-    for db_user in expired_users:
-        crud.remove_user(db, db_user)
-
-        asyncio.get_running_loop().create_task(
-            report.user_deleted(
-                username=db_user.username,
-                by=admin
-        ))
-
-        logger.info("User `%s` removed", db_user.username)
-
-    return {}

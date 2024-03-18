@@ -1,24 +1,56 @@
 import json
 import logging
-from datetime import datetime
-from typing import List, Annotated
+from typing import Annotated
 
 import sqlalchemy
-from fastapi import APIRouter, Depends, Body
+from fastapi import APIRouter, Body, Query
 from fastapi import HTTPException, WebSocket
-from starlette.requests import Request
-from starlette.responses import PlainTextResponse
+from fastapi_pagination.ext.sqlalchemy import paginate
+from fastapi_pagination.links import Page
 
 from app import marznode
 from app.db import crud, get_tls_certificate
-from app.dependencies import DBDep, SudoAdminDep, sudo_admin, EndDateDep, StartDateDep, get_admin
-from app.marznode import MarzNodeGRPCIO
-from app.models.admin import Admin
+from app.db.models import Node
+from app.dependencies import DBDep, SudoAdminDep, EndDateDep, StartDateDep, get_admin
+
 from app.models.node import (NodeCreate, NodeModify, NodeResponse,
                              NodeSettings, NodeStatus, NodesUsageResponse)
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/nodes", tags=['Node'])
+
+
+@router.get("", response_model=Page[NodeResponse])
+def get_nodes(db: DBDep,
+              admin: SudoAdminDep,
+              status: list[NodeStatus] = Query(None),
+              name: str = Query(None)):
+    query = db.query(Node)
+
+    if name:
+        query = query.filter(Node.name.ilike(f"%{name}%"))
+
+    if status:
+        query = query.filter(Node.status.in_(status))
+
+    return paginate(db, query)
+
+
+@router.post("", response_model=NodeResponse)
+async def add_node(new_node: NodeCreate,
+                   db: DBDep,
+                   admin: SudoAdminDep):
+    try:
+        db_node = crud.create_node(db, new_node)
+    except sqlalchemy.exc.IntegrityError:
+        db.rollback()
+        raise HTTPException(status_code=409, detail=f"Node \"{new_node.name}\" already exists")
+    certificate = get_tls_certificate(db)
+
+    await marznode.operations.add_node(db_node, certificate)
+
+    logger.info("New node `%s` added", db_node.name)
+    return db_node
 
 
 @router.get("/settings", response_model=NodeSettings)
@@ -42,23 +74,6 @@ def get_usage(db: DBDep,
     usages = crud.get_nodes_usage(db, start_date, end_date)
 
     return {"usages": usages}
-
-
-@router.post("", response_model=NodeResponse)
-async def add_node(new_node: NodeCreate,
-                   db: DBDep,
-                   admin: SudoAdminDep):
-    try:
-        db_node = crud.create_node(db, new_node)
-    except sqlalchemy.exc.IntegrityError:
-        db.rollback()
-        raise HTTPException(status_code=409, detail=f"Node \"{new_node.name}\" already exists")
-    certificate = get_tls_certificate(db)
-
-    await marznode.operations.add_node(db_node, certificate)
-
-    logger.info("New node `%s` added", db_node.name)
-    return db_node
 
 
 @router.get("/{node_id}", response_model=NodeResponse)
@@ -98,12 +113,6 @@ async def node_logs(node_id: int,
         await websocket.send_text(line)
 
 
-@router.get("", response_model=List[NodeResponse])
-def get_nodes(db: DBDep,
-              admin: SudoAdminDep):
-    return crud.get_nodes(db)
-
-
 @router.put("/{node_id}", response_model=NodeResponse)
 async def modify_node(node_id: int,
                       modified_node: NodeModify,
@@ -122,6 +131,21 @@ async def modify_node(node_id: int,
 
     logger.info("Node `%s` modified", db_node.name)
     return db_node
+
+
+@router.delete("/{node_id}")
+async def remove_node(node_id: int,
+                      db: DBDep,
+                      admin: SudoAdminDep):
+    db_node = crud.get_node_by_id(db, node_id)
+    if not db_node:
+        raise HTTPException(status_code=404, detail="Node not found")
+
+    crud.remove_node(db, db_node)
+    await marznode.operations.remove_node(db_node.id)
+
+    logger.info(f"Node `%s` deleted", db_node.name)
+    return {}
 
 
 @router.post("/{node_id}/resync")
@@ -153,19 +177,4 @@ async def alter_node_xray_config(node_id: int,
         raise HTTPException(status_code=404, detail="Node not found")
     xray_config = json.dumps(body)
     await node.restart_xray(xray_config)
-    return {}
-
-
-@router.delete("/{node_id}")
-async def remove_node(node_id: int,
-                      db: DBDep,
-                      admin: SudoAdminDep):
-    db_node = crud.get_node_by_id(db, node_id)
-    if not db_node:
-        raise HTTPException(status_code=404, detail="Node not found")
-
-    crud.remove_node(db, db_node)
-    await marznode.operations.remove_node(db_node.id)
-
-    logger.info(f"Node `%s` deleted", db_node.name)
     return {}

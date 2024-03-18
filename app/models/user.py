@@ -196,11 +196,6 @@ class UserResponse(User):
         salt = secrets.token_hex(8)
         url_prefix = (XRAY_SUBSCRIPTION_URL_PREFIX).replace('*', salt)
         return f"{url_prefix}/sub/{self.username}/{self.key}"
-    
-
-class UsersResponse(BaseModel): 
-    total: int
-    users: List[UserResponse]
 
 
 class UserUsageResponse(BaseModel):

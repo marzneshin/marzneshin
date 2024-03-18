@@ -8,7 +8,6 @@ class NodeStatus(str, Enum):
     healthy = "healthy"
     unhealthy = "unhealthy"
     disabled = "disabled"
-    none = "none"
 
 
 class NodeConnectionBackend(str, Enum):
