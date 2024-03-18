@@ -196,3 +196,4 @@ stats.html
 yarn.lock
 
 app/dashboard/build/
+dashboard/.vite/deps_temp_f42dd32d/package.json
