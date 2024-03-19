@@ -4,11 +4,11 @@ on:
 
   push:
     paths:
-      - 'app/dashboard/**'
+      - './dashboard/**'
     branches: [ "master" ]
   pull_request:
     paths: 
-      - 'app/dashboard/**'
+      - './dashboard/**'
 
 jobs:
   build:
@@ -17,28 +17,39 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./app/dashboard
+        working-directory: ./dashboard
     steps:
     - uses: actions/checkout@v4
 
-    - name: Use Node.js 
-      uses: actions/setup-node@v3
+    - uses: pnpm/action-setup@v3
+      name: Install pnpm
       with:
-        node-version: '20.0'
-        cache: 'npm'
-        cache-dependency-path: 'app/dashboard/package-lock.json'
+        version: 8
+        run_install: false
+    - name: Get pnpm store directory
+      shell: bash
+      run: |
+        echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+    - uses: actions/cache@v3
+      name: Setup pnpm cache
+      with:
+        path: ${{ env.STORE_PATH }}
+        key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+        restore-keys: |
+          ${{ runner.os }}-pnpm-store-
 
     - name: Install dependencies
-      run: npm install
+      run: pnpm install
 
     - name: Lint Dashboard
-      run: npm run lint
+      run: pnpm lint
 
     - name: Build Dashboard
-      run: npm run build --if-present -- --outDir build --base '/dashboard/'
+      run: pnpm build -- --outDir dist --base '/dashboard/'
     
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v4.2.0
       with:
         name: artifact
-        path: app/dashboard/build
+        path: dashboard/dist

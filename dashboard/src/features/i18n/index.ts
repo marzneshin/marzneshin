@@ -3,7 +3,7 @@ import i18n from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import HttpApi from 'i18next-http-backend';
 import { initReactI18next } from 'react-i18next';
-import path from 'react-native-path';
+import { joinPaths } from '@remix-run/router';
 
 declare module 'i18next' {
     interface CustomTypeOptions {
@@ -31,7 +31,7 @@ i18n
                 caches: ['localStorage', 'sessionStorage', 'cookie'],
             },
             backend: {
-                loadPath: path.resolve(import.meta.env.BASE_URL, 'locales/{{lng}}.json'),
+                loadPath: joinPaths([import.meta.env.BASE_URL, 'locales/{{lng}}.json']),
             },
         },
         function() {
