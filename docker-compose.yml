@@ -17,5 +17,7 @@ services:
       XRAY_EXECUTABLE_PATH: "/usr/local/bin/xray"
       XRAY_ASSETS_PATH: "/usr/local/lib/xray"
       XRAY_CONFIG_PATH: "/var/lib/marznode/xray_config.json"
+      SSL_KEY_FILE: "./server.key"
+      SSL_CERT_FILE: "./server.cert"
     volumes:
       - /var/lib/marznode:/var/lib/marznode
