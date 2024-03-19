@@ -39,6 +39,7 @@ const config = {
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
           foreground: "hsl(var(--destructive-foreground))",
+          accent: "hsl(var(--destructive-accent))",
         },
         muted: {
           DEFAULT: "hsl(var(--muted))",
@@ -76,6 +77,10 @@ const config = {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
+      fontFamily: {
+        'font-body': ['Lato'],
+        'font-header': ['Ubuntu'],
+      }
     },
   },
   plugins: [
