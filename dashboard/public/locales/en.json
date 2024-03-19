@@ -3,5 +3,23 @@
     "users": "Users",
     "nodes": "Nodes",
     "services": "Services",
-    "hosts": "Hosts"
+    "hosts": "Hosts",
+    "username": "Username",
+    "password": "Password",
+    "submit": "Submit",
+    "login": "Login",
+    "page": {
+        "login": {
+            "username": {
+                "error": {
+                    "isRequired": "Username is required"
+                }
+            },
+            "password": {
+                "error": {
+                    "is-required": "Password is required"
+                }
+            }
+        }
+    }
 }
