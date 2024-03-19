@@ -2,11 +2,11 @@ import { Outlet, createFileRoute } from '@tanstack/react-router'
 
 const AuthLayout = () => {
   return (
-    <div className='grid grid-cols-2 w-screen h-screen'>
+    <div className='grid-cols-2 w-screen h-screen md:grid bg-primary md:bg-primary-foreground'>
       <div className="w-full h-full">
         <Outlet />
       </div>
-      <div className='w-full h-full bg-primary'></div>
+      <div className='hidden w-full h-full md:block bg-primary'></div>
     </div>
   )
 }
