@@ -26,6 +26,12 @@
     "paths": {
       "@marzneshin/*": [
         "./src/*"
+      ],
+      "@marzneshin/components": [
+        "./src/components/*"
+      ],
+      "@marzneshin/features": [
+        "./src/features/*"
       ]
     }
   },
