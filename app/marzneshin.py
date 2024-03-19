@@ -18,6 +18,7 @@ from app.templates import render_template
 from config import (DEBUG, DOCS, HOME_PAGE_TEMPLATE, UVICORN_HOST,
                     UVICORN_PORT, UVICORN_SSL_CERTFILE, UVICORN_SSL_KEYFILE,
                     UVICORN_UDS)
+
 from . import __version__, telegram
 from .routes import api_router
 from .tasks import (delete_expired_reminders, nodes_startup,
@@ -97,8 +98,8 @@ async def main():
     if not DEBUG:
         app.mount(
             "/dashboard/",
-            StaticFiles(directory="app/dashboard/dist", html=True),
-            name="dashboard"
+            StaticFiles(directory="dashboard/dist", html=True),
+            name="dashboard",
         )
     scheduler.start()
     asyncio.create_task(telegram.start_bot())
