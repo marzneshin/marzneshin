@@ -13,18 +13,26 @@ from app.db import crud, get_tls_certificate
 from app.db.models import Node
 from app.dependencies import DBDep, SudoAdminDep, EndDateDep, StartDateDep, get_admin
 
-from app.models.node import (NodeCreate, NodeModify, NodeResponse,
-                             NodeSettings, NodeStatus, NodesUsageResponse)
+from app.models.node import (
+    NodeCreate,
+    NodeModify,
+    NodeResponse,
+    NodeSettings,
+    NodeStatus,
+    NodesUsageResponse,
+)
 
 logger = logging.getLogger(__name__)
-router = APIRouter(prefix="/nodes", tags=['Node'])
+router = APIRouter(prefix="/nodes", tags=["Node"])
 
 
 @router.get("", response_model=Page[NodeResponse])
-def get_nodes(db: DBDep,
-              admin: SudoAdminDep,
-              status: list[NodeStatus] = Query(None),
-              name: str = Query(None)):
+def get_nodes(
+    db: DBDep,
+    admin: SudoAdminDep,
+    status: list[NodeStatus] = Query(None),
+    name: str = Query(None),
+):
     query = db.query(Node)
 
     if name:
@@ -37,14 +45,14 @@ def get_nodes(db: DBDep,
 
 
 @router.post("", response_model=NodeResponse)
-async def add_node(new_node: NodeCreate,
-                   db: DBDep,
-                   admin: SudoAdminDep):
+async def add_node(new_node: NodeCreate, db: DBDep, admin: SudoAdminDep):
     try:
         db_node = crud.create_node(db, new_node)
     except sqlalchemy.exc.IntegrityError:
         db.rollback()
-        raise HTTPException(status_code=409, detail=f"Node \"{new_node.name}\" already exists")
+        raise HTTPException(
+            status_code=409, detail=f'Node "{new_node.name}" already exists'
+        )
     certificate = get_tls_certificate(db)
 
     await marznode.operations.add_node(db_node, certificate)
@@ -54,20 +62,16 @@ async def add_node(new_node: NodeCreate,
 
 
 @router.get("/settings", response_model=NodeSettings)
-def get_node_settings(db: DBDep,
-                      admin: SudoAdminDep):
+def get_node_settings(db: DBDep, admin: SudoAdminDep):
     tls = crud.get_tls_certificate(db)
 
-    return NodeSettings(
-        certificate=tls.certificate
-    )
+    return NodeSettings(certificate=tls.certificate)
 
 
 @router.get("/usage", response_model=NodesUsageResponse)
-def get_usage(db: DBDep,
-              admin: SudoAdminDep,
-              start_date: StartDateDep,
-              end_date: EndDateDep):
+def get_usage(
+    db: DBDep, admin: SudoAdminDep, start_date: StartDateDep, end_date: EndDateDep
+):
     """
     Get nodes usage
     """
@@ -77,9 +81,7 @@ def get_usage(db: DBDep,
 
 
 @router.get("/{node_id}", response_model=NodeResponse)
-def get_node(node_id: int,
-             db: DBDep,
-             admin: SudoAdminDep):
+def get_node(node_id: int, db: DBDep, admin: SudoAdminDep):
     db_node = crud.get_node_by_id(db, node_id)
     if not db_node:
         raise HTTPException(status_code=404, detail="Node not found")
@@ -88,15 +90,12 @@ def get_node(node_id: int,
 
 
 @router.websocket("/{node_id}/logs")
-async def node_logs(node_id: int,
-                    websocket: WebSocket,
-                    db: DBDep,
-                    include_buffer: bool = True):
-    token = (
-        websocket.query_params.get('token')
-        or
-        websocket.headers.get('Authorization', '').removeprefix("Bearer ")
-    )
+async def node_logs(
+    node_id: int, websocket: WebSocket, db: DBDep, include_buffer: bool = True
+):
+    token = websocket.query_params.get("token") or websocket.headers.get(
+        "Authorization", ""
+    ).removeprefix("Bearer ")
     admin = get_admin(db, token)
 
     if not admin or not admin.is_sudo:
@@ -114,10 +113,9 @@ async def node_logs(node_id: int,
 
 
 @router.put("/{node_id}", response_model=NodeResponse)
-async def modify_node(node_id: int,
-                      modified_node: NodeModify,
-                      db: DBDep,
-                      admin: SudoAdminDep):
+async def modify_node(
+    node_id: int, modified_node: NodeModify, db: DBDep, admin: SudoAdminDep
+):
     db_node = crud.get_node_by_id(db, node_id)
     if not db_node:
         raise HTTPException(status_code=404, detail="Node not found")
@@ -134,9 +132,7 @@ async def modify_node(node_id: int,
 
 
 @router.delete("/{node_id}")
-async def remove_node(node_id: int,
-                      db: DBDep,
-                      admin: SudoAdminDep):
+async def remove_node(node_id: int, db: DBDep, admin: SudoAdminDep):
     db_node = crud.get_node_by_id(db, node_id)
     if not db_node:
         raise HTTPException(status_code=404, detail="Node not found")
@@ -149,9 +145,7 @@ async def remove_node(node_id: int,
 
 
 @router.post("/{node_id}/resync")
-async def reconnect_node(node_id: int,
-                         db: DBDep,
-                         admin: SudoAdminDep):
+async def reconnect_node(node_id: int, db: DBDep, admin: SudoAdminDep):
     db_node = crud.get_node_by_id(db, node_id)
     if not db_node:
         raise HTTPException(status_code=404, detail="Node not found")
@@ -160,19 +154,16 @@ async def reconnect_node(node_id: int,
 
 
 @router.get("/{node_id}/xray_config")
-async def get_node_xray_config(node_id: int,
-                               db: DBDep,
-                               admin: SudoAdminDep):
+async def get_node_xray_config(node_id: int, db: DBDep, admin: SudoAdminDep):
     if not (node := marznode.nodes.get(node_id)):
         raise HTTPException(status_code=404, detail="Node not found")
     return json.loads(await node.get_xray_config())
 
 
 @router.put("/{node_id}/xray_config")
-async def alter_node_xray_config(node_id: int,
-                                 db: DBDep,
-                                 admin: SudoAdminDep,
-                                 body: Annotated[dict, Body()]):
+async def alter_node_xray_config(
+    node_id: int, db: DBDep, admin: SudoAdminDep, body: Annotated[dict, Body()]
+):
     if not (node := marznode.nodes.get(node_id)):
         raise HTTPException(status_code=404, detail="Node not found")
     xray_config = json.dumps(body)

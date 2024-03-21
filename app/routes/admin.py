@@ -29,23 +29,21 @@ def authenticate_admin(db: Session, username: str, password: str) -> Optional[Ad
     if not dbadmin:
         return None
 
-    return dbadmin if AdminInDB.model_validate(dbadmin).verify_password(password) else None
+    return (
+        dbadmin if AdminInDB.model_validate(dbadmin).verify_password(password) else None
+    )
 
 
 @router.get("", response_model=Page[Admin])
-def get_admins(db: DBDep,
-               admin: SudoAdminDep,
-               username: str = None):
+def get_admins(db: DBDep, admin: SudoAdminDep, username: str = None):
     query = db.query(DBAdmin)
     if username:
-        query = query.filter(DBAdmin.username.ilike(f'%{username}%'))
+        query = query.filter(DBAdmin.username.ilike(f"%{username}%"))
     return paginate(db, query)
 
 
 @router.post("", response_model=Admin)
-def create_admin(new_admin: AdminCreate,
-                 db: DBDep,
-                 admin: SudoAdminDep):
+def create_admin(new_admin: AdminCreate, db: DBDep, admin: SudoAdminDep):
     try:
         dbadmin = crud.create_admin(db, new_admin)
     except sqlalchemy.exc.IntegrityError:
@@ -61,13 +59,14 @@ def get_current_admin(admin: AdminDep):
 
 
 @router.post("/token", response_model=Token)
-def admin_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
-                db: DBDep):
+def admin_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: DBDep):
     if authenticate_env_sudo(form_data.username, form_data.password):
         return Token(access_token=create_admin_token(form_data.username, is_sudo=True))
 
     if dbadmin := authenticate_admin(db, form_data.username, form_data.password):
-        return Token(access_token=create_admin_token(form_data.username, is_sudo=dbadmin.is_sudo))
+        return Token(
+            access_token=create_admin_token(form_data.username, is_sudo=dbadmin.is_sudo)
+        )
 
     raise HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
@@ -77,10 +76,9 @@ def admin_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
 
 
 @router.put("/{username}", response_model=Admin)
-def modify_admin(username: str,
-                 modified_admin: AdminModify,
-                 db: DBDep,
-                 admin: AdminDep):
+def modify_admin(
+    username: str, modified_admin: AdminModify, db: DBDep, admin: AdminDep
+):
     if not (admin.is_sudo or admin.username == username):
         raise HTTPException(status_code=403, detail="You're not allowed")
 
@@ -104,9 +102,7 @@ def modify_admin(username: str,
 
 
 @router.delete("/{username}")
-def remove_admin(username: str,
-                 db: DBDep,
-                 admin: SudoAdminDep):
+def remove_admin(username: str, db: DBDep, admin: SudoAdminDep):
     dbadmin = crud.get_admin(db, username)
     if not dbadmin:
         raise HTTPException(status_code=404, detail="Admin not found")

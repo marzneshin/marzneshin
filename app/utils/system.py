@@ -57,13 +57,17 @@ class RealtimeBandwidthStat:
 
 
 rt_bw = RealtimeBandwidth(
-    incoming_bytes=0, outgoing_bytes=0, incoming_packets=0, outgoing_packets=0)
+    incoming_bytes=0, outgoing_bytes=0, incoming_packets=0, outgoing_packets=0
+)
 
 
 def realtime_bandwidth() -> RealtimeBandwidthStat:
     return RealtimeBandwidthStat(
-        incoming_bytes=rt_bw.incoming_bytes, outgoing_bytes=rt_bw.outgoing_bytes,
-        incoming_packets=rt_bw.incoming_packets, outgoing_packets=rt_bw.outgoing_packets)
+        incoming_bytes=rt_bw.incoming_bytes,
+        outgoing_bytes=rt_bw.outgoing_bytes,
+        incoming_packets=rt_bw.incoming_packets,
+        outgoing_packets=rt_bw.outgoing_packets,
+    )
 
 
 def random_password() -> str:
@@ -73,7 +77,7 @@ def random_password() -> str:
 def check_port(port: int) -> bool:
     s = socket.socket()
     try:
-        s.connect(('127.0.0.1', port))
+        s.connect(("127.0.0.1", port))
         return True
     except socket.error:
         return False
@@ -84,14 +88,14 @@ def check_port(port: int) -> bool:
 def get_public_ip():
     try:
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        sock.connect(('8.8.8.8', 80))
+        sock.connect(("8.8.8.8", 80))
         return sock.getsockname()[0]
     except (socket.error, IndexError):
         pass
     finally:
         sock.close()
 
-    return '127.0.0.1'
+    return "127.0.0.1"
 
 
 def readable_size(size_bytes):
@@ -101,4 +105,4 @@ def readable_size(size_bytes):
     i = int(math.floor(math.log(size_bytes, 1024)))
     p = math.pow(1024, i)
     s = round(size_bytes / p, 2)
-    return f'{s} {size_name[i]}'
+    return f"{s} {size_name[i]}"

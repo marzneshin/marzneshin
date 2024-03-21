@@ -1,20 +1,21 @@
 import json
 from enum import Enum
 from typing import Optional, Union, List
+
 # from uuid import UUID, uuid4
 
 from pydantic import ConfigDict, BaseModel, Field, validator
 
 
 class XTLSFlows(Enum):
-    NONE = ''
-    VISION = 'xtls-rprx-vision'
+    NONE = ""
+    VISION = "xtls-rprx-vision"
 
 
 class ShadowsocksMethods(Enum):
-    AES_128_GCM = 'aes-128-gcm'
-    AES_256_GCM = 'aes-256-gcm'
-    CHACHA20_POLY1305 = 'chacha20-ietf-poly1305'
+    AES_128_GCM = "aes-128-gcm"
+    AES_256_GCM = "aes-256-gcm"
+    CHACHA20_POLY1305 = "chacha20-ietf-poly1305"
 
 
 class ProxyTypes(str, Enum):

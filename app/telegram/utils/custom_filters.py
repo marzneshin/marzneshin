@@ -8,7 +8,7 @@ from config import TELEGRAM_ADMIN_ID
 
 
 class IsAdminFilter(AdvancedCustomFilter):
-    key = 'is_admin'
+    key = "is_admin"
 
     async def check(self, message, text):
         """

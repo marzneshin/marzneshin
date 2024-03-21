@@ -22,26 +22,25 @@ def generate_certificate():
     cert = crypto.X509()
     cert.get_subject().CN = "Gozargah"
     cert.gmtime_adj_notBefore(0)
-    cert.gmtime_adj_notAfter(100*365*24*60*60)
+    cert.gmtime_adj_notAfter(100 * 365 * 24 * 60 * 60)
     cert.set_issuer(cert.get_subject())
     cert.set_pubkey(k)
-    cert.sign(k, 'sha512')
+    cert.sign(k, "sha512")
     cert_pem = crypto.dump_certificate(crypto.FILETYPE_PEM, cert).decode("utf-8")
     key_pem = crypto.dump_privatekey(crypto.FILETYPE_PEM, k).decode("utf-8")
 
-    return {
-        "cert": cert_pem,
-        "key": key_pem
-    }
+    return {"cert": cert_pem, "key": key_pem}
 
 
 def create_secure_context(
-    client_cert: str, client_key: str, trusted: str,
+    client_cert: str,
+    client_key: str,
+    trusted: str,
 ) -> ssl.SSLContext:
     ctx = ssl.create_default_context(cafile=trusted)
     ctx.load_cert_chain(client_cert, client_key)
-    ctx.set_ciphers('ECDHE+AESGCM:ECDHE+CHACHA20:DHE+AESGCM:DHE+CHACHA20')
-    ctx.set_alpn_protocols(['h2'])
+    ctx.set_ciphers("ECDHE+AESGCM:ECDHE+CHACHA20:DHE+AESGCM:DHE+CHACHA20")
+    ctx.set_alpn_protocols(["h2"])
     ctx.check_hostname = False
     ctx.verify_mode = ssl.CERT_NONE
     return ctx

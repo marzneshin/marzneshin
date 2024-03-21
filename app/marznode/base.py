@@ -3,8 +3,7 @@ from abc import ABC
 
 class MarzNodeBase(ABC):
 
-    async def update_user(self, user,
-                          inbounds: list[str] | None = None) -> None:
+    async def update_user(self, user, inbounds: list[str] | None = None) -> None:
         """updates a user on the node"""
 
     async def fetch_users_stats(self):

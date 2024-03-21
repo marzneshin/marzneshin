@@ -21,7 +21,9 @@ def get_system_stats(db: DBDep, admin: AdminDep):
     dbadmin: Union[Admin, None] = crud.get_admin(db, admin.username)
 
     total_user = crud.get_users_count(db, admin=dbadmin if not admin.is_sudo else None)
-    users_active = crud.get_users_count(db, status=UserStatus.active, admin=dbadmin if not admin.is_sudo else None)
+    users_active = crud.get_users_count(
+        db, status=UserStatus.active, admin=dbadmin if not admin.is_sudo else None
+    )
     realtime_bandwidth_stats = realtime_bandwidth()
 
     return SystemStats(

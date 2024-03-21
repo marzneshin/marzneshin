@@ -10,7 +10,12 @@ from uuid import UUID
 import yaml
 from jdatetime import date as jd
 
-from app.models.proxy import FormatVariables, InboundBase, InboundHost, InboundHostSecurity
+from app.models.proxy import (
+    FormatVariables,
+    InboundBase,
+    InboundHost,
+    InboundHostSecurity,
+)
 from app.templates import render_template
 from app.utils.system import get_public_ip, readable_size
 from app.utils.keygen import generate_settings
@@ -30,6 +35,7 @@ STATUS_EMOJIS = {
     "disabled": "❌",
     "connect_to_start": "🔌",
 }
+
 
 class V2rayShareLink(str):
     @classmethod
@@ -108,8 +114,7 @@ class V2rayShareLink(str):
         spx="",
         ais="",
     ):
-        payload = {"security": tls, "type": net,
-                   "host": host, "headerType": type}
+        payload = {"security": tls, "type": net, "host": host, "headerType": type}
         if flow and (net in ("tcp", "kcp") and type != "http"):
             payload["flow"] = flow
 
@@ -159,8 +164,7 @@ class V2rayShareLink(str):
         spx="",
         ais="",
     ):
-        payload = {"security": tls, "type": net,
-                   "host": host, "headerType": type}
+        payload = {"security": tls, "type": net, "host": host, "headerType": type}
         if flow and (net in ("tcp", "kcp") and type != "http"):
             payload["flow"] = flow
 
@@ -374,7 +378,7 @@ class ClashMetaConfiguration(ClashConfiguration):
             sni=sni,
             host=host,
             path=path,
-            #headers="",
+            # headers="",
             udp=udp,
             alpn=alpn,
             ais=ais,
@@ -755,7 +759,7 @@ def generate_v2ray_links(inbounds: list, key: str, extra_data: dict) -> list:
 
 
 def generate_clash_subscription(
-        inbounds: dict, key: str, extra_data: dict, is_meta: bool = False
+    inbounds: dict, key: str, extra_data: dict, is_meta: bool = False
 ) -> str:
     if is_meta is True:
         conf = ClashMetaConfiguration()
@@ -768,9 +772,7 @@ def generate_clash_subscription(
     )
 
 
-def generate_singbox_subscription(
-        inbounds: dict, key: str, extra_data: dict
-) -> str:
+def generate_singbox_subscription(inbounds: dict, key: str, extra_data: dict) -> str:
     conf = SingBoxConfiguration()
 
     format_variables = setup_format_variables(extra_data)
@@ -783,9 +785,7 @@ def generate_v2ray_subscription(links: list) -> str:
     return base64.b64encode("\n".join(links).encode()).decode()
 
 
-def generate_outline_subscription(
-        inbounds: dict, key: str, extra_data: dict
-) -> str:
+def generate_outline_subscription(inbounds: dict, key: str, extra_data: dict) -> str:
     conf = OutlineConfiguration()
 
     format_variables = setup_format_variables(extra_data)
@@ -847,10 +847,11 @@ def format_time_left(seconds_left: int) -> str:
         result.append(f"{seconds}s")
     return " ".join(result)
 
+
 from app.models.user import UserStatus
 
+
 def setup_format_variables(extra_data: dict) -> dict:
-    
 
     user_status = extra_data.get("status")
     expire_timestamp = extra_data.get("expire")
@@ -920,9 +921,14 @@ def process_inbounds_and_tags(
 ) -> Union[List, str]:
     salt = secrets.token_hex(8)
     results = []
-    
+
     for inb in inbounds:
-        inb_id, inbound, protocol, tag = inb.id, json.loads(inb.config), inb.protocol, inb.tag
+        inb_id, inbound, protocol, tag = (
+            inb.id,
+            json.loads(inb.config),
+            inb.protocol,
+            inb.tag,
+        )
         settings = generate_settings(ukey, protocol)
 
         format_variables.update({"PROTOCOL": protocol.name})
@@ -948,8 +954,12 @@ def process_inbounds_and_tags(
                 req_host = random.choice(req_host_list).replace("*", salt)
             else:
                 req_host = ""
-            
-            host_tls = None if host.security == InboundHostSecurity.inbound_default else host.security.value
+
+            host_tls = (
+                None
+                if host.security == InboundHostSecurity.inbound_default
+                else host.security.value
+            )
             host_inbound.update(
                 {
                     "port": host.port or inbound["port"],
@@ -957,11 +967,13 @@ def process_inbounds_and_tags(
                     "host": req_host,
                     "tls": inbound["tls"] if host_tls is None else host_tls,
                     "alpn": host.alpn.value or inbound.get("alpn", ""),
-                    "path": inbound.get("path", "")
-                    if host.path is None
-                    else host.path.format_map(format_variables),
+                    "path": (
+                        inbound.get("path", "")
+                        if host.path is None
+                        else host.path.format_map(format_variables)
+                    ),
                     "fp": host.fingerprint.value or inbound.get("fp", ""),
-                    "ais": host.allowinsecure or ""
+                    "ais": host.allowinsecure or "",
                 }
             )
 
@@ -969,8 +981,7 @@ def process_inbounds_and_tags(
                 results.append(
                     get_v2ray_link(
                         remark=host.remark.format_map(format_variables),
-                        address=host.address.format_map(
-                            format_variables),
+                        address=host.address.format_map(format_variables),
                         inbound=host_inbound,
                         settings=settings,
                     )

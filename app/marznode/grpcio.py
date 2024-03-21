@@ -9,7 +9,15 @@ from grpc.aio import insecure_channel
 from .base import MarzNodeBase
 from .database import MarzNodeDB
 from .marznode_pb2_grpc import MarzServiceStub
-from .marznode_pb2 import UserData, UsersData, Empty, User, Inbound, XrayLogsRequest, XrayConfig
+from .marznode_pb2 import (
+    UserData,
+    UsersData,
+    Empty,
+    User,
+    Inbound,
+    XrayLogsRequest,
+    XrayConfig,
+)
 from ..models.node import NodeStatus
 
 logger = logging.getLogger(__name__)
@@ -21,17 +29,21 @@ channel_options = [
     ("grpc.keepalive_permit_without_calls", 1),
     ("grpc.max_connection_idle_ms", INT_MAX),
     ("grpc.client_idle_timeout_ms", INT_MAX),
-    ("grpc.max_connection_age_ms", INT_MAX)
+    ("grpc.max_connection_age_ms", INT_MAX),
 ]
 
 
 class MarzNodeGRPCIO(MarzNodeBase, MarzNodeDB):
-    def __init__(self, node_id: int, address: str, port: int, usage_coefficient: int = 1):
+    def __init__(
+        self, node_id: int, address: str, port: int, usage_coefficient: int = 1
+    ):
         self.id = node_id
         self._address = address
         self._port = port
 
-        self._channel = insecure_channel(f"{self._address}:{self._port}", channel_options)
+        self._channel = insecure_channel(
+            f"{self._address}:{self._port}", channel_options
+        )
         self._stub = MarzServiceStub(self._channel)
         asyncio.create_task(self._monitor_channel())
         self._streaming_task = None
@@ -73,8 +85,11 @@ class MarzNodeGRPCIO(MarzNodeBase, MarzNodeDB):
             logger.debug("got something from queue")
             user = user_update["user"]
             await stream.write(
-                UserData(user=User(id=user.id, username=user.username, key=user.key),
-                         inbounds=[Inbound(tag=t) for t in user_update["inbounds"]]))
+                UserData(
+                    user=User(id=user.id, username=user.username, key=user.key),
+                    inbounds=[Inbound(tag=t) for t in user_update["inbounds"]],
+                )
+            )
 
     async def update_user(self, user, inbounds: set[str] | None = None):
         if inbounds is None:
@@ -84,8 +99,13 @@ class MarzNodeGRPCIO(MarzNodeBase, MarzNodeDB):
             await self._updates_queue.put({"user": user, "inbounds": inbounds})
 
     async def _repopulate_users(self, users_data: list[dict]) -> None:
-        updates = [UserData(user=User(id=u["id"], username=u["username"], key=u["key"]),
-                            inbounds=[Inbound(tag=t) for t in u["inbounds"]]) for u in users_data]
+        updates = [
+            UserData(
+                user=User(id=u["id"], username=u["username"], key=u["key"]),
+                inbounds=[Inbound(tag=t) for t in u["inbounds"]],
+            )
+            for u in users_data
+        ]
         await self._stub.RepopulateUsers(UsersData(users_data=updates))
 
     async def fetch_users_stats(self):
@@ -105,7 +125,7 @@ class MarzNodeGRPCIO(MarzNodeBase, MarzNodeDB):
 
     async def get_logs(self, include_buffer=True):
         async for response in self._stub.StreamXrayLogs(
-                XrayLogsRequest(include_buffer=include_buffer)
+            XrayLogsRequest(include_buffer=include_buffer)
         ):
             yield response.line
 

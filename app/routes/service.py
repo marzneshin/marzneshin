@@ -9,10 +9,11 @@ from app import marznode
 from app.db import crud
 from app.db.models import Service
 from app.dependencies import DBDep, sudo_admin
-from app.models.service import (ServiceCreate, ServiceModify,
-                                ServiceResponse)
+from app.models.service import ServiceCreate, ServiceModify, ServiceResponse
 
-router = APIRouter(prefix="/services", dependencies=[Depends(sudo_admin)], tags=['Service'])
+router = APIRouter(
+    prefix="/services", dependencies=[Depends(sudo_admin)], tags=["Service"]
+)
 
 
 @router.get("", response_model=Page[ServiceResponse])
@@ -24,8 +25,7 @@ def get_services(db: DBDep, name: str = Query(None)):
 
 
 @router.post("", response_model=ServiceResponse)
-def add_service(new_service: ServiceCreate,
-                db: DBDep):
+def add_service(new_service: ServiceCreate, db: DBDep):
     """
     Add a new service
 
@@ -36,7 +36,9 @@ def add_service(new_service: ServiceCreate,
         return crud.create_service(db, new_service)
     except sqlalchemy.exc.IntegrityError:
         db.rollback()
-        raise HTTPException(status_code=409, detail="Service by this name already exists")
+        raise HTTPException(
+            status_code=409, detail="Service by this name already exists"
+        )
 
 
 @router.get("/{id}", response_model=ServiceResponse)
@@ -52,9 +54,7 @@ def get_service(id: int, db: DBDep):
 
 
 @router.put("/{id}", response_model=ServiceResponse)
-async def modify_service(id: int,
-                   modification: ServiceModify,
-                   db: DBDep):
+async def modify_service(id: int, modification: ServiceModify, db: DBDep):
     """
     Modify Service
 
@@ -65,7 +65,7 @@ async def modify_service(id: int,
     # TODO: Update all affected users in nodes
     dbservice = crud.get_service(db, id)
     if not dbservice:
-        raise HTTPException(status_code=404, detail="Service not found") 
+        raise HTTPException(status_code=404, detail="Service not found")
     old_inbounds = {(i.node_id, i.protocol, i.tag) for i in dbservice.inbounds}
     try:
         response = crud.update_service(db, dbservice, modification)
@@ -79,11 +79,10 @@ async def modify_service(id: int,
 
 
 @router.delete("/{id}")
-def remove_service(id: int,
-                   db: DBDep):
+def remove_service(id: int, db: DBDep):
     dbservice = crud.get_service(db, id)
     if not dbservice:
         raise HTTPException(status_code=404, detail="Service not found")
-    
+
     crud.remove_service(db, dbservice)
     return dict()
