@@ -11,6 +11,9 @@ dependencies:
   '@hookform/resolvers':
     specifier: ^3.3.4
     version: 3.3.4(react-hook-form@7.51.1)
+  '@kodingdotninja/use-tailwind-breakpoint':
+    specifier: ^0.0.5
+    version: 0.0.5(react@18.2.0)
   '@radix-ui/react-alert-dialog':
     specifier: ^1.0.5
     version: 1.0.5(@types/react-dom@18.2.21)(@types/react@18.2.64)(react-dom@18.2.0)(react@18.2.0)
@@ -53,6 +56,9 @@ dependencies:
   '@radix-ui/react-tooltip':
     specifier: ^1.0.7
     version: 1.0.7(@types/react-dom@18.2.21)(@types/react@18.2.64)(react-dom@18.2.0)(react@18.2.0)
+  '@react-hook/media-query':
+    specifier: ^1.1.1
+    version: 1.1.1(react@18.2.0)
   '@remix-run/router':
     specifier: ^1.15.3
     version: 1.15.3
@@ -558,6 +564,17 @@ packages:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.4.15
+
+  /@kodingdotninja/use-tailwind-breakpoint@0.0.5(react@18.2.0):
+    resolution: {integrity: sha512-7h52zL+l+14u9diyjVcGoS5NRIwrc6euIGlHDwtJXlrR3h31RNyTrOfimy7PJTvS4fFdNgbzyrNcGfhj3sDRfQ==}
+    peerDependencies:
+      react: '>=16.8'
+    peerDependenciesMeta:
+      react:
+        optional: true
+    dependencies:
+      react: 18.2.0
+    dev: false
 
   /@nodelib/fs.scandir@2.1.5:
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -1413,6 +1430,14 @@ packages:
     resolution: {integrity: sha512-fyrgCaedtvMg9NK3en0pnOYJdtfwxUcNolezkNPUsoX57X8oQk+NkqcvzHXD2uKNij6GXmWU9NDru2IWjrO4BQ==}
     dependencies:
       '@babel/runtime': 7.24.0
+    dev: false
+
+  /@react-hook/media-query@1.1.1(react@18.2.0):
+    resolution: {integrity: sha512-VM14wDOX5CW5Dn6b2lTiMd79BFMTut9AZj2+vIRT3LCKgMCYmdqruTtzDPSnIVDQdtxdPgtOzvU9oK20LopuOw==}
+    peerDependencies:
+      react: '>=16.8'
+    dependencies:
+      react: 18.2.0
     dev: false
 
   /@remix-run/router@1.15.3:
