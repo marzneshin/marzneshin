@@ -48,7 +48,7 @@ export const LoginForm = () => {
                         <FormItem>
                             <FormLabel className="font-semibold text-primary">{t('username')}</FormLabel>
                             <FormControl>
-                                <Input placeholder="username" {...field} />
+                                <Input type="text" {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -61,7 +61,7 @@ export const LoginForm = () => {
                         <FormItem>
                             <FormLabel className="font-semibold text-primary">{t('password')}</FormLabel>
                             <FormControl>
-                                <Input placeholder="password" {...field} />
+                                <Input type="password" {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
