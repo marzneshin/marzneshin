@@ -6,7 +6,7 @@ const AuthLayout = () => {
       <div className="w-full h-full">
         <Outlet />
       </div>
-      <div className='hidden w-full h-full md:block bg-primary'></div>
+      <div className='hidden w-full h-full md:block bg-primary dark:bg-accent'></div>
     </div>
   )
 }
