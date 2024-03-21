@@ -1,14 +1,17 @@
-import { routeTree } from "@marzneshin/routeTree.gen";
-import { RoutePaths } from "@tanstack/react-router";
+import { AppRouterPaths } from "@marzneshin/types";
 import { ReactNode } from "react";
 
 
 export interface SidebarItem {
     title: string;
-    to: RoutePaths<typeof routeTree>;
+    to: AppRouterPaths;
     icon: ReactNode;
     isParent: boolean;
     subItem?: SidebarItem[];
+}
+
+export interface SidebarObject {
+    [key: string]: SidebarItem[];
 }
 
 export type SidebarItemGroup = Record<string, SidebarItem[]>;
