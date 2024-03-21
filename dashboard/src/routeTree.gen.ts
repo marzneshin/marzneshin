@@ -14,6 +14,10 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as DashboardImport } from './routes/_dashboard'
 import { Route as AuthImport } from './routes/_auth'
 import { Route as DashboardIndexImport } from './routes/_dashboard/index'
+import { Route as DashboardUsersImport } from './routes/_dashboard/users'
+import { Route as DashboardServicesImport } from './routes/_dashboard/services'
+import { Route as DashboardNodesImport } from './routes/_dashboard/nodes'
+import { Route as DashboardHostsImport } from './routes/_dashboard/hosts'
 import { Route as AuthLoginImport } from './routes/_auth/login'
 
 // Create/Update Routes
@@ -30,6 +34,26 @@ const AuthRoute = AuthImport.update({
 
 const DashboardIndexRoute = DashboardIndexImport.update({
   path: '/',
+  getParentRoute: () => DashboardRoute,
+} as any)
+
+const DashboardUsersRoute = DashboardUsersImport.update({
+  path: '/users',
+  getParentRoute: () => DashboardRoute,
+} as any)
+
+const DashboardServicesRoute = DashboardServicesImport.update({
+  path: '/services',
+  getParentRoute: () => DashboardRoute,
+} as any)
+
+const DashboardNodesRoute = DashboardNodesImport.update({
+  path: '/nodes',
+  getParentRoute: () => DashboardRoute,
+} as any)
+
+const DashboardHostsRoute = DashboardHostsImport.update({
+  path: '/hosts',
   getParentRoute: () => DashboardRoute,
 } as any)
 
@@ -54,6 +78,22 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthLoginImport
       parentRoute: typeof AuthImport
     }
+    '/_dashboard/hosts': {
+      preLoaderRoute: typeof DashboardHostsImport
+      parentRoute: typeof DashboardImport
+    }
+    '/_dashboard/nodes': {
+      preLoaderRoute: typeof DashboardNodesImport
+      parentRoute: typeof DashboardImport
+    }
+    '/_dashboard/services': {
+      preLoaderRoute: typeof DashboardServicesImport
+      parentRoute: typeof DashboardImport
+    }
+    '/_dashboard/users': {
+      preLoaderRoute: typeof DashboardUsersImport
+      parentRoute: typeof DashboardImport
+    }
     '/_dashboard/': {
       preLoaderRoute: typeof DashboardIndexImport
       parentRoute: typeof DashboardImport
@@ -65,7 +105,13 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren([
   AuthRoute.addChildren([AuthLoginRoute]),
-  DashboardRoute.addChildren([DashboardIndexRoute]),
+  DashboardRoute.addChildren([
+    DashboardHostsRoute,
+    DashboardNodesRoute,
+    DashboardServicesRoute,
+    DashboardUsersRoute,
+    DashboardIndexRoute,
+  ]),
 ])
 
 /* prettier-ignore-end */
