@@ -15,15 +15,28 @@ from uvicorn import Config, Server
 
 import config
 from app.templates import render_template
-from config import (DEBUG, DOCS, HOME_PAGE_TEMPLATE, UVICORN_HOST,
-                    UVICORN_PORT, UVICORN_SSL_CERTFILE, UVICORN_SSL_KEYFILE,
-                    UVICORN_UDS)
+from config import (
+    DEBUG,
+    DOCS,
+    HOME_PAGE_TEMPLATE,
+    UVICORN_HOST,
+    UVICORN_PORT,
+    UVICORN_SSL_CERTFILE,
+    UVICORN_SSL_KEYFILE,
+    UVICORN_UDS,
+)
 
 from . import __version__, telegram
 from .routes import api_router
-from .tasks import (delete_expired_reminders, nodes_startup,
-                    record_realtime_bandwidth, record_user_usages,
-                    reset_user_data_usage, review_users, send_notifications)
+from .tasks import (
+    delete_expired_reminders,
+    nodes_startup,
+    record_realtime_bandwidth,
+    record_user_usages,
+    reset_user_data_usage,
+    review_users,
+    send_notifications,
+)
 
 logger = logging.getLogger(__name__)
 dashboard_path = "/dashboard/"

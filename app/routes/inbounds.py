@@ -8,7 +8,9 @@ from app.db.models import InboundHost as DBInboundHost, Inbound as DBInbound
 from app.dependencies import DBDep, sudo_admin
 from app.models.proxy import Inbound, InboundHost, InboundHostResponse
 
-router = APIRouter(prefix="/inbounds", dependencies=[Depends(sudo_admin)], tags=['Inbounds'])
+router = APIRouter(
+    prefix="/inbounds", dependencies=[Depends(sudo_admin)], tags=["Inbounds"]
+)
 
 
 @router.get("", response_model=Page[Inbound])
@@ -23,7 +25,7 @@ def get_inbounds(db: DBDep, tag: str = Query(None)):
     return paginate(db, query)
 
 
-@router.get('/hosts', response_model=Page[InboundHost])
+@router.get("/hosts", response_model=Page[InboundHost])
 def get_hosts(db: DBDep):
     return paginate(db.query(DBInboundHost))
 

@@ -4,8 +4,17 @@ from datetime import datetime
 from enum import Enum
 from typing import List, Optional, Union, Annotated
 
-from pydantic import field_validator, ConfigDict, BaseModel, Field, validator, computed_field, ValidationInfo, constr, \
-    StringConstraints
+from pydantic import (
+    field_validator,
+    ConfigDict,
+    BaseModel,
+    Field,
+    validator,
+    computed_field,
+    ValidationInfo,
+    constr,
+    StringConstraints,
+)
 
 from config import XRAY_SUBSCRIPTION_URL_PREFIX
 
@@ -87,9 +96,10 @@ class UserBase(BaseModel):
     @classmethod
     def validate_timeout(cls, v: Optional[int]):
         # Check if expire is 0 or None and timeout is not 0 or None
-        if (v in (0, None)):
+        if v in (0, None):
             return None
         return v
+
     model_config = ConfigDict(from_attributes=True)
 
 
@@ -104,25 +114,27 @@ class User(UserBase):
 class UserCreate(User):
     status: UserStatusCreate = Field(None, validate_default=True)
     services: List[int] = Field([])
-    model_config = ConfigDict(json_schema_extra={
-        "example": {
-            "username": "user1234",
-            "services": [1, 2, 3],
-            "expire": 0,
-            "data_limit": 0,
-            "data_limit_reset_strategy": "no_reset",
-            "status": "active",
-            "note": "",
-            "on_hold_timeout": "2023-11-03T20:30:00",
-            "on_hold_expire_duration": 0,
+    model_config = ConfigDict(
+        json_schema_extra={
+            "example": {
+                "username": "user1234",
+                "services": [1, 2, 3],
+                "expire": 0,
+                "data_limit": 0,
+                "data_limit_reset_strategy": "no_reset",
+                "status": "active",
+                "note": "",
+                "on_hold_timeout": "2023-11-03T20:30:00",
+                "on_hold_expire_duration": 0,
+            }
         }
-    })
+    )
 
     # TODO[pydantic]: We couldn't refactor the `validator`, please replace it by `field_validator` manually.
     # Check https://docs.pydantic.dev/dev-v2/migration/#changes-to-validators for more information.
-    #@validator("status", pre=True, always=True)
-    #def validate_status(cls, value):
-        
+    # @validator("status", pre=True, always=True)
+    # def validate_status(cls, value):
+
     # TODO[pydantic]: We couldn't refactor the `validator`, please replace it by `field_validator` manually.
     # Check https://docs.pydantic.dev/dev-v2/migration/#changes-to-validators for more information.
     @field_validator("status", mode="before")
@@ -133,7 +145,9 @@ class UserCreate(User):
         expire = info.data.get("expire")
         if status == UserStatusCreate.on_hold:
             if on_hold_expire == 0 or on_hold_expire is None:
-                raise ValueError("User cannot be on hold without a valid on_hold_expire_duration.")
+                raise ValueError(
+                    "User cannot be on hold without a valid on_hold_expire_duration."
+                )
             if expire:
                 raise ValueError("User cannot be on hold with specified expire.")
         return status
@@ -143,20 +157,21 @@ class UserModify(User):
     status: Optional[UserStatusModify] = Field(None)
     services: List[int] = Field([])
     data_limit_reset_strategy: Optional[UserDataLimitResetStrategy] = Field(None)
-    model_config = ConfigDict(json_schema_extra={
-        "example": {
-            "username": "mammad1234",
-            "services": [1, 2, 3],
-            "expire": 0,
-            "data_limit": 0,
-            "data_limit_reset_strategy": "no_reset",
-            "status": "active",
-            "note": "",
-            "on_hold_timeout": "2023-11-03T20:30:00",
-            "on_hold_expire_duration": 0,
+    model_config = ConfigDict(
+        json_schema_extra={
+            "example": {
+                "username": "mammad1234",
+                "services": [1, 2, 3],
+                "expire": 0,
+                "data_limit": 0,
+                "data_limit_reset_strategy": "no_reset",
+                "status": "active",
+                "note": "",
+                "on_hold_timeout": "2023-11-03T20:30:00",
+                "on_hold_expire_duration": 0,
+            }
         }
-    })
-    
+    )
 
     # TODO[pydantic]: We couldn't refactor the `validator`, please replace it by `field_validator` manually.
     # Check https://docs.pydantic.dev/dev-v2/migration/#changes-to-validators for more information.
@@ -166,7 +181,9 @@ class UserModify(User):
         expire = values.get("expire")
         if status == UserStatusCreate.on_hold:
             if not on_hold_expire:
-                raise ValueError("User cannot be on hold without a valid on_hold_expire_duration.")
+                raise ValueError(
+                    "User cannot be on hold without a valid on_hold_expire_duration."
+                )
             if expire:
                 raise ValueError("User cannot be on hold with specified expire.")
         return status
@@ -194,7 +211,7 @@ class UserResponse(User):
     @property
     def subscription_url(self) -> str:
         salt = secrets.token_hex(8)
-        url_prefix = (XRAY_SUBSCRIPTION_URL_PREFIX).replace('*', salt)
+        url_prefix = (XRAY_SUBSCRIPTION_URL_PREFIX).replace("*", salt)
         return f"{url_prefix}/sub/{self.username}/{self.key}"
 
 

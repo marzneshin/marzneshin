@@ -12,6 +12,4 @@ api_router.include_router(subscription.router)
 api_router.include_router(system.router, prefix="/api")
 api_router.include_router(user.router, prefix="/api")
 
-__all__ = [
-    "api_router"
-]
+__all__ = ["api_router"]

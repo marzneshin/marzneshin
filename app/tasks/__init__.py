@@ -14,5 +14,5 @@ __all__ = [
     "delete_expired_reminders",
     "send_notifications",
     "store_bandwidth",
-    "record_realtime_bandwidth"
+    "record_realtime_bandwidth",
 ]

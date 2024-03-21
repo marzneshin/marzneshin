@@ -25,7 +25,9 @@ class NodeBase(BaseModel):
     name: str
     address: str
     port: int = 62050
-    connection_backend: NodeConnectionBackend = Field(default=NodeConnectionBackend.grpclib)
+    connection_backend: NodeConnectionBackend = Field(
+        default=NodeConnectionBackend.grpclib
+    )
     usage_coefficient: float = Field(ge=0, default=1.0)
     model_config = ConfigDict(from_attributes=True)
 
@@ -38,14 +40,16 @@ class Node(NodeBase):
 
 
 class NodeCreate(Node):
-    model_config = ConfigDict(json_schema_extra={
-        "example": {
-            "name": "DE node",
-            "address": "192.168.1.1",
-            "port": 62050,
-            "usage_coefficient": 1
+    model_config = ConfigDict(
+        json_schema_extra={
+            "example": {
+                "name": "DE node",
+                "address": "192.168.1.1",
+                "port": 62050,
+                "usage_coefficient": 1,
+            }
         }
-    })
+    )
 
 
 class NodeModify(Node):
@@ -55,16 +59,18 @@ class NodeModify(Node):
     connection_backend: Optional[NodeConnectionBackend] = Field(None)
     status: Optional[NodeStatus] = Field(None)
     usage_coefficient: Optional[float] = Field(None)
-    model_config = ConfigDict(json_schema_extra={
-        "example": {
-            "name": "DE node",
-            "address": "192.168.1.1",
-            "port": 62050,
-            "api_port": 62051,
-            "status": "disabled",
-            "usage_coefficient": 1.0
+    model_config = ConfigDict(
+        json_schema_extra={
+            "example": {
+                "name": "DE node",
+                "address": "192.168.1.1",
+                "port": 62050,
+                "api_port": 62051,
+                "status": "disabled",
+                "usage_coefficient": 1.0,
+            }
         }
-    })
+    )
 
 
 class NodeResponse(Node):

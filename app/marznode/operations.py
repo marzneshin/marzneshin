@@ -51,13 +51,14 @@ async def add_node(db_node, certificate):
     if db_node.connection_backend == NodeConnectionBackend.grpcio:
         node = MarzNodeGRPCIO(db_node.id, db_node.address, db_node.port)
     else:
-        node = MarzNodeGRPCLIB(db_node.id, db_node.address, db_node.port, certificate.key,
-                               certificate.certificate)
+        node = MarzNodeGRPCLIB(
+            db_node.id,
+            db_node.address,
+            db_node.port,
+            certificate.key,
+            certificate.certificate,
+        )
     marznode.nodes[db_node.id] = node
 
 
-__all__ = [
-    "update_user",
-    "add_node",
-    "remove_node"
-]
+__all__ = ["update_user", "add_node", "remove_node"]

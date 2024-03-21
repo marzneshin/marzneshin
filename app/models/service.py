@@ -21,24 +21,24 @@ class Service(ServiceBase):
 class ServiceCreate(ServiceBase):
     users: List[int] = Field([])
     inbounds: List[int] = Field([])
-    model_config = ConfigDict(json_schema_extra={
-        "example": {
-            "name": "my service 1",
-            "inbounds": [1, 5, 9],
-            "users": [1, 2, 3]
+    model_config = ConfigDict(
+        json_schema_extra={
+            "example": {
+                "name": "my service 1",
+                "inbounds": [1, 5, 9],
+                "users": [1, 2, 3],
+            }
         }
-    })
+    )
 
 
 class ServiceModify(ServiceBase):
     inbounds: Optional[List[int]] = Field(None)
-    model_config = ConfigDict(json_schema_extra={
-        "example": {
-            "id": 2,
-            "name": "my service 2",
-            "inbounds": [1, 2, 3]
+    model_config = ConfigDict(
+        json_schema_extra={
+            "example": {"id": 2, "name": "my service 2", "inbounds": [1, 2, 3]}
         }
-    })
+    )
 
 
 class ServiceResponse(Service):

@@ -11,21 +11,37 @@ from grpclib.exceptions import StreamTerminatedError
 from .base import MarzNodeBase
 from .database import MarzNodeDB
 from .marznode_grpc import MarzServiceStub
-from .marznode_pb2 import UserData, UsersData, Empty, User, Inbound, XrayLogsRequest, XrayConfig
+from .marznode_pb2 import (
+    UserData,
+    UsersData,
+    Empty,
+    User,
+    Inbound,
+    XrayLogsRequest,
+    XrayConfig,
+)
 from ..models.node import NodeStatus
 
 logger = logging.getLogger(__name__)
 
 
 def string_to_temp_file(content: str):
-    file = tempfile.NamedTemporaryFile(mode='w+t')
+    file = tempfile.NamedTemporaryFile(mode="w+t")
     file.write(content)
     file.flush()
     return file
 
 
 class MarzNodeGRPCLIB(MarzNodeBase, MarzNodeDB):
-    def __init__(self, node_id: int, address: str, port: int, ssl_key: str, ssl_cert: str, usage_coefficient: int = 1):
+    def __init__(
+        self,
+        node_id: int,
+        address: str,
+        port: int,
+        ssl_key: str,
+        ssl_cert: str,
+        usage_coefficient: int = 1,
+    ):
         self.id = node_id
         self._address = address
         self._port = port
@@ -62,7 +78,9 @@ class MarzNodeGRPCLIB(MarzNodeBase, MarzNodeDB):
             else:
                 if not self.synced:
                     await self._sync()
-                    self._streaming_task = asyncio.create_task(self._stream_user_updates())
+                    self._streaming_task = asyncio.create_task(
+                        self._stream_user_updates()
+                    )
                     self.set_status(NodeStatus.healthy)
                     logger.info("Connected to node %i", self.id)
             await asyncio.sleep(10)
@@ -76,8 +94,11 @@ class MarzNodeGRPCLIB(MarzNodeBase, MarzNodeDB):
                     logger.info("got something from queue")
                     user = user_update["user"]
                     await stream.send_message(
-                        UserData(user=User(id=user.id, username=user.username, key=user.key),
-                                 inbounds=[Inbound(tag=t) for t in user_update["inbounds"]]))
+                        UserData(
+                            user=User(id=user.id, username=user.username, key=user.key),
+                            inbounds=[Inbound(tag=t) for t in user_update["inbounds"]],
+                        )
+                    )
         except (OSError, ConnectionError, GRPCError, StreamTerminatedError):
             logger.info("node %i detached", self.id)
             self.synced = False
@@ -90,8 +111,13 @@ class MarzNodeGRPCLIB(MarzNodeBase, MarzNodeDB):
             await self._updates_queue.put({"user": user, "inbounds": inbounds})
 
     async def _repopulate_users(self, users_data: list[dict]) -> None:
-        updates = [UserData(user=User(id=u["id"], username=u["username"], key=u["key"]),
-                            inbounds=[Inbound(tag=t) for t in u["inbounds"]]) for u in users_data]
+        updates = [
+            UserData(
+                user=User(id=u["id"], username=u["username"], key=u["key"]),
+                inbounds=[Inbound(tag=t) for t in u["inbounds"]],
+            )
+            for u in users_data
+        ]
         await self._stub.RepopulateUsers(UsersData(users_data=updates))
 
     async def fetch_users_stats(self):

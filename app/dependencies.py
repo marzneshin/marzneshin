@@ -16,16 +16,18 @@ def get_db():  # Dependency
         yield db
 
 
-def get_admin(db: Annotated[Session, Depends(get_db)],
-              token: Annotated[str, Depends(oauth2_scheme)]):
+def get_admin(
+    db: Annotated[Session, Depends(get_db)],
+    token: Annotated[str, Depends(oauth2_scheme)],
+):
     payload = get_admin_payload(token)
     if not payload:
         return
 
-    if payload['username'] in SUDOERS and payload['is_sudo'] is True:
-        return Admin(username=payload['username'], is_sudo=True)
+    if payload["username"] in SUDOERS and payload["is_sudo"] is True:
+        return Admin(username=payload["username"], is_sudo=True)
 
-    dbadmin = crud.get_admin(db, payload['username'])
+    dbadmin = crud.get_admin(db, payload["username"])
     if not dbadmin:
         return
 
@@ -58,7 +60,9 @@ def sudo_admin(admin: Annotated[Admin, Depends(get_current_admin)]):
     return admin
 
 
-def get_subscription_user(username: str, key: str, db: Annotated[Session, Depends(get_db)]):
+def get_subscription_user(
+    username: str, key: str, db: Annotated[Session, Depends(get_db)]
+):
     try:
         int(key, 16)
     except ValueError:
@@ -70,11 +74,15 @@ def get_subscription_user(username: str, key: str, db: Annotated[Session, Depend
     return db_user
 
 
-def get_user(username: str,
-             admin: Annotated[Admin, Depends(get_current_admin)],
-             db: Annotated[Session, Depends(get_db)]):
+def get_user(
+    username: str,
+    admin: Annotated[Admin, Depends(get_current_admin)],
+    db: Annotated[Session, Depends(get_db)],
+):
     db_user = crud.get_user(db, username)
-    if not (admin.is_sudo or (db_user.admin and db_user.admin.username == admin.username)):
+    if not (
+        admin.is_sudo or (db_user.admin and db_user.admin.username == admin.username)
+    ):
         raise HTTPException(status_code=403, detail="You're not allowed")
 
     if not db_user:
