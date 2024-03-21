@@ -1,4 +1,4 @@
-import { FC, PropsWithChildren, useState } from "react";
+import { FC, PropsWithChildren } from "react";
 import { SidebarContext } from "./sidebar-provider"
 import { SidebarItemGroup } from "./types"
 import { VariantProps, cva } from "class-variance-authority"

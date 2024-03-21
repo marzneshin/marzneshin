@@ -1,6 +1,6 @@
 
 import { Link } from '@tanstack/react-router'
-import { FC, useEffect } from 'react'
+import { FC } from 'react'
 import { SidebarItem as SidebarItemType } from './types'
 import { cn } from '@marzneshin/utils';
 import { VariantProps, cva } from 'class-variance-authority';

@@ -1,7 +1,9 @@
+//@ts-expect-error
 import create from "@kodingdotninja/use-tailwind-breakpoint";
 import resolveConfig from "tailwindcss/resolveConfig";
 
-import tailwindConfig from "@marzneshin/../tailwind.config";
+//@ts-expect-error
+import tailwindConfig from "@marzneshin/../tailwind.config.js";
 
 const config = resolveConfig(tailwindConfig);
 
