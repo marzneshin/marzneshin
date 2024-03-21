@@ -3,12 +3,8 @@ name: Dashboard CI
 on:
 
   push:
-    paths:
-      - './dashboard/**'
     branches: [ "master" ]
   pull_request:
-    paths: 
-      - './dashboard/**'
 
 jobs:
   build:
