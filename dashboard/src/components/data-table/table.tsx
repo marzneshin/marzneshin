@@ -12,6 +12,7 @@ import {
 } from "@tanstack/react-table"
 
 import {
+    Button,
     Input,
     Table,
     TableBody,
@@ -24,6 +25,12 @@ import { useTranslation } from "react-i18next"
 import { DataTablePagination } from "./pagination"
 import { useState } from "react"
 import { DataTableViewOptions } from "./table-view-option"
+import {
+    DropdownMenu,
+    DropdownMenuCheckboxItem,
+    DropdownMenuContent,
+    DropdownMenuTrigger
+} from "@marzneshin/components"
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -67,7 +74,7 @@ export function DataTable<TData, TValue>({
         <div>
             <div className="flex items-center py-4">
                 <Input
-                    placeholder={t('table.toggle-column')}
+                    placeholder={t('table.filter-placeholder', { name: filteredColumn })}
                     value={(table.getColumn(filteredColumn)?.getFilterValue() as string) ?? ""}
                     onChange={(event) =>
                         table.getColumn(filteredColumn)?.setFilterValue(event.target.value)
