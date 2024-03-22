@@ -19,7 +19,7 @@ export const NodesSettingsConfirmationDialog: FC<NodesDeleteConfirmationDialogPr
     const { t } = useTranslation();
     return (
         <Sheet open={open} onOpenChange={onOpenChange}>
-            <SheetContent className="sm:w-full w-[100px]" >
+            <SheetContent className="sm:min-w-full min-w-[600px]" >
                 <SheetHeader>
                     <SheetTitle>
                         {t('page.nodes.settings.title')}
