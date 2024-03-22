@@ -1,5 +1,7 @@
 {
     "name": "Name",
+    "status": "Status",
+    "address": "Address",
     "users": "Users",
     "nodes": "Nodes",
     "services": "Services",
@@ -8,6 +10,12 @@
     "password": "Password",
     "submit": "Submit",
     "login": "Login",
+    "edit": "Edit",
+    "actions": "Actions",
+    "open": "Open",
+    "delete": "Delete",
+    "port": "Port",
+    "create": "Create",
     "page": {
         "login": {
             "username": {
@@ -20,6 +28,58 @@
                     "is-required": "Password is required"
                 }
             }
+        },
+        "nodes": {
+            "settings": {
+                "title": "Nodes Settings"
+            },
+            "dialogs": {
+                "creation": {
+                    "title": "Nodes Creation"
+                },
+                "deletion": {
+                    "title": "Nodes Deletion"
+                },
+                "edition": {
+                    "title": "Nodes Edition"
+                }
+            },
+            "usage_coefficient": "Utilization Index",
+            "add_as_new_host": "Add as new hosts",
+            "events": {
+                "delete": {
+                    "error": "Failed to delete {{name}}",
+                    "success": {
+                        "title": "{{name}} is successfuly deleted",
+                        "desc": ""
+                    }
+                },
+                "create": {
+                    "error": "Failed to create {{name}}",
+                    "success": {
+                        "title": "{{name}} is successfuly created",
+                        "desc": ""
+                    }
+                },
+                "update": {
+                    "error": "Failed to update {{name}}",
+                    "success": {
+                        "title": "{{name}} is successfuly updated",
+                        "desc": ""
+                    }
+                }
+            }
         }
+    },
+    "delete-confirmation": {
+        "title": "Are you sure of this?",
+        "desc": "This action cannot be undone. This will permanently delete your account and remove your data from our servers."
+    },
+    "table": {
+        "row-per-page": "Rows per page",
+        "no-result": "No results",
+        "selected": "Selected",
+        "toggle-column": "Toggle columns",
+        "filter-placeholder": "Filter {{name}}"
     }
 }

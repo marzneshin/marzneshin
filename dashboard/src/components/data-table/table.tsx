@@ -25,23 +25,18 @@ import { useTranslation } from "react-i18next"
 import { DataTablePagination } from "./pagination"
 import { useState } from "react"
 import { DataTableViewOptions } from "./table-view-option"
-import {
-    DropdownMenu,
-    DropdownMenuCheckboxItem,
-    DropdownMenuContent,
-    DropdownMenuTrigger
-} from "@marzneshin/components"
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
     data: TData[]
     filteredColumn: string
-
+    onCreate?: () => void
 }
 
 export function DataTable<TData, TValue>({
     columns,
     data,
+    onCreate,
     filteredColumn
 }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = useState<SortingState>([])
@@ -82,6 +77,7 @@ export function DataTable<TData, TValue>({
                     className="max-w-sm"
                 />
                 <DataTableViewOptions table={table} />
+                {onCreate && (<Button onClick={onCreate}>{t('create')}</Button>)}
             </div>
             <div className="rounded-md border">
                 <Table>

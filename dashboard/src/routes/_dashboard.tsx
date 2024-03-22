@@ -4,7 +4,8 @@ import {
   Header,
   ResizableHandle,
   ResizablePanel,
-  ResizablePanelGroup
+  ResizablePanelGroup,
+  Toaster
 } from '@marzneshin/components'
 import { NavigationDirectory } from '@marzneshin/components/nav-dir';
 import { useAuth } from '@marzneshin/features/auth'
@@ -64,6 +65,7 @@ export const DashboardLayout = () => {
             </aside>
             <main className="sm:block">
               <Outlet />
+              <Toaster position="top-center" />
             </main>
           </div>
         )}
