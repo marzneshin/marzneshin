@@ -125,11 +125,11 @@ export const NavigationDirectory: FC<NavigationDirectoryProps> = ({ sidebar }) =
                             <>
                                 <BreadcrumbLink
                                     asChild
-                                    className="md:max-w-none max-w-20 truncate"
+                                    className="md:max-w-none max-w-20 truncate text-accent hover:text-primary-foreground"
                                 >
                                     <Link to={item.href}>{item.label}</Link>
                                 </BreadcrumbLink>
-                                <BreadcrumbSeparator />
+                                {index !== items.slice(-ITEMS_TO_DISPLAY + 1).length - 1 && <BreadcrumbSeparator />}
                             </>
                         ) : (
                             <BreadcrumbPage className="md:max-w-none max-w-20 truncate">
