@@ -15,22 +15,27 @@ export const NodesTable: FC = () => {
     const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
     const [settingsDialogOpen, setSettingsDialogOpen] = useState<boolean>(false);
     const [selectedNode, selectNode] = useState<NodeType | null>(null);
+
     const onEdit = (node: NodeType) => {
         selectNode(node);
         setMutationDialogOpen(true);
     }
+
     const onDelete = (node: NodeType) => {
         selectNode(node);
         setDeleteDialogOpen(true);
     }
+
     const onCreate = () => {
         selectNode(null);
         setMutationDialogOpen(true);
     }
+
     const onOpen = (node: NodeType) => {
         selectNode(node);
         setSettingsDialogOpen(true);
     }
+
     return (
         <div>
             <NodesSettingsConfirmationDialog open={settingsDialogOpen} onOpenChange={setSettingsDialogOpen} node={selectedNode} />

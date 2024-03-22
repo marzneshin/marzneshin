@@ -1,13 +1,7 @@
-
-
 import {
-    ArrowDownIcon,
-    ArrowUpIcon,
-    CaretSortIcon,
-    EyeNoneIcon,
     OpenInNewWindowIcon,
 } from "@radix-ui/react-icons"
-import { Column, Row } from "@tanstack/react-table"
+import { Row } from "@tanstack/react-table"
 
 import {
     Button,
@@ -20,7 +14,6 @@ import {
 } from "@marzneshin/components"
 import { MoreHorizontal, PencilIcon, TrashIcon } from "lucide-react"
 import { useTranslation } from "react-i18next"
-import { NodeType } from "@marzneshin/features/nodes"
 
 interface DataTableActionsCellProps<TData>
     extends React.HTMLAttributes<HTMLDivElement> {
