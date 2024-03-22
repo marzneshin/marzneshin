@@ -41,7 +41,7 @@ export const NodesTable: FC = () => {
             <NodesSettingsConfirmationDialog open={settingsDialogOpen} onOpenChange={setSettingsDialogOpen} node={selectedNode} />
             <NodesDeleteConfirmationDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen} node={selectedNode} />
             <MutationDialog node={selectedNode} open={mutationDialogOpen} onOpenChange={setMutationDialogOpen} />
-            <DataTable columns={columns({ onEdit, onDelete, onOpen })} data={data} filteredColumn='name' onCreate={onCreate} />
+            <DataTable columns={columns({ onEdit, onDelete, onOpen })} data={data} filteredColumn='name' onCreate={onCreate} onOpen={onOpen} />
         </div>
     )
 }

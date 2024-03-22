@@ -31,12 +31,14 @@ interface DataTableProps<TData, TValue> {
     data: TData[]
     filteredColumn: string
     onCreate?: () => void
+    onOpen?: (object: TData) => void
 }
 
 export function DataTable<TData, TValue>({
     columns,
     data,
     onCreate,
+    onOpen,
     filteredColumn
 }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = useState<SortingState>([])
@@ -105,6 +107,7 @@ export function DataTable<TData, TValue>({
                                 <TableRow
                                     key={row.id}
                                     data-state={row.getIsSelected() && "selected"}
+                                    onClick={() => onOpen !== undefined && onOpen(row.original)}
                                 >
                                     {row.getVisibleCells().map((cell) => (
                                         <TableCell key={cell.id}>
