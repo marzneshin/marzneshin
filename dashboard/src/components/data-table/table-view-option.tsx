@@ -26,7 +26,7 @@ export function DataTableViewOptions<TData>({
                 <Button
                     variant="outline"
                     size="sm"
-                    className="hidden ml-auto h-8 lg:flex"
+                    className="ml-auto h-8 lg:flex"
                 >
                     <MixerHorizontalIcon className="mr-2 w-4 h-4" />
                     View
@@ -49,7 +49,7 @@ export function DataTableViewOptions<TData>({
                                 checked={column.getIsVisible()}
                                 onCheckedChange={(value) => column.toggleVisibility(!!value)}
                             >
-                                {column.id}
+                                {column.id.replace('_', ' ')}
                             </DropdownMenuCheckboxItem>
                         )
                     })}
