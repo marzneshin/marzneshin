@@ -4,18 +4,19 @@ import {
   Header,
   ResizableHandle,
   ResizablePanel,
-  ResizablePanelGroup
+  ResizablePanelGroup,
+  Toaster
 } from '@marzneshin/components'
 import { NavigationDirectory } from '@marzneshin/components/nav-dir';
 import { useAuth } from '@marzneshin/features/auth'
 import { DashboardSidebar, ToggleButton, sidebarItems } from '@marzneshin/features/sidebar';
 import { usePanelToggle } from '@marzneshin/features/sidebar/use-panel-toggle';
-import { useBreakpoint } from '@marzneshin/hooks/use-screen-breakpoint';
+import { useScreenBreakpoint } from '@marzneshin/hooks/use-screen-breakpoint';
 import { cn } from '@marzneshin/utils';
 import { Outlet, createFileRoute, redirect } from '@tanstack/react-router'
 
 export const DashboardLayout = () => {
-  const isDesktop = useBreakpoint("sm");
+  const isDesktop = useScreenBreakpoint("sm");
   const { collapsed, panelRef, open, setCollapsed, setOpen, toggleCollapse, toggleOpen } = usePanelToggle(isDesktop);
 
   return (
@@ -64,6 +65,7 @@ export const DashboardLayout = () => {
             </aside>
             <main className="sm:block">
               <Outlet />
+              <Toaster position="top-center" />
             </main>
           </div>
         )}

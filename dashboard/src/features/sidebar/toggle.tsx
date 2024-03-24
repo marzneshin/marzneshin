@@ -16,7 +16,7 @@ export const ToggleButton: FC<ToggleButtonProps> = ({ isDesktop, collapsed, open
         (open ? PanelBottomClose : PanelBottomOpen);
 
     return (
-        <Button className="p-2 bg-muted-foreground text-primary-foreground" onClick={onToggle}>
+        <Button className="p-2 bg-secondary-foreground border-2 text-primary-foreground dark:bg-secondary dark:text-primary" onClick={onToggle}>
             <Icon className="w-full h-full" />
         </Button>
     );
