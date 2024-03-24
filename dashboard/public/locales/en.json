@@ -12,11 +12,19 @@
     "login": "Login",
     "edit": "Edit",
     "actions": "Actions",
+    "settings": "Settings",
     "open": "Open",
     "delete": "Delete",
     "port": "Port",
     "create": "Create",
     "page": {
+        "settings": {
+            "certificate": {
+                "copy": "Copy Certificate",
+                "error": "Certificate Unavailable",
+                "copied": "Certificate Copied"
+            }
+        },
         "login": {
             "username": {
                 "error": {
@@ -68,6 +76,11 @@
                         "desc": ""
                     }
                 }
+            },
+            "certificate-alert": {
+                "title": "Nodes Certificate Configuration",
+                "desc": "If you aim to configure your nodes certificate, checkout settings page.",
+                "click": "Click Here"
             }
         }
     },

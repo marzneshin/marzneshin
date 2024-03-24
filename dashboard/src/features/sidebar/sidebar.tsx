@@ -1,7 +1,7 @@
 import { Sidebar, SidebarItem } from "@marzneshin/components";
 import { useRouterState } from "@tanstack/react-router";
 import { FC, useEffect } from "react";
-import { sidebarItems as sidebar } from ".";
+import { sidebarItems } from ".";
 
 
 interface DashboardSidebarProps {
@@ -19,18 +19,17 @@ export const DashboardSidebar: FC<DashboardSidebarProps> = ({ collapsed, setColl
         <aside>
             <nav className="w-full">
                 <Sidebar
-                    sidebar={sidebar}
+                    sidebar={sidebarItems}
                     collapsed={collapsed}
                     setCollapsed={setCollapsed}
                 >
                     <div className="flex flex-col p-4 w-full h-full">
-                        <Sidebar.Body>
-
-                            {Object.keys(sidebar).map((key) =>
+                        <Sidebar.Body className="my-3">
+                            {Object.keys(sidebarItems).map((key) =>
                             (
                                 <div className="my-2 w-full" key={key}>
                                     <Sidebar.Group>{key}</Sidebar.Group>
-                                    {sidebar[key].map((item: SidebarItem, i) => (
+                                    {sidebarItems[key].map((item: SidebarItem, i) => (
                                         <Sidebar.Item
                                             variant={currentActivePath === item.to ? "active" : "default"}
                                             className="my-2"
