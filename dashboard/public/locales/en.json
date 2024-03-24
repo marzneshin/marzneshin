@@ -13,6 +13,8 @@
     "edit": "Edit",
     "actions": "Actions",
     "settings": "Settings",
+    "logs": "Logs",
+    "config": "Config",
     "open": "Open",
     "delete": "Delete",
     "port": "Port",
@@ -39,7 +41,11 @@
         },
         "nodes": {
             "settings": {
-                "title": "Nodes Settings"
+                "title": "Nodes Settings",
+                "detail": "Details",
+                "log-container": {
+                    "title": "Marznode Xray config logs"
+                }
             },
             "dialogs": {
                 "creation": {
