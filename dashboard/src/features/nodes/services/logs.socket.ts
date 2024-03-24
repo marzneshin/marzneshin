@@ -38,33 +38,22 @@ export const getWebsocketUrl = (nodeId: number) => {
     }
 };
 
+
 export const useNodesLog = (node: NodeType) => {
-    let logsTmp: string[] = [];
-    const logsDiv = useRef<HTMLDivElement | null>(null);
     const [logs, setLogs] = useState<string[]>([]);
+    const logsDiv = useRef<HTMLDivElement | null>(null);
     const scrollShouldStayOnEnd = useRef(true);
-    const updateLogs = useCallback(
-        debounce((logs: string[]) => {
-            const isScrollOnEnd =
-                Math.abs(
-                    (logsDiv.current?.scrollTop || 0) -
-                    (logsDiv.current?.scrollHeight || 0) +
-                    (logsDiv.current?.offsetHeight || 0)
-                ) < 10;
-            if (logsDiv.current && isScrollOnEnd)
-                scrollShouldStayOnEnd.current = true;
-            else scrollShouldStayOnEnd.current = false;
-            if (logs.length < 40) setLogs(logs);
-        }, 300),
-        []
-    );
+
+    const updateLogs = useCallback((callback: (prevLogs: string[]) => string[]) => {
+        setLogs(prevLogs => {
+            const newLogs = callback(prevLogs);
+            return newLogs.length > MAX_NUMBER_OF_LOGS ? newLogs.slice(-MAX_NUMBER_OF_LOGS) : newLogs;
+        });
+    }, []);
 
     const { readyState } = useWebSocket(node?.id ? getWebsocketUrl(node.id) : '', {
         onMessage: (e: any) => {
-            logsTmp.push(e.data);
-            if (logsTmp.length > MAX_NUMBER_OF_LOGS)
-                logsTmp = logsTmp.splice(0, logsTmp.length - MAX_NUMBER_OF_LOGS);
-            updateLogs([...logsTmp]);
+            updateLogs(prevLogs => [...prevLogs, e.data]);
         },
         shouldReconnect: () => true,
         reconnectAttempts: 10,
@@ -72,16 +61,19 @@ export const useNodesLog = (node: NodeType) => {
     });
 
     useEffect(() => {
-        if (logsDiv.current && scrollShouldStayOnEnd.current)
-            logsDiv.current.scrollTop = logsDiv.current?.scrollHeight;
+        if (logsDiv.current && scrollShouldStayOnEnd.current) {
+            logsDiv.current.scrollTop = logsDiv.current.scrollHeight;
+        }
     }, [logs]);
 
     useEffect(() => {
         return () => {
-            logsTmp = [];
+            // Cleanup
+            setLogs([]);
         };
     }, []);
 
     const status = getStatus(readyState.toString());
-    return { status, readyState, logs, logsDiv }
-}
+
+    return { status, readyState, logs, logsDiv };
+};
