@@ -52,7 +52,7 @@
                     "title": "Nodes Edition"
                 }
             },
-            "usage_coefficient": "Utilization Index",
+            "usage_coefficient": "Usage Coefficient",
             "add_as_new_host": "Add as new hosts",
             "events": {
                 "delete": {
