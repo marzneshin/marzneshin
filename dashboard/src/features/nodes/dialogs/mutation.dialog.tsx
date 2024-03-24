@@ -149,7 +149,10 @@ export const MutationDialog: FC<MutationDialogProps> = ({ node, open, onOpenChan
                                 </FormItem>
                             )}
                         />
-                        <Button className="mt-3 w-full font-semibold" type="submit">
+                        <Button
+                            className="mt-3 w-full font-semibold"
+                            type="submit"
+                            disabled={form.formState.isSubmitting}>
                             {t('submit')}
                         </Button>
                     </form>
