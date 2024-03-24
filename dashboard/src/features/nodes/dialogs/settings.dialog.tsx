@@ -73,7 +73,7 @@ export const NodesSettingsDialog: FC<NodesSettingsDialogProps> = ({ onOpenChange
                                         height="50vh"
                                         defaultLanguage="json"
                                         theme={theme === "dark" ? "vs-dark" : "github"}
-                                        defaultValue={JSON.stringify(data)}
+                                        defaultValue={JSON.stringify(data, null, '\t')}
                                         onChange={handleConfigChange}
                                     />
                                     <Button onClick={() => mutate.mutate(config)}>{t('save')}</Button>
