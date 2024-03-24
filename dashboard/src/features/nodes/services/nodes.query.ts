@@ -8,7 +8,7 @@ export async function fetchNodes(): Promise<NodeType[]> {
     });
 }
 
-export const NodesQueryFetchKey = "nodes-query-fetch-key";
+export const NodesQueryFetchKey = "nodes";
 
 export const useNodesQuery = () => {
     return useQuery({

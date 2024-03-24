@@ -3,7 +3,7 @@ import {
     useNodesQuery,
     columns,
     NodeType,
-    NodesSettingsConfirmationDialog
+    NodesSettingsDialog
 } from '@marzneshin/features/nodes';
 import { DataTable } from "@marzneshin/components";
 import { MutationDialog } from "../dialogs/mutation.dialog";
@@ -38,7 +38,7 @@ export const NodesTable: FC = () => {
 
     return (
         <div>
-            <NodesSettingsConfirmationDialog
+            <NodesSettingsDialog
                 open={settingsDialogOpen}
                 onOpenChange={setSettingsDialogOpen}
                 node={selectedNode}
