@@ -8,11 +8,12 @@ import {
     TabsList,
     TabsTrigger,
 } from "@marzneshin/components"
-import { FC, useCallback, useState } from "react"
+import { FC } from "react"
 import { useTranslation } from "react-i18next"
 import { NodeType } from ".."
 // import { useNodesSettingsQuery } from "../services/settings.query";
 import { LogContainer } from "../log";
+import { NodesDetailTable } from "../tables/detail-table";
 
 interface NodesSettingsDialogProps {
     onOpenChange: (state: boolean) => void
@@ -34,6 +35,10 @@ export const NodesSettingsDialog: FC<NodesSettingsDialogProps> = ({ onOpenChange
                             {t('page.nodes.settings.title')}
                         </SheetTitle>
                     </SheetHeader>
+                    <div className="my-4">
+                        <h1 className="font-medium font-header">{t('page.nodes.settings.detail')}</h1>
+                        <NodesDetailTable node={node} />
+                    </div>
                     <Tabs className="my-3 w-full h-full" defaultValue="logs">
                         <TabsList className="w-full">
                             <TabsTrigger className="w-full" value="logs">{t('logs')}</TabsTrigger>
