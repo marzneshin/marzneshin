@@ -1,5 +1,5 @@
 import { SidebarObject } from '@marzneshin/components';
-import { Box, Home, Server, ServerCog, UsersIcon } from 'lucide-react';
+import { Box, Home, Server, ServerCog, Settings, UsersIcon } from 'lucide-react';
 
 export const sidebarItems: SidebarObject = {
     Dashboard: [
@@ -33,6 +33,14 @@ export const sidebarItems: SidebarObject = {
             title: 'Hosts',
             to: '/hosts',
             icon: <ServerCog />,
+            isParent: false,
+        },
+    ],
+    System: [
+        {
+            title: 'Settings',
+            to: '/settings',
+            icon: <Settings />,
             isParent: false,
         },
     ]

@@ -1,6 +1,6 @@
 /* prettier-ignore-start */
 
- 
+/* eslint-disable */
 
 // @ts-nocheck
 
@@ -15,6 +15,7 @@ import { Route as DashboardImport } from './routes/_dashboard'
 import { Route as AuthImport } from './routes/_auth'
 import { Route as DashboardIndexImport } from './routes/_dashboard/index'
 import { Route as DashboardUsersImport } from './routes/_dashboard/users'
+import { Route as DashboardSettingsImport } from './routes/_dashboard/settings'
 import { Route as DashboardServicesImport } from './routes/_dashboard/services'
 import { Route as DashboardNodesImport } from './routes/_dashboard/nodes'
 import { Route as DashboardHostsImport } from './routes/_dashboard/hosts'
@@ -39,6 +40,11 @@ const DashboardIndexRoute = DashboardIndexImport.update({
 
 const DashboardUsersRoute = DashboardUsersImport.update({
   path: '/users',
+  getParentRoute: () => DashboardRoute,
+} as any)
+
+const DashboardSettingsRoute = DashboardSettingsImport.update({
+  path: '/settings',
   getParentRoute: () => DashboardRoute,
 } as any)
 
@@ -90,6 +96,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardServicesImport
       parentRoute: typeof DashboardImport
     }
+    '/_dashboard/settings': {
+      preLoaderRoute: typeof DashboardSettingsImport
+      parentRoute: typeof DashboardImport
+    }
     '/_dashboard/users': {
       preLoaderRoute: typeof DashboardUsersImport
       parentRoute: typeof DashboardImport
@@ -109,6 +119,7 @@ export const routeTree = rootRoute.addChildren([
     DashboardHostsRoute,
     DashboardNodesRoute,
     DashboardServicesRoute,
+    DashboardSettingsRoute,
     DashboardUsersRoute,
     DashboardIndexRoute,
   ]),

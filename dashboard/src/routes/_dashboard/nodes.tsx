@@ -1,6 +1,7 @@
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@marzneshin/components';
+import { Alert, AlertDescription, AlertTitle, Card, CardContent, CardFooter, CardHeader, CardTitle } from '@marzneshin/components';
 import { NodesTable } from '@marzneshin/features/nodes';
-import { createFileRoute } from '@tanstack/react-router'
+import { Link, createFileRoute } from '@tanstack/react-router'
+import { Info } from 'lucide-react';
 import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -17,7 +18,14 @@ export const NodesPage: FC = () => {
         <NodesTable />
       </CardContent>
       <CardFooter>
-        Footer
+        <Alert>
+          <Info className="mr-2" />
+          <AlertTitle className="font-semibold text-primary">{t('page.nodes.certificate-alert.title')}</AlertTitle>
+          <AlertDescription>
+            {t('page.nodes.certificate-alert.desc')}
+            <Link className="m-1 font-semibold text-secondary-foreground" to="/settings">{t('page.nodes.certificate-alert.click')}</Link>
+          </AlertDescription>
+        </Alert>
       </CardFooter>
     </Card >)
 };
