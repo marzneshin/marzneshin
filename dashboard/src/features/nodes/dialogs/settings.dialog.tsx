@@ -11,7 +11,7 @@ import {
 import { FC, useCallback, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { NodeType } from ".."
-import { useNodesSettingsQuery } from "../services/settings.query";
+// import { useNodesSettingsQuery } from "../services/settings.query";
 import { LogContainer } from "../log";
 
 interface NodesSettingsDialogProps {
@@ -23,7 +23,7 @@ interface NodesSettingsDialogProps {
 export const NodesSettingsDialog: FC<NodesSettingsDialogProps> = ({ onOpenChange, open, node }) => {
 
     const { t } = useTranslation();
-    const { data: config } = useNodesSettingsQuery(node);
+    // const { data: config } = useNodesSettingsQuery(node);
 
     if (node) {
         return (
