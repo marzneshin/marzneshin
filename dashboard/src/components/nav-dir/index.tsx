@@ -24,7 +24,7 @@ import {
     Button,
     SidebarObject,
 } from "@marzneshin/components"
-import { useBreakpoint } from "@marzneshin/hooks/use-screen-breakpoint";
+import { useScreenBreakpoint } from "@marzneshin/hooks/use-screen-breakpoint";
 import { AppRouterPaths } from "@marzneshin/types";
 import i18n from "@marzneshin/features/i18n";
 
@@ -60,7 +60,7 @@ export const NavigationDirectory: FC<NavigationDirectoryProps> = ({ sidebar }) =
     const [open, setOpen] = React.useState(false)
     const currentPath = useRouterState().location.pathname;
     const items = getPathDirs(currentPath, sidebar);
-    const isDesktop = !useBreakpoint("sm");
+    const isDesktop = !useScreenBreakpoint("sm");
     return (
         <Breadcrumb>
             <BreadcrumbList>
