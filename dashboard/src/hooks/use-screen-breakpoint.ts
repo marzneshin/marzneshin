@@ -1,5 +1,4 @@
 //@ts-expect-error
-import throttle from 'lodash.throttle'
 import resolveConfig from "tailwindcss/resolveConfig";
 
 //@ts-expect-error

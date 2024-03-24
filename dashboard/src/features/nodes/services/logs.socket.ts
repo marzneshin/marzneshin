@@ -1,5 +1,4 @@
 import { NodeType } from "@marzneshin/features/nodes";
-import { debounce } from 'lodash';
 import useWebSocket, { ReadyState } from "react-use-websocket";
 import { useAuth } from "@marzneshin/features/auth";
 import { joinPaths } from "@tanstack/react-router";
