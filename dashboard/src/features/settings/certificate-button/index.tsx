@@ -1,6 +1,6 @@
 
 import { Button } from '@marzneshin/components'
-import { CopyToClipboard } from 'react-copy-to-clipboard'
+import CopyToClipboard from 'react-copy-to-clipboard'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next';
 import { useCertificateQuery } from '../services';

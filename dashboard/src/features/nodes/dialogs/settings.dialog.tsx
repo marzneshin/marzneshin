@@ -1,4 +1,7 @@
 import {
+    Button,
+    Card,
+    CardContent,
     Sheet,
     SheetContent,
     SheetHeader,
@@ -8,12 +11,14 @@ import {
     TabsList,
     TabsTrigger,
 } from "@marzneshin/components"
-import { FC } from "react"
+import { FC, useState } from "react"
 import { useTranslation } from "react-i18next"
-import { NodeType } from ".."
-// import { useNodesSettingsQuery } from "../services/settings.query";
+import { NodeType, useNodesSettingsMutation } from ".."
+import { useNodesSettingsQuery } from "../services/settings.query";
 import { LogContainer } from "../log";
 import { NodesDetailTable } from "../tables/detail-table";
+import Editor from '@monaco-editor/react';
+import { useTheme } from "@marzneshin/features/theme-switch";
 
 interface NodesSettingsDialogProps {
     onOpenChange: (state: boolean) => void
@@ -24,7 +29,21 @@ interface NodesSettingsDialogProps {
 export const NodesSettingsDialog: FC<NodesSettingsDialogProps> = ({ onOpenChange, open, node }) => {
 
     const { t } = useTranslation();
-    // const { data: config } = useNodesSettingsQuery(node);
+    const { data } = useNodesSettingsQuery(node);
+    const [config, setConfig] = useState<any>(data)
+    const mutate = useNodesSettingsMutation();
+    const { theme } = useTheme()
+
+    const handleConfigChange = (newConfig: string | undefined) => {
+        if (newConfig) {
+            try {
+                const parsedConfig = JSON.parse(newConfig);
+                setConfig(parsedConfig);
+            } catch (error) {
+                throw null;
+            }
+        }
+    };
 
     if (node) {
         return (
@@ -47,8 +66,19 @@ export const NodesSettingsDialog: FC<NodesSettingsDialogProps> = ({ onOpenChange
                         <TabsContent value="logs" className="h-full">
                             <LogContainer node={node} />
                         </TabsContent>
-                        <TabsContent value="config">
-                            Config
+                        <TabsContent value="config" className="h-full z-51">
+                            <Card>
+                                <CardContent className="p-2 h-1/2">
+                                    <Editor
+                                        height="50vh"
+                                        defaultLanguage="json"
+                                        theme={theme === "dark" ? "vs-dark" : "github"}
+                                        defaultValue={JSON.stringify(data)}
+                                        onChange={handleConfigChange}
+                                    />
+                                    <Button onClick={() => mutate.mutate(config)}>{t('save')}</Button>
+                                </CardContent>
+                            </Card>
                         </TabsContent>
                     </Tabs>
                 </SheetContent>

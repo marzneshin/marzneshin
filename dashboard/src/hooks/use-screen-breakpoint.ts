@@ -1,4 +1,3 @@
-//@ts-expect-error
 import resolveConfig from "tailwindcss/resolveConfig";
 
 //@ts-expect-error

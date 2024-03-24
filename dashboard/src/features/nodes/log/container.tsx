@@ -22,8 +22,8 @@ export const LogContainer: FC<LogContainerProps> = ({ node }) => {
                     </div>
                 </CardHeader>
                 <ScrollArea className="flex p-2 m-1 h-full rounded-b-md divide-dashed divide-accent bg-secondary text-primary" ref={logsDiv}>
-                    {logs.map((log: string) => {
-                        return <p className="font-mono text-[0.7rem] text-primary">{log}</p>
+                    {logs.map((log: string, i) => {
+                        return <p key={i} className="font-mono text-[0.7rem] text-primary">{log}</p>
                     })}
                 </ScrollArea>
             </CardContent>
