@@ -90,7 +90,7 @@ export const MutationDialog: FC<MutationDialogProps> = ({ node, open, onOpenChan
                                 control={form.control}
                                 name="address"
                                 render={({ field }) => (
-                                    <FormItem className="w-2/4">
+                                    <FormItem className="w-1/3">
                                         <FormLabel>{t('address')}</FormLabel>
                                         <FormControl>
                                             <Input {...field} />
@@ -103,7 +103,7 @@ export const MutationDialog: FC<MutationDialogProps> = ({ node, open, onOpenChan
                                 control={form.control}
                                 name="port"
                                 render={({ field }) => (
-                                    <FormItem className="w-1/4">
+                                    <FormItem className="w-1/3">
                                         <FormLabel>{t('port')}</FormLabel>
                                         <FormControl>
                                             <Input type="number" {...field} />
@@ -117,7 +117,7 @@ export const MutationDialog: FC<MutationDialogProps> = ({ node, open, onOpenChan
                                 control={form.control}
                                 name="usage_coefficient"
                                 render={({ field }) => (
-                                    <FormItem className="w-1/4">
+                                    <FormItem className="w-1/3">
                                         <FormLabel>{t('page.nodes.usage_coefficient')}</FormLabel>
                                         <FormControl>
                                             <Input type="number" {...field} />
@@ -132,19 +132,27 @@ export const MutationDialog: FC<MutationDialogProps> = ({ node, open, onOpenChan
                             control={form.control}
                             name="add_as_new_host"
                             render={({ field }) => (
-                                <FormItem className="flex flex-row gap-1 items-center">
-                                    <FormControl>
-                                        <Checkbox
-                                            checked={field.value}
-                                            onCheckedChange={field.onChange}
-                                        />
+                                <FormItem className="mt-4">
+                                    <FormControl >
+                                        <div className="flex flex-row gap-1 items-center">
+                                            <Checkbox
+                                                checked={field.value}
+                                                onCheckedChange={field.onChange}
+                                            >
+                                            </Checkbox>
+                                            <FormLabel>
+                                                {t('page.nodes.add_as_new_host')}
+                                            </FormLabel>
+                                        </div>
                                     </FormControl>
-                                    <FormLabel>{t('page.nodes.add_as_new_host')}</FormLabel>
                                     <FormMessage />
                                 </FormItem>
                             )}
                         />
-                        <Button className="mt-3 w-full font-semibold" type="submit">
+                        <Button
+                            className="mt-3 w-full font-semibold"
+                            type="submit"
+                            disabled={form.formState.isSubmitting}>
                             {t('submit')}
                         </Button>
                     </form>

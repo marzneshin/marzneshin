@@ -32,7 +32,7 @@ export const DashboardSidebar: FC<DashboardSidebarProps> = ({ collapsed, setColl
                                     {sidebarItems[key].map((item: SidebarItem, i) => (
                                         <Sidebar.Item
                                             variant={currentActivePath === item.to ? "active" : "default"}
-                                            className="my-2"
+                                            className="my-2 border-transparent"
                                             item={item}
                                             key={i}
                                         />
