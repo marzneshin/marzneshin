@@ -4,6 +4,7 @@ APScheduler==3.10.4
 commentjson==0.9.0
 cryptography==42.0.4
 fastapi==0.110.0
+fastapi-pagination==0.12.21
 fastapi-responses==0.2.1
 grpclib==0.4.7
 jdatetime==4.1.1
