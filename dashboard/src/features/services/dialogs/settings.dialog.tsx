@@ -14,13 +14,13 @@ import { ServiceType } from "..";
 import { ServiceInboundsTable } from "../tables/inbounds";
 import { ServicesUsersTable } from "../tables/users";
 
-interface NodesSettingsDialogProps {
+interface ServicecSettingsDialogProps {
     onOpenChange: (state: boolean) => void
     open: boolean
     service: ServiceType | null
 }
 
-export const ServiceSettingsDialog: FC<NodesSettingsDialogProps> = ({ onOpenChange, open, service }) => {
+export const ServiceSettingsDialog: FC<ServicecSettingsDialogProps> = ({ onOpenChange, open, service }) => {
 
     const { t } = useTranslation();
 
@@ -30,7 +30,7 @@ export const ServiceSettingsDialog: FC<NodesSettingsDialogProps> = ({ onOpenChan
                 <SheetContent className="sm:min-w-full md:min-w-[600px]" >
                     <SheetHeader>
                         <SheetTitle>
-                            {t('page.nodes.settings.title')}
+                            {t('page.services.settings.title')}
                         </SheetTitle>
                     </SheetHeader>
                     <Tabs className="my-3 w-full h-full" defaultValue="inbounds">

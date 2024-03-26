@@ -16,6 +16,9 @@
     "settings": "Settings",
     "logs": "Logs",
     "config": "Config",
+    "tag": "Tag",
+    "protocol": "Protocol",
+    "apply": "Apply",
     "open": "Open",
     "delete": "Delete",
     "port": "Port",
@@ -68,6 +71,10 @@
             }
         },
         "services": {
+            "settings": {
+                "title": "Servicecs Settings",
+                "detail": "Details"
+            },
             "dialogs": {
                 "creation": {
                     "title": "Services Creation"

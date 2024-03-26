@@ -5,12 +5,7 @@ import { DataTableColumnHeader } from "@marzneshin/components/data-table/column-
 import i18n from "@marzneshin/features/i18n"
 import { Badge, Checkbox } from "@marzneshin/components"
 
-interface InboundsTableColumns {
-    selectedInbound: number[]
-    setSelectedInbound: (state: number[]) => void
-}
-
-export const columns = ({ selectedInbound, setSelectedInbound }: InboundsTableColumns): ColumnDef<InboundType>[] => ([
+export const columns: ColumnDef<InboundType>[] = [
     {
         id: "select",
         header: ({ table }) => (
@@ -27,11 +22,8 @@ export const columns = ({ selectedInbound, setSelectedInbound }: InboundsTableCo
         ),
         cell: ({ row }) => (
             <Checkbox
-                checked={selectedInbound.includes(row.original.id)}
-                onCheckedChange={(value) => {
-                    setSelectedInbound([...selectedInbound, row.original.id])
-                    row.toggleSelected(!!value)
-                }}
+                checked={row.getIsSelected()}
+                onCheckedChange={(value) => row.toggleSelected(!!value)}
                 aria-label="Select row"
             />
         ),
@@ -56,4 +48,4 @@ export const columns = ({ selectedInbound, setSelectedInbound }: InboundsTableCo
             <Badge className="py-1 px-2"> {row.original.node.name} </Badge>
         )
     }
-]);
+];
