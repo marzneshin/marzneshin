@@ -16,7 +16,7 @@ import { cn } from '@marzneshin/utils';
 import { Outlet, createFileRoute, redirect } from '@tanstack/react-router'
 
 export const DashboardLayout = () => {
-  const isDesktop = useScreenBreakpoint("sm");
+  const isDesktop = useScreenBreakpoint("md");
   const { collapsed, panelRef, open, setCollapsed, setOpen, toggleCollapse, toggleOpen } = usePanelToggle(isDesktop);
 
   return (
