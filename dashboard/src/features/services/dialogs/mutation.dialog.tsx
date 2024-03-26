@@ -105,7 +105,7 @@ export const MutationDialog: FC<MutationDialogProps> = ({ service, open, onOpenC
                         <FormField
                             control={form.control}
                             name="inbounds"
-                            render={({ field }) => (
+                            render={() => (
                                 <FormItem>
                                     <FormLabel>{t('inbounds')}</FormLabel>
                                     {inbounds.map((inbound) => (
