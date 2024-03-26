@@ -8,6 +8,7 @@
     "hosts": "Hosts",
     "username": "Username",
     "password": "Password",
+    "inbounds": "Inbounds",
     "submit": "Submit",
     "login": "Login",
     "edit": "Edit",
@@ -60,33 +61,46 @@
             },
             "usage_coefficient": "Usage Coefficient",
             "add_as_new_host": "Add as new hosts",
-            "events": {
-                "delete": {
-                    "error": "Failed to delete {{name}}",
-                    "success": {
-                        "title": "{{name}} is successfuly deleted",
-                        "desc": ""
-                    }
-                },
-                "create": {
-                    "error": "Failed to create {{name}}",
-                    "success": {
-                        "title": "{{name}} is successfuly created",
-                        "desc": ""
-                    }
-                },
-                "update": {
-                    "error": "Failed to update {{name}}",
-                    "success": {
-                        "title": "{{name}} is successfuly updated",
-                        "desc": ""
-                    }
-                }
-            },
             "certificate-alert": {
                 "title": "Nodes Certificate Configuration",
                 "desc": "If you aim to configure your nodes certificate, checkout settings page.",
                 "click": "Click Here"
+            }
+        },
+        "services": {
+            "dialogs": {
+                "creation": {
+                    "title": "Services Creation"
+                },
+                "deletion": {
+                    "title": "Services Deletion"
+                },
+                "edition": {
+                    "title": "Services Edition"
+                }
+            }
+        }
+    },
+    "events": {
+        "delete": {
+            "error": "Failed to delete {{name}}",
+            "success": {
+                "title": "{{name}} is successfuly deleted",
+                "desc": ""
+            }
+        },
+        "create": {
+            "error": "Failed to create {{name}}",
+            "success": {
+                "title": "{{name}} is successfuly created",
+                "desc": ""
+            }
+        },
+        "update": {
+            "error": "Failed to update {{name}}",
+            "success": {
+                "title": "{{name}} is successfuly updated",
+                "desc": ""
             }
         }
     },
