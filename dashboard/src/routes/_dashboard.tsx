@@ -37,11 +37,11 @@ export const DashboardLayout = () => {
           <ResizablePanelGroup direction="horizontal" className="block sm:hidden">
             <ResizablePanel
               collapsible
-              collapsedSize={5}
+              collapsedSize={2}
               onCollapse={() => setCollapsed(true)}
               onExpand={() => setCollapsed(false)}
               minSize={15}
-              className={cn("w-[120px] min-w-[100px]")}
+              className={cn("w-[120px] min-w-[70px]")}
               defaultSize={20}
               ref={panelRef}
               maxSize={30}>
