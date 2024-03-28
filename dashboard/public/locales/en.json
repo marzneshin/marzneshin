@@ -15,6 +15,7 @@
     "actions": "Actions",
     "settings": "Settings",
     "logs": "Logs",
+    "note": "Note",
     "config": "Config",
     "tag": "Tag",
     "protocol": "Protocol",
@@ -84,6 +85,28 @@
                 },
                 "edition": {
                     "title": "Services Edition"
+                }
+            }
+        },
+        "users": {
+            "data_limit": "Data Limit",
+            "used_traffic": "Used Traffic",
+            "data_limit_reset_strategy": "Data Limit Reset Strategy",
+            "expire_date": "Expire Date",
+            "dialogs": {
+                "edition": {
+                    "title": "Users Edition"
+                },
+                "creation": {
+                    "title": "Users Creation"
+                },
+                "deletion": {
+                    "title": "Users Deletion"
+                },
+                "mutation": {
+                    "note": {
+                        "desc": "Leave a note about your user"
+                    }
                 }
             }
         }
