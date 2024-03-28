@@ -60,7 +60,7 @@ class UserBase(BaseModel):
     # proxies: Dict[ProxyTypes, ProxySettings] = {}
     id: Optional[int] = None
     username: Annotated[str, StringConstraints(to_lower=True)]
-    expire: Optional[int] = Field(None, nullable=True)
+    expire: Optional[datetime] = Field(None, nullable=True)
     key: str = Field(default_factory=lambda: secrets.token_hex(16))
     data_limit: Optional[int] = Field(
         ge=0, default=None, description="data_limit can be 0 or greater"
@@ -119,7 +119,7 @@ class UserCreate(User):
             "example": {
                 "username": "user1234",
                 "services": [1, 2, 3],
-                "expire": 0,
+                "expire": "2023-11-03T20:30:00"
                 "data_limit": 0,
                 "data_limit_reset_strategy": "no_reset",
                 "status": "active",
