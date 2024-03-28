@@ -17,17 +17,17 @@ import { ServicesUsersTable } from "../tables/users";
 interface ServicecSettingsDialogProps {
     onOpenChange: (state: boolean) => void
     open: boolean
-    service: ServiceType | null
+    entity: ServiceType | null
 }
 
-export const ServiceSettingsDialog: FC<ServicecSettingsDialogProps> = ({ onOpenChange, open, service }) => {
+export const ServiceSettingsDialog: FC<ServicecSettingsDialogProps> = ({ onOpenChange, open, entity }) => {
 
     const { t } = useTranslation();
 
-    if (service) {
+    if (entity) {
         return (
             <Sheet open={open} onOpenChange={onOpenChange}>
-                <SheetContent className="sm:min-w-full md:min-w-[600px]" >
+                <SheetContent className="sm:min-w-full md:min-w-[700px]" >
                     <SheetHeader>
                         <SheetTitle>
                             {t('page.services.settings.title')}
@@ -39,10 +39,10 @@ export const ServiceSettingsDialog: FC<ServicecSettingsDialogProps> = ({ onOpenC
                             <TabsTrigger className="w-full" value="users">{t('users')}</TabsTrigger>
                         </TabsList>
                         <TabsContent value="inbounds" className="h-full">
-                            <ServiceInboundsTable service={service} />
+                            <ServiceInboundsTable service={entity} />
                         </TabsContent>
                         <TabsContent value="users" className="h-full">
-                            <ServicesUsersTable service={service} />
+                            <ServicesUsersTable service={entity} />
                         </TabsContent>
                     </Tabs>
                 </SheetContent>

@@ -6,17 +6,17 @@ import { NodeType, useNodesDeletionMutation } from '@marzneshin/features/nodes'
 interface NodesDeleteConfirmationDialogProps {
     onOpenChange: (state: boolean) => void
     open: boolean
-    node: NodeType | null
+    entity: NodeType | null
 }
 
-export const NodesDeleteConfirmationDialog: FC<NodesDeleteConfirmationDialogProps> = ({ onOpenChange, open, node }) => {
+export const NodesDeleteConfirmationDialog: FC<NodesDeleteConfirmationDialogProps> = ({ onOpenChange, open, entity }) => {
     const deleteMutation = useNodesDeletionMutation();
-    if (node !== null) {
+    if (entity !== null) {
         return (
             <DeleteConfirmation
                 open={open}
                 onOpenChange={onOpenChange}
-                action={() => deleteMutation.mutate(node)}
+                action={() => deleteMutation.mutate(entity)}
             />
         )
     }

@@ -6,18 +6,20 @@ import { ServiceType, useServicesDeletionMutation } from '@marzneshin/features/s
 interface ServicesDeleteConfirmationDialogProps {
     onOpenChange: (state: boolean) => void
     open: boolean
-    service: ServiceType | null
+    entity: ServiceType | null
 }
 
-export const ServicesDeleteConfirmationDialog: FC<ServicesDeleteConfirmationDialogProps> = ({ onOpenChange, open, service }) => {
+export const ServicesDeleteConfirmationDialog: FC<ServicesDeleteConfirmationDialogProps> = ({ onOpenChange, open, entity }) => {
     const deleteMutation = useServicesDeletionMutation();
-    if (service !== null) {
+    if (entity !== null) {
         return (
             <DeleteConfirmation
                 open={open}
                 onOpenChange={onOpenChange}
-                action={() => deleteMutation.mutate(service)}
+                action={() => deleteMutation.mutate(entity)}
             />
         )
+    } else {
+        return null
     }
 }

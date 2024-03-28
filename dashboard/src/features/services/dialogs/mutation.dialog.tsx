@@ -40,7 +40,7 @@ export const ServiceSchema = z.object({
 export type ServiceCreateType = z.infer<typeof ServiceSchema>
 
 interface MutationDialogProps {
-    service: ServiceType | ServiceCreateType | null
+    entity: ServiceType | null
     open: boolean
     onOpenChange: (state: boolean) => void
 }
@@ -50,13 +50,13 @@ const getDefaultValues = (): ServiceCreateType => ({
     inbounds: [],
 })
 
-export const MutationDialog: FC<MutationDialogProps> = ({ service, open, onOpenChange }) => {
-    const isEditing = service !== null
+export const MutationDialog: FC<MutationDialogProps> = ({ entity, open, onOpenChange }) => {
+    const isEditing = entity !== null
     const updateMutation = useServicesUpdateMutation();
     const createMutation = useServicesCreationMutation();
     const { data: inbounds } = useInboundsQuery()
     const form = useForm({
-        defaultValues: isEditing ? service : getDefaultValues(),
+        defaultValues: isEditing ? entity : getDefaultValues(),
         resolver: zodResolver(ServiceSchema)
     })
     const { t } = useTranslation();
@@ -72,10 +72,10 @@ export const MutationDialog: FC<MutationDialogProps> = ({ service, open, onOpenC
 
     useEffect(() => {
         if (isEditing)
-            form.reset(service);
+            form.reset(entity);
         else
             form.reset(getDefaultValues())
-    }, [service, form, isEditing])
+    }, [entity, form, isEditing])
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange} defaultOpen={true}>
