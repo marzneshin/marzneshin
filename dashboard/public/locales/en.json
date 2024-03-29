@@ -144,5 +144,17 @@
         "selected": "Selected",
         "toggle-column": "Toggle columns",
         "filter-placeholder": "Filter {{name}}"
+    },
+    "statuses": {
+        "active": "Active",
+        "connected": "Connected",
+        "healthy": "Healthy",
+        "disabled": "Disabled",
+        "expired": "Expired",
+        "on_hold": "On Hold",
+        "connecting": "Connecting",
+        "unhealthy": "Unhealthy",
+        "limited": "Limited",
+        "error": "Error"
     }
 }
