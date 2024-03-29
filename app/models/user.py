@@ -119,7 +119,7 @@ class UserCreate(User):
             "example": {
                 "username": "user1234",
                 "services": [1, 2, 3],
-                "expire": "2023-11-03T20:30:00"
+                "expire": "2023-11-03T20:30:00",
                 "data_limit": 0,
                 "data_limit_reset_strategy": "no_reset",
                 "status": "active",
