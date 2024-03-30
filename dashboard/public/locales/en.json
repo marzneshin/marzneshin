@@ -24,6 +24,10 @@
     "delete": "Delete",
     "port": "Port",
     "create": "Create",
+    "path": "Path",
+    "host": "Host",
+    "alpn": "ALPN",
+    "security": "Security",
     "page": {
         "settings": {
             "certificate": {
@@ -106,6 +110,25 @@
                 "mutation": {
                     "note": {
                         "desc": "Leave a note about your user"
+                    }
+                }
+            }
+        },
+        "hosts": {
+            "allowinsecure": "Allow insecure",
+            "dialogs": {
+                "edition": {
+                    "title": "Hosts Edition"
+                },
+                "creation": {
+                    "title": "Hosts Creation"
+                },
+                "deletion": {
+                    "title": "Hosts Deletion"
+                },
+                "mutation": {
+                    "allowinsecure": {
+                        "alert": "Due to security concerns, it is not recommended to allow Insecure"
                     }
                 }
             }
