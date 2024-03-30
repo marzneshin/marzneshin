@@ -1,7 +1,6 @@
 import { HostType } from "@marzneshin/features/hosts";
 import { useQuery } from "@tanstack/react-query";
 import { fetch } from "@marzneshin/utils";
-import { InboundType } from "@marzneshin/features/inbounds";
 
 export async function fetchHosts({ queryKey }: { queryKey: [string, number | undefined] }): Promise<HostType[]> {
     if (queryKey[1]) {
@@ -17,9 +16,9 @@ export async function fetchHosts({ queryKey }: { queryKey: [string, number | und
 
 export const HostsQueryFetchKey = "hosts";
 
-export const useHostsQuery = (inbound?: InboundType | undefined) => {
+export const useHostsQuery = (inboundId?: number | undefined) => {
     return useQuery({
-        queryKey: [HostsQueryFetchKey, inbound?.id],
+        queryKey: [HostsQueryFetchKey, inboundId],
         queryFn: fetchHosts,
         initialData: []
     })
