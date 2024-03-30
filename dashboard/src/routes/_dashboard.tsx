@@ -51,6 +51,7 @@ export const DashboardLayout = () => {
             <ResizablePanel>
               <main>
                 <Outlet />
+                <Toaster position="top-center" />
               </main>
             </ResizablePanel>
           </ResizablePanelGroup>
