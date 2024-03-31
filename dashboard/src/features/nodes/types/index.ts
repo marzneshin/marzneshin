@@ -1,10 +1,7 @@
-import { LucideIcon, PowerOff, Zap, ZapOff } from "lucide-react";
+import { StatusType } from "@marzneshin/types/status";
+import { PowerOff, Zap, ZapOff } from "lucide-react";
 import { z } from "zod";
 
-export interface NodesStatusType {
-    label: string;
-    icon: LucideIcon | null;
-}
 
 export const NodesStatus = {
     healthy: {
@@ -23,7 +20,7 @@ export const NodesStatus = {
         label: 'none',
         icon: null,
     }
-} as Record<string, NodesStatusType>;
+} as Record<string, StatusType>;
 
 export const NodeSchema = z.object({
     name: z.string().min(1),
@@ -35,7 +32,8 @@ export const NodeSchema = z.object({
     id: z.number().nullable().optional(),
     status: z
         .enum([NodesStatus.healthy.label, NodesStatus.unhealthy.label, 'none', NodesStatus.disabled.label]),
-    usage_coefficient: z.number().default(1),
+    usage_coefficient: z.number().default(1.0)
+        .or(z.string().transform((v) => parseFloat(v))),
     add_as_new_host: z.boolean().optional(),
 });
 

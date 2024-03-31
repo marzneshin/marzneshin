@@ -366,7 +366,7 @@ def update_user(db: Session, dbuser: User, modify: UserModify):
     if modify.expire is not None:
         dbuser.expire = modify.expire or None
         if dbuser.status in (UserStatus.active, UserStatus.expired):
-            if not dbuser.expire or dbuser.expire > datetime.utcnow().timestamp():
+            if not dbuser.expire or dbuser.expire > datetime.utcnow():
                 dbuser.status = UserStatus.active
                 if not dbuser.expire or (
                     calculate_expiration_days(dbuser.expire) > NOTIFY_DAYS_LEFT

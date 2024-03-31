@@ -2,6 +2,7 @@ import tailwindcssAnimate from 'tailwindcss-animate';
 import tailwindcssForm from '@tailwindcss/forms';
 import tailwindcssAspectRatio from '@tailwindcss/aspect-ratio';
 import tailwindcssTypography from '@tailwindcss/typography';
+import { nextui } from '@nextui-org/react'
 
 /** @type {import('tailwindcss').Config} */
 const config = {
@@ -11,9 +12,16 @@ const config = {
     './components/**/*.{ts,tsx}',
     './app/**/*.{ts,tsx}',
     './src/**/*.{ts,tsx}',
+    "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
   ],
   prefix: "",
   theme: {
+    screens: {
+      'sm': '0',
+      'md': '768px',
+      'lg': '1024px',
+      'xl': '1280px',
+    },
     container: {
       center: true,
       padding: "2rem",
@@ -84,6 +92,7 @@ const config = {
     },
   },
   plugins: [
+    nextui(),
     tailwindcssAnimate,
     tailwindcssForm,
     tailwindcssAspectRatio,

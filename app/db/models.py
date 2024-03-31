@@ -108,7 +108,7 @@ class User(Base):
     usage_logs = relationship(
         "UserUsageResetLogs", back_populates="user", lazy="joined"
     )
-    expire = Column(Integer)
+    expire = Column(DateTime)
     admin_id = Column(Integer, ForeignKey("admins.id"))
     admin = relationship("Admin", back_populates="users")
     sub_updated_at = Column(DateTime)

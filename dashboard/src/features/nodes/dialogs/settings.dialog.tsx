@@ -23,13 +23,13 @@ import { useTheme } from "@marzneshin/features/theme-switch";
 interface NodesSettingsDialogProps {
     onOpenChange: (state: boolean) => void
     open: boolean
-    node: NodeType | null
+    entity: NodeType | null
 }
 
-export const NodesSettingsDialog: FC<NodesSettingsDialogProps> = ({ onOpenChange, open, node }) => {
+export const NodesSettingsDialog: FC<NodesSettingsDialogProps> = ({ onOpenChange, open, entity }) => {
 
     const { t } = useTranslation();
-    const { data } = useNodesSettingsQuery(node);
+    const { data } = useNodesSettingsQuery(entity);
     const [config, setConfig] = useState<any>(data)
     const mutate = useNodesSettingsMutation();
     const { theme } = useTheme()
@@ -45,7 +45,7 @@ export const NodesSettingsDialog: FC<NodesSettingsDialogProps> = ({ onOpenChange
         }
     };
 
-    if (node) {
+    if (entity) {
         return (
             <Sheet open={open} onOpenChange={onOpenChange}>
                 <SheetContent className="sm:min-w-full md:min-w-[600px]" >
@@ -56,7 +56,7 @@ export const NodesSettingsDialog: FC<NodesSettingsDialogProps> = ({ onOpenChange
                     </SheetHeader>
                     <div className="my-4">
                         <h1 className="font-medium font-header">{t('page.nodes.settings.detail')}</h1>
-                        <NodesDetailTable node={node} />
+                        <NodesDetailTable node={entity} />
                     </div>
                     <Tabs className="my-3 w-full h-full" defaultValue="logs">
                         <TabsList className="w-full">
@@ -64,7 +64,7 @@ export const NodesSettingsDialog: FC<NodesSettingsDialogProps> = ({ onOpenChange
                             <TabsTrigger className="w-full" value="config">{t('config')}</TabsTrigger>
                         </TabsList>
                         <TabsContent value="logs" className="h-full">
-                            <LogContainer node={node} />
+                            <LogContainer node={entity} />
                         </TabsContent>
                         <TabsContent value="config" className="h-full z-51">
                             <Card>
