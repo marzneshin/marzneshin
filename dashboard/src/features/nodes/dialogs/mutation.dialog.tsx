@@ -86,50 +86,52 @@ export const MutationDialog: FC<MutationDialogProps> = ({
                                 </FormItem>
                             )}
                         />
-                        <FormField
-                            control={form.control}
-                            name="address"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>{t('address')}</FormLabel>
-                                    <FormControl>
-                                        <Input {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="port"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>{t('port')}</FormLabel>
-                                    <FormControl>
-                                        <Input type="number" {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="usage_coefficient"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>{t('page.nodes.usage_coefficient')}</FormLabel>
-                                    <FormControl>
-                                        <Input type="number" {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
+                        <div className="flex flex-row gap-2 items-center">
+                            <FormField
+                                control={form.control}
+                                name="address"
+                                render={({ field }) => (
+                                    <FormItem className="w-2/4">
+                                        <FormLabel>{t('address')}</FormLabel>
+                                        <FormControl>
+                                            <Input {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="port"
+                                render={({ field }) => (
+                                    <FormItem className="w-1/4">
+                                        <FormLabel>{t('port')}</FormLabel>
+                                        <FormControl>
+                                            <Input type="number" {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="usage_coefficient"
+                                render={({ field }) => (
+                                    <FormItem className="w-1/4">
+                                        <FormLabel>{t('page.nodes.usage_coefficient')}</FormLabel>
+                                        <FormControl>
+                                            <Input {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
                         <FormField
                             control={form.control}
                             name="add_as_new_host"
                             render={({ field }) => (
-                                <FormItem>
+                                <FormItem className="mt-4">
                                     <FormControl>
                                         <div className="flex flex-row gap-1 items-center">
                                             <Checkbox
