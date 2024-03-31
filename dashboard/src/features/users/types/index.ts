@@ -18,7 +18,7 @@ export type Status =
     | 'connected';
 
 export interface UserType {
-    expire: number | null;
+    expire: Date | number;
     data_limit: number | null;
     data_limit_reset_strategy: DataLimitResetStrategy;
     lifetime_used_traffic: number;

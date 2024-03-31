@@ -25,7 +25,6 @@ import {
     TableHead,
     TableCell,
     TableBody,
-    Label,
     ToggleGroup,
     ToggleGroupItem,
     ScrollArea

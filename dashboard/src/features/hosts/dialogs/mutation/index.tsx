@@ -28,8 +28,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslation } from 'react-i18next';
 import {
     HostSchema,
-    HostSchemaType,
     HostType,
+    getDefaultValues,
     useHostsCreationMutation,
     useHostsUpdateMutation
 } from "@marzneshin/features/hosts";
@@ -42,20 +42,6 @@ interface MutationDialogProps {
     onOpenChange: (state: boolean) => void
 }
 
-export const getDefaultValues = (): HostSchemaType => {
-    return {
-        host: '',
-        sni: '',
-        port: 8080,
-        path: '',
-        address: '',
-        remark: '',
-        security: 'inbound_default',
-        alpn: 'none',
-        allowinsecure: false,
-        fingerprint: 'none',
-    }
-};
 
 export const HostsMutationDialog: FC<MutationDialogProps> = ({
     inboundId,

@@ -9,10 +9,6 @@ import {
     TableCell,
     TableHead,
     TableRow,
-    Tabs,
-    TabsContent,
-    TabsList,
-    TabsTrigger,
 } from "@marzneshin/components"
 import { FC } from "react"
 import { useTranslation } from "react-i18next"

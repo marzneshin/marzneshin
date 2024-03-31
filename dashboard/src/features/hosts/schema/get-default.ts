@@ -4,12 +4,13 @@ export const getDefaultValues = (): HostSchemaType => {
     return {
         host: '',
         sni: '',
-        port: null,
+        port: 8080,
         path: '',
         address: '',
         remark: '',
         security: 'inbound_default',
-        alpn: '',
-        fingerprint: '',
+        alpn: 'none',
+        allowinsecure: false,
+        fingerprint: 'none',
     }
 };

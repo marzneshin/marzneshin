@@ -1,9 +1,10 @@
 import { FC } from 'react';
 import { Badge, Label } from '@marzneshin/components';
-import { NodesStatus, NodesStatusType } from '..';
+import { StatusType } from '@marzneshin/types';
+import { NodesStatus } from '..';
 
 interface NodesStatusBadgeProps {
-    status: NodesStatusType;
+    status: StatusType;
 }
 
 export const NodesStatusBadge: FC<NodesStatusBadgeProps> = ({ status }) => {

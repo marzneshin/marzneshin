@@ -37,7 +37,7 @@ export const ServiceSchema = z.object({
     }),
     name: z.string().trim().min(1)
 })
-export type ServiceCreateType = z.infer<typeof ServiceSchema>
+type ServiceCreateType = z.infer<typeof ServiceSchema>
 
 interface MutationDialogProps {
     entity: ServiceType | null
