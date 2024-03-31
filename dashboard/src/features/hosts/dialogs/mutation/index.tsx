@@ -56,7 +56,7 @@ export const HostsMutationDialog: FC<MutationDialogProps> = ({
     const updateMutation = useHostsUpdateMutation();
     const createMutation = useHostsCreationMutation();
     const { t } = useTranslation();
-    const security = form.getValues().security
+    const security = form.watch().security
     const [extraSecurity, setExtraSecurity] = useState<boolean>(["tls", "inbound_default"].includes(security))
 
     useEffect(() => {
