@@ -32,7 +32,8 @@ export const NodeSchema = z.object({
     id: z.number().nullable().optional(),
     status: z
         .enum([NodesStatus.healthy.label, NodesStatus.unhealthy.label, 'none', NodesStatus.disabled.label]),
-    usage_coefficient: z.number().default(1.0),
+    usage_coefficient: z.number().default(1.0)
+        .or(z.string().transform((v) => parseFloat(v))),
     add_as_new_host: z.boolean().optional(),
 });
 
