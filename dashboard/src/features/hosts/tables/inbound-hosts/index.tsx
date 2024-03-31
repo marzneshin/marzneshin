@@ -9,6 +9,7 @@ import { InboundHostsDataTable } from './table'
 import { useState } from 'react'
 import { useInboundsQuery } from '@marzneshin/features/inbounds'
 import { columns } from './columns'
+import { HostSettingsDialog } from '../../dialogs/settings'
 
 export const InboundHostsTable = () => {
     const { data: inbounds } = useInboundsQuery()
@@ -42,6 +43,11 @@ export const InboundHostsTable = () => {
 
     return (
         <div>
+            <HostSettingsDialog
+                open={settingsDialogOpen}
+                onOpenChange={setSettingsDialogOpen}
+                entity={selectedEntity}
+            />
             <HostsDeleteConfirmationDialog
                 open={deleteDialogOpen}
                 onOpenChange={setDeleteDialogOpen}
