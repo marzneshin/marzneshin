@@ -1,5 +1,5 @@
 
-import { FC, useEffect } from "react";
+import { FC, useEffect, useState } from "react";
 import {
     DialogTitle,
     DialogContent,
@@ -56,6 +56,12 @@ export const HostsMutationDialog: FC<MutationDialogProps> = ({
     const updateMutation = useHostsUpdateMutation();
     const createMutation = useHostsCreationMutation();
     const { t } = useTranslation();
+    const security = form.getValues().security
+    const [extraSecurity, setExtraSecurity] = useState<boolean>(["tls", "inbound_default"].includes(security))
+
+    useEffect(() => {
+        setExtraSecurity(["tls", "inbound_default"].includes(security))
+    }, [security, setExtraSecurity])
 
     const submit = (values: HostType) => {
         if (entity) {
@@ -174,7 +180,7 @@ export const HostsMutationDialog: FC<MutationDialogProps> = ({
                                 </FormItem>
                             )}
                         />
-                        {["tls", "inbound_default"].includes(form.getValues().security) &&
+                        {extraSecurity &&
                             <>
                                 <FormField
                                     control={form.control}
@@ -264,7 +270,7 @@ export const HostsMutationDialog: FC<MutationDialogProps> = ({
                                             <FormMessage />
                                             {form.getValues().allowinsecure &&
                                                 <Alert variant="destructive">
-                                                    <ExclamationTriangleIcon className="h-4 w-4" />
+                                                    <ExclamationTriangleIcon className="w-4 h-4" />
                                                     <AlertTitle>
                                                         Warning
                                                     </AlertTitle>
