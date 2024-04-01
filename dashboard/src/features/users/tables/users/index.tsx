@@ -17,7 +17,7 @@ export const UsersTable: FC = () => {
             DeleteConfirmationDialog={UsersDeleteConfirmationDialog}
             SettingsDialog={UsersSettingsDialog}
             columns={columns}
-            filteredColumn="name"
+            filteredColumn="username"
         />
     )
 }
