@@ -3,8 +3,8 @@ import { FC } from "react";
 import {
     useUsersQuery,
     UsersMutationDialog,
-    UsersDeleteConfirmationDialog
-    // UsersSettingsDialog
+    UsersDeleteConfirmationDialog,
+    UsersSettingsDialog
 } from '@marzneshin/features/users';
 import { columns } from './columns'
 import { EntityTable } from "@marzneshin/components";
