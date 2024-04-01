@@ -2,18 +2,16 @@ import re
 import secrets
 from datetime import datetime
 from enum import Enum
-from typing import List, Optional, Union, Annotated
+from typing import List, Optional, Union, Annotated, Literal
 
 from pydantic import (
     field_validator,
     ConfigDict,
     BaseModel,
     Field,
-    validator,
     computed_field,
-    ValidationInfo,
-    constr,
     StringConstraints,
+    model_validator,
 )
 
 from config import XRAY_SUBSCRIPTION_URL_PREFIX
@@ -32,9 +30,6 @@ class UserStatus(str, Enum):
     limited = "limited"
     expired = "expired"
     on_hold = "on_hold"
-
-
-# from app.utils.share import generate_v2ray_links
 
 
 class UserStatusModify(str, Enum):
@@ -60,7 +55,7 @@ class UserBase(BaseModel):
     # proxies: Dict[ProxyTypes, ProxySettings] = {}
     id: Optional[int] = None
     username: Annotated[str, StringConstraints(to_lower=True)]
-    expire: Optional[datetime] = Field(None, nullable=True)
+    expire: Union[datetime, None, Literal[0]] = Field(None)
     key: str = Field(default_factory=lambda: secrets.token_hex(16))
     data_limit: Optional[int] = Field(
         ge=0, default=None, description="data_limit can be 0 or greater"
@@ -68,13 +63,12 @@ class UserBase(BaseModel):
     data_limit_reset_strategy: UserDataLimitResetStrategy = (
         UserDataLimitResetStrategy.no_reset
     )
-    # inbounds: Dict[ProxyTypes, List[str]] = {}
-    note: Optional[str] = Field(None, nullable=True)
-    sub_updated_at: Optional[datetime] = Field(None, nullable=True)
-    sub_last_user_agent: Optional[str] = Field(None, nullable=True)
-    online_at: Optional[datetime] = Field(None, nullable=True)
-    on_hold_expire_duration: Optional[int] = Field(None, nullable=True)
-    on_hold_timeout: Optional[Union[datetime, None]] = Field(None, nullable=True)
+    note: Optional[str] = Field(None)
+    sub_updated_at: Optional[datetime] = Field(None)
+    sub_last_user_agent: Optional[str] = Field(None)
+    online_at: Optional[datetime] = Field(None)
+    on_hold_expire_duration: Optional[int] = Field(None)
+    on_hold_timeout: Optional[datetime] = Field(None)
 
     @field_validator("username")
     @classmethod
@@ -92,14 +86,6 @@ class UserBase(BaseModel):
             raise ValueError("User's note can be a maximum of 500 character")
         return v
 
-    @field_validator("on_hold_expire_duration", "on_hold_timeout", check_fields=False)
-    @classmethod
-    def validate_timeout(cls, v: Optional[int]):
-        # Check if expire is 0 or None and timeout is not 0 or None
-        if v in (0, None):
-            return None
-        return v
-
     model_config = ConfigDict(from_attributes=True)
 
 
@@ -112,7 +98,7 @@ class User(UserBase):
 
 
 class UserCreate(User):
-    status: UserStatusCreate = Field(None, validate_default=True)
+    status: UserStatusCreate = Field(UserStatusCreate.active)
     services: List[int] = Field([])
     model_config = ConfigDict(
         json_schema_extra={
@@ -130,27 +116,36 @@ class UserCreate(User):
         }
     )
 
-    # TODO[pydantic]: We couldn't refactor the `validator`, please replace it by `field_validator` manually.
-    # Check https://docs.pydantic.dev/dev-v2/migration/#changes-to-validators for more information.
-    # @validator("status", pre=True, always=True)
-    # def validate_status(cls, value):
-
-    # TODO[pydantic]: We couldn't refactor the `validator`, please replace it by `field_validator` manually.
-    # Check https://docs.pydantic.dev/dev-v2/migration/#changes-to-validators for more information.
-    @field_validator("status", mode="before")
-    def validate_status(cls, status: str, info: ValidationInfo) -> str:
-        if not status or status not in UserStatusCreate.__members__:
-            return UserStatusCreate.active  # Set to the default if not valid
-        on_hold_expire = info.data.get("on_hold_expire_duration")
-        expire = info.data.get("expire")
-        if status == UserStatusCreate.on_hold:
-            if on_hold_expire == 0 or on_hold_expire is None:
+    @model_validator(mode="after")
+    def validate_expiry(self):
+        if self.status == UserStatusCreate.on_hold:
+            if not self.on_hold_expire_duration:
                 raise ValueError(
                     "User cannot be on hold without a valid on_hold_expire_duration."
                 )
-            if expire:
+            if self.expire:
                 raise ValueError("User cannot be on hold with specified expire.")
-        return status
+        elif self.status == UserStatusCreate.active:
+            if not self.expire:
+                raise ValueError("expire field should be set when status is active.")
+            if self.on_hold_expire_duration or self.on_hold_timeout:
+                raise ValueError(
+                    "on hold parametrs set when user status isn't on_hold."
+                )
+        return self
+
+    @field_validator("expire")
+    @classmethod
+    def validate_note(cls, v: Union[datetime, None, Literal[0]]):
+        if isinstance(v, datetime) and (
+            v.tzinfo is not None or v.tzinfo.utcoffset(v) is not None
+        ):
+            raise ValueError(
+                "Expire date should be offset naive, and preferably in utc timezone."
+            )
+        if isinstance(v, datetime) and v < datetime.utcnow():
+            raise ValueError("Expire date should be in the future, not in the past.")
+        return v
 
 
 class UserModify(User):
@@ -173,20 +168,24 @@ class UserModify(User):
         }
     )
 
-    # TODO[pydantic]: We couldn't refactor the `validator`, please replace it by `field_validator` manually.
-    # Check https://docs.pydantic.dev/dev-v2/migration/#changes-to-validators for more information.
-    @validator("status", pre=True, always=True)
-    def validate_status(cls, status, values):
-        on_hold_expire = values.get("on_hold_expire_duration")
-        expire = values.get("expire")
-        if status == UserStatusCreate.on_hold:
-            if not on_hold_expire:
-                raise ValueError(
-                    "User cannot be on hold without a valid on_hold_expire_duration."
-                )
-            if expire:
-                raise ValueError("User cannot be on hold with specified expire.")
-        return status
+    @model_validator(mode="after")
+    def validate_expiry(self):
+        if self.on_hold_expire_duration and self.expire:
+            raise ValueError(
+                "can't set both expire and on hold expire at the same time."
+            )
+        return self
+
+    @field_validator("expire")
+    @classmethod
+    def validate_note(cls, v: Union[datetime, None, Literal[0]]):
+        if isinstance(v, datetime) and v.tzinfo is not None:
+            raise ValueError(
+                "Expire date should be offset naive, and preferably in utc timezone."
+            )
+        if isinstance(v, datetime) and v < datetime.utcnow():
+            raise ValueError("Expire date should be in the future, not in the past.")
+        return v
 
 
 class UserResponse(User):
@@ -211,7 +210,7 @@ class UserResponse(User):
     @property
     def subscription_url(self) -> str:
         salt = secrets.token_hex(8)
-        url_prefix = (XRAY_SUBSCRIPTION_URL_PREFIX).replace("*", salt)
+        url_prefix = XRAY_SUBSCRIPTION_URL_PREFIX.replace("*", salt)
         return f"{url_prefix}/sub/{self.username}/{self.key}"
 
 
