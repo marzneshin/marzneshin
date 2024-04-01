@@ -1,4 +1,5 @@
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@marzneshin/components';
+import { UsersTable } from '@marzneshin/features/users';
 import { createFileRoute } from '@tanstack/react-router'
 import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -14,6 +15,7 @@ export const UsersPage: FC = () => {
         </CardTitle>
       </CardHeader>
       <CardContent>
+        <UsersTable />
       </CardContent>
       <CardFooter>
       </CardFooter>
