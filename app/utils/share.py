@@ -195,7 +195,6 @@ def process_inbounds_and_tags(
             inb.protocol,
             inb.tag,
         )
-        settings = generate_settings(ukey, protocol)
 
         format_variables.update({"PROTOCOL": protocol.name})
         if not inbound:
@@ -226,8 +225,8 @@ def process_inbounds_and_tags(
                 else host.security.value
             )
             data = V2Data(
-                protocol,
-                host.remark.fromat_map(format_variables),
+                protocol.value,
+                host.remark.format_map(format_variables),
                 host.address.format_map(format_variables),
                 host.port or inbound["port"],
                 sni=sni,
@@ -244,7 +243,6 @@ def process_inbounds_and_tags(
                 uuid=UUID(gen_uuid(ukey)),
                 password=gen_password(ukey),
             )
-
             if mode == "v2ray":
                 results.append(data.to_link())
             elif mode in ["clash", "sing-box"]:
