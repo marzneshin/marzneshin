@@ -1,12 +1,12 @@
 
 import { DeleteConfirmation } from '@marzneshin/components'
 import { FC } from 'react'
-import { UserType, useUsersDeletionMutation } from '@marzneshin/features/users'
+import { UserMutationType, useUsersDeletionMutation } from '@marzneshin/features/users'
 
 interface UsersDeleteConfirmationDialogProps {
     onOpenChange: (state: boolean) => void
     open: boolean
-    entity: UserType | null
+    entity: UserMutationType | null
 }
 
 export const UsersDeleteConfirmationDialog: FC<UsersDeleteConfirmationDialogProps> = ({ onOpenChange, open, entity }) => {
