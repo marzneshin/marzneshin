@@ -13,10 +13,11 @@ export const UserSchema = z.object({
             if (str) return Number((parseFloat(String(str)) * 1073741824).toFixed(5));
             return 0;
         }),
-    expire: z.date(),
+    expire: z.string(),
     data_limit_reset_strategy: z.string(),
     status: z.string(),
-    on_hold_duration: z.number().nullable(),
-    on_hold_timeout: z.date().nullable(),
-    services: z.array(z.number()).nonempty({ message: 'At least one service is required' }),
+    on_hold_expire_duration: z.number(),
+    on_hold_timeout: z.string().nullable(),
+    services: z.array(z.number().or(z.string())).nonempty({ message: 'At least one service is required' })
+        .transform((v) => v.map(Number)),
 });

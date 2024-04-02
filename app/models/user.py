@@ -138,7 +138,7 @@ class UserCreate(User):
     @classmethod
     def validate_note(cls, v: Union[datetime, None, Literal[0]]):
         if isinstance(v, datetime) and (
-            v.tzinfo is not None or v.tzinfo.utcoffset(v) is not None
+            v.tzinfo is not None
         ):
             raise ValueError(
                 "Expire date should be offset naive, and preferably in utc timezone."

@@ -37,7 +37,7 @@ export const useMutationDialog = <TData, TError = unknown, TVariables = unknown>
     createMutation,
     updateMutation,
     schema,
-    getDefaultValue
+    getDefaultValue,
 }: IMutationDialog<TData, TError, TVariables>) => {
     const form = useForm({
         defaultValues: entity ? (entity as FieldValues) : (getDefaultValue()),

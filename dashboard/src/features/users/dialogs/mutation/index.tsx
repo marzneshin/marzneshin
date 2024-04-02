@@ -1,4 +1,4 @@
-import { FC, useCallback } from "react";
+import { FC, useCallback, useEffect, useState } from "react";
 import {
     DialogTitle,
     DialogContent,
@@ -20,6 +20,7 @@ import {
     ExpireDateField,
     DataLimitResetStrategyField,
     NoteField,
+    ServicesField,
 } from "./fields";
 import { useMutationDialog } from "@marzneshin/hooks";
 
@@ -43,16 +44,30 @@ export const UsersMutationDialog: FC<UsersMutationDialogProps> = ({
         data_limit_reset_strategy: 'no_reset',
         status: 'active',
         note: '',
+        on_hold_expire_duration: 0,
+        on_hold_timeout: null,
     }), []);
-    const { form, handleSubmit } =
-        useMutationDialog({
-            entity,
-            onOpenChange,
-            createMutation: useUsersCreationMutation(),
-            updateMutation: useUsersUpdateMutation(),
-            schema: UserSchema,
-            getDefaultValue: getDefaultValues
-        })
+
+    const [services, setServices] = useState<string[]>([])
+    useEffect(() => {
+        if (entity) {
+            setServices(entity.services.map(serviceId => String(serviceId)))
+        }
+    }, [entity])
+
+    const { form, handleSubmit } = useMutationDialog({
+        entity,
+        onOpenChange,
+        createMutation: useUsersCreationMutation(),
+        updateMutation: useUsersUpdateMutation(),
+        schema: UserSchema,
+        getDefaultValue: getDefaultValues,
+    })
+
+    useEffect(() => {
+        form.setValue("services", services.map(Number))
+        console.log(form.getValues())
+    }, [services, form])
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange} defaultOpen={true}>
@@ -66,10 +81,10 @@ export const UsersMutationDialog: FC<UsersMutationDialogProps> = ({
                 </DialogHeader>
                 <Form {...form}>
                     <form onSubmit={handleSubmit}>
-                        <div className="flex-col grid-cols-2 sm:flex md:grid">
+                        <div className="flex-col grid-cols-2 gap-2 sm:flex md:grid">
                             <div>
                                 <UsernameField form={form} />
-                                <div className="flex sm:flex-row md:flex-col gap-2 items-center w-full">
+                                <div className="flex gap-2 items-center w-full sm:flex-row md:flex-col">
                                     <DataLimitField form={form} />
                                     {form.watch().data_limit !== 0 && <DataLimitResetStrategyField form={form} />}
                                 </div>
@@ -77,6 +92,7 @@ export const UsersMutationDialog: FC<UsersMutationDialogProps> = ({
                                 <NoteField form={form} />
                             </div>
                             <div>
+                                <ServicesField form={form} services={services} setServices={setServices} />
                             </div>
                         </div>
                         <Button

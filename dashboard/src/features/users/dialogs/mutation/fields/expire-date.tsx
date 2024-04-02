@@ -10,15 +10,21 @@ import {
   Button,
   FormMessage,
 } from '@marzneshin/components'
-import { FC, useCallback } from 'react'
-import { format, getUTCDate } from 'date-fns'
+import { FC, useState } from 'react'
+import { format } from 'date-fns'
 import { CalendarIcon } from '@radix-ui/react-icons'
 import { cn } from '@marzneshin/utils'
 import { useTranslation } from 'react-i18next'
-import { getUTCDateWithoutOffset } from '@marzneshin/utils/utc-date'
 
 interface ExpireDateFieldProps {
   form: any
+}
+
+
+function parseISODate(isoDateString: string | undefined): Date | undefined {
+  if (!isoDateString) return undefined;
+  const date = new Date(isoDateString);
+  return isNaN(date.getTime()) ? undefined : date;
 }
 
 export const ExpireDateField: FC<ExpireDateFieldProps> = (
@@ -26,11 +32,7 @@ export const ExpireDateField: FC<ExpireDateFieldProps> = (
 ) => {
   const { t } = useTranslation()
 
-  const handleSelect = useCallback((date) => {
-    const utcDateWithoutOffset = getUTCDateWithoutOffset(date);
-    form.setValue('expire', date);
-    console.log('UTC Date without offset:', utcDateWithoutOffset.toISOString());
-  }, [form]);
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(parseISODate(form.getValues('expire')));
   return (
     <FormField
       control={form.control}
@@ -60,8 +62,11 @@ export const ExpireDateField: FC<ExpireDateFieldProps> = (
             <PopoverContent className="p-0 w-auto" align="start">
               <Calendar
                 mode="single"
-                selected={field.value}
-                onSelect={handleSelect}
+                selected={selectedDate}
+                onSelect={(date) => {
+                  form.setValue('expire', date?.toISOString().slice(0, -5));
+                  setSelectedDate(date);
+                }}
                 disabled={(date) =>
                   date < new Date()
                 }

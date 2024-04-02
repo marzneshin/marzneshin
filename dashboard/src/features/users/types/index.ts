@@ -18,9 +18,9 @@ export type Status =
     | 'connected';
 
 export interface UserType {
-    on_hold_timeout: Date | number | null;
-    on_hold_duration: number | null;
-    expire: Date | number | null;
+    on_hold_timeout: Date | string | null;
+    on_hold_expire_duration: number;
+    expire: Date | string | null;
     data_limit: number | null;
     data_limit_reset_strategy: DataLimitResetStrategy;
     lifetime_used_traffic: number;
@@ -40,6 +40,8 @@ export type UserMutationType = Pick<
     | 'expire'
     | 'data_limit'
     | 'data_limit_reset_strategy'
+    | 'on_hold_timeout'
+    | 'on_hold_expire_duration'
     | 'username'
     | 'status'
     | 'note'
