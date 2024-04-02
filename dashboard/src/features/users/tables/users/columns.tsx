@@ -15,8 +15,8 @@ interface ColumnAction {
 
 export const columns = (actions: ColumnAction): ColumnDef<UserType>[] => ([
     {
-        accessorKey: "name",
-        header: ({ column }) => <DataTableColumnHeader title={i18n.t('name')} column={column} />,
+        accessorKey: "username",
+        header: ({ column }) => <DataTableColumnHeader title={i18n.t('username')} column={column} />,
     },
     {
         accessorKey: "status",
@@ -30,7 +30,7 @@ export const columns = (actions: ColumnAction): ColumnDef<UserType>[] => ([
     },
     {
         accessorKey: "used_traffic",
-        header: ({ column }) => <DataTableColumnHeader title={i18n.t('page.users.usage_coefficient')} column={column} />,
+        header: ({ column }) => <DataTableColumnHeader title={i18n.t('page.users.used_traffic')} column={column} />,
         cell: ({ row }) => {
             if (row.original.data_limit)
                 return (

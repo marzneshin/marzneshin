@@ -13,7 +13,7 @@ export const UsersTable: FC = () => {
     return (
         <EntityTable
             useQuery={useUsersQuery}
-            MutationDialog={MutationDialog}
+            MutationDialog={UsersMutationDialog}
             DeleteConfirmationDialog={UsersDeleteConfirmationDialog}
             SettingsDialog={UsersSettingsDialog}
             columns={columns}

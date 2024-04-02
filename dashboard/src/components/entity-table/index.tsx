@@ -23,7 +23,7 @@ interface EntityTableProps<T> {
     useQuery: () => { data: T[] };
     MutationDialog: FC<MutationDialogProps<T>>;
     DeleteConfirmationDialog: FC<DeleteConfirmationDialogProps<T>>;
-    SettingsDialog: FC<SettingsDialogProps<T>>;
+    SettingsDialog: FC<SettingsDialogProps<T | any>>;
     columns: any;
     filteredColumn: string;
 }
