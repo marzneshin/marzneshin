@@ -33,7 +33,7 @@ export const UsersSettingsDialog: FC<UsersSettingsDialogProps> = ({ onOpenChange
                             {t('settings')}
                         </SheetTitle>
                     </SheetHeader>
-                    <ScrollArea className="flex flex-col gap-4 h-full">
+                    <ScrollArea className="flex flex-col gap-4 m-3 h-full">
                         <Tabs defaultValue="info" className="w-full h-full">
                             <TabsList className="w-full bg-accent">
                                 <TabsTrigger className="w-full" value="info"> {t('user_info')} </TabsTrigger>
