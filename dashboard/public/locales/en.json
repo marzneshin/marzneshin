@@ -100,6 +100,7 @@
             "data_limit": "Data Limit",
             "used_traffic": "Used Traffic",
             "data_limit_reset_strategy": "Data Limit Reset Strategy",
+            "online_at": "Online At",
             "expire_date": "Expire Date",
             "determined_expire": "Determined",
             "onhold_expire": "On Hold",
@@ -111,6 +112,11 @@
                     "copy": "Copy Subscription Link",
                     "error": "Unable to copy Subscription Link"
                 }
+            },
+            "services-alert": {
+                "title": "No Service were found",
+                "desc": "Make you sure you create services to enable your users with inbounds to connect with.",
+                "click": "Click Here"
             },
             "dialogs": {
                 "edition": {
