@@ -31,6 +31,7 @@ interface IMutationDialog<TData, TError = unknown, TVariables = unknown> {
  * @template TError = unknown 
  * @template TVariables = unknown
  */
+
 export const useMutationDialog = <TData, TError = unknown, TVariables = unknown>({
     entity,
     onOpenChange,
