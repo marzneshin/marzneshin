@@ -30,6 +30,7 @@
     "security": "Security",
     "user_info": "Users Info",
     "subscription": "Subscription",
+    "subscription_link": "Subscription Link",
     "page": {
         "settings": {
             "certificate": {
@@ -103,6 +104,13 @@
             "onhold_expire": "On Hold",
             "on_hold_expire_duration": "On Hold",
             "on_hold_timeout": "On Hold Timeout",
+            "settings": {
+                "subscription_link": {
+                    "copied": "Subscription Link Copied",
+                    "copy": "Copy Subscription Link",
+                    "error": "Unable to copy Subscription Link"
+                }
+            },
             "dialogs": {
                 "edition": {
                     "title": "Users Edition"
