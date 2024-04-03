@@ -17,6 +17,7 @@ export const SubscriptionLinkButton: FC<SubscriptionLinkButtonProps> = ({ subscr
             copyLabel={t('page.users.settings.subscription_link.copy')}
             errorLabel={t('page.users.settings.subscription_link.error')}
             copyIcon={SquareCode}
+            className="w-full"
         />
     );
 };
