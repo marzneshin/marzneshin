@@ -11,8 +11,9 @@ import {
     TableRow,
 } from "@marzneshin/components"
 import { FC } from 'react'
-import { UserType, UsersStatus, UsersStatusBadge } from '../../..';
+import { UserType, UsersStatus, UsersStatusBadge } from '@marzneshin/features/users';
 import { CircularProgress } from "@nextui-org/progress";
+import { useTranslation } from "react-i18next";
 
 interface UserInfoTableProps {
     entity: UserType
@@ -21,12 +22,12 @@ interface UserInfoTableProps {
 export const UserInfoTable: FC<UserInfoTableProps> = (
     { entity }
 ) => {
-
+    const { t } = useTranslation()
     return (
         <Card>
             <CardHeader>
                 <CardTitle>
-                    Users Info
+                    {t('user_info')}
                 </CardTitle>
             </CardHeader>
             <CardContent>
@@ -34,7 +35,7 @@ export const UserInfoTable: FC<UserInfoTableProps> = (
                     <TableBody>
                         <TableRow>
                             <TableHead>
-                                Username
+                                {t('username')}
                             </TableHead>
                             <TableCell>
                                 {entity.username}
@@ -42,7 +43,7 @@ export const UserInfoTable: FC<UserInfoTableProps> = (
                         </TableRow>
                         <TableRow>
                             <TableHead>
-                                Status
+                                {t('status')}
                             </TableHead>
                             <TableCell>
                                 <UsersStatusBadge status={UsersStatus[entity.status]} />
@@ -50,7 +51,7 @@ export const UserInfoTable: FC<UserInfoTableProps> = (
                         </TableRow>
                         <TableRow>
                             <TableHead>
-                                Expire Date
+                                {t('page.users.expire_date')}
                             </TableHead>
                             <TableCell>
                             </TableCell>
@@ -58,7 +59,7 @@ export const UserInfoTable: FC<UserInfoTableProps> = (
                         {entity.data_limit &&
                             <TableRow>
                                 <TableHead>
-                                    Used Traffic
+                                    {t('page.users.used_traffic')}
                                 </TableHead>
                                 <TableCell>
                                     <CircularProgress size="sm" value={entity.used_traffic / entity.data_limit * 100} />
@@ -67,7 +68,7 @@ export const UserInfoTable: FC<UserInfoTableProps> = (
                         }
                         <TableRow>
                             <TableHead>
-                                Subscription link
+                                {t('subscription_link')}
                             </TableHead>
                             <TableCell>
                                 {entity.username}
@@ -75,7 +76,7 @@ export const UserInfoTable: FC<UserInfoTableProps> = (
                         </TableRow>
                         <TableRow>
                             <TableHead>
-                                Note
+                                {t('note')}
                             </TableHead>
                             <TableCell>
                                 {entity.note}
