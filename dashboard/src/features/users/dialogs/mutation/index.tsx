@@ -1,11 +1,15 @@
 import { FC, useCallback, useEffect, useState } from "react";
+import { DevTool } from '@hookform/devtools';
 import {
     DialogTitle,
     DialogContent,
     Dialog,
     DialogHeader,
     Form,
-    Button
+    Button,
+    Tabs,
+    TabsTrigger,
+    TabsContent
 } from '@marzneshin/components';
 import { useTranslation } from 'react-i18next';
 import {
@@ -23,6 +27,9 @@ import {
     ServicesField,
 } from "./fields";
 import { useMutationDialog } from "@marzneshin/hooks";
+import { TabsList } from "@radix-ui/react-tabs";
+import { OnHoldExpireDurationField } from "./fields/onhold-expire-duration";
+import { OnHoldTimeoutField } from "./fields/onhold-timeout";
 
 interface UsersMutationDialogProps {
     entity: UserMutationType | null;
@@ -69,7 +76,22 @@ export const UsersMutationDialog: FC<UsersMutationDialogProps> = ({
         console.log(form.getValues())
     }, [services, form])
 
+
+    const [selectedTab, setSelectedTab] = useState<'determined' | 'onhold'>('determined');
+
+    useEffect(() => {
+        if (selectedTab === 'onhold') {
+            form.setValue("on_hold_expire_duration", 0);
+            form.setValue("on_hold_timeout", null);
+            form.clearErrors("on_hold_expire_duration");
+            form.clearErrors("on_hold_timeout");
+        } else {
+            form.setValue("expire", null);
+            form.clearErrors("expire");
+        }
+    }, [selectedTab, form]);
     return (
+
         <Dialog open={open} onOpenChange={onOpenChange} defaultOpen={true}>
             <DialogContent>
                 <DialogHeader>
@@ -83,16 +105,28 @@ export const UsersMutationDialog: FC<UsersMutationDialogProps> = ({
                     <form onSubmit={handleSubmit}>
                         <div className="flex-col grid-cols-2 gap-2 sm:flex md:grid">
                             <div>
-                                <UsernameField form={form} />
+                                <UsernameField />
                                 <div className="flex gap-2 items-center w-full sm:flex-row md:flex-col">
-                                    <DataLimitField form={form} />
-                                    {form.watch().data_limit !== 0 && <DataLimitResetStrategyField form={form} />}
+                                    <DataLimitField />
+                                    {form.watch().data_limit !== 0 && <DataLimitResetStrategyField />}
                                 </div>
-                                <ExpireDateField form={form} />
-                                <NoteField form={form} />
+                                <Tabs defaultValue="determined" onChange={(e) => setSelectedTab(e.target.value)} className="mt-2 w-full">
+                                    <TabsList className="flex flex-row items-center p-1 w-full bg-accent">
+                                        <TabsTrigger className="w-full" value="determined">{t('page.users.determined_expire')}</TabsTrigger>
+                                        <TabsTrigger className="w-full" value="onhold">{t('page.users.onhold_expire')}</TabsTrigger>
+                                    </TabsList>
+                                    <TabsContent value="determined">
+                                        <ExpireDateField />
+                                    </TabsContent>
+                                    <TabsContent value="onhold">
+                                        <OnHoldExpireDurationField />
+                                        <OnHoldTimeoutField />
+                                    </TabsContent>
+                                </Tabs>
+                                <NoteField />
                             </div>
                             <div>
-                                <ServicesField form={form} services={services} setServices={setServices} />
+                                <ServicesField services={services} setServices={setServices} />
                             </div>
                         </div>
                         <Button
@@ -103,6 +137,9 @@ export const UsersMutationDialog: FC<UsersMutationDialogProps> = ({
                             {t('submit')}
                         </Button>
                     </form>
+                    <div className="block h-1/2">
+                        <DevTool control={form.control} placement="top-left" />
+                    </div>
                 </Form>
             </DialogContent>
         </Dialog>

@@ -9,8 +9,10 @@ import {
   ScrollArea
 } from '@marzneshin/components';
 import { useServicesQuery } from '@marzneshin/features/services';
-import { ServiceCard, UserMutationType } from '@marzneshin/features/users';
+import { useState } from 'react';
+import { ServiceCard } from '@marzneshin/features/users';
 import { FC } from 'react'
+import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 interface ServicesFieldProps {
@@ -19,16 +21,18 @@ interface ServicesFieldProps {
 }
 
 export const ServicesField: FC<ServicesFieldProps> = (
-  { form, services, setServices }
+  { services, setServices }
 ) => {
   const form = useFormContext()
   const { data } = useServicesQuery()
   const { t } = useTranslation()
+  const uniqueServices = Array.from(new Set(services));
+
   return (
     <FormField
       control={form.control}
       name="services"
-      render={() => (
+      render={({ field }) => (
         <FormItem>
           <FormLabel>{t('services')}</FormLabel>
           <FormControl>
@@ -41,7 +45,11 @@ export const ServicesField: FC<ServicesFieldProps> = (
               <ScrollArea className="flex flex-col justify-start h-full">
                 {...data.map((service) => {
                   return (
-                    <ToggleGroupItem value={String(service.id)} key={service.id} className="px-0 mb-1 w-full">
+                    <ToggleGroupItem
+                      {...field}
+                      value={String(service.id)}
+                      key={service.id}
+                      className="px-0 mb-1 w-full">
                       <ServiceCard service={service} />
                     </ToggleGroupItem>
                   )
