@@ -1,17 +1,9 @@
 import {
-    Card,
-    CardContent,
-    CardHeader,
-    CardTitle,
+    ScrollArea,
     Sheet,
     SheetContent,
     SheetHeader,
     SheetTitle,
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableRow,
     Tabs,
     TabsContent,
     TabsList,
@@ -19,8 +11,8 @@ import {
 } from "@marzneshin/components"
 import { FC } from "react"
 import { useTranslation } from "react-i18next"
-import { UserType, UsersStatus, UsersStatusBadge } from "@marzneshin/features/users"
-import { CircularProgress } from "@nextui-org/progress"
+import { UserServicesTable, UserType } from "@marzneshin/features/users"
+import { UserInfoTable, QRCodeSection } from "./user-info"
 
 interface UsersSettingsDialogProps {
     onOpenChange: (state: boolean) => void
@@ -38,83 +30,24 @@ export const UsersSettingsDialog: FC<UsersSettingsDialogProps> = ({ onOpenChange
                 <SheetContent className="sm:min-w-full md:min-w-[700px]" >
                     <SheetHeader>
                         <SheetTitle>
-                            {t('page.users.settings.title')}
+                            {t('settings')}
                         </SheetTitle>
                     </SheetHeader>
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>
-                                Users Info
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <Table>
-                                <TableBody>
-                                    <TableRow>
-                                        <TableHead>
-                                            Username
-                                        </TableHead>
-                                        <TableCell>
-                                            {entity.username}
-                                        </TableCell>
-                                    </TableRow>
-                                    <TableRow>
-                                        <TableHead>
-                                            Status
-                                        </TableHead>
-                                        <TableCell>
-                                            <UsersStatusBadge status={UsersStatus[entity.status]} />
-                                        </TableCell>
-                                    </TableRow>
-                                    <TableRow>
-                                        <TableHead>
-                                            Expire Date
-                                        </TableHead>
-                                        <TableCell>
-                                        </TableCell>
-                                    </TableRow>
-                                    {entity.data_limit &&
-                                        <TableRow>
-                                            <TableHead>
-                                                Used Traffic
-                                            </TableHead>
-                                            <TableCell>
-                                                <CircularProgress size="sm" value={entity.used_traffic / entity.data_limit * 100} />
-                                            </TableCell>
-                                        </TableRow>
-                                    }
-                                    <TableRow>
-                                        <TableHead>
-                                            Subscription link
-                                        </TableHead>
-                                        <TableCell>
-                                            {entity.username}
-                                        </TableCell>
-                                    </TableRow>
-                                    <TableRow>
-                                        <TableHead>
-                                            Note
-                                        </TableHead>
-                                        <TableCell>
-                                            {entity.note}
-                                        </TableCell>
-                                    </TableRow>
-                                </TableBody>
-                            </Table>
-                        </CardContent>
-                    </Card>
-                    <Tabs defaultValue="settings">
-                        <TabsList>
-                            <TabsTrigger value="settings"> {t('settings')} </TabsTrigger>
-                            <TabsTrigger value="services"> {t('services')} </TabsTrigger>
-                        </TabsList>
-                        <TabsContent value="settings">
-                            Settings
-                        </TabsContent>
-                        <TabsContent value="services">
-                            Services
-                        </TabsContent>
-                    </Tabs>
+                    <ScrollArea className="flex flex-col gap-4 h-full">
+                        <Tabs defaultValue="info" className="w-full h-full">
+                            <TabsList className="w-full bg-accent">
+                                <TabsTrigger className="w-full" value="info"> {t('user_info')} </TabsTrigger>
+                                <TabsTrigger className="w-full" value="services"> {t('services')} </TabsTrigger>
+                            </TabsList>
+                            <TabsContent value="info" className="flex flex-col gap-4">
+                                <UserInfoTable entity={entity} />
+                                <QRCodeSection entity={entity} />
+                            </TabsContent>
+                            <TabsContent value="services">
+                                <UserServicesTable user={entity} />
+                            </TabsContent>
+                        </Tabs>
+                    </ScrollArea>
                 </SheetContent>
             </Sheet>
         )
