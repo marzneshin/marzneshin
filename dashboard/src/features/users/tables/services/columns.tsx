@@ -1,7 +1,7 @@
 import { ColumnDef } from "@tanstack/react-table"
 import { DataTableColumnHeader } from "@marzneshin/components/data-table/column-header"
 import i18n from "@marzneshin/features/i18n"
-import { Badge, Checkbox } from "@marzneshin/components"
+import { Checkbox } from "@marzneshin/components"
 import { ServiceType } from "@marzneshin/features/services"
 
 export const columns: ColumnDef<ServiceType>[] = [
