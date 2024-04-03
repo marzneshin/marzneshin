@@ -7,16 +7,14 @@ import {
     FormMessage
 } from '@marzneshin/components';
 import { FC } from 'react'
+import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-interface DataLimitFieldProps {
-    form: any
-}
+interface DataLimitFieldProps { }
 
-export const DataLimitField: FC<DataLimitFieldProps> = (
-    { form }
-) => {
+export const DataLimitField: FC<DataLimitFieldProps> = () => {
     const { t } = useTranslation()
+    const form = useFormContext()
     return (
         <FormField
             control={form.control}

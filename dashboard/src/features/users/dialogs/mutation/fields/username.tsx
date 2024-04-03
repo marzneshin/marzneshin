@@ -6,18 +6,14 @@ import {
     FormLabel,
     FormMessage
 } from '@marzneshin/components';
-import { UserMutationType } from '@marzneshin/features/users';
 import { FC } from 'react'
-import { FieldValues, UseFormReturn } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-interface UsernameFieldProps {
-    form: UseFormReturn<FieldValues, UserMutationType>
-}
+interface UsernameFieldProps { }
 
-export const UsernameField: FC<UsernameFieldProps> = (
-    { form }
-) => {
+export const UsernameField: FC<UsernameFieldProps> = () => {
+    const form = useFormContext()
     const { t } = useTranslation()
     return (
         <FormField

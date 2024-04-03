@@ -11,16 +11,14 @@ import {
     SelectValue,
 } from '@marzneshin/components';
 import { FC } from 'react'
+import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-interface DataLimitResetStrategyFieldProps {
-    form: any
-}
+interface DataLimitResetStrategyFieldProps { }
 
-export const DataLimitResetStrategyField: FC<DataLimitResetStrategyFieldProps> = (
-    { form }
-) => {
+export const DataLimitResetStrategyField: FC<DataLimitResetStrategyFieldProps> = () => {
     const { t } = useTranslation()
+    const form = useFormContext()
     return (
         <FormField
             control={form.control}

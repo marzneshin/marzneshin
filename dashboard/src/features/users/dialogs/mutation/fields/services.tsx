@@ -11,11 +11,9 @@ import {
 import { useServicesQuery } from '@marzneshin/features/services';
 import { ServiceCard, UserMutationType } from '@marzneshin/features/users';
 import { FC } from 'react'
-import { FieldValues, UseFormReturn } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 interface ServicesFieldProps {
-  form: UseFormReturn<FieldValues, UserMutationType>
   services: string[]
   setServices: (s: string[]) => void
 }
@@ -23,6 +21,7 @@ interface ServicesFieldProps {
 export const ServicesField: FC<ServicesFieldProps> = (
   { form, services, setServices }
 ) => {
+  const form = useFormContext()
   const { data } = useServicesQuery()
   const { t } = useTranslation()
   return (
