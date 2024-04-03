@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CopyCheck, CopyX, ClipboardCopy, LucideIcon } from 'lucide-react';
 import { toast } from 'sonner';
+import { cn } from '@marzneshin/utils';
 
 interface CopyToClipboardButtonProps {
     text: string;
@@ -14,13 +15,13 @@ interface CopyToClipboardButtonProps {
     errorLabel: string;
 }
 
-export const CopyToClipboardButton: React.FC<CopyToClipboardButtonProps> = ({
+export const CopyToClipboardButton: React.FC<CopyToClipboardButtonProps & HTMLElement> = ({
     text,
     disabled = false,
     successMessage,
     copyIcon,
     copyLabel,
-    errorLabel
+    errorLabel, className
 }) => {
     const { t } = useTranslation();
     const [copied, setCopied] = useState(false);
@@ -49,7 +50,7 @@ export const CopyToClipboardButton: React.FC<CopyToClipboardButtonProps> = ({
 
     return (
         <CopyToClipboard text={text}>
-            <Button className="p-2" disabled={disabled || !healthy} onClick={handleClick}>
+            <Button className={cn(className, "p-2 flex flex-row items-center gap-2")} disabled={disabled || !healthy} onClick={handleClick}>
                 <Icon />
                 {t(copied ? successMessage : (healthy ? copyLabel : errorLabel))}
             </Button>
