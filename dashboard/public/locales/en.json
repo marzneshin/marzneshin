@@ -115,7 +115,7 @@
             },
             "services-alert": {
                 "title": "No Service were found",
-                "desc": "Make you sure you create services to enable your users with inbounds to connect with.",
+                "desc": "Make sure you create services to enable your users with inbounds to connect with.",
                 "click": "Click Here"
             },
             "dialogs": {
