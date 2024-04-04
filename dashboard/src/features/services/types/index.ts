@@ -1,2 +1,2 @@
 export * from './services.type'
-export * from './services-create.type'
+export * from './services-mutation.type'

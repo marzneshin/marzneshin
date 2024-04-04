@@ -1,19 +1,19 @@
-import { UserType, UsersQueryFetchKey } from "@marzneshin/features/users";
+import {  UserMutationType, UsersQueryFetchKey } from "@marzneshin/features/users";
 import { useMutation } from "@tanstack/react-query";
 import { fetch, queryClient } from "@marzneshin/utils";
 import { toast } from "sonner";
 import i18n from "@marzneshin/features/i18n";
 
-export async function fetchDeleteUser(user: UserType): Promise<UserType> {
+export async function fetchDeleteUser(user: UserMutationType): Promise<UserMutationType> {
     return fetch(`/users/${user.username}`, { method: 'delete' }).then((user) => {
         return user;
     });
 }
 
-const UsersDeleteFetchKey = "users-delete-fetch-key";
+const UsersDeleteFetchKey = "users";
 
 
-const handleError = (error: Error, value: UserType) => {
+const handleError = (error: Error, value: UserMutationType) => {
     toast.error(
         i18n.t('events.delete.error', { name: value.username }),
         {
@@ -21,7 +21,7 @@ const handleError = (error: Error, value: UserType) => {
         })
 }
 
-const handleSuccess = (value: UserType) => {
+const handleSuccess = (value: UserMutationType) => {
     toast.success(
         i18n.t('events.delete.success.title', { name: value.username }),
         {

@@ -1,4 +1,4 @@
-import { FC, useEffect } from "react";
+import { FC } from "react";
 import {
     DialogTitle,
     DialogContent,
@@ -14,10 +14,9 @@ import {
     Checkbox,
     Button
 } from '@marzneshin/components';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslation } from 'react-i18next';
 import { NodeType, NodeSchema, useNodesCreationMutation, useNodesUpdateMutation } from "..";
+import { useMutationDialog } from "@marzneshin/hooks";
 
 interface MutationDialogProps {
     entity: NodeType | null;
@@ -25,7 +24,7 @@ interface MutationDialogProps {
     onOpenChange: (state: boolean) => void;
 }
 
-const getDefaultValues = (): NodeType => ({
+const getDefaultValue = (): NodeType => ({
     name: '',
     address: '',
     status: 'none',
@@ -39,28 +38,17 @@ export const MutationDialog: FC<MutationDialogProps> = ({
     open,
     onOpenChange,
 }) => {
-    const form = useForm({
-        defaultValues: entity ? entity : getDefaultValues(),
-        resolver: zodResolver(NodeSchema)
-    });
     const updateMutation = useNodesUpdateMutation();
     const createMutation = useNodesCreationMutation();
     const { t } = useTranslation();
-
-    const submit = (values: NodeType) => {
-        if (entity) {
-            updateMutation.mutate(values);
-        } else {
-            createMutation.mutate(values);
-        }
-        onOpenChange(false);
-    };
-
-    useEffect(() => {
-        if (entity) form.reset(entity);
-        else form.reset(getDefaultValues());
-    }, [entity, form]);
-
+    const { form, handleSubmit } = useMutationDialog({
+        onOpenChange,
+        entity,
+        schema: NodeSchema,
+        createMutation,
+        updateMutation,
+        getDefaultValue
+    })
     return (
         <Dialog open={open} onOpenChange={onOpenChange} defaultOpen={true}>
             <DialogContent>
@@ -72,7 +60,7 @@ export const MutationDialog: FC<MutationDialogProps> = ({
                     </DialogTitle>
                 </DialogHeader>
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(submit)}>
+                    <form onSubmit={handleSubmit}>
                         <FormField
                             control={form.control}
                             name="name"

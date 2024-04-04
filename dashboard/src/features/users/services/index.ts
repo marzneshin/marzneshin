@@ -1,4 +1,4 @@
 export * from './users.query'
-export * from './update-service.mutate'
-export * from './create-service.mutate'
-export * from './delete-service.mutate'
+export * from './update-user.mutate'
+export * from './create-user.mutate'
+export * from './delete-user.mutate'

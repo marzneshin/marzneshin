@@ -3,15 +3,16 @@ import { fetch, queryClient } from "@marzneshin/utils";
 import { toast } from "sonner";
 import i18n from "@marzneshin/features/i18n";
 import { ServicesQueryFetchKey } from "./services.query";
-import { ServiceType } from "../types";
+import { ServiceMutationType } from "../types";
 
-export async function updateService(node: ServiceType): Promise<ServiceType> {
+
+export async function updateService(node: ServiceMutationType): Promise<ServiceMutationType> {
     return fetch(`/services/${node.id}`, { method: 'put', body: node }).then((service) => {
         return service;
     });
 }
 
-const handleError = (error: Error, value: ServiceType) => {
+const handleError = (error: Error, value: ServiceMutationType) => {
     toast.error(
         i18n.t('events.update.error', { name: value.name }),
         {
@@ -19,7 +20,7 @@ const handleError = (error: Error, value: ServiceType) => {
         })
 }
 
-const handleSuccess = (value: ServiceType) => {
+const handleSuccess = (value: ServiceMutationType) => {
     toast.success(
         i18n.t('events.update.success.title', { name: value.name }),
         {

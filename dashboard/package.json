@@ -68,6 +68,7 @@
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.51.1",
     "react-i18next": "^14.1.0",
+    "react-qr-code": "^2.0.12",
     "react-resizable-panels": "^2.0.13",
     "react-use-websocket": "^4.8.1",
     "remirror": "^2.0.39",
@@ -79,6 +80,7 @@
     "zustand": "^4.5.2"
   },
   "devDependencies": {
+    "@hookform/devtools": "^4.3.1",
     "@tanstack/router-cli": "^1.20.0",
     "@tanstack/router-devtools": "^1.20.1",
     "@tanstack/router-vite-plugin": "^1.20.2",

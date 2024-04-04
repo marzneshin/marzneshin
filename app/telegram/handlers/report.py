@@ -1,4 +1,3 @@
-import datetime
 import logging
 from datetime import datetime
 
@@ -33,7 +32,7 @@ async def report_new_user(
     user_id: int,
     username: str,
     by: str,
-    expire_date: int,
+    expire_date: datetime,
     data_limit: int,
     services: list,
 ):
@@ -50,9 +49,7 @@ async def report_new_user(
         username=escape_html(username),
         data_limit=readable_size(data_limit) if data_limit else "Unlimited",
         expire_date=(
-            datetime.fromtimestamp(expire_date).strftime("%H:%M:%S %Y-%m-%d")
-            if expire_date
-            else "Never"
+            expire_date.strftime("%H:%M:%S %Y-%m-%d") if expire_date else "Never"
         ),
         services="" if not services else ", ".join([s.name for s in services]),
     )
@@ -66,7 +63,7 @@ async def report_new_user(
 
 
 async def report_user_modification(
-    username: str, expire_date: int, data_limit: int, services: list, by: str
+    username: str, expire_date: datetime, data_limit: int, services: list, by: str
 ):
     text = """\
 ✏️ <b>#Modified</b>
@@ -82,9 +79,7 @@ async def report_user_modification(
         username=escape_html(username),
         data_limit=readable_size(data_limit) if data_limit else "Unlimited",
         expire_date=(
-            datetime.fromtimestamp(expire_date).strftime("%H:%M:%S %Y-%m-%d")
-            if expire_date
-            else "Never"
+            expire_date.strftime("%H:%M:%S %Y-%m-%d") if expire_date else "Never"
         ),
         services=", ".join([s.name for s in services]),
     )

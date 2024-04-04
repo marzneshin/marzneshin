@@ -16,19 +16,18 @@ import {
     Checkbox,
     Badge
 } from '@marzneshin/components'
-import { FC, useEffect } from 'react'
+import { FC } from 'react'
 import {
     ServiceType,
     useServicesCreationMutation,
     useServicesUpdateMutation,
 } from '@marzneshin/features/services'
 import { useInboundsQuery } from '@marzneshin/features/inbounds'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
 import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
 import { cn } from '@marzneshin/utils'
 import { Box, GlobeLock } from 'lucide-react'
+import { useMutationDialog } from '@marzneshin/hooks'
 
 export const ServiceSchema = z.object({
     id: z.number().optional(),
@@ -55,28 +54,15 @@ export const MutationDialog: FC<MutationDialogProps> = ({ entity, open, onOpenCh
     const updateMutation = useServicesUpdateMutation();
     const createMutation = useServicesCreationMutation();
     const { data: inbounds } = useInboundsQuery()
-    const form = useForm({
-        defaultValues: isEditing ? entity : getDefaultValues(),
-        resolver: zodResolver(ServiceSchema)
+    const { form, handleSubmit } = useMutationDialog({
+        entity,
+        updateMutation,
+        createMutation,
+        getDefaultValue: getDefaultValues,
+        schema: ServiceSchema,
+        onOpenChange,
     })
-    const { t } = useTranslation();
-
-    const submit = (values: ServiceCreateType | ServiceType) => {
-        if (isEditing) {
-            updateMutation.mutate(values as ServiceType)
-        } else {
-            createMutation.mutate(values)
-        }
-        onOpenChange(false);
-    }
-
-    useEffect(() => {
-        if (isEditing)
-            form.reset(entity);
-        else
-            form.reset(getDefaultValues())
-    }, [entity, form, isEditing])
-
+    const { t } = useTranslation()
     return (
         <Dialog open={open} onOpenChange={onOpenChange} defaultOpen={true}>
             <DialogContent>
@@ -88,7 +74,7 @@ export const MutationDialog: FC<MutationDialogProps> = ({ entity, open, onOpenCh
                     </DialogTitle>
                 </DialogHeader>
                 <Form {...form} >
-                    <form onSubmit={form.handleSubmit(submit)} >
+                    <form onSubmit={handleSubmit} >
                         <FormField
                             control={form.control}
                             name="name"
@@ -125,7 +111,7 @@ export const MutationDialog: FC<MutationDialogProps> = ({ entity, open, onOpenCh
                                                                         ? field.onChange([...field.value, inbound.id])
                                                                         : field.onChange(
                                                                             field.value?.filter(
-                                                                                (value) => value !== inbound.id
+                                                                                (value: number) => value !== inbound.id
                                                                             )
                                                                         )
                                                                 }}

@@ -18,7 +18,9 @@ export type Status =
     | 'connected';
 
 export interface UserType {
-    expire: Date | number;
+    on_hold_timeout: Date | string | null;
+    on_hold_expire_duration: number;
+    expire: Date | string | null;
     data_limit: number | null;
     data_limit_reset_strategy: DataLimitResetStrategy;
     lifetime_used_traffic: number;
@@ -32,12 +34,14 @@ export interface UserType {
     online_at: string;
 }
 
-export type UserCreateType = Pick<
+export type UserMutationType = Pick<
     UserType,
     | 'services'
     | 'expire'
     | 'data_limit'
     | 'data_limit_reset_strategy'
+    | 'on_hold_timeout'
+    | 'on_hold_expire_duration'
     | 'username'
     | 'status'
     | 'note'
