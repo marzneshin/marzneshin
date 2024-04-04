@@ -1,4 +1,4 @@
-import { FC, useEffect } from "react";
+import { FC } from "react";
 import {
     DialogTitle,
     DialogContent,
@@ -41,7 +41,7 @@ export const MutationDialog: FC<MutationDialogProps> = ({
     const updateMutation = useNodesUpdateMutation();
     const createMutation = useNodesCreationMutation();
     const { t } = useTranslation();
-    const { form, handleSubmit}= useMutationDialog({
+    const { form, handleSubmit } = useMutationDialog({
         onOpenChange,
         entity,
         schema: NodeSchema,

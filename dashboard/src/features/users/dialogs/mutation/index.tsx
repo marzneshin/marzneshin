@@ -1,5 +1,4 @@
 import { FC, useCallback, useEffect, useState } from "react";
-import { DevTool } from '@hookform/devtools';
 import {
     DialogTitle,
     DialogContent,
@@ -141,9 +140,6 @@ export const UsersMutationDialog: FC<UsersMutationDialogProps> = ({
                             {t('submit')}
                         </Button>
                     </form>
-                    <div className="block h-1/2">
-                        <DevTool control={form.control} placement="top-left" />
-                    </div>
                 </Form>
             </DialogContent>
         </Dialog>
