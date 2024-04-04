@@ -78,7 +78,7 @@ export const NavigationDirectory: FC<NavigationDirectoryProps> = ({ sidebar }) =
                                     <DropdownMenuContent align="start">
                                         {items.slice(1, -2).map((item, index) => (
                                             <DropdownMenuItem key={index}>
-                                                <Link to={item.href}>
+                                                <Link to={item.href} className="capitalize">
                                                     {item.label}
                                                 </Link>
                                             </DropdownMenuItem>
