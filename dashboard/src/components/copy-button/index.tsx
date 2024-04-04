@@ -16,7 +16,7 @@ interface CopyToClipboardButtonProps {
     className?: string;
 }
 
-export const CopyToClipboardButton: React.FC<CopyToClipboardButtonProps & HTMLElement> = ({
+export const CopyToClipboardButton: React.FC<CopyToClipboardButtonProps> = ({
     text,
     disabled = false,
     successMessage,
