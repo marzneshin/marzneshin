@@ -51,7 +51,7 @@ export const UserServicesTable: FC<UserServicesTableProps> = ({ user }) => {
             <DataTable
                 columns={columns}
                 data={data}
-                filteredColumn='tag'
+                filteredColumn='name'
                 selectedRow={selectedService}
                 setSelectedRow={setSelectedService}
             />
