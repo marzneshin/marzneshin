@@ -1,4 +1,3 @@
-import re
 import secrets
 from datetime import datetime
 from enum import Enum
@@ -16,7 +15,7 @@ from pydantic import (
 
 from config import XRAY_SUBSCRIPTION_URL_PREFIX
 
-USERNAME_REGEXP = re.compile(r"^\w{3,32}$")
+USERNAME_REGEXP = r"^\w{3,32}$"
 
 
 class ReminderType(str, Enum):
@@ -52,9 +51,8 @@ class UserDataLimitResetStrategy(str, Enum):
 
 
 class UserBase(BaseModel):
-    # proxies: Dict[ProxyTypes, ProxySettings] = {}
     id: Optional[int] = None
-    username: Annotated[str, StringConstraints(to_lower=True)]
+    username: Annotated[str, StringConstraints(to_lower=True, pattern=USERNAME_REGEXP)]
     expire: Union[datetime, None, Literal[0]] = Field(None)
     key: str = Field(default_factory=lambda: secrets.token_hex(16))
     data_limit: Optional[int] = Field(
@@ -63,28 +61,12 @@ class UserBase(BaseModel):
     data_limit_reset_strategy: UserDataLimitResetStrategy = (
         UserDataLimitResetStrategy.no_reset
     )
-    note: Optional[str] = Field(None)
+    note: Optional[Annotated[str, Field(max_length=500)]] = None
     sub_updated_at: Optional[datetime] = Field(None)
     sub_last_user_agent: Optional[str] = Field(None)
     online_at: Optional[datetime] = Field(None)
     on_hold_expire_duration: Optional[int] = Field(None)
     on_hold_timeout: Optional[datetime] = Field(None)
-
-    @field_validator("username")
-    @classmethod
-    def validate_username(cls, v: str):
-        if not USERNAME_REGEXP.match(v):
-            raise ValueError(
-                "Username should be 3 to 32 characters containing A-Z, a-z, 0-9 and underscores in between."
-            )
-        return v
-
-    @field_validator("note")
-    @classmethod
-    def validate_note(cls, v: str):
-        if v and len(v) > 500:
-            raise ValueError("User's note can be a maximum of 500 character")
-        return v
 
     model_config = ConfigDict(from_attributes=True)
 
@@ -136,10 +118,8 @@ class UserCreate(User):
 
     @field_validator("expire")
     @classmethod
-    def validate_note(cls, v: Union[datetime, None, Literal[0]]):
-        if isinstance(v, datetime) and (
-            v.tzinfo is not None
-        ):
+    def validate_expire(cls, v: Union[datetime, None, Literal[0]]):
+        if isinstance(v, datetime) and (v.tzinfo is not None):
             raise ValueError(
                 "Expire date should be offset naive, and preferably in utc timezone."
             )
@@ -178,7 +158,7 @@ class UserModify(User):
 
     @field_validator("expire")
     @classmethod
-    def validate_note(cls, v: Union[datetime, None, Literal[0]]):
+    def validate_expire(cls, v: Union[datetime, None, Literal[0]]):
         if isinstance(v, datetime) and v.tzinfo is not None:
             raise ValueError(
                 "Expire date should be offset naive, and preferably in utc timezone."
