@@ -15,11 +15,11 @@ on:
   push:
     branches: [ "master" ]
     paths: 
-      - 'app/dashboard/**'
+      - 'dashboard/**'
   pull_request:
     branches: [ "master" ]
     paths: 
-      - 'app/dashboard/**'
+      - 'dashboard/**'
   schedule:
     - cron: '40 13 * * 2'
 
