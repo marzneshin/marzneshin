@@ -9,51 +9,53 @@ import {
   ScrollArea
 } from '@marzneshin/components';
 import { useServicesQuery } from '@marzneshin/features/services';
-import { useState } from 'react';
 import { ServiceCard } from '@marzneshin/features/users';
 import { FC } from 'react'
 import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 interface ServicesFieldProps {
-  services: string[]
-  setServices: (s: string[]) => void
+  services: number[]
+  setServices: (s: number[]) => void
 }
 
-export const ServicesField: FC<ServicesFieldProps> = (
-  { services, setServices }
-) => {
-  const form = useFormContext()
-  const { data } = useServicesQuery()
-  const { t } = useTranslation()
-  const uniqueServices = Array.from(new Set(services));
+export const ServicesField: FC<ServicesFieldProps> = ({
+  services,
+  setServices
+}) => {
+  const form = useFormContext();
+  const { data } = useServicesQuery();
+  const { t } = useTranslation();
+
+  const handleToggle = (selectedServiceIds: string[]) => {
+    setServices(selectedServiceIds.map(Number));
+  };
 
   return (
     <FormField
       control={form.control}
       name="services"
-      render={({ field }) => (
+      render={() => (
         <FormItem>
           <FormLabel>{t('services')}</FormLabel>
           <FormControl>
             <ToggleGroup
-              defaultValue={services}
+              defaultValue={services.map(String)}
               className="h-full"
-              onValueChange={setServices}
+              onValueChange={handleToggle}
               type="multiple"
             >
-              <ScrollArea className="flex flex-col justify-start h-full">
-                {...data.map((service) => {
-                  return (
-                    <ToggleGroupItem
-                      {...field}
-                      value={String(service.id)}
-                      key={service.id}
-                      className="px-0 mb-1 w-full">
-                      <ServiceCard service={service} />
-                    </ToggleGroupItem>
-                  )
-                })}
+              <ScrollArea className="flex flex-col justify-start px-1 h-[22rem]">
+                {data.map(service => (
+                  <ToggleGroupItem
+                    key={service.id}
+                    value={String(service.id)}
+                    {...form.register(`services.${service.id}`)}
+                    className="px-0 mb-1 w-full"
+                  >
+                    <ServiceCard service={service} />
+                  </ToggleGroupItem>
+                ))}
               </ScrollArea>
             </ToggleGroup>
           </FormControl>
@@ -62,4 +64,4 @@ export const ServicesField: FC<ServicesFieldProps> = (
       )}
     />
   );
-}
+};

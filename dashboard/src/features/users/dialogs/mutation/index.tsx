@@ -55,12 +55,7 @@ export const UsersMutationDialog: FC<UsersMutationDialogProps> = ({
         on_hold_timeout: null,
     }), []);
 
-    const [services, setServices] = useState<string[]>([])
-    useEffect(() => {
-        if (entity) {
-            setServices(entity.services.map(serviceId => String(serviceId)))
-        }
-    }, [entity])
+    const [services, setServices] = useState<number[]>(entity ? entity.services : [])
 
     const { form, handleSubmit } = useMutationDialog({
         entity,
@@ -72,26 +67,27 @@ export const UsersMutationDialog: FC<UsersMutationDialogProps> = ({
     })
 
     useEffect(() => {
-        form.setValue("services", services.map(Number))
-        console.log(form.getValues())
+        form.setValue("services", services.map(Number).filter(item => typeof item === 'number'))
     }, [services, form])
 
 
-    const [selectedTab, setSelectedTab] = useState<'determined' | 'onhold'>('determined');
+    const [selectedTab, setSelectedTab] = useState<'determined' | 'onhold' | string>('determined');
 
     useEffect(() => {
         if (selectedTab === 'onhold') {
+            form.setValue("status", "on_hold")
+            form.setValue("expire", null);
+            form.clearErrors("expire");
+        } else {
+            form.setValue("status", "active")
             form.setValue("on_hold_expire_duration", 0);
             form.setValue("on_hold_timeout", null);
             form.clearErrors("on_hold_expire_duration");
             form.clearErrors("on_hold_timeout");
-        } else {
-            form.setValue("expire", null);
-            form.clearErrors("expire");
         }
     }, [selectedTab, form]);
-    return (
 
+    return (
         <Dialog open={open} onOpenChange={onOpenChange} defaultOpen={true}>
             <DialogContent>
                 <DialogHeader>
@@ -110,10 +106,18 @@ export const UsersMutationDialog: FC<UsersMutationDialogProps> = ({
                                     <DataLimitField />
                                     {form.watch().data_limit !== 0 && <DataLimitResetStrategyField />}
                                 </div>
-                                <Tabs defaultValue="determined" onChange={(e) => setSelectedTab(e.target.value)} className="mt-2 w-full">
-                                    <TabsList className="flex flex-row items-center p-1 w-full bg-accent">
-                                        <TabsTrigger className="w-full" value="determined">{t('page.users.determined_expire')}</TabsTrigger>
-                                        <TabsTrigger className="w-full" value="onhold">{t('page.users.onhold_expire')}</TabsTrigger>
+                                <Tabs defaultValue="determined" onValueChange={setSelectedTab} className="mt-2 w-full">
+                                    <TabsList className="flex flex-row items-center p-1 w-full rounded-md bg-accent">
+                                        <TabsTrigger
+                                            className="w-full"
+                                            value="determined">
+                                            {t('page.users.determined_expire')}
+                                        </TabsTrigger>
+                                        <TabsTrigger
+                                            className="w-full"
+                                            value="onhold">
+                                            {t('page.users.onhold_expire')}
+                                        </TabsTrigger>
                                     </TabsList>
                                     <TabsContent value="determined">
                                         <ExpireDateField />

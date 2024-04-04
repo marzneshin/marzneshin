@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { format } from 'date-fns';
 import { CalendarIcon } from '@radix-ui/react-icons';
 import { cn } from '@marzneshin/utils';
@@ -23,8 +23,11 @@ export const DateField: FC<DateFieldProps> = ({ name, label }) => {
     const [selectedDate, setSelectedDate] = useState<Date | undefined>(parseISODate(form.getValues(name)));
 
     useEffect(() => {
-        // Set up the form value when the component mounts
-        form.setValue(name, selectedDate?.toISOString().slice(0, -5)); // Ensure that the timezone offset is removed
+        const newValue = selectedDate?.toISOString().slice(0, -5);
+        const prevValue = form.getValues(name);
+        if (newValue !== prevValue) {
+            form.setValue(name, newValue, { shouldValidate: true, shouldTouch: true });
+        }
     }, [form, name, selectedDate]);
 
     return (
@@ -56,12 +59,10 @@ export const DateField: FC<DateFieldProps> = ({ name, label }) => {
                         <PopoverContent className="p-0 w-auto" align="start">
                             <Calendar
                                 mode="single"
+                                {...field}
                                 selected={selectedDate}
                                 onSelect={(date) => {
                                     setSelectedDate(date);
-                                }}
-                                onFinalize={(date) => {
-                                    form.setValue(name, date?.toISOString().slice(0, -5), { shouldValidate: true });
                                 }}
                                 disabled={(date) =>
                                     date < new Date()
