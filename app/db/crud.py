@@ -173,32 +173,6 @@ def update_host(db: Session, db_host: InboundHost, host: InboundHostModify):
     return db_host
 
 
-def update_hosts(
-    db: Session, inbound_tag: str, modified_hosts: List[InboundHostModify]
-):
-    inbound = get_or_create_inbound(db, inbound_tag)
-    inbound.hosts = [
-        InboundHost(
-            remark=host.remark,
-            address=host.address,
-            port=host.port,
-            path=host.path,
-            sni=host.sni,
-            host=host.host,
-            inbound=inbound,
-            security=host.security,
-            alpn=host.alpn,
-            fingerprint=host.fingerprint,
-            allowinsecure=host.allowinsecure,
-            is_disabled=host.is_disabled,
-        )
-        for host in modified_hosts
-    ]
-    db.commit()
-    db.refresh(inbound)
-    return inbound.hosts
-
-
 def get_user(db: Session, username: str):
     return db.query(User).filter(User.username == username).first()
 
