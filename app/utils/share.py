@@ -13,7 +13,7 @@ from app.db import GetDB, crud
 from app.models.proxy import (
     InboundHostSecurity,
 )
-from app.utils.keygen import generate_settings, gen_uuid, gen_password
+from app.utils.keygen import gen_uuid, gen_password
 from app.utils.system import get_public_ip, readable_size
 
 if TYPE_CHECKING:
@@ -120,13 +120,12 @@ from app.models.user import UserStatus
 def setup_format_variables(extra_data: dict) -> dict:
 
     user_status = extra_data.get("status")
-    expire_timestamp = extra_data.get("expire")
+    expire_datetime = extra_data.get("expire")
     on_hold_expire_duration = extra_data.get("on_hold_expire_duration")
 
     if user_status != UserStatus.on_hold:
-        if expire_timestamp is not None and expire_timestamp >= 0:
-            seconds_left = expire_timestamp - int(dt.utcnow().timestamp())
-            expire_datetime = dt.fromtimestamp(expire_timestamp)
+        if expire_datetime is not None:
+            seconds_left = (expire_datetime - dt.utcnow()).total_seconds()
             expire_date = expire_datetime.date()
             jalali_expire_date = jd.fromgregorian(
                 year=expire_date.year, month=expire_date.month, day=expire_date.day
