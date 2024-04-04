@@ -3,7 +3,8 @@ import {
   CardContent,
   CardFooter,
   CardHeader,
-  CardTitle
+  CardTitle,
+  Page
 } from '@marzneshin/components'
 import { ServicesTable } from '@marzneshin/features/services';
 import { createFileRoute } from '@tanstack/react-router'
@@ -13,18 +14,20 @@ import { useTranslation } from 'react-i18next';
 export const ServicesPage: FC = () => {
   const { t } = useTranslation();
   return (
-    <Card className="m-3">
-      <CardHeader>
-        <CardTitle>
-          {t('services')}
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <ServicesTable />
-      </CardContent>
-      <CardFooter>
-      </CardFooter>
-    </Card >
+    <Page>
+      <Card>
+        <CardHeader>
+          <CardTitle>
+            {t('services')}
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ServicesTable />
+        </CardContent>
+        <CardFooter>
+        </CardFooter>
+      </Card >
+    </Page>
   )
 };
 
