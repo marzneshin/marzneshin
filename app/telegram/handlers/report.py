@@ -110,6 +110,7 @@ async def report_status_change(username: str, status: str):
         "active": "✅ <b>#Activated</b>",
         "disabled": "❌ <b>#Disabled</b>",
         "limited": "🪫 <b>#Limited</b>",
+        "on_hold": "🟡 <b>#On_Hold</b>",
         "expired": "🕔 <b>#Expired</b>",
     }
     text = """\
