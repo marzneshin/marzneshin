@@ -1,6 +1,6 @@
 import json
 import secrets
-from datetime import datetime
+from datetime import datetime, timedelta
 from enum import Enum
 from typing import List, Optional, Tuple, Union
 
@@ -470,7 +470,7 @@ def set_owner(db: Session, dbuser: User, admin: Admin):
 
 
 def start_user_expire(db: Session, dbuser: User):
-    expire = int(datetime.utcnow().timestamp()) + dbuser.on_hold_expire_duration
+    expire = datetime.utcnow() + timedelta(seconds=dbuser.on_hold_expire_duration)
     dbuser.expire = expire
     db.commit()
     db.refresh(dbuser)
