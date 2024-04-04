@@ -85,8 +85,8 @@
         {% if not user.expire %}
         ∞
         {% else %}
-        {% set current_timestamp = now().timestamp() %}
-        {% set remaining_days = ((user.expire - current_timestamp) // (24 * 3600)) %}
+        {% set current_datetime = now() %}
+        {% set remaining_days = ((user.expire - current_datetime).days) %}
         {{ user.expire | datetime }} ({{ remaining_days | int }} days
         remaining)
         {% endif %}</p>

@@ -57,7 +57,7 @@ async def review_users():
         for user in get_users(db, status=UserStatus.active):
 
             limited = user.data_limit and user.used_traffic >= user.data_limit
-            expired = user.expire and user.expire <= now.timestamp()
+            expired = user.expire and user.expire <= now
             if limited:
                 status = UserStatus.limited
             elif expired:
@@ -81,17 +81,15 @@ async def review_users():
         for user in get_users(db, status=UserStatus.on_hold):
 
             if user.edit_at:
-                base_time = datetime.timestamp(user.edit_at)
+                base_time = user.edit_at
             else:
-                base_time = datetime.timestamp(user.created_at)
+                base_time = user.created_at
 
             # Check if the user is online After or at 'base_time'
-            if user.online_at and base_time <= datetime.timestamp(user.online_at):
+            if user.online_at and base_time <= user.online_at:
                 status = UserStatus.active
 
-            elif user.on_hold_timeout and (
-                datetime.timestamp(user.on_hold_timeout) <= (now.timestamp())
-            ):
+            elif user.on_hold_timeout and (user.on_hold_timeout <= now):
                 # If the user didn't connect within the timeout period, change status to "Active"
                 status = UserStatus.active
 

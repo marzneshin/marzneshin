@@ -1,6 +1,6 @@
 import json
 import secrets
-from datetime import datetime
+from datetime import datetime, timedelta
 from enum import Enum
 from typing import List, Optional, Tuple, Union
 
@@ -171,32 +171,6 @@ def update_host(db: Session, db_host: InboundHost, host: InboundHostModify):
     db.commit()
     db.refresh(db_host)
     return db_host
-
-
-def update_hosts(
-    db: Session, inbound_tag: str, modified_hosts: List[InboundHostModify]
-):
-    inbound = get_or_create_inbound(db, inbound_tag)
-    inbound.hosts = [
-        InboundHost(
-            remark=host.remark,
-            address=host.address,
-            port=host.port,
-            path=host.path,
-            sni=host.sni,
-            host=host.host,
-            inbound=inbound,
-            security=host.security,
-            alpn=host.alpn,
-            fingerprint=host.fingerprint,
-            allowinsecure=host.allowinsecure,
-            is_disabled=host.is_disabled,
-        )
-        for host in modified_hosts
-    ]
-    db.commit()
-    db.refresh(inbound)
-    return inbound.hosts
 
 
 def get_user(db: Session, username: str):
@@ -470,7 +444,7 @@ def set_owner(db: Session, dbuser: User, admin: Admin):
 
 
 def start_user_expire(db: Session, dbuser: User):
-    expire = int(datetime.utcnow().timestamp()) + dbuser.on_hold_expire_duration
+    expire = datetime.utcnow() + timedelta(seconds=dbuser.on_hold_expire_duration)
     dbuser.expire = expire
     db.commit()
     db.refresh(dbuser)
