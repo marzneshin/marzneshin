@@ -19,13 +19,18 @@ jobs:
         with:
           version: 8
           run_install: false
-      
+        
+      - name: Use Node.js 
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+
       - name: Install dependencies
         run: pnpm install
         working-directory: ./dashboard/
     
       - name: Build Dashboard
-        run: pnpm build -- --outDir dist --base '/dashboard/'
+        run: npm run build -- --outDir dist --base '/dashboard/'
         working-directory: ./dashboard/
       
       - name: Set up QEMU
