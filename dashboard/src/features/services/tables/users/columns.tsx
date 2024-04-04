@@ -44,6 +44,6 @@ export const columns: ColumnDef<UserType>[] = [
     {
         accessorKey: 'expire',
         header: ({ column }) => <DataTableColumnHeader title={i18n.t('expire')} column={column} />,
-        cell: ({ row }) => format(row.original.expire, "PP")
+        cell: ({ row }) => format(row.original.expire ? row.original.expire : "", "PP")
     }
 ];

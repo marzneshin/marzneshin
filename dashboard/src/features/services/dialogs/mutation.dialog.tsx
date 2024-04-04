@@ -111,7 +111,7 @@ export const MutationDialog: FC<MutationDialogProps> = ({ entity, open, onOpenCh
                                                                         ? field.onChange([...field.value, inbound.id])
                                                                         : field.onChange(
                                                                             field.value?.filter(
-                                                                                (value) => value !== inbound.id
+                                                                                (value: number) => value !== inbound.id
                                                                             )
                                                                         )
                                                                 }}
