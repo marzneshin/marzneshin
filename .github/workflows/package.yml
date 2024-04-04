@@ -18,16 +18,16 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20.x'
-          cache: 'npm'
-          cache-dependency-path: 'app/dashboard/package-lock.json'
+          cache: 'pnpm'
+          cache-dependency-path: 'dashboard/pnpm-lock.json'
   
       - name: Install dependencies
         run: npm install
-        working-directory: ./app/dashboard/
+        working-directory: ./dashboard/
     
       - name: Build Dashboard
         run: npm run build --if-present -- --outDir dist --base '/dashboard/'
-        working-directory: ./app/dashboard/
+        working-directory: ./dashboard/
       
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
