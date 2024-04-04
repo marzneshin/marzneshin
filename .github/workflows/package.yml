@@ -20,13 +20,18 @@ jobs:
           node-version: '20.x'
           cache: 'pnpm'
           cache-dependency-path: 'dashboard/pnpm-lock.json'
+      - uses: pnpm/action-setup@v3
+        name: Install pnpm
+        with:
+          version: 8
+          run_install: false
   
       - name: Install dependencies
-        run: npm install
+        run: pnpm install
         working-directory: ./dashboard/
     
       - name: Build Dashboard
-        run: npm run build --if-present -- --outDir dist --base '/dashboard/'
+        run: pnpm build -- --outDir dist --base '/dashboard/'
         working-directory: ./dashboard/
       
       - name: Set up QEMU
