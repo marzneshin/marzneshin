@@ -57,11 +57,8 @@ export function InboundHostsDataTable<TData, TValue>({
     setSelectedInbound,
 }: InboundHostsDataTableProps<TData, TValue>) {
     const [sorting, setSorting] = useState<SortingState>([])
-    const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>(
-        []
-    )
-    const [columnVisibility, setColumnVisibility] =
-        useState<VisibilityState>({})
+    const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+    const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
     const table = useReactTable({
         data,
         columns,
