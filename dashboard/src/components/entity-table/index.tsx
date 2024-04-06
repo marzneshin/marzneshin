@@ -1,45 +1,46 @@
 import { FC, useState } from "react";
-import { DataTable } from "@marzneshin/components";
-
-interface MutationDialogProps<T> {
-    open: boolean;
-    onOpenChange: (open: boolean) => void;
-    entity: T | null;
-}
-
-interface DeleteConfirmationDialogProps<T> {
-    open: boolean;
-    onOpenChange: (open: boolean) => void;
-    entity: T | null;
-}
-
-interface SettingsDialogProps<T> {
-    open: boolean;
-    onOpenChange: (open: boolean) => void;
-    entity: T | null;
-}
+import { Button, DataTableViewOptions } from "@marzneshin/components";
+import { EntityTableContext } from "./entity-table-provider";
+import { EntityDataTable } from "./table"
+import { DataTablePagination } from "./table-pagination"
+import { SortingState, VisibilityState, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, useReactTable } from "@tanstack/react-table";
+import {
+    UseRowSelectionReturn,
+    UseDialogProps,
+    useFiltering,
+    useDialog,
+    usePagination,
+    FetchEntityReturn,
+    EntityQueryKeyType
+} from "./hooks";
+import { useTranslation } from "react-i18next";
+import { TableFiltering } from "./table-filtering";
+import { useQuery } from "@tanstack/react-query";
 
 interface EntityTableProps<T> {
-    useQuery: () => { data: T[] };
-    MutationDialog: FC<MutationDialogProps<T>>;
-    DeleteConfirmationDialog: FC<DeleteConfirmationDialogProps<T>>;
-    SettingsDialog: FC<SettingsDialogProps<T | any>>;
-    columns: any;
+    fetchEntity: ({ queryKey }: EntityQueryKeyType) => FetchEntityReturn<T>;
+    MutationDialog: FC<UseDialogProps<T>>;
+    DeleteConfirmationDialog: FC<UseDialogProps<T>>;
+    SettingsDialog: FC<UseDialogProps<T | any>>;
+    columnsFn: any;
     filteredColumn: string;
+    entityKey: string
+    rowSelection?: UseRowSelectionReturn
 }
 
 export function EntityTable<T>({
-    useQuery,
+    fetchEntity,
     MutationDialog,
     DeleteConfirmationDialog,
     SettingsDialog,
-    columns,
+    columnsFn,
     filteredColumn,
+    rowSelection,
+    entityKey,
 }: EntityTableProps<T>) {
-    const { data } = useQuery();
-    const [mutationDialogOpen, setMutationDialogOpen] = useState<boolean>(false);
-    const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
-    const [settingsDialogOpen, setSettingsDialogOpen] = useState<boolean>(false);
+    const [mutationDialogOpen, setMutationDialogOpen] = useDialog();
+    const [deleteDialogOpen, setDeleteDialogOpen] = useDialog();
+    const [settingsDialogOpen, setSettingsDialogOpen] = useDialog();
     const [selectedEntity, selectEntity] = useState<T | null>(null);
 
     const onEdit = (entity: T) => {
@@ -62,8 +63,45 @@ export function EntityTable<T>({
         setSettingsDialogOpen(true);
     };
 
+    const { t } = useTranslation()
+    const filtering = useFiltering({ column: filteredColumn })
+    const [sorting, setSorting] = useState<SortingState>([])
+    const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
+    const { onPaginationChange, pageIndex, pageSize } = usePagination();
+
+    const { data } = useQuery({
+        queryFn: fetchEntity,
+        queryKey: [entityKey, pageIndex, pageSize],
+        initialData: { entity: [], pageCount: 1 }
+    });
+
+    const columns = columnsFn({ onEdit, onDelete, onOpen })
+    const table = useReactTable({
+        data: data.entity,
+        columns,
+        manualPagination: true,
+        pageCount: data.pageCount + 1,
+        autoResetPageIndex: false,
+        onPaginationChange,
+        onSortingChange: setSorting,
+        onColumnFiltersChange: filtering.setColumnFilters,
+        getCoreRowModel: getCoreRowModel(),
+        getPaginationRowModel: getPaginationRowModel(),
+        getSortedRowModel: getSortedRowModel(),
+        getFilteredRowModel: getFilteredRowModel(),
+        onColumnVisibilityChange: setColumnVisibility,
+        onRowSelectionChange: rowSelection && rowSelection.setSelectedRow,
+        state: {
+            sorting,
+            columnFilters: filtering.columnFilters,
+            columnVisibility,
+            pagination: { pageIndex: pageIndex - 1, pageSize },
+            rowSelection: rowSelection ? rowSelection.selectedRow : {},
+        },
+    })
+
     return (
-        <div>
+        <EntityTableContext.Provider value={{ table, data: data.entity, filtering }}>
             <SettingsDialog
                 open={settingsDialogOpen}
                 onOpenChange={setSettingsDialogOpen}
@@ -79,13 +117,23 @@ export function EntityTable<T>({
                 onOpenChange={setMutationDialogOpen}
                 entity={selectedEntity}
             />
-            <DataTable
-                columns={columns({ onEdit, onDelete, onOpen })}
-                data={data}
-                filteredColumn={filteredColumn}
-                onCreate={onCreate}
-                onOpen={onOpen}
-            />
-        </div>
+
+            <div className="flex flex-col">
+                <div className="flex items-center py-4">
+                    <TableFiltering />
+                    <DataTableViewOptions table={table} />
+                    {onCreate && (<Button onClick={onCreate}>{t('create')}</Button>)}
+                </div>
+                <div className="w-full rounded-md border">
+                    <EntityDataTable
+                        columns={columns}
+                        onRowClick={onOpen}
+                    />
+                    <DataTablePagination />
+                </div>
+            </div>
+        </EntityTableContext.Provider>
     );
 }
+
+export * from './hooks'
