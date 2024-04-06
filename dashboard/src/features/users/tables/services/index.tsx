@@ -17,9 +17,10 @@ interface UserServicesTableProps {
     user: UserType
 }
 
+// TODO: Implement pagination for row selectable with appliedable action table
 export const UserServicesTable: FC<UserServicesTableProps> = ({ user }) => {
     const { mutate: updateUser } = useUsersUpdateMutation();
-    const { data } = useServicesQuery();
+    const { data } = useServicesQuery({ page: 1, size: 100 });
     const [selectedService, setSelectedService] = useState<{ [key: number]: boolean }>({})
     const { t } = useTranslation()
 
@@ -27,7 +28,7 @@ export const UserServicesTable: FC<UserServicesTableProps> = ({ user }) => {
         setSelectedService((prevSelected) => {
             const updatedSelected: RowSelectionState = { ...prevSelected };
             user.services.forEach((serviceId) => {
-                data.forEach((fetchedService: ServiceType, i) => {
+                data.entity.forEach((fetchedService: ServiceType, i) => {
                     if (fetchedService.id === serviceId) {
                         updatedSelected[i] = true;
                     }
@@ -40,7 +41,7 @@ export const UserServicesTable: FC<UserServicesTableProps> = ({ user }) => {
     const handleApply = useCallback(() => {
         const selectedServiceIds = Object.keys(selectedService)
             .filter(key => selectedService[parseInt(key)])
-            .map(key => data[parseInt(key)].id);
+            .map(key => data.entity[parseInt(key)].id);
         updateUser({ ...user, services: selectedServiceIds });
     }, [data, selectedService, user, updateUser]);
 
@@ -50,7 +51,7 @@ export const UserServicesTable: FC<UserServicesTableProps> = ({ user }) => {
         <div className="flex flex-col gap-4">
             <DataTable
                 columns={columns}
-                data={data}
+                data={data.entity}
                 filteredColumn='name'
                 selectedRow={selectedService}
                 setSelectedRow={setSelectedService}
