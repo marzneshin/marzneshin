@@ -2,15 +2,16 @@ import { useState } from "react";
 
 export function usePagination() {
     const [pagination, setPagination] = useState({
-        size: 10,
-        page: 0,
+        pageSize: 10,
+        pageIndex: 1,
     });
-    const { page, size } = pagination;
+    const { pageSize, pageIndex } = pagination;
 
     return {
-        limit: size,
+        pageSize,
+        pageIndex,
         onPaginationChange: setPagination,
         pagination,
-        skip: page * size,
+        skip: pageSize * pageIndex,
     };
 }
