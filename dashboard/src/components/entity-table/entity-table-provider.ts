@@ -3,8 +3,9 @@ import { UseFilteringReturn } from "./hooks";
 import { Table } from "@tanstack/react-table";
 
 interface EntityTableContextProps<TData> {
-    table: Table<TData>;
-    filtering?: UseFilteringReturn | undefined
+    table: Table<TData>
+    data: TData[]
+    filtering: UseFilteringReturn
 }
 
 export const EntityTableContext = createContext<EntityTableContextProps<any> | null>(null);
