@@ -1,19 +1,27 @@
 import { NodeType } from "@marzneshin/features/nodes";
 import { useQuery } from "@tanstack/react-query";
 import { fetch } from "@marzneshin/utils";
+import {
+    EntityQueryKeyType,
+    UseEntityQueryProps
+} from "@marzneshin/components";
 
-export async function fetchNodes(): Promise<NodeType[]> {
-    return fetch('/nodes').then((result) => {
-        return result.items;
+export async function fetchNodes({ queryKey }: EntityQueryKeyType): Promise<{ entity: NodeType[], pageCount: number }> {
+    return fetch(`/nodes?page=${queryKey[1]}&size=${queryKey[2]}`).then((result) => {
+        return {
+            entity: result.items,
+            pageCount: result.pages,
+        };
     });
 }
 
 export const NodesQueryFetchKey = "nodes";
 
-export const useNodesQuery = () => {
+
+export const useNodesQuery = ({ page, size }: UseEntityQueryProps) => {
     return useQuery({
-        queryKey: [NodesQueryFetchKey],
+        queryKey: [NodesQueryFetchKey, page, size],
         queryFn: fetchNodes,
-        initialData: []
+        initialData: { entity: [], pageCount: 0 },
     })
 }

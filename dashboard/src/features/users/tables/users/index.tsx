@@ -1,10 +1,11 @@
 
 import { FC } from "react";
 import {
-    useUsersQuery,
     UsersMutationDialog,
     UsersDeleteConfirmationDialog,
-    UsersSettingsDialog
+    UsersSettingsDialog,
+    fetchUsers,
+    UsersQueryFetchKey
 } from '@marzneshin/features/users';
 import { columns } from './columns'
 import { EntityTable } from "@marzneshin/components";
@@ -12,12 +13,13 @@ import { EntityTable } from "@marzneshin/components";
 export const UsersTable: FC = () => {
     return (
         <EntityTable
-            useQuery={useUsersQuery}
+            fetchEntity={fetchUsers}
             MutationDialog={UsersMutationDialog}
             DeleteConfirmationDialog={UsersDeleteConfirmationDialog}
             SettingsDialog={UsersSettingsDialog}
-            columns={columns}
+            columnsFn={columns}
             filteredColumn="username"
+            entityKey={UsersQueryFetchKey}
         />
     )
 }

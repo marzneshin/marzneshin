@@ -17,7 +17,7 @@ import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 
 export const UsersPage: FC = () => {
-  const { data } = useServicesQuery();
+  const { data } = useServicesQuery({ page: 1, size: 10 });
   const { t } = useTranslation();
   return (
     <Page>
@@ -31,7 +31,7 @@ export const UsersPage: FC = () => {
           <UsersTable />
         </CardContent>
         <CardFooter>
-          {(data && data.length === 0) && (
+          {(data && data.pageCount === 0) && (
             <Alert>
               <ExclamationTriangleIcon className="mr-2" />
               <AlertTitle className="font-semibold text-primary">{t('page.users.services-alert.title')}</AlertTitle>

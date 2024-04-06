@@ -24,7 +24,7 @@ export const ServicesField: FC<ServicesFieldProps> = ({
   setServices
 }) => {
   const form = useFormContext();
-  const { data } = useServicesQuery();
+  const { data } = useServicesQuery({ page: 1, size: 100 });
   const { t } = useTranslation();
 
   const handleToggle = (selectedServiceIds: string[]) => {
@@ -46,7 +46,7 @@ export const ServicesField: FC<ServicesFieldProps> = ({
               type="multiple"
             >
               <ScrollArea className="flex flex-col justify-start px-1 h-[22rem]">
-                {data.map(service => (
+                {data.entity.map(service => (
                   <ToggleGroupItem
                     key={service.id}
                     value={String(service.id)}
