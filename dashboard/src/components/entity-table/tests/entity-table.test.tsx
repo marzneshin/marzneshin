@@ -61,6 +61,31 @@ describe("Entity Table", () => {
 
     })
 
+    it('Mutation Dialog Invoked for Entity Edition when clicked on Edit button', async () => {
+        const entityTable = render(
+            <QueryClientProvider client={queryClient}>
+                <EntityTable
+                    fetchEntity={fetchMockApi}
+                    MutationDialog={MockDialog}
+                    DeleteConfirmationDialog={MockDeleteConfirmationDialog}
+                    SettingsDialog={MockSettingsDialog}
+                    columnsFn={mockColumns}
+                    filteredColumn="name"
+                    entityKey="users"
+                />
+            </QueryClientProvider>
+        )
+        const editBtn = await entityTable.findByRole('button', { name: 'Open menu' });
+        await act(async () => await user.click(editBtn))
+
+        const menuItem = await screen.findByRole('menuitem', { name: 'edit' });
+        await act(async () => await user.click(menuItem));
+
+        const editDialog = await screen.findByTestId("edit-mutation-dialog")
+        expect(editDialog).toBeTruthy()
+        expect(editDialog).toBeInTheDocument();
+
+    })
     describe('Entity Table Pagination', () => {
         it('Paginate entities', () => { })
     })
