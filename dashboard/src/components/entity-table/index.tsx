@@ -90,6 +90,7 @@ export function EntityTable<T>({
         onPaginationChange
     })
 
+    // TODO: Move the selectedEntity to context
     return (
         <EntityTableContext.Provider value={{ table, data: data.entity, filtering }}>
             <SettingsDialog
@@ -107,12 +108,17 @@ export function EntityTable<T>({
                 onOpenChange={setMutationDialogOpen}
                 entity={selectedEntity}
             />
-
             <div className="flex flex-col">
                 <div className="flex items-center py-4">
                     <TableFiltering />
                     <DataTableViewOptions table={table} />
-                    {onCreate && (<Button onClick={onCreate}>{t('create')}</Button>)}
+                    {onCreate && (
+                        <Button
+                            aria-label={`create-${entityKey}`}
+                            onClick={onCreate}>
+                            {t('create')}
+                        </Button>
+                    )}
                 </div>
                 <div className="w-full rounded-md border">
                     <EntityDataTable
