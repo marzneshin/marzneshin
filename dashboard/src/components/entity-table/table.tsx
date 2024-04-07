@@ -52,6 +52,7 @@ export function EntityDataTable<TData, TValue>({
                         <TableRow
                             key={row.id}
                             data-state={row.getIsSelected() && "selected"}
+                            data-testid={"entity-table-row"}
                             onClick={() => onRowClick && onRowClick(row.original)}
                         >
                             {row.getVisibleCells().map((cell) => (

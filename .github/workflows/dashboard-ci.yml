@@ -42,7 +42,10 @@ jobs:
       run: pnpm lint
 
     - name: Build Dashboard
-      run: pnpm build -- --outDir dist --base '/dashboard/'
+      run: pnpm build --base '/dashboard/'
+
+    - name: Unit Test Dashboard
+      run: pnpm test
     
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v4.2.0
