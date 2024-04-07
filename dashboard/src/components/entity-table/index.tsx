@@ -1,9 +1,11 @@
 import { FC, useState } from "react";
 import { Button, DataTableViewOptions } from "@marzneshin/components";
+import { useTranslation } from "react-i18next";
+import { useQuery } from "@tanstack/react-query";
 import { EntityTableContext } from "./entity-table-provider";
 import { EntityDataTable } from "./table"
 import { DataTablePagination } from "./table-pagination"
-import { SortingState, VisibilityState, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, useReactTable } from "@tanstack/react-table";
+import { TableFiltering } from "./table-filtering";
 import {
     UseRowSelectionReturn,
     UseDialogProps,
@@ -11,11 +13,11 @@ import {
     useDialog,
     usePagination,
     FetchEntityReturn,
-    EntityQueryKeyType
+    EntityQueryKeyType,
+    useEntityTable,
+    useVisibility,
+    useSorting
 } from "./hooks";
-import { useTranslation } from "react-i18next";
-import { TableFiltering } from "./table-filtering";
-import { useQuery } from "@tanstack/react-query";
 
 interface EntityTableProps<T> {
     fetchEntity: ({ queryKey }: EntityQueryKeyType) => FetchEntityReturn<T>;
@@ -65,8 +67,8 @@ export function EntityTable<T>({
 
     const { t } = useTranslation()
     const filtering = useFiltering({ column: filteredColumn })
-    const [sorting, setSorting] = useState<SortingState>([])
-    const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
+    const sorting = useSorting()
+    const visibility = useVisibility()
     const { onPaginationChange, pageIndex, pageSize } = usePagination();
 
     const { data } = useQuery({
@@ -76,28 +78,16 @@ export function EntityTable<T>({
     });
 
     const columns = columnsFn({ onEdit, onDelete, onOpen })
-    const table = useReactTable({
-        data: data.entity,
+    const table = useEntityTable({
+        data,
+        filtering,
         columns,
-        manualPagination: true,
-        pageCount: data.pageCount + 1,
-        autoResetPageIndex: false,
-        onPaginationChange,
-        onSortingChange: setSorting,
-        onColumnFiltersChange: filtering.setColumnFilters,
-        getCoreRowModel: getCoreRowModel(),
-        getPaginationRowModel: getPaginationRowModel(),
-        getSortedRowModel: getSortedRowModel(),
-        getFilteredRowModel: getFilteredRowModel(),
-        onColumnVisibilityChange: setColumnVisibility,
-        onRowSelectionChange: rowSelection && rowSelection.setSelectedRow,
-        state: {
-            sorting,
-            columnFilters: filtering.columnFilters,
-            columnVisibility,
-            pagination: { pageIndex: pageIndex - 1, pageSize },
-            rowSelection: rowSelection ? rowSelection.selectedRow : {},
-        },
+        pageSize,
+        pageIndex,
+        rowSelection,
+        visibility,
+        sorting,
+        onPaginationChange
     })
 
     return (
