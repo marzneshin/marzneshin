@@ -37,6 +37,30 @@ describe("Entity Table", () => {
 
         expect(entityTable).toBeTruthy()
     })
+
+    it('Mutation Dialog Invoked for Entity Creation when clicked on Create button', async () => {
+        const entityTable = render(
+            <QueryClientProvider client={queryClient}>
+                <EntityTable
+                    fetchEntity={fetchMockApi}
+                    MutationDialog={MockDialog}
+                    DeleteConfirmationDialog={MockDeleteConfirmationDialog}
+                    SettingsDialog={MockSettingsDialog}
+                    columnsFn={mockColumns}
+                    filteredColumn="name"
+                    entityKey="users"
+                />
+            </QueryClientProvider>
+        )
+        const createBtn = await entityTable.findByLabelText('create-users')
+        await user.click(createBtn)
+
+        const createDialog = await screen.findByTestId("create-mutation-dialog")
+        expect(createDialog).toBeTruthy()
+        expect(createDialog).toBeInTheDocument();
+
+    })
+
     describe('Entity Table Pagination', () => {
         it('Paginate entities', () => { })
     })
