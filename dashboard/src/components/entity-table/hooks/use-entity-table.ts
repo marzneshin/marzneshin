@@ -10,7 +10,7 @@ interface UseEntityTableProps<TData, TValue> {
     filtering: UseFilteringReturn
     sorting: UseSortingReturn
     visibility: UseVisibilityReturn
-    rowSelection: UseRowSelectionReturn
+    rowSelection?: UseRowSelectionReturn
     pageIndex: number
     pageSize: number
     onPaginationChange: OnChangeFn<PaginationState>
