@@ -86,6 +86,32 @@ describe("Entity Table", () => {
         expect(editDialog).toBeInTheDocument();
 
     })
+    it('Settings Dialog Invoked for to observe related data to the entity when clicked on row of the entity on table', async () => {
+        const entityTable = render(
+            <QueryClientProvider client={queryClient}>
+                <EntityTable
+                    fetchEntity={fetchMockApi}
+                    MutationDialog={MockDialog}
+                    DeleteConfirmationDialog={MockDeleteConfirmationDialog}
+                    SettingsDialog={MockSettingsDialog}
+                    columnsFn={mockColumns}
+                    filteredColumn="name"
+                    entityKey="users"
+                />
+            </QueryClientProvider>
+        )
+
+        const openBtn = await entityTable.findByRole('button', { name: 'Open menu' });
+        await act(async () => await user.click(openBtn))
+
+        const menuItem = await screen.findByRole('menuitem', { name: 'open' });
+        await act(async () => await user.click(menuItem));
+
+        const settingsDialog = await screen.findByTestId("settings-dialog")
+        expect(settingsDialog).toBeTruthy()
+        expect(settingsDialog).toBeInTheDocument();
+    })
+
     describe('Entity Table Pagination', () => {
         it('Paginate entities', () => { })
     })
