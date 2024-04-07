@@ -10,6 +10,7 @@
     "preview": "vite preview",
     "test": "vitest",
     "test:ui": "vitest --ui",
+    "test:ui:coverage": "vitest --ui --coverage.enabled=true",
     "test:watch": "vitest --watch",
     "test:coverage": "vitest run --coverage"
   },
@@ -54,6 +55,7 @@
     "@testing-library/jest-dom": "^6.4.2",
     "@testing-library/react": "^14.2.2",
     "@testing-library/user-event": "^14.5.2",
+    "@vitest/coverage-istanbul": "^1.4.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "date-fns": "^3.6.0",
