@@ -112,6 +112,32 @@ describe("Entity Table", () => {
         expect(settingsDialog).toBeInTheDocument();
     })
 
+    it('Delete Confirmation Dialog Invoked for confirming the deletion of chosen entity from action list drop down by clicking on Delete button', async () => {
+        const entityTable = render(
+            <QueryClientProvider client={queryClient}>
+                <EntityTable
+                    fetchEntity={fetchMockApi}
+                    MutationDialog={MockDialog}
+                    DeleteConfirmationDialog={MockDeleteConfirmationDialog}
+                    SettingsDialog={MockSettingsDialog}
+                    columnsFn={mockColumns}
+                    filteredColumn="name"
+                    entityKey="users"
+                />
+            </QueryClientProvider>
+        )
+
+        const deleteBtn = await entityTable.findByRole('button', { name: 'Open menu' });
+        await act(async () => await user.click(deleteBtn))
+
+        const menuItem = await screen.findByRole('menuitem', { name: 'delete' });
+        await act(async () => await user.click(menuItem));
+
+        const deleteConfirmationDialog = await screen.findByTestId("delete-confirmation-dialog")
+        expect(deleteConfirmationDialog).toBeTruthy()
+        expect(deleteConfirmationDialog).toBeInTheDocument();
+    })
+
     describe('Entity Table Pagination', () => {
         it('Paginate entities', () => { })
     })
