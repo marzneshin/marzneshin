@@ -228,6 +228,7 @@ def process_inbounds_and_tags(
                 host.remark.format_map(format_variables),
                 host.address.format_map(format_variables),
                 host.port or inbound["port"],
+                transport_type=inbound["network"],
                 sni=sni,
                 host=req_host,
                 tls=host_tls or inbound["tls"],
