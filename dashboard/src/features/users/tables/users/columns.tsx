@@ -5,8 +5,9 @@ import { DataTableColumnHeader } from "@marzneshin/components/data-table/column-
 import i18n from "@marzneshin/features/i18n"
 import { CopyToClipboardButton, DataTableActionsCell, buttonVariants } from "@marzneshin/components"
 import { CircularProgress } from "@nextui-org/progress"
-import { LinkIcon } from "lucide-react"
-import { getSubscriptionLink } from "@marzneshin/utils"
+import { Circle, LinkIcon } from "lucide-react"
+import { getSubscriptionLink, isUserOnline } from "@marzneshin/utils"
+import { FC } from "react"
 
 interface ColumnAction {
     onDelete: (user: UserType) => void;
@@ -14,11 +15,21 @@ interface ColumnAction {
     onEdit: (user: UserType) => void;
 }
 
+interface OnlineStatusProps {
+    user: UserType
+}
+
+const OnlineStatus: FC<OnlineStatusProps> = ({ user }) => {
+    return (isUserOnline(user) ? <Circle className="w-5 h-5 text-green-500" /> : null)
+}
 
 export const columns = (actions: ColumnAction): ColumnDef<UserType>[] => ([
     {
         accessorKey: "username",
         header: ({ column }) => <DataTableColumnHeader title={i18n.t('username')} column={column} />,
+        cell: ({ row }) => (<div className="flex flex-row gap-2 items-center">
+            <OnlineStatus user={row.original} /> {row.original.username}
+        </div>)
     },
     {
         accessorKey: "status",
