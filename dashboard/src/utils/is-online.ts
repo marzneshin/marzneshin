@@ -1,10 +1,13 @@
 import { UserType } from "@marzneshin/features/users";
 
 /**
- * Check whether the user has been online or not
- *
- * @param user - User entity
- * @returns Whether the user has be online or not
+ * Checks whether the user has been online recently.
+ * 
+ * This function compares the provided user's last online time with the current time
+ * to determine if the user has been online within a certain threshold.
+ * 
+ * @param user - The user entity containing information about the user.
+ * @returns A boolean value indicating whether the user has been online recently.
  */
 export const isUserOnline = (user: UserType): boolean => {
     const dateObject = new Date(user.online_at);
