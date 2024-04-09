@@ -11,8 +11,8 @@ interface CopyToClipboardButtonProps {
     disabled?: boolean;
     successMessage: string;
     copyIcon?: LucideIcon;
-    copyLabel: string;
-    errorLabel: string;
+    copyLabel?: string;
+    errorLabel?: string;
     className?: string;
 }
 
@@ -48,12 +48,13 @@ export const CopyToClipboardButton: React.FC<CopyToClipboardButtonProps> = ({
     };
 
     const Icon = copied ? CopyCheck : (healthy ? (copyIcon ? copyIcon : ClipboardCopy) : CopyX)
+    const isWithLabel = successMessage && copyLabel && errorLabel
 
     return (
         <CopyToClipboard text={text}>
             <Button className={cn(className, "p-2 flex flex-row items-center gap-2")} disabled={disabled || !healthy} onClick={handleClick}>
                 <Icon />
-                {t(copied ? successMessage : (healthy ? copyLabel : errorLabel))}
+                {isWithLabel && t(copied ? successMessage : (healthy ? copyLabel : errorLabel))}
             </Button>
         </CopyToClipboard>
     );
