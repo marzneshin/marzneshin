@@ -5,22 +5,14 @@ import { DataTableColumnHeader } from "@marzneshin/components/data-table/column-
 import i18n from "@marzneshin/features/i18n"
 import { CopyToClipboardButton, DataTableActionsCell, buttonVariants } from "@marzneshin/components"
 import { CircularProgress } from "@nextui-org/progress"
-import { Circle, LinkIcon } from "lucide-react"
-import { getSubscriptionLink, isUserOnline } from "@marzneshin/utils"
-import { FC } from "react"
+import { LinkIcon } from "lucide-react"
+import { getSubscriptionLink } from "@marzneshin/utils"
+
 
 interface ColumnAction {
     onDelete: (user: UserType) => void;
     onOpen: (user: UserType) => void;
     onEdit: (user: UserType) => void;
-}
-
-interface OnlineStatusProps {
-    user: UserType
-}
-
-const OnlineStatus: FC<OnlineStatusProps> = ({ user }) => {
-    return (isUserOnline(user) ? <Circle className="w-5 h-5 text-green-500" /> : null)
 }
 
 export const columns = (actions: ColumnAction): ColumnDef<UserType>[] => ([
