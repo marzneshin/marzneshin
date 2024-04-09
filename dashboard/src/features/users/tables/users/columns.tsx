@@ -53,6 +53,7 @@ export const columns = (actions: ColumnAction): ColumnDef<UserType>[] => ([
                 successMessage={i18n.t('page.users.settings.subscription_link.copied')}
                 copyIcon={LinkIcon}
                 className={buttonVariants({ variant: "ghost", className: "h-8 w-8" })}
+                tooltipMsg={i18n.t('page.users.settings.subscription_link.copy')}
             />
             <DataTableActionsCell {...actions} row={row} />
         </div>
