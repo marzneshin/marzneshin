@@ -1,4 +1,4 @@
-import { Button } from '@marzneshin/components';
+import { Button, Tooltip, TooltipContent, TooltipTrigger } from '@marzneshin/components';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -11,9 +11,10 @@ interface CopyToClipboardButtonProps {
     disabled?: boolean;
     successMessage: string;
     copyIcon?: LucideIcon;
-    copyLabel: string;
-    errorLabel: string;
+    copyLabel?: string;
+    errorLabel?: string;
     className?: string;
+    tooltipMsg?: string;
 }
 
 export const CopyToClipboardButton: React.FC<CopyToClipboardButtonProps> = ({
@@ -22,7 +23,8 @@ export const CopyToClipboardButton: React.FC<CopyToClipboardButtonProps> = ({
     successMessage,
     copyIcon,
     copyLabel,
-    errorLabel, className
+    errorLabel, className,
+    tooltipMsg
 }) => {
     const { t } = useTranslation();
     const [copied, setCopied] = useState(false);
@@ -47,14 +49,26 @@ export const CopyToClipboardButton: React.FC<CopyToClipboardButtonProps> = ({
         }
     };
 
+    const tooltip = tooltipMsg ? tooltipMsg : (copyLabel ? copyLabel : undefined)
+
     const Icon = copied ? CopyCheck : (healthy ? (copyIcon ? copyIcon : ClipboardCopy) : CopyX)
+    const isWithLabel = successMessage && copyLabel && errorLabel
 
     return (
-        <CopyToClipboard text={text}>
-            <Button className={cn(className, "p-2 flex flex-row items-center gap-2")} disabled={disabled || !healthy} onClick={handleClick}>
-                <Icon />
-                {t(copied ? successMessage : (healthy ? copyLabel : errorLabel))}
-            </Button>
-        </CopyToClipboard>
+        <Tooltip>
+            <TooltipTrigger>
+                <CopyToClipboard text={text}>
+                    <Button className={cn(className, "p-2 flex flex-row items-center gap-2")} disabled={disabled || !healthy} onClick={handleClick}>
+                        <Icon />
+                        {isWithLabel && t(copied ? successMessage : (healthy ? copyLabel : errorLabel))}
+                    </Button>
+                </CopyToClipboard>
+            </TooltipTrigger>
+            {tooltip &&
+                <TooltipContent>
+                    {tooltip}
+                </TooltipContent>
+            }
+        </Tooltip >
     );
 };
