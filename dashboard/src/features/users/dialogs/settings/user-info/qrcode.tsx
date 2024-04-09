@@ -6,6 +6,7 @@ import { FC } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@marzneshin/components';
 import { useTranslation } from 'react-i18next';
 import { SubscriptionLinkButton } from './subcription-link-button';
+import { getSubscriptionLink } from '@marzneshin/utils';
 
 interface QRCodeProps {
     entity: UserType
@@ -14,9 +15,7 @@ interface QRCodeProps {
 export const QRCodeSection: FC<QRCodeProps> = (
     { entity }
 ) => {
-    const subscribeQrLink = String(entity.subscription_url).startsWith('/')
-        ? window.location.origin + entity.subscription_url
-        : String(entity.subscription_url);
+    const subscribeQrLink = getSubscriptionLink(entity.subscription_url);
     const { t } = useTranslation()
     return (
         <Card>

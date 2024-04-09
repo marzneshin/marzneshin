@@ -3,9 +3,10 @@ import { ColumnDef } from "@tanstack/react-table"
 import { UsersStatusBadge, UserType, UsersStatus } from "@marzneshin/features/users"
 import { DataTableColumnHeader } from "@marzneshin/components/data-table/column-header"
 import i18n from "@marzneshin/features/i18n"
-import { CopyToClipboardButton, DataTableActionsCell, TooltipProvider, buttonVariants } from "@marzneshin/components"
+import { CopyToClipboardButton, DataTableActionsCell, buttonVariants } from "@marzneshin/components"
 import { CircularProgress } from "@nextui-org/progress"
 import { LinkIcon } from "lucide-react"
+import { getSubscriptionLink } from "@marzneshin/utils"
 
 interface ColumnAction {
     onDelete: (user: UserType) => void;
@@ -49,7 +50,7 @@ export const columns = (actions: ColumnAction): ColumnDef<UserType>[] => ([
         id: "actions",
         cell: ({ row }) => <div className="flex flex-row gap-2 items-center" onClick={(e) => e.stopPropagation()}>
             <CopyToClipboardButton
-                text={row.original.subscription_url}
+                text={getSubscriptionLink(row.original.subscription_url)}
                 successMessage={i18n.t('page.users.settings.subscription_link.copied')}
                 copyIcon={LinkIcon}
                 className={buttonVariants({ variant: "ghost", className: "h-8 w-8" })}
