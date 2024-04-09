@@ -1,4 +1,4 @@
-import { Sidebar, SidebarItem } from "@marzneshin/components";
+import { Sidebar, SidebarItem, Tooltip, TooltipContent, TooltipTrigger } from "@marzneshin/components";
 import { useRouterState } from "@tanstack/react-router";
 import { FC, useEffect } from "react";
 import { sidebarItems } from ".";
@@ -31,12 +31,19 @@ export const DashboardSidebar: FC<DashboardSidebarProps> = ({ collapsed, setColl
                                 <div className="w-full" key={key}>
                                     <Sidebar.Group>{key}</Sidebar.Group>
                                     {sidebarItems[key].map((item: SidebarItem, i) => (
-                                        <Sidebar.Item
-                                            variant={currentActivePath === item.to ? "active" : "default"}
-                                            className={cn("my-2 border-transparent", { "w-10 h-10": collapsed })}
-                                            item={item}
-                                            key={i}
-                                        />
+                                        <Tooltip>
+                                            <TooltipTrigger className="w-full">
+                                                <Sidebar.Item
+                                                    variant={currentActivePath === item.to ? "active" : "default"}
+                                                    className={cn("my-2 border-transparent", { "w-10 h-10": collapsed })}
+                                                    item={item}
+                                                    key={i}
+                                                />
+                                            </TooltipTrigger>
+                                            <TooltipContent>
+                                                {collapsed && item.title}
+                                            </TooltipContent>
+                                        </Tooltip>
                                     )
                                     )}
                                 </div>
