@@ -17,7 +17,7 @@ interface ServiceResponse {
 }
 
 export async function fetchServices({ queryKey }: EntityQueryKeyType): FetchEntityReturn<ServiceType> {
-    return fetch(`/services?page=${queryKey[1]}&size=${queryKey[2]}`).then((result) => {
+    return fetch(`/services?page=${queryKey[1]}&size=${queryKey[2]}&name=${queryKey[3]}`).then((result) => {
         const services: ServiceType[] = result.items.map((fetchedService: ServiceResponse) => {
             const service: ServiceType = fetchedService;
             service.users = fetchedService.user_ids
@@ -33,9 +33,9 @@ export async function fetchServices({ queryKey }: EntityQueryKeyType): FetchEnti
 
 export const ServicesQueryFetchKey = "services";
 
-export const useServicesQuery = ({ page, size }: UseEntityQueryProps) => {
+export const useServicesQuery = ({ page, size, search }: UseEntityQueryProps) => {
     return useQuery({
-        queryKey: [ServicesQueryFetchKey, page, size],
+        queryKey: [ServicesQueryFetchKey, page, size, search ? search : ""],
         queryFn: fetchServices,
         initialData: { entity: [], pageCount: 0 }
     })
