@@ -10,9 +10,8 @@ import { UserType } from "@marzneshin/features/users";
  * @returns A boolean value indicating whether the user has been online recently.
  */
 export const isUserOnline = (user: UserType): boolean => {
-    const dateObject = new Date(user.online_at);
+    const utcUserOnlineTime = new Date(user.online_at + 'Z');
     const currentTime = new Date();
-    const utcCurrentTime = new Date(currentTime.toISOString());
-    const timeDifference = utcCurrentTime.getTime() - dateObject.getTime();
+    const timeDifference = Math.abs(currentTime.getTime() - utcUserOnlineTime.getTime());
     return timeDifference < 30000;
 };
