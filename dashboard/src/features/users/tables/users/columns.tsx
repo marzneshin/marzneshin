@@ -1,12 +1,17 @@
 
 import { ColumnDef } from "@tanstack/react-table"
-import { UsersStatusBadge, UserType, UsersStatus } from "@marzneshin/features/users"
+import { UsersStatusBadge, UserType, UsersStatus, OnlineStatus } from "@marzneshin/features/users"
 import { DataTableColumnHeader } from "@marzneshin/components/data-table/column-header"
 import i18n from "@marzneshin/features/i18n"
-import { CopyToClipboardButton, DataTableActionsCell, buttonVariants } from "@marzneshin/components"
+import {
+    CopyToClipboardButton,
+    DataTableActionsCell,
+    buttonVariants
+} from "@marzneshin/components"
 import { CircularProgress } from "@nextui-org/progress"
 import { LinkIcon } from "lucide-react"
 import { getSubscriptionLink } from "@marzneshin/utils"
+
 
 interface ColumnAction {
     onDelete: (user: UserType) => void;
@@ -14,11 +19,13 @@ interface ColumnAction {
     onEdit: (user: UserType) => void;
 }
 
-
 export const columns = (actions: ColumnAction): ColumnDef<UserType>[] => ([
     {
         accessorKey: "username",
         header: ({ column }) => <DataTableColumnHeader title={i18n.t('username')} column={column} />,
+        cell: ({ row }) => (<div className="flex flex-row gap-2 items-center">
+            <OnlineStatus user={row.original} /> {row.original.username}
+        </div>)
     },
     {
         accessorKey: "status",
