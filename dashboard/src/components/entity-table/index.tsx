@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { Button, DataTableViewOptions } from "@marzneshin/components";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
@@ -88,6 +88,8 @@ export function EntityTable<T>({
         sorting,
         onPaginationChange
     })
+
+    useEffect(() => table.setPageIndex(1), [filtering.columnFilters, table])
 
     // TODO: Move the selectedEntity to context
     return (
