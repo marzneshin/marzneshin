@@ -6,7 +6,6 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
   Toaster,
-  TooltipProvider
 } from '@marzneshin/components'
 import { NavigationDirectory } from '@marzneshin/components/nav-dir';
 import { useAuth } from '@marzneshin/features/auth'
@@ -50,12 +49,10 @@ export const DashboardLayout = () => {
             </ResizablePanel>
             <ResizableHandle withHandle className="w-[2px]" />
             <ResizablePanel>
-              <TooltipProvider>
-                <main>
-                  <Outlet />
-                  <Toaster position="top-center" />
-                </main>
-              </TooltipProvider>
+              <main>
+                <Outlet />
+                <Toaster position="top-center" />
+              </main>
             </ResizablePanel>
           </ResizablePanelGroup>
         ) : (
