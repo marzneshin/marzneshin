@@ -6,6 +6,7 @@ interface EntityTableContextProps<TData> {
     table: Table<TData>
     data: TData[]
     filtering: UseFilteringReturn
+    isLoading: boolean
 }
 
 export const EntityTableContext = createContext<EntityTableContextProps<any> | null>(null);

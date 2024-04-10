@@ -14,6 +14,7 @@ import {
 
 import { useTranslation } from "react-i18next"
 import { useEntityTableContext } from "./entity-table-provider"
+import { LoaderCircle } from "lucide-react"
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -25,7 +26,7 @@ export function EntityDataTable<TData, TValue>({
     onRowClick,
 }: DataTableProps<TData, TValue>) {
     const { t } = useTranslation();
-    const { table } = useEntityTableContext()
+    const { table, isLoading } = useEntityTableContext()
     return (
         <Table>
             <TableHeader>
@@ -47,27 +48,35 @@ export function EntityDataTable<TData, TValue>({
                 ))}
             </TableHeader>
             <TableBody>
-                {table.getRowModel().rows?.length ? (
-                    table.getRowModel().rows.map((row) => (
-                        <TableRow
-                            key={row.id}
-                            data-state={row.getIsSelected() && "selected"}
-                            data-testid={"entity-table-row"}
-                            onClick={() => onRowClick && onRowClick(row.original)}
-                        >
-                            {row.getVisibleCells().map((cell) => (
-                                <TableCell key={cell.id}>
-                                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                </TableCell>
-                            ))}
-                        </TableRow>
-                    ))
-                ) : (
-                    <TableRow>
+                {isLoading ? (
+                    <TableRow className="w-full">
                         <TableCell colSpan={columns.length} className="h-24 text-center">
-                            {t('table.no-result')}
+                            <LoaderCircle className="w-5 h-5 animate-spin text-primary" />
                         </TableCell>
                     </TableRow>
+                ) : (
+                    table.getRowModel().rows?.length ? (
+                        table.getRowModel().rows.map((row) => (
+                            <TableRow
+                                key={row.id}
+                                data-state={row.getIsSelected() && "selected"}
+                                data-testid={"entity-table-row"}
+                                onClick={() => onRowClick && onRowClick(row.original)}
+                            >
+                                {row.getVisibleCells().map((cell) => (
+                                    <TableCell key={cell.id}>
+                                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                    </TableCell>
+                                ))}
+                            </TableRow>
+                        ))
+                    ) : (
+                        <TableRow>
+                            <TableCell colSpan={columns.length} className="h-24 text-center">
+                                {t('table.no-result')}
+                            </TableCell>
+                        </TableRow>
+                    )
                 )}
             </TableBody>
         </Table>

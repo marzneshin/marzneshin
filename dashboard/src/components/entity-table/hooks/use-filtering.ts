@@ -1,4 +1,4 @@
-import { ColumnFiltersState, OnChangeFn } from "@tanstack/react-table"
+import { OnChangeFn } from "@tanstack/react-table"
 import { useState } from "react"
 
 export interface UseFilteringType {
@@ -6,11 +6,11 @@ export interface UseFilteringType {
 }
 
 export interface UseFilteringReturn extends UseFilteringType {
-    columnFilters: ColumnFiltersState
-    setColumnFilters: OnChangeFn<ColumnFiltersState>
+    columnFilters: string
+    setColumnFilters: OnChangeFn<string>
 }
 
 export const useFiltering = ({ column }: UseFilteringType): UseFilteringReturn => {
-    const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+    const [columnFilters, setColumnFilters] = useState<string>("")
     return { setColumnFilters, columnFilters, column }
 }

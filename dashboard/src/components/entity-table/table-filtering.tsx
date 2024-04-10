@@ -7,15 +7,13 @@ import { useTranslation } from 'react-i18next';
 interface TableFilteringProps { }
 
 export const TableFiltering: FC<TableFilteringProps> = () => {
-    const { table, filtering } = useEntityTableContext()
+    const { filtering } = useEntityTableContext()
     const { t } = useTranslation()
     return (
         <Input
             placeholder={t('table.filter-placeholder', { name: filtering.column })}
-            value={(table.getColumn(filtering.column)?.getFilterValue() as string) ?? ""}
-            onChange={(event) =>
-                table.getColumn(filtering.column)?.setFilterValue(event.target.value)
-            }
+            value={filtering.columnFilters}
+            onChange={(e) => filtering.setColumnFilters(e.target.value)}
             className="max-w-sm"
         />
     );

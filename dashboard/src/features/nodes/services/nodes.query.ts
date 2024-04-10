@@ -7,7 +7,7 @@ import {
 } from "@marzneshin/components";
 
 export async function fetchNodes({ queryKey }: EntityQueryKeyType): Promise<{ entity: NodeType[], pageCount: number }> {
-    return fetch(`/nodes?page=${queryKey[1]}&size=${queryKey[2]}`).then((result) => {
+    return fetch(`/nodes?page=${queryKey[1]}&size=${queryKey[2]}&name=${queryKey[3]}`).then((result) => {
         return {
             entity: result.items,
             pageCount: result.pages,
@@ -18,9 +18,9 @@ export async function fetchNodes({ queryKey }: EntityQueryKeyType): Promise<{ en
 export const NodesQueryFetchKey = "nodes";
 
 
-export const useNodesQuery = ({ page, size }: UseEntityQueryProps) => {
+export const useNodesQuery = ({ page, size, search }: UseEntityQueryProps) => {
     return useQuery({
-        queryKey: [NodesQueryFetchKey, page, size],
+        queryKey: [NodesQueryFetchKey, page, size, search ? search : ""],
         queryFn: fetchNodes,
         initialData: { entity: [], pageCount: 0 },
     })
