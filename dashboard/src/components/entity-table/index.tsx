@@ -71,16 +71,15 @@ export function EntityTable<T>({
     const visibility = useVisibility()
     const { onPaginationChange, pageIndex, pageSize } = usePagination();
 
-    const { data } = useQuery({
+    const { data, isLoading } = useQuery({
         queryFn: fetchEntity,
-        queryKey: [entityKey, pageIndex, pageSize],
+        queryKey: [entityKey, pageIndex, pageSize, filtering.columnFilters],
         initialData: { entity: [], pageCount: 1 }
     });
 
     const columns = columnsFn({ onEdit, onDelete, onOpen })
     const table = useEntityTable({
         data,
-        filtering,
         columns,
         pageSize,
         pageIndex,
@@ -92,7 +91,7 @@ export function EntityTable<T>({
 
     // TODO: Move the selectedEntity to context
     return (
-        <EntityTableContext.Provider value={{ table, data: data.entity, filtering }}>
+        <EntityTableContext.Provider value={{ table, data: data.entity, filtering, isLoading }}>
             <SettingsDialog
                 open={settingsDialogOpen}
                 onOpenChange={setSettingsDialogOpen}

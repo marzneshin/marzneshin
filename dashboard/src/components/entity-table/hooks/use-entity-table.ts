@@ -1,5 +1,17 @@
-import { ColumnDef, OnChangeFn, PaginationState, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, useReactTable } from "@tanstack/react-table";
-import { UseFilteringReturn, UseRowSelectionReturn, UseSortingReturn, UseVisibilityReturn } from ".";
+import {
+    ColumnDef,
+    OnChangeFn,
+    PaginationState,
+    getCoreRowModel,
+    getPaginationRowModel,
+    getSortedRowModel,
+    useReactTable
+} from "@tanstack/react-table";
+import {
+    UseRowSelectionReturn,
+    UseSortingReturn,
+    UseVisibilityReturn
+} from ".";
 
 interface UseEntityTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -7,7 +19,6 @@ interface UseEntityTableProps<TData, TValue> {
         entity: TData[]
         pageCount: number
     }
-    filtering: UseFilteringReturn
     sorting: UseSortingReturn
     visibility: UseVisibilityReturn
     rowSelection?: UseRowSelectionReturn
@@ -20,7 +31,6 @@ export const useEntityTable = <TData, TValue>(
     {
         columns,
         data,
-        filtering,
         sorting,
         visibility,
         rowSelection,
@@ -36,16 +46,13 @@ export const useEntityTable = <TData, TValue>(
     autoResetPageIndex: false,
     onPaginationChange,
     onSortingChange: sorting.setSorting,
-    onColumnFiltersChange: filtering.setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: visibility.setColumnVisibility,
     onRowSelectionChange: rowSelection && rowSelection.setSelectedRow,
     state: {
         sorting: sorting.sorting,
-        columnFilters: filtering.columnFilters,
         columnVisibility: visibility.columnVisibility,
         pagination: { pageIndex: pageIndex - 1, pageSize },
         rowSelection: rowSelection ? rowSelection.selectedRow : {},
