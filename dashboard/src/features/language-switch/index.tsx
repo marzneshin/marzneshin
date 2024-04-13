@@ -13,8 +13,8 @@ export const LanguageSwitch: FC = () => {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="bg-secondary-foreground text-primary-foreground" size="icon">
-                    <Languages className="transition-all scale-100 rotate-0 dark:scale-0 dark:-rotate-90 h-[1rem] w-[1rem]" />
+                <Button variant="outline" className="bg-secondary-foreground text-primary-foreground " size="icon">
+                    <Languages className="h-[1rem] w-[1rem]" />
                     <span className="sr-only">Toggle Language</span>
                 </Button>
             </DropdownMenuTrigger>
