@@ -21,11 +21,3 @@ export const fetcher = <T = any>(
 };
 
 export const fetch = fetcher;
-
-export const fetchAdminLoader = () => {
-    return fetch('/admins', {
-        headers: {
-            Authorization: `Bearer ${useAuth.getState().getAuthToken()}`,
-        },
-    });
-};
