@@ -78,7 +78,8 @@ export const Route = createFileRoute('/_dashboard')({
   component: () => <DashboardLayout />,
 
   beforeLoad: async () => {
-    if (!useAuth.getState().isLoggedIn) {
+    const loggedIn = await useAuth.getState().isLoggedIn()
+    if (!loggedIn) {
       throw redirect({
         to: '/login',
       })
