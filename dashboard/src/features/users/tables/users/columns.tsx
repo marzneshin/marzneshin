@@ -1,6 +1,12 @@
 
 import { ColumnDef } from "@tanstack/react-table"
-import { UsersStatusBadge, UserType, UsersStatus, OnlineStatus } from "@marzneshin/features/users"
+import {
+    UsersStatusBadge,
+    UserType,
+    UsersStatus,
+    OnlineStatus,
+    UserUsedTraffic
+} from "@marzneshin/features/users"
 import { DataTableColumnHeader } from "@marzneshin/components/data-table/column-header"
 import i18n from "@marzneshin/features/i18n"
 import {
@@ -8,10 +14,8 @@ import {
     DataTableActionsCell,
     buttonVariants
 } from "@marzneshin/components"
-import { CircularProgress } from "@nextui-org/progress"
 import { LinkIcon } from "lucide-react"
 import { getSubscriptionLink } from "@marzneshin/utils"
-
 
 interface ColumnAction {
     onDelete: (user: UserType) => void;
@@ -40,30 +44,23 @@ export const columns = (actions: ColumnAction): ColumnDef<UserType>[] => ([
     {
         accessorKey: "used_traffic",
         header: ({ column }) => <DataTableColumnHeader title={i18n.t('page.users.used_traffic')} column={column} />,
-        cell: ({ row }) => {
-            if (row.original.data_limit)
-                return (
-                    <CircularProgress
-                        value={row.original.used_traffic / row.original.data_limit * 100}
-                        size='sm'
-                        showValueLabel
-                    />
-                )
-            else
-                return "No Traffic"
-        }
+        cell: ({ row }) => <UserUsedTraffic user={row.original} />
     },
     {
         id: "actions",
-        cell: ({ row }) => <div className="flex flex-row gap-2 items-center" onClick={(e) => e.stopPropagation()}>
-            <CopyToClipboardButton
-                text={getSubscriptionLink(row.original.subscription_url)}
-                successMessage={i18n.t('page.users.settings.subscription_link.copied')}
-                copyIcon={LinkIcon}
-                className={buttonVariants({ variant: "ghost", className: "h-8 w-8" })}
-                tooltipMsg={i18n.t('page.users.settings.subscription_link.copy')}
-            />
-            <DataTableActionsCell {...actions} row={row} />
-        </div>
+        cell: ({ row }) => {
+            return (
+                <div className="flex flex-row gap-2 items-center" onClick={(e) => e.stopPropagation()}>
+                    <CopyToClipboardButton
+                        text={getSubscriptionLink(row.original.subscription_url)}
+                        successMessage={i18n.t('page.users.settings.subscription_link.copied')}
+                        copyIcon={LinkIcon}
+                        className={buttonVariants({ variant: "ghost", className: "h-8 w-8" })}
+                        tooltipMsg={i18n.t('page.users.settings.subscription_link.copy')}
+                    />
+                    <DataTableActionsCell {...actions} row={row} />
+                </div>
+            )
+        }
     },
 ]);
