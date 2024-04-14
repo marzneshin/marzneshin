@@ -1,11 +1,13 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@marzneshin/components';
-import { LoginForm } from '@marzneshin/features/auth';
+import { LoginForm, useAuth } from '@marzneshin/features/auth';
 import { createFileRoute } from '@tanstack/react-router'
 import { FC } from 'react'
 import { useTranslation } from 'react-i18next';
 
 const LoginPage: FC = () => {
   const { t } = useTranslation();
+  const { removeAuthToken } = useAuth()
+  removeAuthToken()
   return (
     <div className='flex flex-row justify-center items-center p-4 w-full h-full'>
       <Card className="p-1 w-full md:w-2/3">

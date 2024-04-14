@@ -1,5 +1,6 @@
 import { LanguageSwitch } from "@marzneshin/features/language-switch"
 import { ThemeToggle } from "@marzneshin/features/theme-switch"
+import { Logout } from "@marzneshin/features/auth"
 import { Link } from "@tanstack/react-router"
 import { FC, PropsWithChildren } from "react"
 
@@ -14,7 +15,8 @@ export const Header: FC<PropsWithChildren> = ({ children }) => {
                 </Link>
                 {children}
             </div>
-            <div className="flex flex-row gap-2 justify-reverse">
+            <div className="flex flex-row gap-2 h-10 justify-reverse">
+                <Logout />
                 <LanguageSwitch />
                 <ThemeToggle />
             </div>
