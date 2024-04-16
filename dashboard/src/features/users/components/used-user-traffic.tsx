@@ -28,6 +28,7 @@ export const UserUsedTraffic: FC<UserUsedTrafficProps> = (
                     </p>
                 </div>
             </div>
-        ) : ("No Traffic")
+        ) : prettyBytes(user.used_traffic)
+
     );
 }
