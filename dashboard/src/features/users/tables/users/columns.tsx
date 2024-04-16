@@ -37,11 +37,6 @@ export const columns = (actions: ColumnAction): ColumnDef<UserType>[] => ([
         cell: ({ row }) => <UsersStatusBadge status={UsersStatus[row.original.status]} />,
     },
     {
-        accessorKey: "services",
-        header: ({ column }) => <DataTableColumnHeader title={i18n.t('services')} column={column} />,
-        cell: ({ row }) => row.original.services.length
-    },
-    {
         accessorKey: "used_traffic",
         header: ({ column }) => <DataTableColumnHeader title={i18n.t('page.users.used_traffic')} column={column} />,
         cell: ({ row }) => <UserUsedTraffic user={row.original} />
