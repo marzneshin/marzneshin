@@ -16,6 +16,7 @@ import {
 } from "@marzneshin/components"
 import { LinkIcon } from "lucide-react"
 import { getSubscriptionLink } from "@marzneshin/utils"
+import { format } from "date-fns"
 
 interface ColumnAction {
     onDelete: (user: UserType) => void;
@@ -40,6 +41,11 @@ export const columns = (actions: ColumnAction): ColumnDef<UserType>[] => ([
         accessorKey: "used_traffic",
         header: ({ column }) => <DataTableColumnHeader title={i18n.t('page.users.used_traffic')} column={column} />,
         cell: ({ row }) => <UserUsedTraffic user={row.original} />
+    },
+    {
+        accessorKey: "expire",
+        header: ({ column }) => <DataTableColumnHeader title={i18n.t('page.users.expire_date')} column={column} />,
+        cell: ({ row }) => row.original.expire ? format(row.original.expire.toLocaleString(), "PPP") : "Unlimited"
     },
     {
         id: "actions",
