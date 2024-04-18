@@ -8,7 +8,8 @@ import {
     Button,
     Tabs,
     TabsTrigger,
-    TabsContent
+    TabsContent,
+    FormLabel
 } from '@marzneshin/components';
 import { useTranslation } from 'react-i18next';
 import {
@@ -70,13 +71,21 @@ export const UsersMutationDialog: FC<UsersMutationDialogProps> = ({
     }, [services, form])
 
 
-    const [selectedTab, setSelectedTab] = useState<'determined' | 'onhold' | string>('determined');
+    const [selectedTab, setSelectedTab] = useState<'determined' | 'onhold' | 'unlimited' | string>('determined');
 
     useEffect(() => {
         if (selectedTab === 'onhold') {
             form.setValue("status", "on_hold")
             form.setValue("expire", null);
             form.clearErrors("expire");
+        } else if (selectedTab === "unlimited") {
+            form.setValue("status", "active")
+            form.setValue("expire", 0);
+            form.setValue("on_hold_expire_duration", 0);
+            form.setValue("on_hold_timeout", null);
+            form.clearErrors("expire");
+            form.clearErrors("on_hold_expire_duration");
+            form.clearErrors("on_hold_timeout");
         } else {
             form.setValue("status", "active")
             form.setValue("on_hold_expire_duration", 0);
@@ -88,7 +97,7 @@ export const UsersMutationDialog: FC<UsersMutationDialogProps> = ({
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange} defaultOpen={true}>
-            <DialogContent>
+            <DialogContent className="sm:max-w-full md:max-w-[600px]">
                 <DialogHeader>
                     <DialogTitle className="text-primary">
                         {entity
@@ -105,6 +114,9 @@ export const UsersMutationDialog: FC<UsersMutationDialogProps> = ({
                                     <DataLimitField />
                                     {form.watch().data_limit !== 0 && <DataLimitResetStrategyField />}
                                 </div>
+                                <FormLabel>
+                                    {t('page.users.expire_method')}
+                                </FormLabel>
                                 <Tabs defaultValue="determined" onValueChange={setSelectedTab} className="mt-2 w-full">
                                     <TabsList className="flex flex-row items-center p-1 w-full rounded-md bg-accent">
                                         <TabsTrigger
@@ -116,6 +128,11 @@ export const UsersMutationDialog: FC<UsersMutationDialogProps> = ({
                                             className="w-full"
                                             value="onhold">
                                             {t('page.users.onhold_expire')}
+                                        </TabsTrigger>
+                                        <TabsTrigger
+                                            className="w-full"
+                                            value="unlimited">
+                                            {t('page.users.unlimited')}
                                         </TabsTrigger>
                                     </TabsList>
                                     <TabsContent value="determined">
