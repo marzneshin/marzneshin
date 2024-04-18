@@ -48,7 +48,7 @@ export const DateField: FC<DateFieldProps> = ({ name, label }) => {
                                     )}
                                 >
                                     {field.value ? (
-                                        format(field.value, "PPP")
+                                        format(field.value + 'Z', "PPP")
                                     ) : (
                                         <span>Pick a date</span>
                                     )}
