@@ -55,7 +55,6 @@ export const UsersMutationDialog: FC<UsersMutationDialogProps> = ({
         on_hold_timeout: null,
     }), []);
 
-    const [services, setServices] = useState<number[]>(entity ? entity.services : [])
 
     const { form, handleSubmit } = useMutationDialog({
         entity,
@@ -66,20 +65,15 @@ export const UsersMutationDialog: FC<UsersMutationDialogProps> = ({
         getDefaultValue: getDefaultValues,
     })
 
-    useEffect(() => {
-        form.setValue("services", services.map(Number).filter(item => typeof item === 'number'))
-    }, [services, form])
-
-
     const [selectedTab, setSelectedTab] = useState<'determined' | 'onhold' | 'unlimited' | string>('determined');
-
+    const expire = form.watch().expire
     useEffect(() => {
+        form.setValue("status", "active")
         if (selectedTab === 'onhold') {
             form.setValue("status", "on_hold")
             form.setValue("expire", null);
             form.clearErrors("expire");
         } else if (selectedTab === "unlimited") {
-            form.setValue("status", "active")
             form.setValue("expire", 0);
             form.setValue("on_hold_expire_duration", 0);
             form.setValue("on_hold_timeout", null);
@@ -87,13 +81,12 @@ export const UsersMutationDialog: FC<UsersMutationDialogProps> = ({
             form.clearErrors("on_hold_expire_duration");
             form.clearErrors("on_hold_timeout");
         } else {
-            form.setValue("status", "active")
             form.setValue("on_hold_expire_duration", 0);
             form.setValue("on_hold_timeout", null);
             form.clearErrors("on_hold_expire_duration");
             form.clearErrors("on_hold_timeout");
         }
-    }, [selectedTab, form]);
+    }, [selectedTab, form, expire]);
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange} defaultOpen={true}>
@@ -146,7 +139,7 @@ export const UsersMutationDialog: FC<UsersMutationDialogProps> = ({
                                 <NoteField />
                             </div>
                             <div>
-                                <ServicesField services={services} setServices={setServices} />
+                                <ServicesField />
                             </div>
                         </div>
                         <Button
