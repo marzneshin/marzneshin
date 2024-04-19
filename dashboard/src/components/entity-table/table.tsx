@@ -2,7 +2,6 @@ import {
     ColumnDef,
     flexRender,
 } from "@tanstack/react-table"
-
 import {
     Table,
     TableBody,
@@ -28,7 +27,7 @@ export function EntityDataTable<TData, TValue>({
     const { t } = useTranslation();
     const { table, isLoading } = useEntityTableContext()
     return (
-        <Table>
+        <Table className="w-full">
             <TableHeader>
                 {table.getHeaderGroups().map((headerGroup) => (
                     <TableRow key={headerGroup.id}>

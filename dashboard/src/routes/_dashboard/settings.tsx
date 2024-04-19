@@ -8,7 +8,7 @@ export const Settings = () => {
     const { t } = useTranslation()
     return (
         <Page>
-            <Card className="m-3">
+            <Card className="sm:w-screen md:w-full">
                 <CardContent>
                     <CardHeader>
                         <CardTitle>

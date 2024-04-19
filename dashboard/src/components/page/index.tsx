@@ -10,8 +10,10 @@ interface PageProps extends PropsWithChildren { }
 
 export const Page: FC<PageProps> = ({ children }) => {
     return (
-        <ScrollArea style={{ height: `calc(100vh - 4.5rem)` }} className="m-3">
-            {children}
+        <ScrollArea style={{ height: `calc(100vh - 4.5rem)` }} className="sm:w-screen md:p-3 md:w-[100%]">
+            <div className="flex flex-col justify-center items-center h-full sm:w-screen md:w-[100%]">
+                {children}
+            </div>
         </ScrollArea>
     );
 }
