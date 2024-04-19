@@ -109,6 +109,7 @@
             "determined_expire": "Determined",
             "expire_method": "Expiration method",
             "onhold_expire": "On Hold",
+            "reset_usage": "Reset Usage",
             "on_hold_expire_duration": "On Hold",
             "on_hold_timeout": "On Hold Timeout",
             "settings": {
@@ -179,6 +180,13 @@
             "error": "Failed to update {{name}}",
             "success": {
                 "title": "{{name}} is successfuly updated",
+                "desc": ""
+            }
+        },
+        "user_revoke": {
+            "error": "Failed to revoke {{name}} subscription",
+            "success": {
+                "title": "{{name}} is successfuly created",
                 "desc": ""
             }
         }
