@@ -110,6 +110,7 @@
             "expire_method": "Expiration method",
             "onhold_expire": "On Hold",
             "reset_usage": "Reset Usage",
+            "revoke_subscription": "Revoke Subscription",
             "on_hold_expire_duration": "On Hold",
             "on_hold_timeout": "On Hold Timeout",
             "settings": {
@@ -187,6 +188,13 @@
             "error": "Failed to revoke {{name}} subscription",
             "success": {
                 "title": "{{name}} is successfuly created",
+                "desc": ""
+            }
+        },
+        "user_reset": {
+            "error": "Failed to reset {{name}} data usage",
+            "success": {
+                "title": "{{name}} data usage is successfuly reseted",
                 "desc": ""
             }
         }
