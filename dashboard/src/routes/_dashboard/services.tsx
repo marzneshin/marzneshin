@@ -15,7 +15,7 @@ export const ServicesPage: FC = () => {
   const { t } = useTranslation();
   return (
     <Page>
-      <Card>
+      <Card className="sm:w-screen md:w-full">
         <CardHeader>
           <CardTitle>
             {t('services')}
