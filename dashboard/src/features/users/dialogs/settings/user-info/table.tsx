@@ -1,6 +1,11 @@
-import { Card, CardContent, CardHeader, CardTitle, Table, TableBody, TableCell, TableRow } from "@marzneshin/components";
+import { Button, Card, CardContent, CardHeader, CardTitle, Table, TableBody, TableCell, TableRow } from "@marzneshin/components";
 import { FC } from 'react';
-import { UserType, UsersStatus, UsersStatusBadge } from '@marzneshin/features/users';
+import {
+    useUserUsageResetCmd,
+    UserType,
+    UsersStatus,
+    UsersStatusBadge
+} from '@marzneshin/features/users';
 import { CircularProgress } from "@nextui-org/progress";
 import { useTranslation } from "react-i18next";
 import { format, isDate, isValid } from "date-fns";
@@ -35,12 +40,15 @@ const CircularProgressBarRow: FC<{ label: string; value: number; limit: number }
 
 export const UserInfoTable: FC<UserInfoTableProps> = ({ entity }) => {
     const { t } = useTranslation();
-
+    const { mutate: resetUsage } = useUserUsageResetCmd()
     const expireDate = entity.expire ? (isDate(entity.expire) ? entity.expire : new Date(entity.expire)) : null;
     return (
         <Card>
-            <CardHeader>
+            <CardHeader className="flex flex-row justify-between items-center w-full">
                 <CardTitle>{t('user_info')}</CardTitle>
+                <Button className="w-[7rem]" onClick={() => resetUsage(entity)}>
+                    {t('page.users.reset_usage')}
+                </Button>
             </CardHeader>
             <CardContent>
                 <Table>

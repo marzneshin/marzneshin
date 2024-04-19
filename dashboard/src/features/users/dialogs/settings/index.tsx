@@ -21,7 +21,6 @@ interface UsersSettingsDialogProps {
 }
 
 export const UsersSettingsDialog: FC<UsersSettingsDialogProps> = ({ onOpenChange, open, entity }) => {
-
     const { t } = useTranslation();
 
     if (entity) {
