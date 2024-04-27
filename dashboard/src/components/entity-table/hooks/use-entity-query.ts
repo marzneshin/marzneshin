@@ -6,9 +6,22 @@ const UseEntityQueryPropsSchema = z.object({
     search: z.string().optional()
 })
 
-export type UseEntityQueryProps = z.infer<typeof UseEntityQueryPropsSchema>
+export interface SortableEntitySortQueryProps {
+    sortBy: string
+    desc: boolean
+}
 
-export type EntityQueryKeyType = { queryKey: [string, number, number, string] }
+export type UseEntityQueryProps = z.infer<typeof UseEntityQueryPropsSchema & SortableEntitySortQueryProps>
+
+export type QueryKey = [string, number, number, string]
+export type SortableQueryKey = [string, number, number, string, string, boolean]
+
+export interface QueryKeyType<QT> {
+    queryKey: QT
+}
+
+export type EntityQueryKeyType = QueryKeyType<QueryKey>
+export type SortableEntityQueryKeyType = QueryKeyType<SortableQueryKey>
 
 interface FetchEntityResult<T> {
     pageCount: number
