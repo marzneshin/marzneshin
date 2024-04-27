@@ -20,8 +20,7 @@ export interface QueryKeyType<QT> {
     queryKey: QT
 }
 
-export type EntityQueryKeyType = QueryKeyType<QueryKey>
-export type SortableEntityQueryKeyType = QueryKeyType<SortableQueryKey>
+export type EntityQueryKeyType = QueryKeyType<SortableQueryKey | QueryKey>
 
 interface FetchEntityResult<T> {
     pageCount: number

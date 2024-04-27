@@ -18,10 +18,11 @@ import {
     useSorting,
     SortableQueryKey,
     QueryKey,
+    EntityQueryKeyType,
 } from "./hooks";
 
 interface EntityTableProps<T> {
-    fetchEntity: ({ queryKey }: { queryKey: SortableQueryKey | QueryKey }) => FetchEntityReturn<T>;
+    fetchEntity: ({ queryKey }: EntityQueryKeyType) => FetchEntityReturn<T>;
     MutationDialog: FC<UseDialogProps<T>>;
     DeleteConfirmationDialog: FC<UseDialogProps<T>>;
     SettingsDialog: FC<UseDialogProps<T | any>>;

@@ -5,9 +5,7 @@ import {
     FetchEntityReturn,
     UseEntityQueryProps,
     SortableEntitySortQueryProps,
-    QueryKeyType,
-    SortableQueryKey,
-    QueryKey
+    EntityQueryKeyType
 } from "@marzneshin/components";
 
 export type SortUserBy = "username" | "used_traffic" | "data_limit" | "expire" | "created_at"
@@ -17,7 +15,7 @@ interface UserResponse extends UserType {
     services: any[]
 }
 
-export async function fetchUsers({ queryKey }: QueryKeyType<SortableQueryKey | QueryKey>): FetchEntityReturn<UserType> {
+export async function fetchUsers({ queryKey }: EntityQueryKeyType): FetchEntityReturn<UserType> {
     return fetch(`/users`, {
         query: {
             page: queryKey[1],
@@ -41,7 +39,9 @@ export async function fetchUsers({ queryKey }: QueryKeyType<SortableQueryKey | Q
 
 export const UsersQueryFetchKey = "users";
 
-export const useUsersQuery = ({ page, size, search = "", sortBy = "created_at", desc = false }: UseEntityQueryProps & SortableEntitySortQueryProps<SortUserBy>) => {
+export const useUsersQuery = ({
+    page, size, search = "", sortBy = "created_at", desc = false
+}: UseEntityQueryProps & SortableEntitySortQueryProps) => {
     return useQuery({
         queryKey: [UsersQueryFetchKey, page, size, search, sortBy, desc],
         queryFn: fetchUsers,
