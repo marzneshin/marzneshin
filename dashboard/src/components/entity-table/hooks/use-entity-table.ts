@@ -10,7 +10,7 @@ import {
 import {
     UseRowSelectionReturn,
     UseSortingReturn,
-    UseVisibilityReturn,
+    UseVisibilityReturn
 } from ".";
 
 interface UseEntityTableProps<TData, TValue> {
@@ -22,7 +22,6 @@ interface UseEntityTableProps<TData, TValue> {
     sorting: UseSortingReturn
     visibility: UseVisibilityReturn
     rowSelection?: UseRowSelectionReturn
-    manualSorting?: boolean
     pageIndex: number
     pageSize: number
     onPaginationChange: OnChangeFn<PaginationState>
@@ -33,7 +32,6 @@ export const useEntityTable = <TData, TValue>(
         columns,
         data,
         sorting,
-        manualSorting = false,
         visibility,
         rowSelection,
         pageIndex,
@@ -44,7 +42,6 @@ export const useEntityTable = <TData, TValue>(
     data: data.entity,
     columns,
     manualPagination: true,
-    manualSorting,
     pageCount: data.pageCount + 1,
     autoResetPageIndex: false,
     onPaginationChange,
