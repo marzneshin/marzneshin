@@ -36,6 +36,7 @@ export const columns = (actions: ColumnAction): ColumnDef<UserType>[] => ([
         accessorKey: "status",
         header: ({ column }) => <DataTableColumnHeader title={i18n.t('status')} column={column} />,
         cell: ({ row }) => <UsersStatusBadge status={UsersStatus[row.original.status]} />,
+        enableSorting: false,
     },
     {
         accessorKey: "used_traffic",
