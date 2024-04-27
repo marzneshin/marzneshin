@@ -27,13 +27,14 @@ export function DataTablePagination() {
                     {table.getFilteredSelectedRowModel().rows.length} {"/"}
                     {table.getFilteredRowModel().rows.length} {t('table.selected')}
                 </div>}
-            <div className="flex justify-between items-center space-x-6 lg:space-x-8 w-full">
+            <div className="flex justify-between items-center space-x-6 w-full lg:space-x-8">
                 <div className="flex items-center space-x-2">
                     <p className="text-sm font-medium">{t('table.row-per-page')}</p>
                     <Select
                         value={`${table.getState().pagination.pageSize}`}
                         onValueChange={(value) => {
                             table.setPageSize(Number(value))
+                            table.setPageIndex(1)
                         }}
                     >
                         <SelectTrigger className="h-8 w-[70px]">
