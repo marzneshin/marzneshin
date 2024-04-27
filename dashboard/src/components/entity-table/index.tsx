@@ -13,10 +13,12 @@ import {
     useDialog,
     usePagination,
     FetchEntityReturn,
-    EntityQueryKeyType,
     useEntityTable,
     useVisibility,
-    useSorting
+    useSorting,
+    SortableQueryKey,
+    QueryKey,
+    EntityQueryKeyType,
 } from "./hooks";
 
 interface EntityTableProps<T> {
@@ -28,6 +30,7 @@ interface EntityTableProps<T> {
     filteredColumn: string;
     entityKey: string
     rowSelection?: UseRowSelectionReturn
+    manualSorting?: boolean
 }
 
 export function EntityTable<T>({
@@ -39,6 +42,7 @@ export function EntityTable<T>({
     filteredColumn,
     rowSelection,
     entityKey,
+    manualSorting = false
 }: EntityTableProps<T>) {
     const [mutationDialogOpen, setMutationDialogOpen] = useDialog();
     const [deleteDialogOpen, setDeleteDialogOpen] = useDialog();
@@ -70,10 +74,18 @@ export function EntityTable<T>({
     const sorting = useSorting()
     const visibility = useVisibility()
     const { onPaginationChange, pageIndex, pageSize } = usePagination();
+    const sortedQuery: SortableQueryKey = [
+        entityKey,
+        pageIndex,
+        pageSize,
+        filtering.columnFilters,
+        sorting.sorting[0]?.id ? sorting.sorting[0].id : "created_at",
+        sorting.sorting[0]?.desc]
+    const query: QueryKey = [entityKey, pageIndex, pageSize, filtering.columnFilters]
 
     const { data, isLoading } = useQuery({
         queryFn: fetchEntity,
-        queryKey: [entityKey, pageIndex, pageSize, filtering.columnFilters],
+        queryKey: manualSorting ? sortedQuery : query,
         initialData: { entity: [], pageCount: 1 }
     });
 

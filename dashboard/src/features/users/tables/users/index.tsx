@@ -14,6 +14,7 @@ export const UsersTable: FC = () => {
     return (
         <EntityTable
             fetchEntity={fetchUsers}
+            manualSorting={true}
             MutationDialog={UsersMutationDialog}
             DeleteConfirmationDialog={UsersDeleteConfirmationDialog}
             SettingsDialog={UsersSettingsDialog}
