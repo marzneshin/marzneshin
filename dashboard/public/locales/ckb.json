@@ -1,0 +1,218 @@
+{
+    "name": "Naw",
+    "status": "Dox",
+    "address": "Edrês",
+    "users": "Bekarhêneran",
+    "nodes": "Girêkan",
+    "services": "Rajekan",
+    "hosts": "Hostkan",
+    "username": "Naw Bekarhêneran",
+    "password": "Têperrewişe",
+    "inbounds": "înbawendkan",
+    "submit": "Nardin",
+    "login": "Çûnejûrew",
+    "edit": "Desitkarîkirdn",
+    "actions": "Fermankan",
+    "settings": "Sazkarîyekan",
+    "logs": "Tomarekan",
+    "config": "Kanfîg",
+    "open": "Kirnewe",
+    "delete": "Sirrînewe",
+    "port": "Port",
+    "create": "Dirust bike",
+    "path": "Path",
+    "host": "Host",
+    "alpn": "ALPN",
+    "security": "Security",
+    "user_info": "Users Info",
+    "subscription": "Subscription",
+    "subscription_link": "Subscription Link",
+    "fingerprint": "Fingerprint",
+    "page": {
+        "settings": {
+            "certificate": {
+                "copy": "Copy Certificate",
+                "error": "Certificate Unavailable",
+                "copied": "Certificate Copied"
+            }
+        },
+        "login": {
+            "username": {
+                "error": {
+                    "isRequired": "Username is required"
+                }
+            },
+            "password": {
+                "error": {
+                    "is-required": "Password is required"
+                }
+            }
+        },
+        "nodes": {
+            "settings": {
+                "title": "Nodes Settings",
+                "detail": "Details",
+                "log-container": {
+                    "title": "Marznode Xray config logs"
+                }
+            },
+            "dialogs": {
+                "creation": {
+                    "title": "Nodes Creation"
+                },
+                "deletion": {
+                    "title": "Nodes Deletion"
+                },
+                "edition": {
+                    "title": "Nodes Edition"
+                }
+            },
+            "usage_coefficient": "Usage Coefficient",
+            "add_as_new_host": "Add as new hosts",
+            "certificate-alert": {
+                "title": "Nodes Certificate Configuration",
+                "desc": "If you aim to configure your nodes certificate, checkout settings page.",
+                "click": "Click Here"
+            }
+        },
+        "services": {
+            "settings": {
+                "title": "Servicecs Settings",
+                "detail": "Details"
+            },
+            "dialogs": {
+                "creation": {
+                    "title": "Services Creation"
+                },
+                "deletion": {
+                    "title": "Services Deletion"
+                },
+                "edition": {
+                    "title": "Services Edition"
+                }
+            }
+        },
+        "users": {
+            "data_limit": "Data Limit",
+            "used_traffic": "Used Traffic",
+            "data_limit_reset_strategy": "Data Limit Reset Strategy",
+            "online_at": "Online At",
+            "expire_date": "Expire Date",
+            "unlimited": "Unlimited",
+            "determined_expire": "Determined",
+            "expire_method": "Expiration method",
+            "onhold_expire": "On Hold",
+            "reset_usage": "Reset Usage",
+            "revoke_subscription": "Revoke Subscription",
+            "on_hold_expire_duration": "On Hold",
+            "on_hold_timeout": "On Hold Timeout",
+            "settings": {
+                "subscription_link": {
+                    "copied": "Subscription Link Copied",
+                    "copy": "Copy Subscription Link",
+                    "error": "Unable to copy Subscription Link"
+                }
+            },
+            "services-alert": {
+                "title": "No Service were found",
+                "desc": "Make sure you create services to enable your users with inbounds to connect with.",
+                "click": "Click Here"
+            },
+            "dialogs": {
+                "edition": {
+                    "title": "Users Edition"
+                },
+                "creation": {
+                    "title": "Users Creation"
+                },
+                "deletion": {
+                    "title": "Users Deletion"
+                },
+                "mutation": {
+                    "note": {
+                        "desc": "Leave a note about your user"
+                    }
+                }
+            }
+        },
+        "hosts": {
+            "allowinsecure": "Allow insecure",
+            "dialogs": {
+                "edition": {
+                    "title": "Hosts Edition"
+                },
+                "creation": {
+                    "title": "Hosts Creation"
+                },
+                "deletion": {
+                    "title": "Hosts Deletion"
+                },
+                "mutation": {
+                    "allowinsecure": {
+                        "alert": "Due to security concerns, it is not recommended to allow Insecure"
+                    }
+                }
+            }
+        }
+    },
+    "events": {
+        "delete": {
+            "error": "Failed to delete {{name}}",
+            "success": {
+                "title": "{{name}} is successfuly deleted",
+                "desc": ""
+            }
+        },
+        "create": {
+            "error": "Failed to create {{name}}",
+            "success": {
+                "title": "{{name}} is successfuly created",
+                "desc": ""
+            }
+        },
+        "update": {
+            "error": "Failed to update {{name}}",
+            "success": {
+                "title": "{{name}} is successfuly updated",
+                "desc": ""
+            }
+        },
+        "user_revoke": {
+            "error": "Failed to revoke {{name}} subscription",
+            "success": {
+                "title": "{{name}} is successfuly created",
+                "desc": ""
+            }
+        },
+        "user_reset": {
+            "error": "Failed to reset {{name}} data usage",
+            "success": {
+                "title": "{{name}} data usage is successfuly reseted",
+                "desc": ""
+            }
+        }
+    },
+    "delete-confirmation": {
+        "title": "Are you sure of this?",
+        "desc": "This action cannot be undone. This will permanently delete your account and remove your data from our servers."
+    },
+    "table": {
+        "row-per-page": "Rows per page",
+        "no-result": "No results",
+        "selected": "Selected",
+        "toggle-column": "Toggle columns",
+        "filter-placeholder": "Filter {{name}}"
+    },
+    "statuses": {
+        "active": "Active",
+        "connected": "Connected",
+        "healthy": "Healthy",
+        "disabled": "Disabled",
+        "expired": "Expired",
+        "on_hold": "On Hold",
+        "connecting": "Connecting",
+        "unhealthy": "Unhealthy",
+        "limited": "Limited",
+        "error": "Error"
+    }
+}
