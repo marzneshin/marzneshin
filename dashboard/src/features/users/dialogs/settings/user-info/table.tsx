@@ -4,11 +4,13 @@ import {
     useUserUsageResetCmd,
     UserType,
     UsersStatus,
-    UsersStatusBadge
+    UsersStatusBadge,
+    useUserStatusEnable
 } from '@marzneshin/features/users';
 import { CircularProgress } from "@nextui-org/progress";
 import { useTranslation } from "react-i18next";
 import { format, isDate, isValid } from "date-fns";
+import { cn } from "@marzneshin/utils";
 
 interface UserInfoTableProps {
     entity: UserType;
@@ -41,14 +43,20 @@ const CircularProgressBarRow: FC<{ label: string; value: number; limit: number }
 export const UserInfoTable: FC<UserInfoTableProps> = ({ entity }) => {
     const { t } = useTranslation();
     const { mutate: resetUsage } = useUserUsageResetCmd()
+    const { mutate: userStatusEnable } = useUserStatusEnable()
     const expireDate = entity.expire ? (isDate(entity.expire) ? entity.expire : new Date(entity.expire)) : null;
     return (
         <Card>
             <CardHeader className="flex flex-row justify-between items-center w-full">
                 <CardTitle>{t('user_info')}</CardTitle>
-                <Button className="w-[7rem]" onClick={() => resetUsage(entity)}>
-                    {t('page.users.reset_usage')}
-                </Button>
+                <div className="flex flex-row justify-center items-center gap-3">
+                    <Button className="w-[7rem]" onClick={() => resetUsage(entity)}>
+                        {t('page.users.reset_usage')}
+                    </Button>
+                    <Button className={cn("w-[7rem]", entity.enabled ? 'bg-red-400' : 'bg-green-400')} onClick={() => userStatusEnable({ user: entity, enabled: !entity.enabled })}>
+                        {t(!entity.enabled ? 'enable' : 'disable')}
+                    </Button>
+                </div>
             </CardHeader>
             <CardContent>
                 <Table>
