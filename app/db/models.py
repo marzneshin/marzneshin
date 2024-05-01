@@ -72,6 +72,7 @@ class User(Base):
     id = Column(Integer, primary_key=True)
     username = Column(String(32), unique=True, index=True)
     key = Column(String(64), unique=True)
+    enabled = Column(Boolean, nullable=False, default=True)
     services = relationship(
         "Service", secondary=users_services, back_populates="users", lazy="joined"
     )
