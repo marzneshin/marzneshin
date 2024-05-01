@@ -1,7 +1,17 @@
 import { FC } from 'react';
 import { Badge, Label } from '@marzneshin/components';
 import { StatusType } from '@marzneshin/types';
-import { AlarmClock, BrickWall, CalendarX, Cloud, PowerCircle, PowerOff, Radio, ServerCrash, Zap, ZapOff } from 'lucide-react';
+import {
+    AlarmClock,
+    BrickWall,
+    CalendarX,
+    Cloud,
+    PowerCircle,
+    Radio,
+    ServerCrash,
+    Zap,
+    ZapOff
+} from 'lucide-react';
 
 interface UsersStatusType {
     [key: string]: StatusType;
@@ -12,11 +22,6 @@ export const UsersStatus: UsersStatusType = {
         icon: PowerCircle,
         label: "Active",
         variant: "positive"
-    },
-    disabled: {
-        icon: PowerOff,
-        label: "Disabled",
-        variant: "disabled"
     },
     limited: {
         icon: BrickWall,

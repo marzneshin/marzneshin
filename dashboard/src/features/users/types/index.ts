@@ -24,6 +24,7 @@ export interface UserType {
     data_limit: number | null;
     data_limit_reset_strategy: DataLimitResetStrategy;
     lifetime_used_traffic: number;
+    enabled: boolean;
     username: string;
     used_traffic: number;
     status: Status;
