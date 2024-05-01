@@ -35,6 +35,8 @@
     "subscription": "Subscription",
     "subscription_link": "Subscription Link",
     "fingerprint": "Fingerprint",
+    "enable": "Enable",
+    "disable": "Disable",
     "page": {
         "settings": {
             "certificate": {
@@ -195,6 +197,13 @@
             "error": "Failed to reset {{name}} data usage",
             "success": {
                 "title": "{{name}} data usage is successfuly reseted",
+                "desc": ""
+            }
+        },
+        "user_status": {
+            "error": "Failed to toggle {{name}} enable status",
+            "success": {
+                "title": "{{name}} enable status is successfuly updated",
                 "desc": ""
             }
         }
