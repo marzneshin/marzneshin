@@ -21,7 +21,7 @@ export async function userStatusEnabled({ user, enabled }: UsersStatusEnabledQue
 
 const handleError = (error: Error, value: UsersStatusEnabledQuery) => {
     toast.error(
-        i18n.t('events.user_status_mutate.error', { name: value.user.username }),
+        i18n.t('events.user_status.error', { name: value.user.username }),
         {
             description: error.message
         })
@@ -29,9 +29,9 @@ const handleError = (error: Error, value: UsersStatusEnabledQuery) => {
 
 const handleSuccess = (value: UserMutationType) => {
     toast.success(
-        i18n.t('events.user_revoke.success.title', { name: value.username }),
+        i18n.t('events.user_status.success.title', { name: value.username }),
         {
-            description: i18n.t('events.user_revoke.success.desc')
+            description: i18n.t('events.user_status.success.desc')
         })
     queryClient.invalidateQueries({ queryKey: [UsersStatusEnabledFetchKey] })
 }
