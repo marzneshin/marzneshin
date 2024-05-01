@@ -102,6 +102,7 @@ def get_node_users(
     query = (
         db.query(User.id, User.username, User.key, Inbound)
         .distinct()
+        .where(User.enabled is True)
         .join(Inbound.services)
         .join(Service.users)
         .filter(Inbound.node_id == node_id)
