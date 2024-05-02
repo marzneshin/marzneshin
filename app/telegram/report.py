@@ -4,8 +4,7 @@ from datetime import datetime
 from telebot.apihelper import ApiTelegramException
 from telebot.formatting import escape_html
 
-from app.telegram import bot
-from app.telegram.utils.keyboard import BotKeyboard
+from app import telegram
 from app.utils.system import readable_size
 from config import TELEGRAM_ADMIN_ID, TELEGRAM_LOGGER_CHANNEL_ID
 
@@ -13,15 +12,15 @@ logger = logging.getLogger(__name__)
 
 
 async def report(message: str, parse_mode="html", keyboard=None):
-    if bot and (TELEGRAM_ADMIN_ID or TELEGRAM_LOGGER_CHANNEL_ID):
+    if telegram.bot and (TELEGRAM_ADMIN_ID or TELEGRAM_LOGGER_CHANNEL_ID):
         try:
             if TELEGRAM_LOGGER_CHANNEL_ID:
-                await bot.send_message(
+                await telegram.bot.send_message(
                     TELEGRAM_LOGGER_CHANNEL_ID, message, parse_mode=parse_mode
                 )
             else:
                 for admin in TELEGRAM_ADMIN_ID:
-                    await bot.send_message(
+                    await telegram.bot.send_message(
                         admin, message, parse_mode=parse_mode, reply_markup=keyboard
                     )
         except ApiTelegramException as e:
@@ -54,12 +53,7 @@ async def report_new_user(
         services="" if not services else ", ".join([s.name for s in services]),
     )
 
-    return await report(
-        text,
-        keyboard=BotKeyboard.user_menu(
-            {"username": username, "id": user_id, "status": "active"}, with_back=False
-        ),
-    )
+    return await report(text)
 
 
 async def report_user_modification(
@@ -84,12 +78,7 @@ async def report_user_modification(
         services=", ".join([s.name for s in services]),
     )
 
-    return await report(
-        text,
-        keyboard=BotKeyboard.user_menu(
-            {"username": username, "status": "active"}, with_back=False
-        ),
-    )
+    return await report(text)
 
 
 async def report_user_deletion(username: str, by: str):
@@ -108,9 +97,8 @@ async def report_user_deletion(username: str, by: str):
 async def report_status_change(username: str, status: str):
     _status = {
         "active": "✅ <b>#Activated</b>",
-        "disabled": "❌ <b>#Disabled</b>",
-        "limited": "🪫 <b>#Limited</b>",
         "on_hold": "🟡 <b>#On_Hold</b>",
+        "limited": "🪫 <b>#Limited</b>",
         "expired": "🕔 <b>#Expired</b>",
     }
     text = """\
