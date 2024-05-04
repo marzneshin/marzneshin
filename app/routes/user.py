@@ -264,9 +264,9 @@ async def enable_user(db_user: UserDep, db: DBDep, admin: AdminDep):
 
 
 @router.post("/{username}/disable", response_model=UserResponse)
-async def enable_user(db_user: UserDep, db: DBDep, admin: AdminDep):
+async def disable_user(db_user: UserDep, db: DBDep, admin: AdminDep):
     """
-    Enables a user
+    Disables a user
     """
     if not db_user.enabled:
         raise HTTPException(409, "User is not enabled")
