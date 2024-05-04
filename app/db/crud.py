@@ -278,12 +278,24 @@ def get_user_usages(
     return list(usages.values())
 
 
-def get_users_count(db: Session, status: UserStatus = None, admin: Admin = None):
+def get_users_count(
+    db: Session,
+    status: UserStatus | None = None,
+    admin: Admin | None = None,
+    enabled: bool | None = None,
+    online: bool | None = None,
+):
     query = db.query(User.id)
     if admin:
         query = query.filter(User.admin == admin)
     if status:
         query = query.filter(User.status == status)
+    if enabled:
+        query = query.filter(User.enabled == enabled)
+    if online:
+        query = query.filter(
+            User.online_at > (datetime.utcnow() - timedelta(seconds=30))
+        )
     return query.count()
 
 
