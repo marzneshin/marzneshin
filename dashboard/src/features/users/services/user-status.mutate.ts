@@ -13,7 +13,7 @@ interface UsersStatusEnabledQuery {
 }
 
 export async function userStatusEnabled({ user, enabled }: UsersStatusEnabledQuery): Promise<UserMutationType> {
-    const action = enabled ? 'enable' : 'disabled'
+    const action = enabled ? 'enable' : 'disable'
     return fetch(`/users/${user.username}/${action}`, { method: 'post' }).then((user) => {
         return user;
     });
