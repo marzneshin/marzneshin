@@ -98,7 +98,6 @@
             "data_limit_reset_strategy": "Data Limit Reset Strategy",
             "online_at": "Online At",
             "expire_date": "Expire Date",
-            "unlimited": "Unlimited",
             "determined_expire": "Determined",
             "expire_method": "Expiration method",
             "onhold_expire": "On Hold",
