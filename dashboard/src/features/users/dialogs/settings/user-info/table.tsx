@@ -1,5 +1,15 @@
-import { Button, Card, CardContent, CardHeader, CardTitle, Table, TableBody, TableCell, TableRow } from "@marzneshin/components";
-import { FC } from 'react';
+import {
+    Button,
+    Card,
+    CardContent,
+    CardHeader,
+    CardTitle,
+    Table,
+    TableBody,
+    TableCell,
+    TableRow
+} from "@marzneshin/components";
+import { FC, useCallback, useState } from 'react';
 import {
     useUserUsageResetCmd,
     UserType,
@@ -45,6 +55,13 @@ export const UserInfoTable: FC<UserInfoTableProps> = ({ entity }) => {
     const { mutate: resetUsage } = useUserUsageResetCmd()
     const { mutate: userStatusEnable } = useUserStatusEnable()
     const expireDate = entity.expire ? (isDate(entity.expire) ? entity.expire : new Date(entity.expire)) : null;
+    const [userStatus, setUserStatus] = useState<boolean>(entity.enabled)
+
+    const handleUserStatusEnabledToggle = useCallback(() => {
+        userStatusEnable({ user: entity, enabled: !userStatus })
+        setUserStatus(!userStatus)
+    }, [entity, userStatus, userStatusEnable]);
+
     return (
         <Card>
             <CardHeader className="flex flex-row justify-between items-center w-full">
@@ -53,8 +70,11 @@ export const UserInfoTable: FC<UserInfoTableProps> = ({ entity }) => {
                     <Button className="w-[7rem]" onClick={() => resetUsage(entity)}>
                         {t('page.users.reset_usage')}
                     </Button>
-                    <Button className={cn("w-[7rem]", entity.enabled ? 'bg-red-400' : 'bg-green-400')} onClick={() => userStatusEnable({ user: entity, enabled: !entity.enabled })}>
-                        {t(!entity.enabled ? 'enable' : 'disable')}
+                    <Button
+                        className={cn("w-[7rem]", userStatus ? 'bg-red-400' : 'bg-green-400')}
+                        onClick={handleUserStatusEnabledToggle}
+                    >
+                        {t(!userStatus ? 'enable' : 'disable')}
                     </Button>
                 </div>
             </CardHeader>
