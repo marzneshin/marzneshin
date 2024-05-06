@@ -66,7 +66,6 @@ export const UsersMutationDialog: FC<UsersMutationDialogProps> = ({
     })
 
     const [selectedTab, setSelectedTab] = useState<'determined' | 'onhold' | 'unlimited' | string>('determined');
-    const expire = form.watch().expire
     useEffect(() => {
         form.setValue("status", "active")
         if (selectedTab === 'onhold') {
@@ -86,7 +85,7 @@ export const UsersMutationDialog: FC<UsersMutationDialogProps> = ({
             form.clearErrors("on_hold_expire_duration");
             form.clearErrors("on_hold_timeout");
         }
-    }, [selectedTab, form, expire]);
+    }, [selectedTab, form]);
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange} defaultOpen={true}>
