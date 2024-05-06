@@ -106,6 +106,9 @@
             "revoke_subscription": "Revoke Subscription",
             "on_hold_expire_duration": "On Hold",
             "on_hold_timeout": "On Hold Timeout",
+            "unlimited": "Bêsinûr",
+            "limited": "Sinûrdar",
+            "data_limit_method": "Çonêtî Sinûrî Data",
             "settings": {
                 "subscription_link": {
                     "copied": "Subscription Link Copied",

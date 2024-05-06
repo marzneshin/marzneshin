@@ -106,6 +106,8 @@
             "online_at": "Online At",
             "expire_date": "Expire Date",
             "unlimited": "Unlimited",
+            "limited": "Limited",
+            "data_limit_method": "Data limit type",
             "determined_expire": "Determined",
             "expire_method": "Expiration method",
             "onhold_expire": "On Hold",
