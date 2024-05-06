@@ -1,9 +1,9 @@
 from collections import defaultdict
 from typing import TYPE_CHECKING
 
-from .grpclib import MarzNodeGRPCLIB
-from .grpcio import MarzNodeGRPCIO
 from app import marznode
+from .grpcio import MarzNodeGRPCIO
+from .grpclib import MarzNodeGRPCLIB
 from ..models.node import NodeConnectionBackend
 from ..models.user import UserStatus
 
