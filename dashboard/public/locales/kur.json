@@ -10,7 +10,7 @@
     "password": "Têperrewişe",
     "inbounds": "înbawendkan",
     "submit": "Nardin",
-    "login": "Çûnejûrew",
+    "login": "Çûnejûrewe",
     "edit": "Desitkarîkirdn",
     "actions": "Fermankan",
     "settings": "Sazkarîyekan",
@@ -95,7 +95,7 @@
         "users": {
             "data_limit": "Sinûrî data",
             "used_traffic": "Traffic bekarhêndiraw",
-            "data_limit_reset_strategy": "Sêwazî sirrinewey sinûrî data",
+            "data_limit_reset_strategy": "Şêwazî sirrinewey sinûrî data",
             "online_at": "Online Le",
             "expire_date": "Katî beserçûn",
             "unlimited": "Bêsinûr",
