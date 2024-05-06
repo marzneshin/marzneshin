@@ -45,7 +45,7 @@ export const UsersMutationDialog: FC<UsersMutationDialogProps> = ({
     const { t } = useTranslation();
     const getDefaultValues = useCallback((): UserMutationType => ({
         services: [],
-        data_limit: 0,
+        data_limit: 1,
         expire: null,
         username: '',
         data_limit_reset_strategy: 'no_reset',
@@ -65,14 +65,32 @@ export const UsersMutationDialog: FC<UsersMutationDialogProps> = ({
         getDefaultValue: getDefaultValues,
     })
 
-    const [selectedTab, setSelectedTab] = useState<'determined' | 'onhold' | 'unlimited' | string>('determined');
+    const [
+        selectedDataLimitTab,
+        setSelectedDataLimitTab
+    ] = useState<'limited' | 'unlimited' | string>('limited');
+    useEffect(() => {
+        if (selectedDataLimitTab === 'limited') {
+            form.setValue("data_limit", 1)
+            form.setValue("data_limit_reset_strategy", "no_reset");
+        } else {
+            form.setValue("data_limit", 0)
+            form.setValue("data_limit_reset_strategy", "no_reset");
+        }
+    }, [selectedDataLimitTab, form]);
+
+
+    const [
+        selectedExpirationMethodTab,
+        setSelectedExpirationMethodTab
+    ] = useState<'determined' | 'onhold' | 'unlimited' | string>('determined');
     useEffect(() => {
         form.setValue("status", "active")
-        if (selectedTab === 'onhold') {
+        if (selectedExpirationMethodTab === 'onhold') {
             form.setValue("status", "on_hold")
             form.setValue("expire", null);
             form.clearErrors("expire");
-        } else if (selectedTab === "unlimited") {
+        } else if (selectedExpirationMethodTab === "unlimited") {
             form.setValue("expire", 0);
             form.setValue("on_hold_expire_duration", 0);
             form.setValue("on_hold_timeout", undefined);
@@ -85,7 +103,7 @@ export const UsersMutationDialog: FC<UsersMutationDialogProps> = ({
             form.clearErrors("on_hold_expire_duration");
             form.clearErrors("on_hold_timeout");
         }
-    }, [selectedTab, form]);
+    }, [selectedExpirationMethodTab, form]);
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange} defaultOpen={true}>
@@ -102,14 +120,33 @@ export const UsersMutationDialog: FC<UsersMutationDialogProps> = ({
                         <div className="flex-col grid-cols-2 gap-2 sm:flex md:grid">
                             <div>
                                 <UsernameField />
+                                <FormLabel>
+                                    {t('page.users.data_limit_method')}
+                                </FormLabel>
                                 <div className="flex gap-2 items-center w-full sm:flex-row md:flex-col">
-                                    <DataLimitField />
-                                    {form.watch().data_limit !== 0 && <DataLimitResetStrategyField />}
+                                    <Tabs defaultValue="limited" onValueChange={setSelectedDataLimitTab} className="mt-2 w-full">
+                                        <TabsList className="flex flex-row items-center p-1 w-full rounded-md bg-accent">
+                                            <TabsTrigger
+                                                className="w-full"
+                                                value="limited">
+                                                {t('page.users.limited')}
+                                            </TabsTrigger>
+                                            <TabsTrigger
+                                                className="w-full"
+                                                value="unlimited">
+                                                {t('page.users.unlimited')}
+                                            </TabsTrigger>
+                                        </TabsList>
+                                        <TabsContent value="limited">
+                                            <DataLimitField />
+                                            {form.watch().data_limit !== 0 && <DataLimitResetStrategyField />}
+                                        </TabsContent>
+                                    </Tabs>
                                 </div>
                                 <FormLabel>
                                     {t('page.users.expire_method')}
                                 </FormLabel>
-                                <Tabs defaultValue="determined" onValueChange={setSelectedTab} className="mt-2 w-full">
+                                <Tabs defaultValue="determined" onValueChange={setSelectedExpirationMethodTab} className="mt-2 w-full">
                                     <TabsList className="flex flex-row items-center p-1 w-full rounded-md bg-accent">
                                         <TabsTrigger
                                             className="w-full"
