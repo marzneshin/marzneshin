@@ -14,7 +14,6 @@ import {
 import { useTranslation } from 'react-i18next';
 import {
     UserMutationType,
-    UsersStatus,
     useUsersCreationMutation,
     useUsersUpdateMutation
 } from "@marzneshin/features/users";
