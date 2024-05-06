@@ -52,7 +52,7 @@ export const UsersMutationDialog: FC<UsersMutationDialogProps> = ({
         status: 'active',
         note: '',
         on_hold_expire_duration: 0,
-        on_hold_timeout: null,
+        on_hold_timeout: undefined,
     }), []);
 
 
@@ -75,7 +75,7 @@ export const UsersMutationDialog: FC<UsersMutationDialogProps> = ({
         } else if (selectedTab === "unlimited") {
             form.setValue("expire", 0);
             form.setValue("on_hold_expire_duration", 0);
-            form.setValue("on_hold_timeout", null);
+            form.setValue("on_hold_timeout", undefined);
             form.clearErrors("expire");
             form.clearErrors("on_hold_expire_duration");
             form.clearErrors("on_hold_timeout");
