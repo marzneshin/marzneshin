@@ -14,6 +14,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import {
     UserMutationType,
+    UsersStatus,
     useUsersCreationMutation,
     useUsersUpdateMutation
 } from "@marzneshin/features/users";
@@ -79,11 +80,20 @@ export const UsersMutationDialog: FC<UsersMutationDialogProps> = ({
         }
     }, [selectedDataLimitTab, form]);
 
-
+    const getUserExpirationMethod = useCallback((entity: UserMutationType) => {
+        if (entity.status === "on_hold")
+            return 'onhold'
+        else if (entity.expire !== undefined)
+            return 'determined'
+        else
+            return 'unlimited'
+    }, [])
+    const defaultExpirationMethodTab = entity?.username ? getUserExpirationMethod(entity) : 'determined'
     const [
         selectedExpirationMethodTab,
         setSelectedExpirationMethodTab
-    ] = useState<'determined' | 'onhold' | 'unlimited' | string>('determined');
+    ] = useState<'determined' | 'onhold' | 'unlimited' | string>(defaultExpirationMethodTab);
+
     useEffect(() => {
         form.setValue("status", "active")
         if (selectedExpirationMethodTab === 'onhold') {
@@ -146,7 +156,7 @@ export const UsersMutationDialog: FC<UsersMutationDialogProps> = ({
                                 <FormLabel>
                                     {t('page.users.expire_method')}
                                 </FormLabel>
-                                <Tabs defaultValue="determined" onValueChange={setSelectedExpirationMethodTab} className="mt-2 w-full">
+                                <Tabs defaultValue={defaultExpirationMethodTab} onValueChange={setSelectedExpirationMethodTab} className="mt-2 w-full">
                                     <TabsList className="flex flex-row items-center p-1 w-full rounded-md bg-accent">
                                         <TabsTrigger
                                             className="w-full"
