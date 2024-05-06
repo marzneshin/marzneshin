@@ -20,7 +20,7 @@ export const ServiceCard: FC<ServiceCardProps> = (
 ) => {
     if (service.users && service.inbounds) {
         return (
-            <div className="w-full border rounded-md p-2 flex justify-between flex-row items-center">
+            <div className="w-full flex justify-between flex-row items-center">
                 <Label>{service.name}</Label>
                 <div className="flex flex-row items-center gap-1">
                     <ServiceProperty Icon={UserIcon} amount={service.users.length} />
