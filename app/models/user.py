@@ -106,10 +106,7 @@ class UserCreate(User):
                 )
             if self.expire:
                 raise ValueError("User cannot be on hold with specified expire.")
-        elif self.status == UserStatusCreate.active:
-            if not self.expire:
-                raise ValueError("expire field should be set when status is active.")
-            if self.on_hold_expire_duration or self.on_hold_timeout:
+        elif self.status == UserStatusCreate.active and (self.on_hold_expire_duration or self.on_hold_timeout):
                 raise ValueError(
                     "on hold parametrs set when user status isn't on_hold."
                 )

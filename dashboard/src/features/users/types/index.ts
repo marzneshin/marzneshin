@@ -18,7 +18,7 @@ export type Status =
     | 'connected';
 
 export interface UserType {
-    on_hold_timeout: Date | string | null;
+    on_hold_timeout: Date | string | undefined;
     on_hold_expire_duration: number;
     expire: Date | string | null;
     data_limit: number | null;
