@@ -67,11 +67,11 @@ export const UserInfoTable: FC<UserInfoTableProps> = ({ entity }) => {
             <CardHeader className="flex flex-row justify-between items-center w-full">
                 <CardTitle>{t('user_info')}</CardTitle>
                 <div className="flex flex-row justify-center items-center gap-3">
-                    <Button className="w-[7rem]" onClick={() => resetUsage(entity)}>
+                    <Button onClick={() => resetUsage(entity)}>
                         {t('page.users.reset_usage')}
                     </Button>
                     <Button
-                        className={cn("w-[7rem]", userStatus ? 'bg-red-400' : 'bg-green-400')}
+                        className={cn(userStatus ? 'bg-red-400' : 'bg-green-400')}
                         onClick={handleUserStatusEnabledToggle}
                     >
                         {t(!userStatus ? 'enable' : 'disable')}
