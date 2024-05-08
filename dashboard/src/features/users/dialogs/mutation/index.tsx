@@ -87,6 +87,7 @@ export const UsersMutationDialog: FC<UsersMutationDialogProps> = ({
         else
             return 'unlimited'
     }, [])
+
     const defaultExpirationMethodTab = entity?.username ? getUserExpirationMethod(entity) : 'determined'
     const [
         selectedExpirationMethodTab,
@@ -100,8 +101,8 @@ export const UsersMutationDialog: FC<UsersMutationDialogProps> = ({
             form.setValue("expire", null);
             form.clearErrors("expire");
         } else if (selectedExpirationMethodTab === "unlimited") {
-            form.setValue("expire", 0);
-            form.setValue("on_hold_expire_duration", 0);
+            form.setValue("expire", undefined);
+            form.setValue("on_hold_expire_duration", undefined);
             form.setValue("on_hold_timeout", undefined);
             form.clearErrors("expire");
             form.clearErrors("on_hold_expire_duration");
