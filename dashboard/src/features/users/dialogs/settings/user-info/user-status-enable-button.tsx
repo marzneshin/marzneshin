@@ -14,8 +14,9 @@ export const UserStatusEnableButton: FC<UserStatusEnableButtonProps> = ({ user }
     const { mutate: userStatusEnable, isPending } = useUserStatusEnable()
 
     const handleUserStatusEnabledToggle = useCallback(() => {
+        const tempUserStatus = userStatus;
         userStatusEnable({ user: user, enabled: !userStatus })
-        setUserStatus(!userStatus)
+        setUserStatus(!tempUserStatus)
     }, [user, userStatus, userStatusEnable]);
 
     const bgColor = isPending ? 'bg-muted-foreground' : (userStatus ? 'bg-red-400' : 'bg-green-400')
