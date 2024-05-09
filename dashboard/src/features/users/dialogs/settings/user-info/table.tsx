@@ -21,6 +21,7 @@ import { CircularProgress } from "@nextui-org/progress";
 import { useTranslation } from "react-i18next";
 import { format, isDate, isValid } from "date-fns";
 import { cn } from "@marzneshin/utils";
+import { LoaderIcon } from "lucide-react";
 
 interface UserInfoTableProps {
     entity: UserType;
@@ -52,7 +53,7 @@ const CircularProgressBarRow: FC<{ label: string; value: number; limit: number }
 
 export const UserInfoTable: FC<UserInfoTableProps> = ({ entity }) => {
     const { t } = useTranslation();
-    const { mutate: resetUsage } = useUserUsageResetCmd()
+    const { mutate: resetUsage, isPending } = useUserUsageResetCmd()
     const { mutate: userStatusEnable } = useUserStatusEnable()
     const expireDate = entity.expire ? (isDate(entity.expire) ? entity.expire : new Date(entity.expire)) : null;
     const [userStatus, setUserStatus] = useState<boolean>(entity.enabled)
@@ -71,10 +72,10 @@ export const UserInfoTable: FC<UserInfoTableProps> = ({ entity }) => {
                         {t('page.users.reset_usage')}
                     </Button>
                     <Button
-                        className={cn(userStatus ? 'bg-red-400' : 'bg-green-400')}
+                        className={cn(userStatus ? 'bg-red-400' : 'bg-green-400', { 'bg-muted-foreground': isPending })}
                         onClick={handleUserStatusEnabledToggle}
                     >
-                        {t(!userStatus ? 'enable' : 'disable')}
+                        {isPending ? <LoaderIcon className="animate-spin" /> : t(!userStatus ? 'enable' : 'disable')}
                     </Button>
                 </div>
             </CardHeader>
