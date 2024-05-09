@@ -7,7 +7,7 @@ dashboard-deps:
 	pnpm install --prefix ./dashboard
 
 dashboard-build:
-	cd dashboard; VITE_BASE_API=/api/ npm run build --if-present -- --base '/dashboard'
+	cd dashboard; VITE_BASE_API=/api/ npm run build --if-present -- --outDir 'dist' --assetsDir 'static'
 
 dashboard-dev:
 	VITE_BASE_API=http://0.0.0.0:8000/api/ npm run dev \
