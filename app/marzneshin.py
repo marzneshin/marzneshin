@@ -116,8 +116,13 @@ async def main():
         )
         app.mount(
             "/static/",
-            StaticFiles(directory="dashboard/dist/static", html=True),
+            StaticFiles(directory="dashboard/dist/static"),
             name="static",
+        )
+        app.mount(
+            "/locales/",
+            StaticFiles(directory="dashboard/dist/locales"),
+            name="locales",
         )
     scheduler.start()
     asyncio.create_task(telegram.start_bot())
