@@ -6,18 +6,22 @@ import path from 'path';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [
-    TanStackRouterVite(),
-    tsconfigPaths(),
-    react()
-  ],
-  root: '.',
-  resolve: {
-    alias: [
-      {
-        find: '@marzneshin',
-        replacement: path.resolve(__dirname, './src/'),
-      },
+    plugins: [
+        TanStackRouterVite(),
+        tsconfigPaths(),
+        react()
     ],
-  },
+    root: '.',
+    build: {
+        assetsDir: 'static',
+        outDir: 'dist'
+    },
+    resolve: {
+        alias: [
+            {
+                find: '@marzneshin',
+                replacement: path.resolve(__dirname, './src/'),
+            },
+        ],
+    },
 })
