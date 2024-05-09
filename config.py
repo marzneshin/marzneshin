@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+DASHBOARD_PATH = config("DASHBOARD_PATH", default="/dashboard/")
 
 SQLALCHEMY_DATABASE_URL = config(
     "SQLALCHEMY_DATABASE_URL", default="sqlite:///db.sqlite3"
