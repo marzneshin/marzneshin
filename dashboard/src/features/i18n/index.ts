@@ -28,7 +28,7 @@ i18n
       order: ['localStorage', 'sessionStorage', 'cookie', 'navigator'],
     },
     backend: {
-      loadPath: '/locales/{{lng}}.json',
+      loadPath: import.meta.env.DEBUG ? '/dashboard/locales/{{lng}}.json' : '/locales/{{lng}}.json',
     },
     supportedLngs: ['en', 'kur', 'kmr', 'ckb', 'fa', 'ru'],
   })
