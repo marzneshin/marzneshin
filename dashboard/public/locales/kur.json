@@ -23,11 +23,13 @@
     "path": "Path",
     "host": "Host",
     "alpn": "ALPN",
-    "security": "Security",
-    "user_info": "Users Info",
-    "subscription": "Subscription",
-    "subscription_link": "Subscription Link",
+    "security": "Asayiş",
+    "user_info": "Zanyarî bekarhêneran",
+    "subscription": "Beşdarî",
+    "subscription_link": "Link Beşdarî",
     "fingerprint": "Fingerprint",
+    "enable": "Çalakî ke",
+    "disable": "Naçalakî ke",
     "page": {
         "settings": {
             "certificate": {
@@ -191,6 +193,13 @@
             "success": {
                 "title": "{{name}} data usage is successfuly reseted",
                 "desc": ""
+            }
+        },
+        "user_status": {
+            "error": "Şikistî hêna le gorrînî doxî çalak kirdinî {{name}}",
+            "success": {
+                "title": "Doxî çalakî {{name}} nwêkirawe",
+                "desc": "Doxî çalak kirdin be serkewtûyî nwêkirawe"
             }
         }
     },

@@ -175,11 +175,6 @@ async def modify_user(
     status_change = bool(
         modifications.status and modifications.status != db_user.status
     )
-    if status_change and (
-        modifications.status == UserStatus.disabled
-        and old_status in {UserStatus.active, UserStatus.on_hold}
-    ):
-        await marznode.operations.remove_user(db_user)
 
     old_inbounds = {(i.node_id, i.protocol, i.tag) for i in db_user.inbounds}
     new_user = crud.update_user(db, db_user, modifications)
@@ -187,7 +182,11 @@ async def modify_user(
     user = UserResponse.model_validate(db_user)
 
     inbound_change = old_inbounds != new_inbounds
-    if inbound_change and user.status in {UserStatus.active, UserStatus.on_hold}:
+    if (
+        inbound_change
+        and user.enabled
+        and user.status in {UserStatus.active, UserStatus.on_hold}
+    ):
         await marznode.operations.update_user(new_user, old_inbounds)
 
     asyncio.create_task(report.user_updated(user=user, by=admin))
@@ -241,6 +240,44 @@ async def reset_user_data_usage(db_user: UserDep, db: DBDep, admin: AdminDep):
     asyncio.create_task(report.user_data_usage_reset(user=user, by=admin))
 
     logger.info("User `%s`'s usage was reset", db_user.username)
+
+    return user
+
+
+@router.post("/{username}/enable", response_model=UserResponse)
+async def enable_user(db_user: UserDep, db: DBDep, admin: AdminDep):
+    """
+    Enables a user
+    """
+    if db_user.enabled:
+        raise HTTPException(409, "User is already enabled")
+    db_user.enabled = True
+    db.commit()
+
+    await marznode.operations.update_user(db_user)
+
+    user = UserResponse.model_validate(db_user)
+
+    logger.info("User `%s` has been enabled", db_user.username)
+
+    return user
+
+
+@router.post("/{username}/disable", response_model=UserResponse)
+async def disable_user(db_user: UserDep, db: DBDep, admin: AdminDep):
+    """
+    Disables a user
+    """
+    if not db_user.enabled:
+        raise HTTPException(409, "User is not enabled")
+    db_user.enabled = False
+    db.commit()
+
+    await marznode.operations.remove_user(db_user)
+
+    user = UserResponse.model_validate(db_user)
+
+    logger.info("User `%s` has been disabled", db_user.username)
 
     return user
 

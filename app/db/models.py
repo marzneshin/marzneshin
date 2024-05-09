@@ -1,6 +1,7 @@
 import os
 from datetime import datetime
 
+import sqlalchemy.sql
 from sqlalchemy import (
     BigInteger,
     Boolean,
@@ -72,6 +73,9 @@ class User(Base):
     id = Column(Integer, primary_key=True)
     username = Column(String(32), unique=True, index=True)
     key = Column(String(64), unique=True)
+    enabled = Column(
+        Boolean, nullable=False, default=True, server_default=sqlalchemy.sql.true()
+    )
     services = relationship(
         "Service", secondary=users_services, back_populates="users", lazy="joined"
     )
