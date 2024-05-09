@@ -9,19 +9,17 @@ import {
     TableCell,
     TableRow
 } from "@marzneshin/components";
-import { FC, useCallback, useState } from 'react';
+import { FC } from 'react';
 import {
     useUserUsageResetCmd,
     UserType,
     UsersStatus,
     UsersStatusBadge,
-    useUserStatusEnable
 } from '@marzneshin/features/users';
 import { CircularProgress } from "@nextui-org/progress";
 import { useTranslation } from "react-i18next";
 import { format, isDate, isValid } from "date-fns";
-import { cn } from "@marzneshin/utils";
-import { LoaderIcon } from "lucide-react";
+import { UserStatusEnableButton } from "./user-status-enable-button";
 
 interface UserInfoTableProps {
     entity: UserType;
@@ -53,15 +51,8 @@ const CircularProgressBarRow: FC<{ label: string; value: number; limit: number }
 
 export const UserInfoTable: FC<UserInfoTableProps> = ({ entity }) => {
     const { t } = useTranslation();
-    const { mutate: resetUsage, isPending } = useUserUsageResetCmd()
-    const { mutate: userStatusEnable } = useUserStatusEnable()
+    const { mutate: resetUsage } = useUserUsageResetCmd()
     const expireDate = entity.expire ? (isDate(entity.expire) ? entity.expire : new Date(entity.expire)) : null;
-    const [userStatus, setUserStatus] = useState<boolean>(entity.enabled)
-
-    const handleUserStatusEnabledToggle = useCallback(() => {
-        userStatusEnable({ user: entity, enabled: !userStatus })
-        setUserStatus(!userStatus)
-    }, [entity, userStatus, userStatusEnable]);
 
     return (
         <Card>
@@ -71,12 +62,7 @@ export const UserInfoTable: FC<UserInfoTableProps> = ({ entity }) => {
                     <Button onClick={() => resetUsage(entity)}>
                         {t('page.users.reset_usage')}
                     </Button>
-                    <Button
-                        className={cn(userStatus ? 'bg-red-400' : 'bg-green-400', { 'bg-muted-foreground': isPending })}
-                        onClick={handleUserStatusEnabledToggle}
-                    >
-                        {isPending ? <LoaderIcon className="animate-spin" /> : t(!userStatus ? 'enable' : 'disable')}
-                    </Button>
+                    <UserStatusEnableButton user={entity} />
                 </div>
             </CardHeader>
             <CardContent>
