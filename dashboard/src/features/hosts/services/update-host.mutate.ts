@@ -12,7 +12,7 @@ export async function fetchHostsUpdateMutation({ hostId, host }: HostUpdateReque
 
 const handleError = (error: Error, value: HostUpdateRequestDto) => {
     toast.error(
-        i18n.t('events.create.error', { name: value.host.remark }),
+        i18n.t('events.update.error', { name: value.host.remark }),
         {
             description: error.message
         })
@@ -20,9 +20,9 @@ const handleError = (error: Error, value: HostUpdateRequestDto) => {
 
 const handleSuccess = (value: HostUpdateRequestDto) => {
     toast.success(
-        i18n.t('events.create.success.title', { name: value.host.remark }),
+        i18n.t('events.update.success.title', { name: value.host.remark }),
         {
-            description: i18n.t('events.create.success.desc')
+            description: i18n.t('events.update.success.desc')
         })
     queryClient.invalidateQueries({ queryKey: [HostsQueryFetchKey] })
 }
