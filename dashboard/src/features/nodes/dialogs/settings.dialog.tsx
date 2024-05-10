@@ -76,7 +76,7 @@ export const NodesSettingsDialog: FC<NodesSettingsDialogProps> = ({ onOpenChange
                                         defaultValue={JSON.stringify(data, null, '\t')}
                                         onChange={handleConfigChange}
                                     />
-                                    <Button onClick={() => mutate.mutate(config)}>{t('save')}</Button>
+                                    <Button onClick={() => mutate.mutate({ node: entity, config })}>{t('save')}</Button>
                                 </CardContent>
                             </Card>
                         </TabsContent>

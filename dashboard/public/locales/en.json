@@ -37,6 +37,7 @@
     "fingerprint": "Fingerprint",
     "enable": "Enable",
     "disable": "Disable",
+    "save": "Save",
     "page": {
         "settings": {
             "certificate": {
