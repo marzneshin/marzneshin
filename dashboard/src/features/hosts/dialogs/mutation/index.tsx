@@ -1,4 +1,3 @@
-
 import { FC, useEffect, useState } from "react";
 import {
     DialogTitle,
@@ -65,7 +64,8 @@ export const HostsMutationDialog: FC<MutationDialogProps> = ({
 
     const submit = (values: HostType) => {
         if (entity) {
-            updateMutation.mutate({ inboundId, host: values });
+            console.log(entity)
+            updateMutation.mutate({ hostId: entity.id, host: values });
         } else {
             createMutation.mutate({ inboundId, host: values });
         }
@@ -209,7 +209,7 @@ export const HostsMutationDialog: FC<MutationDialogProps> = ({
                                                     </SelectTrigger>
                                                 </FormControl>
                                                 <SelectContent>
-                                                    <SelectItem value="none">None</SelectItem>
+                                                    <SelectItem value="">None</SelectItem>
                                                     <SelectItem value="h2">h2</SelectItem>
                                                     <SelectItem value="http/1.1">HTTP 1.1</SelectItem>
                                                     <SelectItem value="h2,http/1.1"> H2 HTTP 1.1</SelectItem>
@@ -233,7 +233,7 @@ export const HostsMutationDialog: FC<MutationDialogProps> = ({
                                                     </SelectTrigger>
                                                 </FormControl>
                                                 <SelectContent>
-                                                    <SelectItem value="none">None</SelectItem>
+                                                    <SelectItem value="">None</SelectItem>
                                                     <SelectItem value="chrome">Chrome</SelectItem>
                                                     <SelectItem value="firefox">Firefox</SelectItem>
                                                     <SelectItem value="safari">Safari</SelectItem>

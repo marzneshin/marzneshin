@@ -9,8 +9,8 @@ export const getDefaultValues = (): HostSchemaType => {
         address: '',
         remark: '',
         security: 'none',
-        alpn: 'none',
+        alpn: "",
         allowinsecure: false,
-        fingerprint: 'none',
+        fingerprint: "",
     }
 };
