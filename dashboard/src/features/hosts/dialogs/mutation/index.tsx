@@ -63,7 +63,7 @@ export const HostsMutationDialog: FC<MutationDialogProps> = ({
     }, [security, setExtraSecurity])
 
     const submit = (values: HostType) => {
-        if (entity) {
+        if (entity && entity.id !== undefined) {
             console.log(entity)
             updateMutation.mutate({ hostId: entity.id, host: values });
         } else {
