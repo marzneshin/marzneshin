@@ -3,14 +3,14 @@ import { useMutation } from "@tanstack/react-query";
 import { fetch, queryClient } from "@marzneshin/utils";
 import { toast } from "sonner";
 import i18n from "@marzneshin/features/i18n";
-import { HostRequestDto } from "./host-mutation.dto";
+import { HostUpdateRequestDto } from "./host-mutation.dto";
 
-export async function fetchHostsUpdateMutation({ inboundId, host }: HostRequestDto): Promise<HostRequestDto> {
-    return fetch(`/inbounds/${inboundId}/hosts`,
-        { method: 'put', body: host }).then((host: HostType) => ({ inboundId, host }));
+export async function fetchHostsUpdateMutation({ hostId, host }: HostUpdateRequestDto): Promise<HostUpdateRequestDto> {
+    return fetch(`/inbounds/hosts/${hostId}`,
+        { method: 'put', body: host }).then((host: HostType) => ({ hostId, host }));
 }
 
-const handleError = (error: Error, value: HostRequestDto) => {
+const handleError = (error: Error, value: HostUpdateRequestDto) => {
     toast.error(
         i18n.t('events.create.error', { name: value.host.remark }),
         {
@@ -18,7 +18,7 @@ const handleError = (error: Error, value: HostRequestDto) => {
         })
 }
 
-const handleSuccess = (value: HostRequestDto) => {
+const handleSuccess = (value: HostUpdateRequestDto) => {
     toast.success(
         i18n.t('events.create.success.title', { name: value.host.remark }),
         {
