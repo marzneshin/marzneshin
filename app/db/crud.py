@@ -322,9 +322,12 @@ def update_user(db: Session, dbuser: User, modify: UserModify):
         dbuser.status = modify.status
 
     if modify.data_limit is not None:
-        dbuser.data_limit = modify.data_limit or None
-        if dbuser.status not in (UserStatus.expired, UserStatus.disabled):
+        # in case there is modification to a user's data limit
+        dbuser.data_limit = modify.data_limit or None  # set it to the new limit
+        if dbuser.status is not UserStatus.expired:
+            # in case the user isn't already disabled/expired
             if not dbuser.data_limit or dbuser.used_traffic < dbuser.data_limit:
+                # in case the user is unlimited or hasn't reached the limit already
                 if dbuser.status != UserStatus.on_hold:
                     dbuser.status = UserStatus.active
 
@@ -336,6 +339,7 @@ def update_user(db: Session, dbuser: User, modify: UserModify):
                         db, dbuser.id, ReminderType.data_usage
                     )
             else:
+                # the user has reached the new data limit
                 dbuser.status = UserStatus.limited
 
     if modify.expire is not None:
@@ -420,7 +424,6 @@ def reset_all_users_data_usage(db: Session, admin: Optional[Admin] = None):
         if dbuser.status not in [
             UserStatus.on_hold,
             UserStatus.expired,
-            UserStatus.disabled,
         ]:
             dbuser.status = UserStatus.active
         dbuser.usage_logs.clear()
