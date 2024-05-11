@@ -17,7 +17,7 @@ export const HostField = () => {
             control={form.control}
             name="host"
             render={({ field }) => (
-                <FormItem >
+                <FormItem>
                     <FormLabel>{t('host')}</FormLabel>
                     <FormControl>
                         <Input {...field} />

@@ -32,7 +32,7 @@ export const FingerprintField = () => {
                             </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                            <SelectItem value="">None</SelectItem>
+                            <SelectItem value="none">None</SelectItem>
                             <SelectItem value="chrome">Chrome</SelectItem>
                             <SelectItem value="firefox">Firefox</SelectItem>
                             <SelectItem value="safari">Safari</SelectItem>
