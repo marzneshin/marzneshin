@@ -10,7 +10,7 @@ export const HostSchema = z.object({
     path: z.string().optional(),
     sni: z.string().optional(),
     host: z.string().optional(),
-    security: z.enum(['inbound_default', 'none', 'tls']).default("none"),
+    security: z.enum(['inbound_default', 'none', 'tls']).default("inbound_default"),
     alpn: z.enum(['h2', 'http/1.1', 'h2,http/1.1', 'none', '']).optional().default("none"),
     allowinsecure: z.boolean().default(false).optional(),
     fingerprint: z.enum([

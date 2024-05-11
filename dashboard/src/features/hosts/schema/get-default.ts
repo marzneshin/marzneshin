@@ -8,7 +8,7 @@ export const getDefaultValues = (): HostSchemaType => {
         path: '',
         address: '',
         remark: '',
-        security: 'none',
+        security: 'inbound_default',
         alpn: "",
         allowinsecure: false,
         fingerprint: "",
