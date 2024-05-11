@@ -30,6 +30,7 @@
     "fingerprint": "Fingerprint",
     "enable": "Çalakî ke",
     "disable": "Naçalakî ke",
+    "close": "Dayixe",
     "save": "Seyv Bike",
     "page": {
         "settings": {
@@ -141,6 +142,10 @@
             }
         },
         "hosts": {
+            "no-inbound-selection-alert": {
+                "title": "Hîç înbawendêk hell nebijardirawe",
+                "desc": "Debêt înbawendêk hell bibjêrî ta we ku hostêk dirust bikey."
+            },
             "allowinsecure": "Allow insecure",
             "dialogs": {
                 "edition": {

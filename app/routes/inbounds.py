@@ -25,7 +25,7 @@ def get_inbounds(db: DBDep, tag: str = Query(None)):
     return paginate(db, query)
 
 
-@router.get("/hosts", response_model=Page[InboundHost])
+@router.get("/hosts", response_model=Page[InboundHostResponse])
 def get_hosts(db: DBDep):
     return paginate(db.query(DBInboundHost))
 

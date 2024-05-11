@@ -37,6 +37,7 @@
     "fingerprint": "Fingerprint",
     "enable": "Enable",
     "disable": "Disable",
+    "close": "Close",
     "save": "Save",
     "page": {
         "settings": {
@@ -148,6 +149,10 @@
             }
         },
         "hosts": {
+            "no-inbound-selection-alert": {
+                "title": "No inbound is selected",
+                "desc": "You must select an inbound inorder to create host."
+            },
             "allowinsecure": "Allow insecure",
             "dialogs": {
                 "edition": {

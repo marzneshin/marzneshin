@@ -10,15 +10,18 @@ import { useState } from 'react'
 import { useInboundsQuery } from '@marzneshin/features/inbounds'
 import { columns } from './columns'
 import { HostSettingsDialog } from '../../dialogs/settings'
+import { useDialog } from '@marzneshin/components'
+import { InboundNotSelectedAlertDialog } from './inbound-not-selected-alert-dialog'
 
 export const InboundHostsTable = () => {
     const { data: inbounds } = useInboundsQuery()
     const [selectedInbound, setSelectedInbound] = useState<string>(String(inbounds[0]?.id))
     const { data } = useHostsQuery(Number(selectedInbound))
 
-    const [mutationDialogOpen, setMutationDialogOpen] = useState<boolean>(false);
-    const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
-    const [settingsDialogOpen, setSettingsDialogOpen] = useState<boolean>(false);
+    const [mutationDialogOpen, setMutationDialogOpen] = useDialog();
+    const [deleteDialogOpen, setDeleteDialogOpen] = useDialog();
+    const [settingsDialogOpen, setSettingsDialogOpen] = useDialog();
+    const [inboundSelectionAlert, setInboundSelectionAlert] = useDialog();
     const [selectedEntity, selectEntity] = useState<HostType | null>(null);
 
     const onEdit = (entity: HostType) => {
@@ -32,8 +35,12 @@ export const InboundHostsTable = () => {
     };
 
     const onCreate = () => {
-        selectEntity(null);
-        setMutationDialogOpen(true);
+        if (selectedInbound) {
+            selectEntity(null);
+            setMutationDialogOpen(true);
+        } else {
+            setInboundSelectionAlert(true)
+        }
     };
 
     const onOpen = (entity: HostType) => {
@@ -43,6 +50,10 @@ export const InboundHostsTable = () => {
 
     return (
         <div>
+            <InboundNotSelectedAlertDialog
+                open={inboundSelectionAlert}
+                onOpenChange={setInboundSelectionAlert}
+            />
             <HostSettingsDialog
                 open={settingsDialogOpen}
                 onOpenChange={setSettingsDialogOpen}
