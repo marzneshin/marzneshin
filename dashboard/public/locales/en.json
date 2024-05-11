@@ -38,6 +38,7 @@
     "enable": "Enable",
     "disable": "Disable",
     "close": "Close",
+    "save": "Save",
     "page": {
         "settings": {
             "certificate": {
