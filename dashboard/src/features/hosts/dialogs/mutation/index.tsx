@@ -33,6 +33,11 @@ interface MutationDialogProps {
     onOpenChange: (state: boolean) => void
 }
 
+const transformFormValue = (values: HostType) => {
+    const alpn = values.alpn === "none" ? "" : values.alpn
+    const fingerprint = values.fingerprint === "none" ? "" : values.fingerprint
+    return { ...values, alpn, fingerprint }
+}
 
 export const HostsMutationDialog: FC<MutationDialogProps> = ({
     inboundId,
@@ -49,11 +54,11 @@ export const HostsMutationDialog: FC<MutationDialogProps> = ({
     const { t } = useTranslation();
 
     const submit = (values: HostType) => {
+        const host = transformFormValue(values)
         if (entity && entity.id !== undefined) {
-            console.log(entity)
-            updateMutation.mutate({ hostId: entity.id, host: values });
+            updateMutation.mutate({ hostId: entity.id, host });
         } else {
-            createMutation.mutate({ inboundId, host: values });
+            createMutation.mutate({ inboundId, host });
         }
         onOpenChange(false);
     };

@@ -11,10 +11,11 @@ export const HostSchema = z.object({
     sni: z.string().optional(),
     host: z.string().optional(),
     security: z.enum(['inbound_default', 'none', 'tls']).default("none"),
-    alpn: z.enum(['h2', 'http/1.1', 'h2,http/1.1', ""]).optional().default(""),
+    alpn: z.enum(['h2', 'http/1.1', 'h2,http/1.1', 'none', '']).optional().default("none"),
     allowinsecure: z.boolean().default(false).optional(),
     fingerprint: z.enum([
         "",
+        "none",
         "chrome",
         "firefox",
         "safari",
@@ -25,5 +26,5 @@ export const HostSchema = z.object({
         "qq",
         "random",
         "randomized",
-    ]).optional().default(""),
+    ]).optional().default("none"),
 });
