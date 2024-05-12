@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { DATA_LIMIT_METRIC } from '@marzneshin/features/users';
 
 export const UserSchema = z.object({
     username: z.string().min(1, { message: 'Username is required' }),
@@ -10,7 +11,7 @@ export const UserSchema = z.object({
         .nullable()
         .optional()
         .transform((str) => {
-            if (str) return Number((parseFloat(String(str)) * 1073741824).toFixed(5));
+            if (str) return Number((parseFloat(String(str)) * DATA_LIMIT_METRIC).toFixed(5));
             return 0;
         }),
     expire: z.string().or(z.number()).nullable().optional(),
