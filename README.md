@@ -101,10 +101,10 @@ while marznode manages vpn backends (such as xray)
 
 ### New Features
 - Manage users' access to inbounds separately
-- Better UI with navigation bar
-- Marzneshin runs independent of any vpn backend(xray/...)
-- In case Marzneshin goes down nodes continue working normally as if nothing has happened.
-- shorter subscription links LOL
+- Marzneshin is decoupled from VPN backends
+- Resilient and fault tolerance node management
+- Short subscription links
+- UI performance and redesign
 
 # Installation guide
 
