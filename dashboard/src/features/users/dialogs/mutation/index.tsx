@@ -99,7 +99,7 @@ export const UsersMutationDialog: FC<UsersMutationDialogProps> = ({
         form.setValue("status", "active")
         if (selectedExpirationMethodTab === 'onhold') {
             form.setValue("status", "on_hold")
-            form.setValue("expire", null);
+            form.setValue("expire", undefined);
             form.clearErrors("expire");
         } else if (selectedExpirationMethodTab === "unlimited") {
             form.setValue("expire", undefined);
