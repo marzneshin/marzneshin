@@ -88,7 +88,6 @@
   "devDependencies": {
     "@hookform/devtools": "^4.3.1",
     "@tanstack/router-cli": "^1.20.0",
-    "@tanstack/router-devtools": "^1.20.1",
     "@tanstack/router-vite-plugin": "^1.20.2",
     "@types/node": "^20.11.29",
     "@types/react": "^18.2.64",
