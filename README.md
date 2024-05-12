@@ -1,7 +1,7 @@
 <h1 align="center"/>Marzneshin</h1>
 
 <p align="center">
-    A Fork of Marzban aiming for scalability
+    An Scalable and Comprehensive Proxy Engine management panel.
 </p>
 
 <br/>
@@ -31,26 +31,8 @@
 </p>
 
 <p align="center">
- <a href="./README.md">
- English
- </a>
- /
- <a href="./README-fa.md">
- فارسی
- </a>
-  /
-  <a href="./README-zh-cn.md">
- 简体中文
- </a>
-   /
-  <a href="./README-ru.md">
- Русский
- </a>
-</p>
-
-<p align="center">
   <a href="https://github.com/khodedawsh/marzneshin" target="_blank" rel="noopener noreferrer" >
-    <img src="https://github.com/Gozargah/Marzban-docs/raw/master/screenshots/preview.png" alt="Marzban screenshots" width="600" height="auto">
+    <img src="https://github.com/Gozargah/Marzban-docs/raw/master/screenshots/preview.png" alt="screenshots" width="600" height="auto">
   </a>
 </p>
 
@@ -58,8 +40,8 @@
 
 - [Overview](#overview)
 	- [How it works](#how-it-works)
-		- [Legacy features](#marzbans-legacy-features)
-		- [New features](#new-features)
+	- [Features](#features)
+	- [Supported Languages](#supported-languages)
 - [Installation guide](#installation-guide)
 - [Configuration](#configuration)
 - [API](#api)
@@ -74,37 +56,52 @@
 
 # Overview
 
-Marzneshin is simply an interface for managing marznode users and services.
+Marzneshin is an UI interface and system which enables managing
+[nodes](https://github.com/khodedawsh/marznode), users and services,
+hosts. Marzneshin distribute traffic between nodes without withhelding 
+admins control over the porpotion and the balance of nodes traffic.
 
-## How it works 
+Dashboard enable access to nodes(configurations, status and stats, logs), 
+hosts, users, services entites. While providing monitoring and system 
+overview statistics.
 
-Marzneshin controls the nodes connected to it; monitoring/disabling/enabling users on marznode instances
-while marznode manages vpn backends (such as xray)
+On another hand, the system (backend) manages traffic distribution, v2ray
+configurations, proxies and VPN backends, users subscription to proxies, etc. 
 
-### Marzban's legacy Features
+Marzneshin controls the [Marznodes](https://github.com/khodedawsh/marznode) 
+connected to it; monitoring/disabling/enabling users on marznode instances while
+marznode manages vpn backends (such as xray).
 
-- Built-in **Web UI**
-- [**Multiple Nodes**](#marznode) support (for infrastructure distribution & scalability)
+### Features
+
+- **Web UI** Dashboard 
+- **Multi Nodes** support for traffic distribution, scalability, and fault tolerance
 - Supports protocols **Vmess**, **VLESS**, **Trojan** and **Shadowsocks**
 - **Multi-protocol** for a single user
+- Manage users' access to inbounds separately
 - **Multi-user** on a single inbound
-- Restfull api
-- limit users' data and set exire dates
+- Limit users' data and set exire dates
 - reset traffic periodically (daily, weekly,...)
-- **Subscription link** compatible with **V2ray** _(such as V2RayNG, OneClick, Nekoray, etc.)_, **Clash** and **ClashMeta**
+- **Subscription link** compatible with **V2ray** (e.g. V2RayNG, OneClick, Nekoray, etc.), **Clash** and **ClashMeta**
 - Automated **Share link** and **QRcode** generator
-- System monitoring and **traffic statistics**
+- System, nodes, traffic statistics, users monitoring 
 - Integrated **Telegram Bot**
 - Integrated **Command Line Interface (CLI)**
-- **Multi-language**
 - **Multi-admin** support (WIP)
-
-### New Features
-- Manage users' access to inbounds separately
 - Marzneshin is decoupled from VPN backends
 - Resilient and fault tolerance node management
-- Short subscription links
 - UI performance and redesign
+
+
+Deployment and Developer Kit:
+- REST-full API
+- Kubernetes and multiple deployment strategy and options (WIP)
+
+### Supported Languages
+- Russian (WIP)
+- English 
+- Kurdish (Soranî, Kurmancî)
+- Persian (WIP)
 
 # Installation guide
 
@@ -379,12 +376,7 @@ We ❤️‍🔥 contributors! If you'd like to contribute, please check out our
 Check [open issues](https://github.com/khodedawsh/marzneshin/issues) to help the progress of this project.
 
 <p align="center">
-Thanks to the all contributors who have helped improved Marzban & Marzneshin:
-</p>
-<p align="center">
-<a href="https://github.com/Gozargah/Marzban/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=Gozargah/Marzban" />
-</a>
+Thanks to the all contributors who have helped Marzneshin:
 </p>
 <p align="center">
 <a href="https://github.com/khodedawsh/marzneshin/graphs/contributors">
