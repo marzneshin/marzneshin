@@ -55,26 +55,22 @@
 
 # Overview
 
-Marzneshin is a UI interface and a system which enables managing
-[nodes](https://github.com/khodedawsh/marznode), users، services,
-and hosts.
+Marzneshin is a censorship circumvention tool utilizing other censorship circumvention tools.
 
-Dashboard enable access to nodes(configurations, status and stats, logs), 
-hosts, users, services entites. While providing monitoring and system 
-overview statistics.
+Dashboard enables access to nodes(configurations, status and stats, logs), 
+hosts, users, service entities; while providing monitoring and system statistics.
 
-On the other hand, the system (backend) manages traffic distribution, v2ray
-configurations, proxies and VPN backends, users subscription to proxies, etc. 
+On the other hand, the backend manages nodes, users, users' subscriptions, etc. 
 
-Marzneshin controls [Marznodes](https://github.com/khodedawsh/marznode) 
+Marzneshin controls the [Marznodes](https://github.com/khodedawsh/marznode) 
 connected to it; monitoring/disabling/enabling users on marznode instances while
-marznode manages vpn backends (such as xray).
+marznode manages and interacts with vpn backends (such as xray).
 
 ### Features
 
 - **Web UI** Dashboard 
 - **Multi Nodes** support for traffic distribution, scalability, and fault tolerance
-- Supports protocols **Vmess**, **VLESS**, **Trojan** and **Shadowsocks**
+- Supports protocols **Vmess**, **VLESS**, **Trojan** and **Shadowsocks** as provided by xray
 - **Multi-protocol** for a single user
 - Manage users' access to inbounds separately
 - **Multi-user** on a single inbound
@@ -83,11 +79,10 @@ marznode manages vpn backends (such as xray).
 - **Subscription link** compatible with **V2ray** (e.g. V2RayNG, OneClick, Nekoray, etc.), **Clash** and **ClashMeta**
 - Automated **Share link** and **QRcode** generator
 - System, nodes, traffic statistics, users monitoring 
-- Integrated **Telegram Bot**
 - Integrated **Command Line Interface (CLI)**
 - **Multi-admin** support (WIP)
 - Marzneshin is decoupled from VPN backends
-- Resilient and fault tolerance node management
+- Resilient and fault tolerant node management
 - UI performance and redesign
 
 
@@ -353,19 +348,19 @@ Different action typs are: `user_created`, `user_updated`, `user_deleted`, `user
 
 # Donation
 
-If you found Marzneshin useful and would like to support its development, you can't make a donation in one of the following crypto networks:
+If you found Marzneshin useful and would like to support its development, you can make a donation in one of the following crypto networks:
 
-- TRON network (TRC20):
-- ETH, BNB, MATIC network (ERC20, BEP20):
-- Bitcoin network:
-- Dogecoin network:
-- TON network: 
+- Bitcoin network: 13ZDhE5KHGsfjM4A22eLTUgW98WpXhQTuF
+- TRON network (TRC20): TYxFCiRqJ3SiV6rAQAmJUd3DgVmJvEAfz4
+- TON network: EQB_VYiU73U1_wk-01I_MLg9-hx953VOf9Y36t2Z04WyUapD
 
-Thank you for your support!
+Part of the donations would be tipped to contributors, the rest to collaborators.
+
+May developers be rich.
 
 # License
 
-Made in [Unknown!] and Published under [AGPL-3.0](./LICENSE).
+Published under [AGPL-3.0](./LICENSE).
 
 # Contributors
 
