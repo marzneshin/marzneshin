@@ -1,7 +1,7 @@
 <h1 align="center"/>Marzneshin</h1>
 
 <p align="center">
-    An Scalable and Comprehensive Proxy Engine management panel.
+    A Scalable and Comprehensive Proxy Engine management panel.
 </p>
 
 <br/>
@@ -56,19 +56,19 @@
 
 # Overview
 
-Marzneshin is an UI interface and system which enables managing
+Marzneshin is an UI interface and a system which enables managing
 [nodes](https://github.com/khodedawsh/marznode), users and services,
-hosts. Marzneshin distribute traffic between nodes without withhelding 
+hosts. Marzneshin distributes traffic between nodes without withhelding 
 admins control over the porpotion and the balance of nodes traffic.
 
 Dashboard enable access to nodes(configurations, status and stats, logs), 
 hosts, users, services entites. While providing monitoring and system 
 overview statistics.
 
-On another hand, the system (backend) manages traffic distribution, v2ray
+On the other hand, the system (backend) manages traffic distribution, v2ray
 configurations, proxies and VPN backends, users subscription to proxies, etc. 
 
-Marzneshin controls the [Marznodes](https://github.com/khodedawsh/marznode) 
+Marzneshin controls [Marznodes](https://github.com/khodedawsh/marznode) 
 connected to it; monitoring/disabling/enabling users on marznode instances while
 marznode manages vpn backends (such as xray).
 
@@ -376,7 +376,7 @@ We ❤️‍🔥 contributors! If you'd like to contribute, please check out our
 Check [open issues](https://github.com/khodedawsh/marzneshin/issues) to help the progress of this project.
 
 <p align="center">
-Thanks to the all contributors who have helped Marzneshin:
+Thanks to all contributors who have helped Marzneshin:
 </p>
 <p align="center">
 <a href="https://github.com/khodedawsh/marzneshin/graphs/contributors">
