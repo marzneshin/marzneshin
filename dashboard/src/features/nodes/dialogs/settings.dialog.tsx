@@ -68,15 +68,21 @@ export const NodesSettingsDialog: FC<NodesSettingsDialogProps> = ({ onOpenChange
                         </TabsContent>
                         <TabsContent value="config" className="h-full z-51">
                             <Card>
-                                <CardContent className="p-2 h-1/2">
+                                <CardContent className="p-2 h-1/2 flex flex-col gap-2">
                                     <Editor
                                         height="50vh"
+                                        className="rounded-sm border"
                                         defaultLanguage="json"
                                         theme={theme === "dark" ? "vs-dark" : "github"}
                                         defaultValue={JSON.stringify(data, null, '\t')}
                                         onChange={handleConfigChange}
                                     />
-                                    <Button onClick={() => mutate.mutate({ node: entity, config })}>{t('save')}</Button>
+                                    <Button
+                                        className="w-full"
+                                        onClick={() => mutate.mutate({ node: entity, config })}
+                                    >
+                                        {t('save')}
+                                    </Button>
                                 </CardContent>
                             </Card>
                         </TabsContent>
