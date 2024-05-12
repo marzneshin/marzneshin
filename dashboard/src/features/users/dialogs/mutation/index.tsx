@@ -13,6 +13,7 @@ import {
 } from '@marzneshin/components';
 import { useTranslation } from 'react-i18next';
 import {
+    DATA_LIMIT_METRIC,
     UserMutationType,
     useUsersCreationMutation,
     useUsersUpdateMutation
@@ -55,7 +56,6 @@ export const UsersMutationDialog: FC<UsersMutationDialogProps> = ({
         on_hold_timeout: undefined,
     }), []);
 
-
     const { form, handleSubmit } = useMutationDialog({
         entity,
         onOpenChange,
@@ -63,6 +63,7 @@ export const UsersMutationDialog: FC<UsersMutationDialogProps> = ({
         updateMutation: useUsersUpdateMutation(),
         schema: UserSchema,
         getDefaultValue: getDefaultValues,
+        loadFormtter: (d) => ({ ...d, data_limit: (d.data_limit ? d.data_limit : 0) / DATA_LIMIT_METRIC })
     })
 
     const [
@@ -98,7 +99,7 @@ export const UsersMutationDialog: FC<UsersMutationDialogProps> = ({
         form.setValue("status", "active")
         if (selectedExpirationMethodTab === 'onhold') {
             form.setValue("status", "on_hold")
-            form.setValue("expire", null);
+            form.setValue("expire", undefined);
             form.clearErrors("expire");
         } else if (selectedExpirationMethodTab === "unlimited") {
             form.setValue("expire", undefined);
