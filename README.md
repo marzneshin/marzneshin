@@ -39,7 +39,6 @@
 ## Table of Contents
 
 - [Overview](#overview)
-	- [How it works](#how-it-works)
 	- [Features](#features)
 	- [Supported Languages](#supported-languages)
 - [Installation guide](#installation-guide)
@@ -48,7 +47,7 @@
 - [Backup](#backup)
 - [Telegram Bot](#telegram-bot)
 - [Marzneshin CLI](#marzneshin-cli)
-- [Marzneshin Node](#marzneshin-node)
+- [Marznode](#marzneshin-node)
 - [Webhook notifications](#webhook-notifications)
 - [Donation](#donation)
 - [License](#license)
