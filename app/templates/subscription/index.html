@@ -91,7 +91,7 @@
         remaining)
         {% endif %}</p>
 
-    {% if user.status == 'active' %}
+    {% if user.status == 'active' or user.status == 'on_hold' %}
     <h2>Links:</h2>
     <ul>
         {% for link in links %}
