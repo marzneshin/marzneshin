@@ -56,7 +56,7 @@
 
 # Overview
 
-Marzneshin is an UI interface and a system which enables managing
+Marzneshin is a UI interface and a system which enables managing
 [nodes](https://github.com/khodedawsh/marznode), users and services,
 hosts. Marzneshin distributes traffic between nodes without withhelding 
 admins control over the porpotion and the balance of nodes traffic.
