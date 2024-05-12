@@ -63,7 +63,7 @@ export const UsersMutationDialog: FC<UsersMutationDialogProps> = ({
         updateMutation: useUsersUpdateMutation(),
         schema: UserSchema,
         getDefaultValue: getDefaultValues,
-        loadFormtter: (d: UserMutationType) => ({ ...d, data_limit: (d.data_limit ? d.data_limit : 0) / DATA_LIMIT_METRIC })
+        loadFormtter: (d) => ({ ...d, data_limit: (d.data_limit ? d.data_limit : 0) / DATA_LIMIT_METRIC })
     })
 
     const [

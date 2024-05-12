@@ -63,6 +63,7 @@ export const useMutationDialog = <TData, TError = unknown, TVariables = unknown>
         } else {
             form.reset(getDefaultValue());
         }
+        // eslint-disable-next-line
     }, [entity, form, getDefaultValue]);
 
     const handleSubmit = form.handleSubmit(submit as SubmitHandler<FieldValues>);
