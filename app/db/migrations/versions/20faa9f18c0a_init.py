@@ -46,7 +46,7 @@ def upgrade() -> None:
         sa.Column("name", sa.String(length=256), nullable=True),
         sa.Column("address", sa.String(length=256), nullable=True),
         sa.Column("port", sa.Integer(), nullable=True),
-        sa.Column("connection_backend", sa.String(), nullable=True),
+        sa.Column("connection_backend", sa.String(32), nullable=True),
         sa.Column("xray_version", sa.String(length=32), nullable=True),
         sa.Column(
             "status",
@@ -115,7 +115,7 @@ def upgrade() -> None:
             nullable=True,
         ),
         sa.Column("tag", sa.String(length=256), nullable=False),
-        sa.Column("config", sa.String(), nullable=False),
+        sa.Column("config", sa.String(512), nullable=False),
         sa.Column("node_id", sa.Integer(), nullable=True),
         sa.ForeignKeyConstraint(
             ["node_id"],
@@ -164,7 +164,7 @@ def upgrade() -> None:
             nullable=False,
         ),
         sa.Column("ip_limit", sa.Integer(), nullable=False),
-        sa.Column("settings", sa.String(), nullable=True),
+        sa.Column("settings", sa.String(1024), nullable=True),
         sa.Column("expire", sa.DateTime(), nullable=True),
         sa.Column("admin_id", sa.Integer(), nullable=True),
         sa.Column("sub_updated_at", sa.DateTime(), nullable=True),

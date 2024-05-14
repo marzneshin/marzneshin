@@ -108,7 +108,7 @@ class User(Base):
         default=UserDataLimitResetStrategy.no_reset,
     )
     ip_limit = Column(Integer, nullable=False, default=-1)
-    settings = Column(String)
+    settings = Column(String(1024))
     usage_logs = relationship(
         "UserUsageResetLogs", back_populates="user", lazy="joined"
     )
@@ -153,7 +153,7 @@ class Inbound(Base):
     id = Column(Integer, primary_key=True)
     protocol = Column(Enum(ProxyTypes))
     tag = Column(String(256), nullable=False)
-    config = Column(String(), nullable=False)
+    config = Column(String(512), nullable=False)
     node_id = Column(Integer, ForeignKey("nodes.id"), index=True)
     node = relationship("Node", back_populates="inbounds")
     services = relationship(
@@ -228,7 +228,7 @@ class Node(Base):
     __table_args__ = (UniqueConstraint("address", "port"),)
     id = Column(Integer, primary_key=True)
     name = Column(String(256), unique=True)
-    connection_backend = Column(String())
+    connection_backend = Column(String(32))
     address = Column(String(256))
     port = Column(Integer)
     xray_version = Column(String(32))
