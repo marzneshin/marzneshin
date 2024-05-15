@@ -71,7 +71,7 @@ export const UsersMutationDialog: FC<UsersMutationDialogProps> = ({
                     <form onSubmit={handleSubmit}>
                         <div className="flex-col grid-cols-2 gap-2 sm:flex md:grid">
                             <div>
-                                <UsernameField />
+                                <UsernameField disabled={(entity && entity.username) ? true : false} />
                                 <DataLimitFields />
                                 <ExpirationMethodFields entity={entity} />
                                 <NoteField />
