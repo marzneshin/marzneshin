@@ -1,4 +1,4 @@
-import { FC, useCallback, useEffect, useState } from "react";
+import { FC } from "react";
 import {
     Tabs,
     TabsTrigger,
@@ -14,51 +14,17 @@ import {
     OnHoldExpireDurationField,
 } from "../fields";
 import { TabsList } from "@radix-ui/react-tabs";
-import { useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { useExpirationMethodTabs } from "./use-expiration-method-tabs";
 
 interface ExpirationMethodProps {
     entity: UserMutationType | null
 }
 
+
 export const ExpirationMethodFields: FC<ExpirationMethodProps> = ({ entity }) => {
-    const form = useFormContext()
     const { t } = useTranslation()
-    const getUserExpirationMethod = useCallback((entity: UserMutationType) => {
-        if (entity.status === "on_hold")
-            return 'onhold'
-        else if (entity.expire !== undefined)
-            return 'determined'
-        else
-            return 'unlimited'
-    }, [])
-
-    const defaultExpirationMethodTab = entity?.username ? getUserExpirationMethod(entity) : 'determined'
-    const [
-        selectedExpirationMethodTab,
-        setSelectedExpirationMethodTab
-    ] = useState<'determined' | 'onhold' | 'unlimited' | string>(defaultExpirationMethodTab);
-
-    useEffect(() => {
-        form.setValue("status", "active")
-        if (selectedExpirationMethodTab === 'onhold') {
-            form.setValue("status", "on_hold")
-            form.setValue("expire", undefined);
-            form.clearErrors("expire");
-        } else if (selectedExpirationMethodTab === "unlimited") {
-            form.setValue("expire", undefined);
-            form.setValue("on_hold_expire_duration", undefined);
-            form.setValue("on_hold_timeout", undefined);
-            form.clearErrors("expire");
-            form.clearErrors("on_hold_expire_duration");
-            form.clearErrors("on_hold_timeout");
-        } else {
-            form.setValue("on_hold_expire_duration", 0);
-            form.setValue("on_hold_timeout", null);
-            form.clearErrors("on_hold_expire_duration");
-            form.clearErrors("on_hold_timeout");
-        }
-    }, [selectedExpirationMethodTab, form]);
+    const { setSelectedExpirationMethodTab, defaultExpirationMethodTab } = useExpirationMethodTabs({ entity })
 
     return (
         <>
