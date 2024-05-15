@@ -12,6 +12,7 @@ interface IMutationDialog<TData, TError = unknown, TVariables = unknown> {
     updateMutation: UseMutationResult<TData, TError, TVariables>
     schema: ZodSchema
     getDefaultValue: () => FieldValues
+    loadFormtter?: (d: FieldValues) => FieldValues
 }
 
 /** useMutationDialog - Dialog mutation hook
@@ -39,9 +40,11 @@ export const useMutationDialog = <TData, TError = unknown, TVariables = unknown>
     updateMutation,
     schema,
     getDefaultValue,
+    loadFormtter = (s) => s,
 }: IMutationDialog<TData, TError, TVariables>) => {
+
     const form = useForm({
-        defaultValues: entity ? (entity as FieldValues) : (getDefaultValue()),
+        defaultValues: entity ? loadFormtter(entity) : getDefaultValue(),
         resolver: zodResolver(schema)
     });
 
@@ -56,10 +59,11 @@ export const useMutationDialog = <TData, TError = unknown, TVariables = unknown>
 
     useEffect(() => {
         if (entity) {
-            form.reset(entity)
+            form.reset(loadFormtter(entity))
         } else {
             form.reset(getDefaultValue());
         }
+        // eslint-disable-next-line
     }, [entity, form, getDefaultValue]);
 
     const handleSubmit = form.handleSubmit(submit as SubmitHandler<FieldValues>);

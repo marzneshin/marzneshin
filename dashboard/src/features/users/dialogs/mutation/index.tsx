@@ -9,6 +9,7 @@ import {
 } from '@marzneshin/components';
 import { useTranslation } from 'react-i18next';
 import {
+    DATA_LIMIT_METRIC,
     UserMutationType,
     useUsersCreationMutation,
     useUsersUpdateMutation
@@ -46,7 +47,6 @@ export const UsersMutationDialog: FC<UsersMutationDialogProps> = ({
         on_hold_timeout: undefined,
     }), []);
 
-
     const { form, handleSubmit } = useMutationDialog({
         entity,
         onOpenChange,
@@ -54,6 +54,7 @@ export const UsersMutationDialog: FC<UsersMutationDialogProps> = ({
         updateMutation: useUsersUpdateMutation(),
         schema: UserSchema,
         getDefaultValue: getDefaultValues,
+        loadFormtter: (d) => ({ ...d, data_limit: (d.data_limit ? d.data_limit : 0) / DATA_LIMIT_METRIC })
     })
 
     return (
