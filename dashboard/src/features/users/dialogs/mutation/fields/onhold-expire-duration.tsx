@@ -27,7 +27,7 @@ export const OnHoldExpireDurationField: FC<OnHoldExpireDurationFieldProps> = () 
             name="on_hold_expire_duration"
             render={({ field }) => (
                 <FormItem>
-                    <FormLabel>{t('page.users.on_hold_expire_duration')} ({t('day')})</FormLabel>
+                    <FormLabel>{t('page.users.on_hold_expire_duration')} ({t('days')})</FormLabel>
                     <FormControl>
                         <Input
                             type="number"
