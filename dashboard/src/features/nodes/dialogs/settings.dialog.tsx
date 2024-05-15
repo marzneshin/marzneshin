@@ -24,7 +24,7 @@ import { useTheme } from "@marzneshin/features/theme-switch";
 interface NodesSettingsDialogProps {
     onOpenChange: (state: boolean) => void
     open: boolean
-    entity: NodeType | null
+    entity: NodeType
 }
 
 export const NodesSettingsDialog: FC<NodesSettingsDialogProps> = ({ onOpenChange, open, entity }) => {
@@ -32,8 +32,17 @@ export const NodesSettingsDialog: FC<NodesSettingsDialogProps> = ({ onOpenChange
     const { t } = useTranslation();
     const { data } = useNodesSettingsQuery(entity);
     const [config, setConfig] = useState<any>(data)
+    const [payloadValidity, setPayloadValidity] = useState<boolean>(true)
     const mutate = useNodesSettingsMutation();
     const { theme } = useTheme()
+
+    const handleEditorValidation = (markers: any[]) => {
+        setPayloadValidity(!markers.length)
+    }
+
+    const handleConfigSave = () => {
+        mutate.mutate({ node: entity, config })
+    }
 
     const handleConfigChange = (newConfig: string | undefined) => {
         if (newConfig) {
@@ -78,10 +87,14 @@ export const NodesSettingsDialog: FC<NodesSettingsDialogProps> = ({ onOpenChange
                                             theme={theme === "dark" ? "vs-dark" : "github"}
                                             defaultValue={JSON.stringify(data, null, '\t')}
                                             onChange={handleConfigChange}
+                                            onValidate={handleEditorValidation}
+
                                         />
                                         <Button
                                             className="w-full"
-                                            onClick={() => mutate.mutate({ node: entity, config })}
+                                            variant={!payloadValidity ? "destructive" : "default"}
+                                            onClick={handleConfigSave}
+                                            disabled={!payloadValidity}
                                         >
                                             {t('save')}
                                         </Button>
