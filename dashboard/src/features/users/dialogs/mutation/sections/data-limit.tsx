@@ -30,7 +30,8 @@ export const DataLimitFields: FC = () => {
             form.setValue("data_limit", 0)
             form.setValue("data_limit_reset_strategy", "no_reset");
         }
-    }, [selectedDataLimitTab, form]);
+        // eslint-disable-next-line
+    }, [selectedDataLimitTab]);
 
     return (
         <>
