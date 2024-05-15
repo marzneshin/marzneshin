@@ -6,13 +6,13 @@ import {
     FormLabel,
     FormMessage
 } from '@marzneshin/components';
-import { FC } from 'react'
+import { FC, InputHTMLAttributes } from 'react'
 import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 interface UsernameFieldProps { }
 
-export const UsernameField: FC<UsernameFieldProps> = () => {
+export const UsernameField: FC<UsernameFieldProps & InputHTMLAttributes<HTMLElement>> = ({ disabled }) => {
     const form = useFormContext()
     const { t } = useTranslation()
     return (
@@ -23,7 +23,7 @@ export const UsernameField: FC<UsernameFieldProps> = () => {
                 <FormItem>
                     <FormLabel>{t('username')}</FormLabel>
                     <FormControl>
-                        <Input {...field} />
+                        <Input disabled={disabled} {...field} />
                     </FormControl>
                     <FormMessage />
                 </FormItem>
