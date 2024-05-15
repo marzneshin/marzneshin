@@ -18,3 +18,23 @@ class SystemStats(BaseModel):
     total_nodes: int
     healthy_nodes: int
     unhealthy_nodes: int
+
+
+class UsersStats(BaseModel):
+    total: int
+    active: int
+    on_hold: int
+    expired: int
+    limited: int
+    online: int
+    recent_subscription_updates: list[str]
+
+
+class AdminsStats(BaseModel):
+    total: int
+
+
+class NodesStats(BaseModel):
+    total: int
+    healthy: int
+    unhealthy: int
