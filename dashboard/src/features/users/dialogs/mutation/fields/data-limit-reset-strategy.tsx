@@ -25,7 +25,7 @@ export const DataLimitResetStrategyField: FC<DataLimitResetStrategyFieldProps> =
             name="data_limit_reset_strategy"
             render={({ field }) => (
                 <FormItem className="w-full">
-                    <FormLabel>{t('Data Limit Reset Strategy')}</FormLabel>
+                    <FormLabel>{t('page.users.data_limit_reset_strategy')}</FormLabel>
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                         <FormControl>
                             <SelectTrigger>

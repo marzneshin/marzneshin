@@ -35,6 +35,11 @@
     "subscription": "Subscription",
     "subscription_link": "Subscription Link",
     "fingerprint": "Fingerprint",
+    "enable": "Enable",
+    "disable": "Disable",
+    "close": "Close",
+    "save": "Save",
+    "days": "Days",
     "page": {
         "settings": {
             "certificate": {
@@ -106,6 +111,8 @@
             "online_at": "Online At",
             "expire_date": "Expire Date",
             "unlimited": "Unlimited",
+            "limited": "Limited",
+            "data_limit_method": "Data limit type",
             "determined_expire": "Determined",
             "expire_method": "Expiration method",
             "onhold_expire": "On Hold",
@@ -143,6 +150,10 @@
             }
         },
         "hosts": {
+            "no-inbound-selection-alert": {
+                "title": "No inbound is selected",
+                "desc": "You must select an inbound inorder to create host."
+            },
             "allowinsecure": "Allow insecure",
             "dialogs": {
                 "edition": {
@@ -195,6 +206,13 @@
             "error": "Failed to reset {{name}} data usage",
             "success": {
                 "title": "{{name}} data usage is successfuly reseted",
+                "desc": ""
+            }
+        },
+        "user_status": {
+            "error": "Failed to toggle {{name}} enable status",
+            "success": {
+                "title": "{{name}} enable status is successfuly updated",
                 "desc": ""
             }
         }

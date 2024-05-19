@@ -25,15 +25,13 @@ class ReminderType(str, Enum):
 
 class UserStatus(str, Enum):
     active = "active"
-    disabled = "disabled"
+    on_hold = "on_hold"
     limited = "limited"
     expired = "expired"
-    on_hold = "on_hold"
 
 
 class UserStatusModify(str, Enum):
     active = "active"
-    disabled = "disabled"
     on_hold = "on_hold"
 
 
@@ -58,6 +56,7 @@ class UserBase(BaseModel):
     data_limit: Optional[int] = Field(
         ge=0, default=None, description="data_limit can be 0 or greater"
     )
+    enabled: bool = Field(default=True)
     data_limit_reset_strategy: UserDataLimitResetStrategy = (
         UserDataLimitResetStrategy.no_reset
     )
@@ -107,10 +106,7 @@ class UserCreate(User):
                 )
             if self.expire:
                 raise ValueError("User cannot be on hold with specified expire.")
-        elif self.status == UserStatusCreate.active:
-            if not self.expire:
-                raise ValueError("expire field should be set when status is active.")
-            if self.on_hold_expire_duration or self.on_hold_timeout:
+        elif self.status == UserStatusCreate.active and (self.on_hold_expire_duration or self.on_hold_timeout):
                 raise ValueError(
                     "on hold parametrs set when user status isn't on_hold."
                 )

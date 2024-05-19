@@ -24,6 +24,7 @@ from config import (
     UVICORN_SSL_CERTFILE,
     UVICORN_SSL_KEYFILE,
     UVICORN_UDS,
+    DASHBOARD_PATH,
 )
 
 from . import __version__, telegram
@@ -39,7 +40,6 @@ from .tasks import (
 )
 
 logger = logging.getLogger(__name__)
-dashboard_path = "/dashboard/"
 
 app = FastAPI(
     title="MarzneshinAPI",
@@ -110,9 +110,19 @@ def validation_exception_handler(request: Request, exc: RequestValidationError):
 async def main():
     if not DEBUG:
         app.mount(
-            "/dashboard/",
+            DASHBOARD_PATH,
             StaticFiles(directory="dashboard/dist", html=True),
             name="dashboard",
+        )
+        app.mount(
+            "/static/",
+            StaticFiles(directory="dashboard/dist/static"),
+            name="static",
+        )
+        app.mount(
+            "/locales/",
+            StaticFiles(directory="dashboard/dist/locales"),
+            name="locales",
         )
     scheduler.start()
     asyncio.create_task(telegram.start_bot())

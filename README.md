@@ -1,7 +1,7 @@
 <h1 align="center"/>Marzneshin</h1>
 
 <p align="center">
-    A Fork of Marzban aiming for scalability
+    A Scalable and Comprehensive Proxy Engine management panel.
 </p>
 
 <br/>
@@ -31,42 +31,23 @@
 </p>
 
 <p align="center">
- <a href="./README.md">
- English
- </a>
- /
- <a href="./README-fa.md">
- فارسی
- </a>
-  /
-  <a href="./README-zh-cn.md">
- 简体中文
- </a>
-   /
-  <a href="./README-ru.md">
- Русский
- </a>
-</p>
-
-<p align="center">
   <a href="https://github.com/khodedawsh/marzneshin" target="_blank" rel="noopener noreferrer" >
-    <img src="https://github.com/Gozargah/Marzban-docs/raw/master/screenshots/preview.png" alt="Marzban screenshots" width="600" height="auto">
+    <img src="https://github.com/Gozargah/Marzban-docs/raw/master/screenshots/preview.png" alt="screenshots" width="600" height="auto">
   </a>
 </p>
 
 ## Table of Contents
 
 - [Overview](#overview)
-	- [How it works](#how-it-works)
-		- [Legacy features](#marzbans-legacy-features)
-		- [New features](#new-features)
+	- [Features](#features)
+	- [Supported Languages](#supported-languages)
 - [Installation guide](#installation-guide)
 - [Configuration](#configuration)
 - [API](#api)
 - [Backup](#backup)
 - [Telegram Bot](#telegram-bot)
 - [Marzneshin CLI](#marzneshin-cli)
-- [Marzneshin Node](#marzneshin-node)
+- [Marznode](#marzneshin-node)
 - [Webhook notifications](#webhook-notifications)
 - [Donation](#donation)
 - [License](#license)
@@ -74,37 +55,46 @@
 
 # Overview
 
-Marzneshin is simply an interface for managing marznode users and services.
+Marzneshin is a censorship circumvention tool utilizing other censorship circumvention tools.
 
-## How it works 
+Dashboard enables access to nodes(configurations, status and stats, logs), 
+hosts, users, service entities; while providing monitoring and system statistics.
 
-Marzneshin controls the nodes connected to it; monitoring/disabling/enabling users on marznode instances
-while marznode manages vpn backends (such as xray)
+On the other hand, the backend manages nodes, users, users' subscriptions, etc. 
 
-### Marzban's legacy Features
+Marzneshin controls the [Marznodes](https://github.com/khodedawsh/marznode) 
+connected to it; monitoring/disabling/enabling users on marznode instances while
+marznode manages and interacts with vpn backends (such as xray).
 
-- Built-in **Web UI**
-- [**Multiple Nodes**](#marznode) support (for infrastructure distribution & scalability)
-- Supports protocols **Vmess**, **VLESS**, **Trojan** and **Shadowsocks**
+### Features
+
+- **Web UI** Dashboard 
+- **Multi Nodes** support for traffic distribution, scalability, and fault tolerance
+- Supports protocols **Vmess**, **VLESS**, **Trojan** and **Shadowsocks** as provided by xray
 - **Multi-protocol** for a single user
-- **Multi-user** on a single inbound
-- Restfull api
-- limit users' data and set exire dates
-- reset traffic periodically (daily, weekly,...)
-- **Subscription link** compatible with **V2ray** _(such as V2RayNG, OneClick, Nekoray, etc.)_, **Clash** and **ClashMeta**
-- Automated **Share link** and **QRcode** generator
-- System monitoring and **traffic statistics**
-- Integrated **Telegram Bot**
-- Integrated **Command Line Interface (CLI)**
-- **Multi-language**
-- **Multi-admin** support (WIP)
-
-### New Features
 - Manage users' access to inbounds separately
-- Better UI with navigation bar
-- Marzneshin runs independent of any vpn backend(xray/...)
-- In case Marzneshin goes down nodes continue working normally as if nothing has happened.
-- shorter subscription links LOL
+- **Multi-user** on a single inbound
+- Limit users' data and set exire dates
+- reset traffic periodically (daily, weekly,...)
+- **Subscription link** compatible with **V2ray** (e.g. V2RayNG, OneClick, Nekoray, etc.), **Clash** and **ClashMeta**
+- Automated **Share link** and **QRcode** generator
+- System, nodes, traffic statistics, users monitoring 
+- Integrated **Command Line Interface (CLI)**
+- **Multi-admin** support (WIP)
+- Marzneshin is decoupled from VPN backends
+- Resilient and fault tolerant node management
+- UI performance and redesign
+
+
+Deployment and Developer Kit:
+- REST-full API
+- Kubernetes and multiple deployment strategy and options (WIP)
+
+### Supported Languages
+- Russian (WIP)
+- English 
+- Kurdish (Soranî, Kurmancî)
+- Persian (WIP)
 
 # Installation guide
 
@@ -358,19 +348,19 @@ Different action typs are: `user_created`, `user_updated`, `user_deleted`, `user
 
 # Donation
 
-If you found Marzneshin useful and would like to support its development, you can't make a donation in one of the following crypto networks:
+If you found Marzneshin useful and would like to support its development, you can make a donation in one of the following crypto networks:
 
-- TRON network (TRC20):
-- ETH, BNB, MATIC network (ERC20, BEP20):
-- Bitcoin network:
-- Dogecoin network:
-- TON network: 
+- Bitcoin network: 13ZDhE5KHGsfjM4A22eLTUgW98WpXhQTuF
+- TRON network (TRC20): TYxFCiRqJ3SiV6rAQAmJUd3DgVmJvEAfz4
+- TON network: EQB_VYiU73U1_wk-01I_MLg9-hx953VOf9Y36t2Z04WyUapD
 
-Thank you for your support!
+Part of the donations would be tipped to contributors, the rest to collaborators.
+
+May developers be rich.
 
 # License
 
-Made in [Unknown!] and Published under [AGPL-3.0](./LICENSE).
+Published under [AGPL-3.0](./LICENSE).
 
 # Contributors
 
@@ -379,12 +369,7 @@ We ❤️‍🔥 contributors! If you'd like to contribute, please check out our
 Check [open issues](https://github.com/khodedawsh/marzneshin/issues) to help the progress of this project.
 
 <p align="center">
-Thanks to the all contributors who have helped improved Marzban & Marzneshin:
-</p>
-<p align="center">
-<a href="https://github.com/Gozargah/Marzban/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=Gozargah/Marzban" />
-</a>
+Thanks to all contributors who have helped Marzneshin:
 </p>
 <p align="center">
 <a href="https://github.com/khodedawsh/marzneshin/graphs/contributors">

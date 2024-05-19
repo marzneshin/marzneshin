@@ -5,15 +5,20 @@ import { toast } from "sonner";
 import i18n from "@marzneshin/features/i18n";
 import { NodesSettingsQueryFetchKey } from "./settings.query";
 
-export async function fetchUpdateNodesSettings(node: NodeType): Promise<NodeType> {
-    return fetch(`/nodes/${node.id}/xray_config`, { method: 'put', body: node }).then((node) => {
+interface UpdateNodesSettings {
+    node: NodeType
+    config: string
+}
+
+export async function fetchUpdateNodesSettings({ node, config }: UpdateNodesSettings): Promise<NodeType> {
+    return fetch(`/nodes/${node.id}/xray_config`, { method: 'put', body: config }).then((node) => {
         return node;
     });
 }
 
-const handleError = (error: Error, value: NodeType) => {
+const handleError = (error: Error, value: UpdateNodesSettings) => {
     toast.error(
-        i18n.t('events.update.error', { name: value.name }),
+        i18n.t('events.update.error', { name: value.node.name }),
         {
             description: error.message
         })

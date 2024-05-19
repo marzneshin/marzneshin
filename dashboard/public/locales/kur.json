@@ -10,7 +10,7 @@
     "password": "Têperrewişe",
     "inbounds": "înbawendkan",
     "submit": "Nardin",
-    "login": "Çûnejûrew",
+    "login": "Çûnejûrewe",
     "edit": "Desitkarîkirdn",
     "actions": "Fermankan",
     "settings": "Sazkarîyekan",
@@ -23,11 +23,16 @@
     "path": "Path",
     "host": "Host",
     "alpn": "ALPN",
-    "security": "Security",
-    "user_info": "Users Info",
-    "subscription": "Subscription",
-    "subscription_link": "Subscription Link",
+    "security": "Asayiş",
+    "user_info": "Zanyarî bekarhêneran",
+    "subscription": "Beşdarî",
+    "subscription_link": "Link Beşdarî",
     "fingerprint": "Fingerprint",
+    "enable": "Çalakî ke",
+    "disable": "Naçalakî ke",
+    "close": "Dayixe",
+    "save": "Seyv Bike",
+    "days": "Roj",
     "page": {
         "settings": {
             "certificate": {
@@ -93,19 +98,21 @@
             }
         },
         "users": {
-            "data_limit": "Data Limit",
-            "used_traffic": "Used Traffic",
-            "data_limit_reset_strategy": "Data Limit Reset Strategy",
-            "online_at": "Online At",
-            "expire_date": "Expire Date",
-            "unlimited": "Unlimited",
-            "determined_expire": "Determined",
-            "expire_method": "Expiration method",
-            "onhold_expire": "On Hold",
-            "reset_usage": "Reset Usage",
-            "revoke_subscription": "Revoke Subscription",
-            "on_hold_expire_duration": "On Hold",
-            "on_hold_timeout": "On Hold Timeout",
+            "data_limit": "Sinûrî data",
+            "used_traffic": "Traffic bekarhêndiraw",
+            "data_limit_reset_strategy": "Şêwazî sirrinewey sinûrî data",
+            "online_at": "Online Le",
+            "expire_date": "Katî beserçûn",
+            "unlimited": "Bêsinûr",
+            "limited": "Sinûrdar",
+            "data_limit_method": "Çonêtî Sinûrî Data",
+            "determined_expire": "Diyarî kiraw",
+            "expire_method": "Sêwazî beserçûn",
+            "onhold_expire": "Ragîraw",
+            "reset_usage": "Rêsitkirdinî bekarhênraw",
+            "revoke_subscription": "Hellweşandinewey Beşdarîkirdn",
+            "on_hold_expire_duration": "Ragîraw",
+            "on_hold_timeout": "Kotayî hatnî ragirtn",
             "settings": {
                 "subscription_link": {
                     "copied": "Subscription Link Copied",
@@ -136,6 +143,10 @@
             }
         },
         "hosts": {
+            "no-inbound-selection-alert": {
+                "title": "Hîç înbawendêk hell nebijardirawe",
+                "desc": "Debêt înbawendêk hell bibjêrî ta we ku hostêk dirust bikey."
+            },
             "allowinsecure": "Allow insecure",
             "dialogs": {
                 "edition": {
@@ -189,6 +200,13 @@
             "success": {
                 "title": "{{name}} data usage is successfuly reseted",
                 "desc": ""
+            }
+        },
+        "user_status": {
+            "error": "Şikistî hêna le gorrînî doxî çalak kirdinî {{name}}",
+            "success": {
+                "title": "Doxî çalakî {{name}} nwêkirawe",
+                "desc": "Doxî çalak kirdin be serkewtûyî nwêkirawe"
             }
         }
     },

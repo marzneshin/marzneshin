@@ -1,14 +1,25 @@
-import { Button, Card, CardContent, CardHeader, CardTitle, Table, TableBody, TableCell, TableRow } from "@marzneshin/components";
+import {
+    Button,
+    Card,
+    CardContent,
+    CardHeader,
+    CardTitle,
+    Table,
+    TableBody,
+    TableCell,
+    TableRow
+} from "@marzneshin/components";
 import { FC } from 'react';
 import {
     useUserUsageResetCmd,
     UserType,
     UsersStatus,
-    UsersStatusBadge
+    UsersStatusBadge,
 } from '@marzneshin/features/users';
 import { CircularProgress } from "@nextui-org/progress";
 import { useTranslation } from "react-i18next";
 import { format, isDate, isValid } from "date-fns";
+import { UserStatusEnableButton } from "./user-status-enable-button";
 
 interface UserInfoTableProps {
     entity: UserType;
@@ -42,13 +53,17 @@ export const UserInfoTable: FC<UserInfoTableProps> = ({ entity }) => {
     const { t } = useTranslation();
     const { mutate: resetUsage } = useUserUsageResetCmd()
     const expireDate = entity.expire ? (isDate(entity.expire) ? entity.expire : new Date(entity.expire)) : null;
+
     return (
         <Card>
             <CardHeader className="flex flex-row justify-between items-center w-full">
                 <CardTitle>{t('user_info')}</CardTitle>
-                <Button className="w-[7rem]" onClick={() => resetUsage(entity)}>
-                    {t('page.users.reset_usage')}
-                </Button>
+                <div className="flex flex-row justify-center items-center gap-3">
+                    <Button onClick={() => resetUsage(entity)}>
+                        {t('page.users.reset_usage')}
+                    </Button>
+                    <UserStatusEnableButton user={entity} />
+                </div>
             </CardHeader>
             <CardContent>
                 <Table>

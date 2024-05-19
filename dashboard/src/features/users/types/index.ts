@@ -18,12 +18,13 @@ export type Status =
     | 'connected';
 
 export interface UserType {
-    on_hold_timeout: Date | string | null;
+    on_hold_timeout: Date | string | undefined;
     on_hold_expire_duration: number;
     expire: Date | string | null;
     data_limit: number | null;
     data_limit_reset_strategy: DataLimitResetStrategy;
     lifetime_used_traffic: number;
+    enabled: boolean;
     username: string;
     used_traffic: number;
     status: Status;
