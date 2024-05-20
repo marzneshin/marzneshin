@@ -12,7 +12,7 @@ export const UsersStatsLegend: FC = () => {
     return (
         <LegendOrdinal scale={ordinalColorScale}>
             {(labels) => (
-                <div className="border border-solid border-[rgba(255, 255, 255, 0.3)] rounded-lg flex flex-col h-full">
+                <div className="border border-solid border-[rgba(255, 255, 255, 0.3)] rounded-lg flex flex-col h-full p-3">
                     {labels.map((label, i) => (
                         <LegendItem
                             key={`legend-quantile-${i}`}

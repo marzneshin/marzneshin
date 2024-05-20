@@ -65,6 +65,7 @@ const Content = () => {
                         textAnchor="middle"
                         fontSize={30}
                         dy={-10}
+                        className='fill-primary'
                     >
                         {active ? active.amount : stats.total}
                     </Text>
@@ -72,6 +73,7 @@ const Content = () => {
                         textAnchor="middle"
                         fontSize={15}
                         dy={10}
+                        className='fill-muted-foreground'
                     >
                         {t('users')}
                     </Text>
