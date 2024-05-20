@@ -55,7 +55,7 @@ const Content = () => {
                                         onMouseEnter={() => setActive(arc.data)}
                                         onMouseLeave={() => setActive(null)}
                                     >
-                                        <path d={pie.path(arc)} className={arc.data.color}></path>
+                                        <path d={pie.path(arc) ?? ''} className={arc.data.color}></path>
                                     </g>
                                 )
                             })
