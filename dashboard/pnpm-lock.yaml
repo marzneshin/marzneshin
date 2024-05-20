@@ -125,6 +125,9 @@ dependencies:
   '@visx/group':
     specifier: ^3.3.0
     version: 3.3.0(react@18.3.1)
+  '@visx/legend':
+    specifier: ^3.10.3
+    version: 3.10.3(react@18.3.1)
   '@visx/scale':
     specifier: ^3.5.0
     version: 3.5.0
@@ -6726,6 +6729,19 @@ packages:
       react: ^16.0.0-0 || ^17.0.0-0 || ^18.0.0-0
     dependencies:
       '@types/react': 18.3.2
+      classnames: 2.5.1
+      prop-types: 15.8.1
+      react: 18.3.1
+    dev: false
+
+  /@visx/legend@3.10.3(react@18.3.1):
+    resolution: {integrity: sha512-jEEK/zdp8gslc3egb3tqNi7dz79riuWR032lCHnULge/h+TtbrC8MnwhbdCbcCn7Fnu3SvY/5DnPpZImFE/Ojg==}
+    peerDependencies:
+      react: ^16.3.0-0 || ^17.0.0-0 || ^18.0.0-0
+    dependencies:
+      '@types/react': 18.3.2
+      '@visx/group': 3.3.0(react@18.3.1)
+      '@visx/scale': 3.5.0
       classnames: 2.5.1
       prop-types: 15.8.1
       react: 18.3.1
