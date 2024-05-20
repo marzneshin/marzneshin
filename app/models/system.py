@@ -3,13 +3,38 @@ from pydantic import BaseModel
 
 class SystemStats(BaseModel):
     version: str
-    mem_total: int
-    mem_used: int
-    cpu_cores: int
-    cpu_usage: float
-    total_user: int
-    users_active: int
-    incoming_bandwidth: int
-    outgoing_bandwidth: int
-    incoming_bandwidth_speed: int
-    outgoing_bandwidth_speed: int
+
+    total_users: int
+    active_users: int
+    on_hold_users: int
+    expired_users: int
+    limited_users: int
+    online_users: int
+
+    recent_subscription_update_usernames: list[str]
+
+    total_admins: int
+
+    total_nodes: int
+    healthy_nodes: int
+    unhealthy_nodes: int
+
+
+class UsersStats(BaseModel):
+    total: int
+    active: int
+    on_hold: int
+    expired: int
+    limited: int
+    online: int
+    recent_subscription_updates: list[str]
+
+
+class AdminsStats(BaseModel):
+    total: int
+
+
+class NodesStats(BaseModel):
+    total: int
+    healthy: int
+    unhealthy: int
