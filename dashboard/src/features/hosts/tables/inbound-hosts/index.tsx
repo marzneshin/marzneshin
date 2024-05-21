@@ -16,7 +16,7 @@ import { InboundNotSelectedAlertDialog } from './inbound-not-selected-alert-dial
 export const InboundHostsTable = () => {
     const { data: inbounds } = useInboundsQuery()
     const [selectedInbound, setSelectedInbound] = useState<string | undefined>(inbounds[0]?.id !== undefined ? String(inbounds[0].id) : undefined)
-    const { data } = useHostsQuery(Number(selectedInbound))
+    const { data, isLoading } = useHostsQuery(Number(selectedInbound))
 
     const [mutationDialogOpen, setMutationDialogOpen] = useDialog();
     const [deleteDialogOpen, setDeleteDialogOpen] = useDialog();
@@ -79,6 +79,7 @@ export const InboundHostsTable = () => {
                 setSelectedInbound={setSelectedInbound}
                 onCreate={onCreate}
                 onOpen={onOpen}
+                isLoading={isLoading}
             />
         </div>
     )

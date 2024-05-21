@@ -34,6 +34,7 @@ import { useState } from "react"
 import { InboundType } from "@marzneshin/features/inbounds"
 import { Server } from "lucide-react"
 import { InboundOption } from "./inbound"
+import { LoaderIcon } from "lucide-react"
 
 interface InboundHostsDataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -44,6 +45,7 @@ interface InboundHostsDataTableProps<TData, TValue> {
     setSelectedInbound: (s: string) => void
     onCreate?: () => void
     onOpen?: (object: TData) => void
+    isLoading: boolean
 }
 
 export function InboundHostsDataTable<TData, TValue>({
@@ -55,6 +57,7 @@ export function InboundHostsDataTable<TData, TValue>({
     inbounds,
     selectedInbound,
     setSelectedInbound,
+    isLoading,
 }: InboundHostsDataTableProps<TData, TValue>) {
     const [sorting, setSorting] = useState<SortingState>([])
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
@@ -136,7 +139,7 @@ export function InboundHostsDataTable<TData, TValue>({
                             ))}
                         </TableHeader>
                         <TableBody>
-                            {table.getRowModel().rows?.length ? (
+                            {isLoading && <LoaderIcon className="w-5 h-5 animate-spin text-primary" />} {!isLoading && table.getRowModel().rows?.length ? (
                                 table.getRowModel().rows.map((row) => (
                                     <TableRow
                                         key={row.id}

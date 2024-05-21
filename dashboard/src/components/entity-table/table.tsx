@@ -13,7 +13,7 @@ import {
 
 import { useTranslation } from "react-i18next"
 import { useEntityTableContext } from "./entity-table-provider"
-import { LoaderCircle } from "lucide-react"
+import { LoaderIcon } from "lucide-react"
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -50,7 +50,7 @@ export function EntityDataTable<TData, TValue>({
                 {isLoading ? (
                     <TableRow className="w-full">
                         <TableCell colSpan={columns.length} className="h-24 text-center">
-                            <LoaderCircle className="w-5 h-5 animate-spin text-primary" />
+                            <LoaderIcon className="w-5 h-5 animate-spin text-primary" />
                         </TableCell>
                     </TableRow>
                 ) : (
