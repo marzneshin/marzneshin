@@ -4,6 +4,8 @@ on:
   push:
     tags:
       - 'v*.*.*'
+  schedule:
+    - cron: "0 10 * * *"
 
 jobs:
   build-docker-image:
@@ -46,6 +48,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build and push
+        if: ${{ github.event_name == 'push' }}
         uses: docker/build-push-action@v5
         with:
           context: .
@@ -54,3 +57,13 @@ jobs:
           tags: |
             dawsh/marzneshin:latest
             dawsh/marzneshin:${{github.ref_name}}
+      
+      - name: Nightly build and push
+        if: ${{ github.event_name == 'schedule' }}
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: |
+            dawsh/marzneshin:nightly
