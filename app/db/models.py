@@ -14,6 +14,7 @@ from sqlalchemy import (
     String,
     Table,
     UniqueConstraint,
+    JSON,
 )
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.expression import text
@@ -191,6 +192,11 @@ class InboundHost(Base):
         default=InboundHostSecurity.none,
         server_default=InboundHostSecurity.none.name,
     )
+
+    mux = Column(
+        Boolean, default=False, nullable=False, server_default=sqlalchemy.sql.true()
+    )
+    fragment = Column(JSON())
 
     inbound_id = Column(Integer, ForeignKey("inbounds.id"), nullable=False)
     inbound = relationship("Inbound", back_populates="hosts")
