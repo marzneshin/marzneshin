@@ -3,8 +3,8 @@ import {
     FormField,
     FormItem,
     FormLabel,
-    FormMessage,
-    Input
+    FormDescription,
+    Checkbox
 } from "@marzneshin/components";
 import { useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -17,12 +17,21 @@ export const MuxField = () => {
             control={form.control}
             name="mux"
             render={({ field }) => (
-                <FormItem>
-                    <FormLabel>{t('mux')}</FormLabel>
+                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow">
                     <FormControl>
-                        <Input {...field} />
+                        <Checkbox
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                        />
                     </FormControl>
-                    <FormMessage />
+                    <div className="space-y-1 leading-none">
+                        <FormLabel>
+                            {t('page.hosts.mux.title')}
+                        </FormLabel>
+                        <FormDescription>
+                            {t('page.hosts.mux.desc')}
+                        </FormDescription>
+                    </div>
                 </FormItem>
             )}
         />

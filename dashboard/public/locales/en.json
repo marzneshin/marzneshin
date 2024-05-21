@@ -188,6 +188,10 @@
                 "host.multiHost": "To set multiple addresses, separate them with <badge>,</badge> Each time an address is chosen randomly.",
                 "host.wildcard": "Use <badge>*</badge> to generate a random string (works for wildcard domain names)"
             },
+            "mux": {
+                "title": "Mux - Connection multiplexing",
+                "desc": "Currently supported by v2rayng while using custom config"
+            },
             "no-inbound-selection-alert": {
                 "title": "No inbound is selected",
                 "desc": "You must select an inbound inorder to create host."
