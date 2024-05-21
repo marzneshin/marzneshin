@@ -9,7 +9,7 @@ export const getDefaultValues = (): HostSchemaType => {
         address: '',
         remark: '',
         fragment: null,
-        mux: null,
+        mux: false,
         security: 'inbound_default',
         alpn: "",
         allowinsecure: false,
