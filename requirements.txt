@@ -13,7 +13,7 @@ passlib==1.7.4
 protobuf==4.25.2
 psutil==5.9.7
 pydantic==2.5.3
-PyMySQL==1.1.0
+PyMySQL==1.1.1
 pyOpenSSL==24.0.0
 pyTelegramBotAPI==4.15.2
 python-decouple==3.8
