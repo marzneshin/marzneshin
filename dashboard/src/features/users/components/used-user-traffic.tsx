@@ -1,7 +1,7 @@
 import { FC } from 'react'
 import { UserType } from '@marzneshin/features/users';
 import { CircularProgress } from '@nextui-org/progress';
-import prettyBytes from 'pretty-bytes';
+import { format } from '@chbphone55/pretty-bytes';
 import { useTranslation } from 'react-i18next';
 
 
@@ -13,6 +13,8 @@ export const UserUsedTraffic: FC<UserUsedTrafficProps> = (
     { user }
 ) => {
     const { t } = useTranslation()
+    const formatedUsedTraffic = format(user.used_traffic)
+    const formatedDatalimit = user.data_limit !== null ? format(user.data_limit) : []
     return (
         <div className="flex gap-x-5 justify-start items-center">
             <CircularProgress
@@ -22,10 +24,10 @@ export const UserUsedTraffic: FC<UserUsedTrafficProps> = (
             />
             <div>
                 <p className="text-sm font-medium text-gray-900 dark:text-gray-50">
-                    {prettyBytes(user.used_traffic)}
+                    {formatedUsedTraffic[0]} {formatedUsedTraffic[1]}
                 </p>
                 <p className="text-sm text-gray-500 dark:text-gray-500">
-                    {user.data_limit ? prettyBytes(user.data_limit) : t('page.users.unlimited')}
+                    {user.data_limit ? `${formatedDatalimit[0]} ${formatedDatalimit[1]}` : t('page.users.unlimited')}
                 </p>
             </div>
         </div>
