@@ -2,8 +2,6 @@ import json
 from enum import Enum
 from typing import Optional, Union, List
 
-# from uuid import UUID, uuid4
-
 from pydantic import ConfigDict, BaseModel, Field, validator
 
 
@@ -110,15 +108,19 @@ class FormatVariables(dict):
 class InboundHost(BaseModel):
     remark: str
     address: str
-    port: Optional[int] = Field(None, nullable=True)
-    sni: Optional[str] = Field(None, nullable=True)
-    host: Optional[str] = Field(None, nullable=True)
-    path: Optional[str] = Field(None, nullable=True)
+    port: Optional[int] = Field(None)
+    sni: Optional[str] = Field(None)
+    host: Optional[str] = Field(None)
+    path: Optional[str] = Field(None)
     security: InboundHostSecurity = InboundHostSecurity.inbound_default
     alpn: InboundHostALPN = InboundHostALPN.none
     fingerprint: InboundHostFingerprint = InboundHostFingerprint.none
     allowinsecure: Union[bool, None] = None
     is_disabled: Union[bool, None] = None
+    mux: bool = Field(False)
+    fragment: Optional[str] = Field(
+        None, pattern=r"^(?:tlshello|[\d-]{1,32}),[\d-]{1,32},[\d-]{1,32}$"
+    )
     model_config = ConfigDict(from_attributes=True)
 
     # TODO[pydantic]: We couldn't refactor the `validator`, please replace it by `field_validator` manually.
