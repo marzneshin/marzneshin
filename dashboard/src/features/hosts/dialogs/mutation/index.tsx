@@ -22,6 +22,8 @@ import {
     AddressField,
     PortField,
     HostField,
+    MuxField,
+    FragmentField,
     PathField,
     SecurityFields,
 } from "./fields";
@@ -87,6 +89,8 @@ export const HostsMutationDialog: FC<MutationDialogProps> = ({
                         </div>
                         <PathField />
                         <HostField />
+                        <FragmentField />
+                        <MuxField />
                         <SecurityFields />
                         <Button
                             className="mt-3 w-full font-semibold"

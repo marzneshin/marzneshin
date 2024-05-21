@@ -35,6 +35,8 @@
     "subscription": "Subscription",
     "subscription_link": "Subscription Link",
     "fingerprint": "Fingerprint",
+    "mux": "Mux",
+    "fragment": "Fragment",
     "enable": "Enable",
     "disable": "Disable",
     "close": "Close",

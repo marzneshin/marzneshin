@@ -10,6 +10,8 @@ export const HostSchema = z.object({
     path: z.string().nullable().optional(),
     sni: z.string().nullable().optional(),
     host: z.string().nullable().optional(),
+    mux: z.string().nullable().optional(),
+    fragment: z.string().nullable().optional(),
     security: z.enum(['inbound_default', 'none', 'tls']).default("inbound_default"),
     alpn: z.enum(['h2', 'http/1.1', 'h2,http/1.1', 'none', '']).optional().default("none"),
     allowinsecure: z.boolean().default(false).optional(),
