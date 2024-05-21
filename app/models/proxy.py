@@ -105,6 +105,12 @@ class FormatVariables(dict):
         return key.join("{}")
 
 
+class FragmentSettings(BaseModel):
+    packets: str = Field(pattern=r"(:?tlshello|[\d-]{1,32})")
+    length: str = Field(pattern=r"[\d-]{1,32}")
+    interval: str = Field(pattern=r"[\d-]{1,32}")
+
+
 class InboundHost(BaseModel):
     remark: str
     address: str
@@ -118,9 +124,7 @@ class InboundHost(BaseModel):
     allowinsecure: Union[bool, None] = None
     is_disabled: Union[bool, None] = None
     mux: bool = Field(False)
-    fragment: Optional[str] = Field(
-        None, pattern=r"^(?:tlshello|[\d-]{1,32}),[\d-]{1,32},[\d-]{1,32}$"
-    )
+    fragment: Optional[FragmentSettings] = Field(None)
     model_config = ConfigDict(from_attributes=True)
 
     # TODO[pydantic]: We couldn't refactor the `validator`, please replace it by `field_validator` manually.
