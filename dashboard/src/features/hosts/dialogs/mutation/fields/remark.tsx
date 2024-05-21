@@ -4,10 +4,15 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
-    Input
+    Input,
+    Popover,
+    PopoverTrigger,
+    PopoverContent,
 } from "@marzneshin/components";
+import { PopoverGuide } from './popover-guide'
 import { useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { InfoIcon } from 'lucide-react';
 
 export const RemarkField = () => {
     const { t } = useTranslation()
@@ -18,7 +23,17 @@ export const RemarkField = () => {
             name="remark"
             render={({ field }) => (
                 <FormItem>
-                    <FormLabel>{t('name')}</FormLabel>
+                    <FormLabel className="flex flex-row items-center gap-2">
+                        {t('name')}
+                        <Popover>
+                            <PopoverTrigger>
+                                <InfoIcon className="size-5" />
+                            </PopoverTrigger>
+                            <PopoverContent className="w-80">
+                                <PopoverGuide />
+                            </PopoverContent>
+                        </Popover>
+                    </FormLabel>
                     <FormControl>
                         <Input {...field} />
                     </FormControl>
