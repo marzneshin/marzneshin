@@ -127,18 +127,23 @@ install_marzneshin_script() {
 install_marzneshin() {
     # Fetch releases
     FILES_URL_PREFIX="https://raw.githubusercontent.com/khodedawsh/marzneshin/master"
-
+	COMPOSE_FILES_URL="https://raw.githubusercontent.com/marzneshin/marzneshin-deploy/master"
+ 	database=$1
+  	nightly=$2
+  
     mkdir -p "$DATA_DIR"
     mkdir -p "$CONFIG_DIR"
 
     colorized_echo blue "Fetching compose file"
-    curl -sL "$FILES_URL_PREFIX/docker-compose.yml" -o "$CONFIG_DIR/docker-compose.yml"
+    curl -sL "$COMPOSE_FILES_URL/docker-compose-$database.yml" -o "$CONFIG_DIR/docker-compose.yml"
     colorized_echo green "File saved in $CONFIG_DIR/docker-compose.yml"
-
-    colorized_echo blue "Fetching .env file"
+	if [ "$nightly" = true ]; then
+	    colorized_echo red "setting compose tag to nightly."
+	 	sed -ri "s/(dawsh\/marzneshin:)latest/\1nightly/g" $CONFIG_DIR/docker-compose.yml
+	fi
+ 
+    colorized_echo blue "Fetching example .env file"
     curl -sL "$FILES_URL_PREFIX/.env.example" -o "$CONFIG_DIR/.env"
-    sed -i 's/^# \(SQLALCHEMY_DATABASE_URL = .*\)$/\1/' "$CONFIG_DIR/.env"
-    sed -i 's~\(SQLALCHEMY_DATABASE_URL = \).*~\1"sqlite:///'$DATA_DIR'/db.sqlite3"~' "$CONFIG_DIR/.env"
     colorized_echo green "File saved in $CONFIG_DIR/.env"
 
     colorized_echo green "Marzneshin files downloaded successfully"
@@ -262,9 +267,34 @@ install_command() {
     if ! command -v docker >/dev/null 2>&1; then
         install_docker
     fi
+	
+    database="sqlite"
+	nightly=false
+ 
+	while [[ "$#" -gt 0 ]]; do
+	    case $1 in
+	        -d|--database)
+		 		database="$2"
+				if [[ ! $database =~ ^(sqlite|mariadb|mysql)$ ]]; then
+				    echo "database could only be sqlite, mysql and mariadb."
+					exit 1
+				fi
+	            shift
+	            ;;
+			-n|--nightly)
+	            nightly=true
+	            ;;
+	        *)
+	            echo "Unknown option: $1"
+	            exit 1
+	            ;;
+	    esac
+	    shift
+	done
+
     detect_compose
     install_marzneshin_script
-    install_marzneshin
+    install_marzneshin $database $nightly
     install_marznode_xray_config
     up_marzneshin
     follow_marzneshin_logs
