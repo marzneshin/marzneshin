@@ -47,7 +47,7 @@
 - [Backup](#backup)
 - [Telegram Bot](#telegram-bot)
 - [Marzneshin CLI](#marzneshin-cli)
-- [Marznode](#marzneshin-node)
+- [Marznode](#marznode)
 - [Webhook notifications](#webhook-notifications)
 - [Donation](#donation)
 - [License](#license)
@@ -103,6 +103,14 @@ Run the following command
 ```bash
 sudo bash -c "$(curl -sL https://github.com/khodedawsh/Marzneshin/raw/master/script.sh)" @ install
 ```
+
+To install with mariadb:
+
+```bash
+sudo bash -c "$(curl -sL https://github.com/khodedawsh/Marzneshin/raw/master/script.sh)" @ install --database mariadb
+```
+You could also use mysql by writing mysql instead, however mariadb is **recommended**.
+Also to install the latest nightly release use the `--nightly` option.
 
 Once the installation is complete:
 
@@ -199,7 +207,7 @@ server {
     ssl_certificate      /etc/letsencrypt/live/example.com/fullchain.pem;
     ssl_certificate_key  /etc/letsencrypt/live/example.com/privkey.pem;
 
-    location ~* /(dashboard|api|docs|redoc|openapi.json) {
+    location ~* /(dashboard|static|locales|api|docs|redoc|openapi.json) {
         proxy_pass http://0.0.0.0:8000;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
