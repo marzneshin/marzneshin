@@ -2,11 +2,11 @@ import { z } from "zod";
 import i18n from "i18next";
 
 const numberInterval = (v: string | null | undefined) => {
-	return v ? /[\d-]{1,32}/.test(v) : false;
+	return v ? /^[\d-]{1,32}$/.test(v) : false;
 };
 
 const packetsInterval = (v: string | null | undefined) => {
-	return v ? /(:?tlshello|[\d-]{1,32})/.test(v) : false;
+	return v ? /^(:?tlshello|[\d-]{1,32})$/.test(v) : false;
 };
 
 export const HostSchema = z.object({
