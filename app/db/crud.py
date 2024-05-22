@@ -152,7 +152,7 @@ def add_host(db: Session, inbound: Inbound, host: InboundHostModify):
         security=host.security,
         alpn=host.alpn,
         fingerprint=host.fingerprint,
-        fragment= host.fragment.model_dump() if host.fragment else None,
+        fragment=host.fragment.model_dump() if host.fragment else None,
         mux=host.mux,
     )
     inbound.hosts.append(host)
