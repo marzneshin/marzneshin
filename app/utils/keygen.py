@@ -1,7 +1,5 @@
-# import hashlib
 import xxhash
 import uuid
-from app.models.proxy import ProxyTypes
 
 
 def gen_uuid(key: str) -> str:
