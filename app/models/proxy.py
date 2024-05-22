@@ -106,9 +106,9 @@ class FormatVariables(dict):
 
 
 class FragmentSettings(BaseModel):
-    packets: str = Field(pattern=r"(:?tlshello|[\d-]{1,32})")
-    length: str = Field(pattern=r"[\d-]{1,32}")
-    interval: str = Field(pattern=r"[\d-]{1,32}")
+    packets: str = Field(pattern=r"^(:?tlshello|[\d-]{1,32})$")
+    length: str = Field(pattern=r"^[\d-]{1,32}$")
+    interval: str = Field(pattern=r"^[\d-]{1,32}$")
 
 
 class InboundHost(BaseModel):
