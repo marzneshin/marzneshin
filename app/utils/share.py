@@ -7,7 +7,8 @@ from typing import TYPE_CHECKING, Literal, Union, List
 from uuid import UUID
 
 from jdatetime import date as jd
-from v2share import V2Data, SingBoxConfig, ClashConfig, ClashMetaConfig
+from v2share import V2Data, SingBoxConfig, ClashConfig, ClashMetaConfig, XrayConfig
+from v2share.links import LinksConfig
 
 from app.db import GetDB, crud
 from app.models.proxy import (
@@ -15,6 +16,7 @@ from app.models.proxy import (
 )
 from app.utils.keygen import gen_uuid, gen_password
 from app.utils.system import get_public_ip, readable_size
+from app.models.user import UserStatus
 
 if TYPE_CHECKING:
     from app.models.user import UserResponse
@@ -26,69 +28,37 @@ STATUS_EMOJIS = {
     "expired": "⌛️",
     "limited": "🪫",
     "disabled": "❌",
-    "connect_to_start": "🔌",
+    "on_hold": "🔌",
 }
 
-
-def generate_v2ray_links(inbounds: list, key: str, extra_data: dict) -> list:
-    format_variables = setup_format_variables(extra_data)
-    return process_inbounds_and_tags(inbounds, key, format_variables, mode="v2ray")
-
-
-def generate_clash_subscription(
-    inbounds: list, key: str, extra_data: dict, is_meta: bool = False
-) -> str:
-    if is_meta is True:
-        conf = ClashMetaConfig()
-    else:
-        conf = ClashConfig()
-
-    format_variables = setup_format_variables(extra_data)
-    return process_inbounds_and_tags(
-        inbounds, key, format_variables, mode="clash", conf=conf
-    )
-
-
-def generate_singbox_subscription(inbounds: list, key: str, extra_data: dict) -> str:
-    conf = SingBoxConfig()
-
-    format_variables = setup_format_variables(extra_data)
-    return process_inbounds_and_tags(
-        inbounds, key, format_variables, mode="sing-box", conf=conf
-    )
-
-
-def generate_v2ray_subscription(links: list) -> str:
-    return base64.b64encode("\n".join(links).encode()).decode()
+subscription_handlers = {
+    "v2ray": LinksConfig,
+    "xray": XrayConfig,
+    "clash-meta": ClashMetaConfig,
+    "clash": ClashConfig,
+    "sing-box": SingBoxConfig,
+}
 
 
 def generate_subscription(
     user: "UserResponse",
-    config_format: Literal["v2ray", "clash-meta", "clash", "sing-box"],
-    as_base64: bool,
+    config_format: Literal["v2ray", "xray", "clash-meta", "clash", "sing-box"],
+    as_base64: bool = False,
 ) -> str:
-    kwargs = {
-        # "proxies": user.proxies,
-        "inbounds": user.inbounds,
-        "key": user.key,
-        "extra_data": user.__dict__,
-    }
 
-    if config_format == "v2ray":
-        config = "\n".join(generate_v2ray_links(**kwargs))
-    elif config_format == "clash-meta":
-        config = generate_clash_subscription(**kwargs, is_meta=True)
-    elif config_format == "clash":
-        config = generate_clash_subscription(**kwargs)
-    elif config_format == "sing-box":
-        config = generate_singbox_subscription(**kwargs)
-    else:
+    inbounds = user.inbounds
+    key = user.key
+    extra_data = user.model_dump(exclude={"subscription_url", "services", "inbounds"})
+    format_variables = setup_format_variables(extra_data)
+
+    if config_format not in subscription_handlers.keys():
         raise ValueError(f'Unsupported format "{config_format}"')
 
-    if as_base64:
-        config = base64.b64encode(config.encode()).decode()
+    config = process_inbounds_and_tags(
+        inbounds, key, format_variables, conf=subscription_handlers[config_format]()
+    )
 
-    return config
+    return config if not as_base64 else base64.b64encode(config.encode()).decode()
 
 
 def format_time_left(seconds_left: int) -> str:
@@ -112,9 +82,6 @@ def format_time_left(seconds_left: int) -> str:
     if seconds and not (months or days):
         result.append(f"{seconds}s")
     return " ".join(result)
-
-
-from app.models.user import UserStatus
 
 
 def setup_format_variables(extra_data: dict) -> dict:
@@ -179,13 +146,11 @@ def setup_format_variables(extra_data: dict) -> dict:
 
 def process_inbounds_and_tags(
     inbounds: list,
-    ukey: str,
+    key: str,
     format_variables: dict,
-    mode: str = "v2ray",
     conf=None,
 ) -> Union[List, str]:
     salt = secrets.token_hex(8)
-    results = []
 
     for inb in inbounds:
         inb_id, inbound, protocol, tag = (
@@ -240,17 +205,11 @@ def process_inbounds_and_tags(
                 ),
                 fingerprint=host.fingerprint.value,
                 allow_insecure=host.allowinsecure,
-                uuid=UUID(gen_uuid(ukey)),
-                password=gen_password(ukey),
+                uuid=UUID(gen_uuid(key)),
+                password=gen_password(key),
             )
-            if mode == "v2ray":
-                results.append(data.to_link())
-            elif mode in ["clash", "sing-box"]:
-                conf.add_proxies([data])
-
-    if mode in ["clash", "sing-box"]:
-        return conf.render()
-    return results
+            conf.add_proxies([data])
+    return conf.render()
 
 
 def encode_title(text: str) -> str:
