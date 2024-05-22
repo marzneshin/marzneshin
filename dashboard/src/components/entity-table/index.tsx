@@ -10,7 +10,6 @@ import {
     UseRowSelectionReturn,
     UseDialogProps,
     useFiltering,
-    useDialog,
     usePagination,
     FetchEntityReturn,
     useEntityTable,
@@ -20,6 +19,7 @@ import {
     QueryKey,
     EntityQueryKeyType,
 } from "./hooks";
+import { useDialog } from "@marzneshin/hooks"
 
 interface EntityTableProps<T> {
     fetchEntity: ({ queryKey }: EntityQueryKeyType) => FetchEntityReturn<T>;
