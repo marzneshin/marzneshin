@@ -40,7 +40,7 @@
   "close": "Close",
   "save": "Save",
   "days": "Days",
-  "home": "Malê",
+  "home": "Home",
   "page": {
     "settings": {
       "certificate": {
@@ -66,18 +66,18 @@
         "title": "Nodes Settings",
         "detail": "Details",
         "log-container": {
-          "title": "Marznode Xray config logs"
+          "title": "Xray logs"
         }
       },
       "dialogs": {
         "creation": {
-          "title": "Nodes Creation"
+          "title": "Add Node"
         },
         "deletion": {
-          "title": "Nodes Deletion"
+          "title": "Remove Node"
         },
         "edition": {
-          "title": "Nodes Edition"
+          "title": "Edit Node"
         }
       },
       "usage_coefficient": "Usage Coefficient",
@@ -90,32 +90,32 @@
     },
     "services": {
       "settings": {
-        "title": "Servicecs Settings",
+        "title": "Service Settings",
         "detail": "Details"
       },
       "dialogs": {
         "creation": {
-          "title": "Services Creation"
+          "title": "Create Service"
         },
         "deletion": {
-          "title": "Services Deletion"
+          "title": "Remove Service"
         },
         "edition": {
-          "title": "Services Edition"
+          "title": "Edit Service"
         }
       }
     },
     "users": {
       "data_limit": "Data Limit",
       "used_traffic": "Used Traffic",
-      "data_limit_reset_strategy": "Data Limit Reset Strategy",
-      "online_at": "Online At",
+      "data_limit_reset_strategy": "Data Reset Period",
+      "online_at": "Last Use",
       "expire_date": "Expire Date",
       "unlimited": "Unlimited",
       "limited": "Limited",
       "data_limit_method": "Data limit type",
       "determined_expire": "Determined",
-      "expire_method": "Expiration method",
+      "expire_method": "Expiration",
       "onhold_expire": "On Hold",
       "reset_usage": "Reset Usage",
       "revoke_subscription": "Revoke Subscription",
@@ -129,19 +129,19 @@
         }
       },
       "services-alert": {
-        "title": "No Service were found",
+        "title": "No Service found",
         "desc": "Make sure you create services to enable your users with inbounds to connect with.",
         "click": "Click Here"
       },
       "dialogs": {
         "edition": {
-          "title": "Users Edition"
+          "title": "Edit User"
         },
         "creation": {
-          "title": "Users Creation"
+          "title": "Create User"
         },
         "deletion": {
-          "title": "Users Deletion"
+          "title": "Remove User"
         },
         "mutation": {
           "note": {
@@ -154,18 +154,18 @@
       "popover-guide": {
         "title": "Using this setting, you are able to assign specific address for each inbound.",
         "desc": "Use these variables to make it dynamic",
-        "username": "The username of the user",
-        "dataUsage": "The current usage of the user",
+        "username": "Username of the user",
+        "dataUsage": "Current usage of the user",
         "remainingData": "Remaining data of the user",
-        "dataLimit": "The usage limit of the user",
+        "dataLimit": "Data limit of the user",
         "remainingDays": "Remaining days of the user",
         "expireDate": "Expiry date of the user",
-        "jalaliExpireDate": "Expiry date of the user in solar calendar",
+        "jalaliExpireDate": "Expiry date of the user in jalali calendar",
         "remainingTime": "Remaining time of the user",
         "statusEmoji": "User status as an emoji (✅,⌛️,🪫,❌,🔌)",
         "proxyProtocol": "Proxy protocol (e.g. VMess)",
         "proxyMethod": "Proxy transport method (e.g. ws)",
-        "currentServer": "Current server ip address",
+        "currentServer": "Marzneshin server ip address",
         "security": "Security Layer",
         "host": "Request Host",
         "port": "Port",
@@ -173,12 +173,12 @@
         "sni": "SNI",
         "advancedOptions": "Advanced options",
         "addHost": "Add host",
-        "savedSuccess": "Hosts saved successfully",
+        "savedSuccess": "Host has been saved successfully",
         "loading": "loading...",
         "apply": "Apply",
-        "port.info": "By default, a host uses the default port of the inbound. You can set a custom port in case this host is a server that forwards traffic from a port that differs from your server's port. For example, the server may forward traffic from port 8443 to the default port of your inbound server.",
+        "port.info": "By default, the inbound port is advertised to the user. You can set a custom port in case this host forwards traffic from another port to your inbound. For example, the server may forward traffic from port 8443 to the default port of your inbound server.",
         "path.info": "Set a path for host users, useful behind a reverse proxy.",
-        "sni.info": "By default, a host uses the default SNI of the inbound. You can set a custom SNI in case this host is a server that has a different SNI. For example, the server may receive traffic with a different SSL certificate, perform SSL termination, and forward it to your inbound server.",
+        "sni.info": "By default, a host uses the SNI from the inbound. You can set a custom SNI in case this host is a server that has a different SNI. For example, the server may receive traffic with a different SSL certificate, perform SSL termination, and forward it to your inbound server.",
         "host.info": "By default, if a request host is set in the Xray config, this host is used. However, you can set a custom request host here if needed.",
         "security.info": "If the middleware server of this host uses a different security layer than the inbound's default, you can set a custom security layer here.",
         "alpn": "ALPN",
@@ -188,22 +188,22 @@
       },
       "no-inbound-selection-alert": {
         "title": "No inbound is selected",
-        "desc": "You must select an inbound inorder to create host."
+        "desc": "You must select an inbound in order to add a host."
       },
-      "allowinsecure": "Allow insecure",
+      "allowinsecure": "Allow Insecure",
       "dialogs": {
         "edition": {
-          "title": "Hosts Edition"
+          "title": "Edit Host"
         },
         "creation": {
-          "title": "Hosts Creation"
+          "title": "Add Host"
         },
         "deletion": {
-          "title": "Hosts Deletion"
+          "title": "Remove Host"
         },
         "mutation": {
           "allowinsecure": {
-            "alert": "Due to security concerns, it is not recommended to allow Insecure"
+            "alert": "Due to security concerns, it's not recommended to enable Allow Insecure"
           }
         }
       }
@@ -211,9 +211,9 @@
   },
   "events": {
     "delete": {
-      "error": "Failed to delete {{name}}",
+      "error": "Failed to remove {{name}}",
       "success": {
-        "title": "{{name}} is successfuly deleted",
+        "title": "{{name}} has been successfully removed",
         "desc": ""
       }
     },
@@ -241,25 +241,25 @@
     "user_reset": {
       "error": "Failed to reset {{name}} data usage",
       "success": {
-        "title": "{{name}} data usage is successfuly reseted",
+        "title": "{{name}} data usage has been successfully reset",
         "desc": ""
       }
     },
     "user_status": {
       "error": "Failed to toggle {{name}} enable status",
       "success": {
-        "title": "{{name}} enable status is successfuly updated",
+        "title": "{{name}} enable status has been successfully updated",
         "desc": ""
       }
     }
   },
   "delete-confirmation": {
     "title": "Are you sure of this?",
-    "desc": "This action cannot be undone. This will permanently delete your account and remove your data from our servers."
+    "desc": "This action cannot be undone."
   },
   "table": {
     "row-per-page": "Rows per page",
-    "no-result": "No results",
+    "no-result": "No result",
     "selected": "Selected",
     "toggle-column": "Toggle columns",
     "filter-placeholder": "Filter {{name}}"
