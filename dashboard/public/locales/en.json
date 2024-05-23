@@ -43,6 +43,10 @@
 	"save": "Save",
 	"days": "Days",
 	"home": "Home",
+	"cancel": "Cancel",
+	"dark": "Dark",
+	"light": "Light",
+	"system": "System",
 	"disabled": "Disabled",
 	"advanced-options": "Advanced Options",
 	"page": {
