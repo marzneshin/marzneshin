@@ -233,7 +233,7 @@
 		"delete": {
 			"error": "Failed to remove {{name}}",
 			"success": {
-				"title": "{{name}} has been successfully removed",
+				"title": "{{name}} has been successfuly removed",
 				"desc": ""
 			}
 		},
