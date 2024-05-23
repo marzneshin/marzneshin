@@ -173,8 +173,8 @@ class InboundHost(Base):
     address = Column(String(256), nullable=False)
     port = Column(Integer)
     path = Column(String(256))
-    sni = Column(String(256))
-    host = Column(String(256))
+    sni = Column(String(1024))
+    host = Column(String(1024))
     security = Column(
         Enum(InboundHostSecurity),
         nullable=False,
