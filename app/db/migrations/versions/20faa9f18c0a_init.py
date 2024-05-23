@@ -190,8 +190,8 @@ def upgrade() -> None:
         sa.Column("address", sa.String(length=256), nullable=False),
         sa.Column("port", sa.Integer(), nullable=True),
         sa.Column("path", sa.String(length=256), nullable=True),
-        sa.Column("sni", sa.String(length=256), nullable=True),
-        sa.Column("host", sa.String(length=256), nullable=True),
+        sa.Column("sni", sa.String(length=1024), nullable=True),
+        sa.Column("host", sa.String(length=1024), nullable=True),
         sa.Column(
             "security",
             sa.Enum("inbound_default", "none", "tls", name="inboundhostsecurity"),
