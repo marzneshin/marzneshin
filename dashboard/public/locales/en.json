@@ -240,21 +240,21 @@
 		"create": {
 			"error": "Failed to create {{name}}",
 			"success": {
-				"title": "{{name}} is successfuly created",
+				"title": "{{name}} is successfully created",
 				"desc": ""
 			}
 		},
 		"update": {
 			"error": "Failed to update {{name}}",
 			"success": {
-				"title": "{{name}} is successfuly updated",
+				"title": "{{name}} is successfully updated",
 				"desc": ""
 			}
 		},
 		"user_revoke": {
 			"error": "Failed to revoke {{name}} subscription",
 			"success": {
-				"title": "{{name}} is successfuly created",
+				"title": "{{name}} is successfully created",
 				"desc": ""
 			}
 		},
