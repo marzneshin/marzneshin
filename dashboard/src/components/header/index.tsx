@@ -1,8 +1,8 @@
-import { LanguageSwitch } from "@marzneshin/features/language-switch"
-import { ThemeToggle } from "@marzneshin/features/theme-switch"
-import { Logout } from "@marzneshin/features/auth"
-import { Link } from "@tanstack/react-router"
-import { FC, PropsWithChildren } from "react"
+import { LanguageSwitch } from "@marzneshin/features/language-switch";
+import { ThemeToggle } from "@marzneshin/features/theme-switch";
+import { Logout } from "@marzneshin/features/auth";
+import { Link } from "@tanstack/react-router";
+import { FC, PropsWithChildren } from "react";
 
 export const Header: FC<PropsWithChildren> = ({ children }) => {
     return (
@@ -21,5 +21,5 @@ export const Header: FC<PropsWithChildren> = ({ children }) => {
                 <ThemeToggle />
             </div>
         </div>
-    )
-}
+    );
+};
