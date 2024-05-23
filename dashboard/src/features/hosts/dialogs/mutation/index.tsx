@@ -93,7 +93,7 @@ export const HostsMutationDialog: FC<MutationDialogProps> = ({
                         </div>
                         <Accordion type="single" collapsible>
                             <AccordionItem value="item-1">
-                                <AccordionTrigger>Advanced Options</AccordionTrigger>
+                                <AccordionTrigger>{t("advanced-options")}</AccordionTrigger>
                                 <AccordionContent>
                                     <div className="flex flex-row gap-2 items-start">
                                         <HostField />
