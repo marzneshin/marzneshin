@@ -1,0 +1,14 @@
+{
+  "$schema": "https://biomejs.dev/schemas/1.6.4/schema.json",
+  "formatter": {
+    "indentStyle": "space",
+    "indentSize": 2
+  },
+  "json": {
+    "formatter": {
+      "indentStyle": "space",
+      "indentSize": 2,
+      "indentWidth": 2
+    }
+  }
+}
