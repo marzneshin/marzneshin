@@ -133,7 +133,7 @@
       "settings": {
         "subscription_link": {
           "copied": "Subscription Link Copied",
-          "copy": "Copy Subscription Link",
+          "copy": "Subscription Link",
           "error": "Unable to copy Subscription Link"
         }
       },
