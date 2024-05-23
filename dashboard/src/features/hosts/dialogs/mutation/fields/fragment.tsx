@@ -3,18 +3,33 @@ import {
     FormField,
     FormItem,
     FormLabel,
-    FormMessage,
     Input,
     Button,
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
 } from "@marzneshin/components";
-import { useWatch, useFormContext } from "react-hook-form";
+import {
+    useWatch,
+    useFormContext,
+    FieldErrors,
+    FieldError,
+} from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { TrashIcon } from "lucide-react";
+import { MailWarning, TrashIcon } from "lucide-react";
+
+interface FragmentForm {
+    fragment: {
+        packets: FieldError;
+        length: FieldError;
+        interval: FieldError;
+    };
+}
 
 export const FragmentField = () => {
     const { t } = useTranslation();
     const form = useFormContext();
-
+    const errors = form.formState.errors as FieldErrors<FragmentForm>;
     const fragment = useWatch({ name: "fragment" });
     const disabled = !!fragment;
 
@@ -29,6 +44,11 @@ export const FragmentField = () => {
         });
     };
 
+    const hasFragmentErrors = (errors: FieldErrors<FragmentForm>) =>
+        errors.fragment?.packets ||
+        errors.fragment?.length ||
+        errors.fragment?.interval;
+
     return (
         <FormField
             control={form.control}
@@ -37,18 +57,40 @@ export const FragmentField = () => {
                 <FormItem className="my-2 w-full">
                     <FormLabel className="flex flex-row justify-between items-center">
                         {t("fragment")}
-                        {disabled && (
-                            <Button
-                                variant="destructive"
-                                className="p-0 size-5 bg-primary-background"
-                                onClick={(e) => {
-                                    e.preventDefault();
-                                    disable();
-                                }}
-                            >
-                                <TrashIcon className="text-red-400" />
-                            </Button>
-                        )}
+                        <div className="flex flex-row items-center gap-2">
+                            {hasFragmentErrors(errors) && (
+                                <Popover>
+                                    <PopoverTrigger>
+                                        <MailWarning className="p-0 size-5 text-destructive bg-primary-background" />
+                                    </PopoverTrigger>
+                                    <PopoverContent className="bg-destructive-accent text-sm">
+                                        <ul className="my-6 ml-3 list-disc [&>li]:mt-1 mt-0">
+                                            {errors.fragment?.length?.message && (
+                                                <li>{t(errors.fragment.length.message as string)}</li>
+                                            )}
+                                            {errors.fragment?.packets?.message && (
+                                                <li>{t(errors.fragment.packets.message as string)}</li>
+                                            )}
+                                            {errors.fragment?.interval?.message && (
+                                                <li>{t(errors.fragment.interval.message as string)}</li>
+                                            )}
+                                        </ul>
+                                    </PopoverContent>
+                                </Popover>
+                            )}
+                            {disabled && (
+                                <Button
+                                    variant="destructive"
+                                    className="p-0 size-5 bg-primary-background"
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        disable();
+                                    }}
+                                >
+                                    <TrashIcon className="text-red-400" />
+                                </Button>
+                            )}
+                        </div>
                     </FormLabel>
                     <FormControl>
                         <div className="flex flex-row w-full items-center">
@@ -105,7 +147,6 @@ export const FragmentField = () => {
                             />
                         </div>
                     </FormControl>
-                    <FormMessage />
                 </FormItem>
             )}
         />
