@@ -114,6 +114,7 @@
       }
     },
     "users": {
+      "note-placeholder": "Additional information about user",
       "data_limit": "Data Limit",
       "used_traffic": "Used Traffic",
       "data_limit_reset_strategy": "Data Reset Period",
