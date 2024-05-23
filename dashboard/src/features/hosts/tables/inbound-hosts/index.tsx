@@ -10,7 +10,7 @@ import { useState } from 'react'
 import { useInboundsQuery } from '@marzneshin/features/inbounds'
 import { columns } from './columns'
 import { HostSettingsDialog } from '../../dialogs/settings'
-import { useDialog } from '@marzneshin/components'
+import { useDialog } from '@marzneshin/hooks'
 import { InboundNotSelectedAlertDialog } from './inbound-not-selected-alert-dialog'
 
 export const InboundHostsTable = () => {
