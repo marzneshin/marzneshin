@@ -35,33 +35,36 @@
 	"save": "Seyv Bike",
 	"days": "Roj",
 	"home": "Malê",
+	"light": "Runak",
+	"dark": "Tarîk",
+	"system": "Sîstim",
 	"advanced-options": "Bijardikanî pêşkewtû",
 	"page": {
 		"settings": {
 			"certificate": {
-				"copy": "Copy Certificate",
-				"error": "Certificate Unavailable",
-				"copied": "Certificate Copied"
+				"copy": "Kopî Birrwaname",
+				"error": "Birrwaname berdest nîye",
+				"copied": "Birrwaname Kopî kira"
 			}
 		},
 		"login": {
 			"username": {
 				"error": {
-					"isRequired": "Username is required"
+					"isRequired": "Nawî bekarhêner pêwîste"
 				}
 			},
 			"password": {
 				"error": {
-					"is-required": "Password is required"
+					"is-required": "Têperwişe pêwîste"
 				}
 			}
 		},
 		"nodes": {
 			"settings": {
-				"title": "Nodes Settings",
-				"detail": "Details",
+				"title": "Sazkarîyekanî Node",
+				"detail": "Wurdekaryekan",
 				"log-container": {
-					"title": "Marznode Xray config logs"
+					"title": "Xray logs"
 				}
 			},
 			"dialogs": {
@@ -101,6 +104,7 @@
 			}
 		},
 		"users": {
+			"note-placeholder": "Têbînî leser bekarhêner",
 			"data_limit": "Sinûrî data",
 			"used_traffic": "Traffic bekarhêndiraw",
 			"data_limit_reset_strategy": "Şêwazî sirrinewey sinûrî data",

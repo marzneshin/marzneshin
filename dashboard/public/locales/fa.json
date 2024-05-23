@@ -1,162 +1,164 @@
 {
-  "name": "اسم",
+  "home": "خانه",
+  "name": "نام",
   "status": "حالت",
-  "address": "ادرس",
-  "users": "کاربر ها",
-  "nodes": "Nodes",
-  "services": "Services",
-  "hosts": "Hosts",
+  "address": "آدرس",
+  "users": "کاربران",
+  "nodes": "نود",
+  "services": "سرویسها",
+  "hosts": "هاست",
   "username": "یوزرنیم",
-  "password": "Password",
-  "inbounds": "Inbounds",
-  "submit": "Submit",
-  "login": "Login",
-  "edit": "Edit",
-  "actions": "Actions",
-  "settings": "Settings",
-  "logs": "Logs",
-  "note": "Note",
-  "config": "Config",
-  "tag": "Tag",
-  "protocol": "Protocol",
-  "online": "Online",
-  "offline": "Offline",
-  "not_connected": "Not Connected",
-  "apply": "Apply",
-  "open": "Open",
-  "delete": "Delete",
-  "port": "Port",
-  "create": "Create",
-  "path": "Path",
-  "host": "Host",
+  "password": "پسوورد",
+  "inbounds": "اینباند ها",
+  "submit": "ارسال",
+  "login": "ورود",
+  "edit": "ویرایش",
+  "actions": "فعالیتها",
+  "settings": "تنظیمات",
+  "logs": "لاگ",
+  "note": "یادداشت",
+  "config": "کانفیگ",
+  "tag": "تگ",
+  "protocol": "پروتکل",
+  "online": "آنلاین",
+  "offline": "آفلاین",
+  "not_connected": "وصل نشده",
+  "apply": "اعمال",
+  "open": "باز کردن",
+  "delete": "حذف",
+  "port": "پورت",
+  "create": "ساخت",
+  "path": "مسیر",
+  "host": "هاست",
   "alpn": "ALPN",
-  "security": "Security",
-  "user_info": "Users Info",
-  "subscription": "Subscription",
-  "subscription_link": "Subscription Link",
-  "fingerprint": "Fingerprint",
+  "security": "امنیت",
+  "user_info": "اطلاعات کاربر",
+  "subscription": "اشتراک",
+  "subscription_link": "لینک اشتراک",
+  "fingerprint": "فینگرپرینت",
   "page": {
     "settings": {
       "certificate": {
-        "copy": "Copy Certificate",
-        "error": "Certificate Unavailable",
-        "copied": "Certificate Copied"
+        "copy": "کپی سرتیفیکت",
+        "error": "سرتیفیکت در دسترس نیست",
+        "copied": "سرتیفیکت کپی شد"
       }
     },
     "login": {
       "username": {
         "error": {
-          "isRequired": "Username is required"
+          "isRequired": "نام کاربری را وارد کنید"
         }
       },
       "password": {
         "error": {
-          "is-required": "Password is required"
+          "is-required": "رمز عبور را وارد کنید"
         }
       }
     },
     "nodes": {
       "settings": {
-        "title": "Nodes Settings",
-        "detail": "Details",
+        "title": "تنظیمات نود",
+        "detail": "جزئیات",
         "log-container": {
-          "title": "Marznode Xray config logs"
+          "title": "لاگ اکسری"
         }
       },
       "dialogs": {
         "creation": {
-          "title": "Nodes Creation"
+          "title": "افزودن نود"
         },
         "deletion": {
-          "title": "Nodes Deletion"
+          "title": "حذف نود"
         },
         "edition": {
-          "title": "Nodes Edition"
+          "title": "ویرایش نود"
         }
       },
-      "usage_coefficient": "Usage Coefficient",
-      "add_as_new_host": "Add as new hosts",
+      "usage_coefficient": "ضریب مصرف",
+      "add_as_new_host": "افزودن هاست های وابسته",
       "certificate-alert": {
-        "title": "Nodes Certificate Configuration",
-        "desc": "If you aim to configure your nodes certificate, checkout settings page.",
-        "click": "Click Here"
+        "title": "کانفیگ سرتیفیکت نود",
+        "desc": "اگر قصد برداشت سرتیفیکت نود را دارید، صفحه تنظیمات را بررسی کنید",
+        "click": "اینجا کلیک کنید"
       }
     },
     "services": {
       "settings": {
-        "title": "Servicecs Settings",
-        "detail": "Details"
+        "title": "تنظیمات سرویس",
+        "detail": "جزئیات"
       },
       "dialogs": {
         "creation": {
-          "title": "Services Creation"
+          "title": "ساخت سرویس"
         },
         "deletion": {
-          "title": "Services Deletion"
+          "title": "حذف سرویس"
         },
         "edition": {
-          "title": "Services Edition"
+          "title": "ویرایش سرویس"
         }
       }
     },
     "users": {
-      "data_limit": "Data Limit",
-      "used_traffic": "Used Traffic",
-      "data_limit_reset_strategy": "Data Limit Reset Strategy",
-      "online_at": "Online At",
-      "expire_date": "Expire Date",
-      "unlimited": "Unlimited",
-      "determined_expire": "Determined",
-      "expire_method": "Expiration method",
-      "onhold_expire": "On Hold",
-      "reset_usage": "Reset Usage",
-      "revoke_subscription": "Revoke Subscription",
-      "on_hold_expire_duration": "On Hold",
-      "on_hold_timeout": "On Hold Timeout",
+      "note-placeholder": "یادداشتی در مورد کاربر",
+      "data_limit": "محدودیت حجم",
+      "used_traffic": "ترافیک مصرفی",
+      "data_limit_reset_strategy": "بازه ریست حجم مصرفی",
+      "online_at": "آخرین استفاده",
+      "expire_date": "تاریخ انقضا",
+      "unlimited": "نامحدود",
+      "determined_expire": "مشخص",
+      "expire_method": "انقضا",
+      "onhold_expire": "شروع از اولین اتصال",
+      "reset_usage": "ریست حجم مصرفی",
+      "revoke_subscription": "ابطال اشتراک",
+      "on_hold_expire_duration": "مدت زمان",
+      "on_hold_timeout": "انقضا",
       "settings": {
         "subscription_link": {
-          "copied": "Subscription Link Copied",
-          "copy": "Copy Subscription Link",
-          "error": "Unable to copy Subscription Link"
+          "copied": "لینک اشتراک کپی شد",
+          "copy": "کپی لینک اشتراک",
+          "error": "لینک اشتراک کپی نشد"
         }
       },
       "services-alert": {
-        "title": "No Service were found",
-        "desc": "Make sure you create services to enable your users with inbounds to connect with.",
-        "click": "Click Here"
+        "title": "سرویسی یافت نشد",
+        "desc": "برای ساخت یوزر ابتدا سرویسی ایجاد کنید",
+        "click": "اینجا را کلیک کنید"
       },
       "dialogs": {
         "edition": {
-          "title": "Users Edition"
+          "title": "ویرایش کاربر"
         },
         "creation": {
-          "title": "Users Creation"
+          "title": "افزودن کاربر"
         },
         "deletion": {
-          "title": "Users Deletion"
+          "title": "حذف کاربر"
         },
         "mutation": {
           "note": {
-            "desc": "Leave a note about your user"
+            "desc": "یادداشت"
           }
         }
       }
     },
     "hosts": {
-      "allowinsecure": "Allow insecure",
+      "allowinsecure": "پذیرش کانکشن ناامن",
       "dialogs": {
         "edition": {
-          "title": "Hosts Edition"
+          "title": "ویرایش هاست"
         },
         "creation": {
-          "title": "Hosts Creation"
+          "title": "افزودن هاست"
         },
         "deletion": {
-          "title": "Hosts Deletion"
+          "title": "حذف هاست"
         },
         "mutation": {
           "allowinsecure": {
-            "alert": "Due to security concerns, it is not recommended to allow Insecure"
+            "alert": "فعال کردن این گزینه پیشنهاد نم�شود."
           }
         }
       }
@@ -164,30 +166,30 @@
   },
   "events": {
     "delete": {
-      "error": "Failed to delete {{name}}",
+      "error": "خطا در حذف {{name}}",
       "success": {
-        "title": "{{name}} is successfuly deleted",
+        "title": "با موفقیت حذف شد {{name}}",
         "desc": ""
       }
     },
     "create": {
-      "error": "Failed to create {{name}}",
+      "error": "خطا در حذف {{name}}",
       "success": {
-        "title": "{{name}} is successfuly created",
+        "title": "{{name}} با موفقیت حذف شد",
         "desc": ""
       }
     },
     "update": {
-      "error": "Failed to update {{name}}",
+      "error": "خطا در آپدیت {{name}}",
       "success": {
-        "title": "{{name}} is successfuly updated",
+        "title": "{{name}} با موفقیت آپدیت شد",
         "desc": ""
       }
     },
     "user_revoke": {
-      "error": "Failed to revoke {{name}} subscription",
+      "error": "خطا در ابطال اشتراک {{name}}",
       "success": {
-        "title": "{{name}} is successfuly created",
+        "title": "با موفقیت ایجاد شد.{{name}}",
         "desc": ""
       }
     },
@@ -200,8 +202,8 @@
     }
   },
   "delete-confirmation": {
-    "title": "Are you sure of this?",
-    "desc": "This action cannot be undone. This will permanently delete your account and remove your data from our servers."
+    "title": "آیا از انجام این کار مطمئنید؟",
+    "desc": "حذف اطلاعات بازگشت ناپذیر است."
   },
   "table": {
     "row-per-page": "Rows per page",
@@ -211,15 +213,15 @@
     "filter-placeholder": "Filter {{name}}"
   },
   "statuses": {
-    "active": "Active",
-    "connected": "Connected",
-    "healthy": "Healthy",
-    "disabled": "Disabled",
-    "expired": "Expired",
-    "on_hold": "On Hold",
-    "connecting": "Connecting",
-    "unhealthy": "Unhealthy",
-    "limited": "Limited",
-    "error": "Error"
+    "active": "فعال",
+    "connected": "متصل شده",
+    "healthy": "سالم",
+    "disabled": "غیرفعال",
+    "expired": "منقضی",
+    "on_hold": "شروع از اولین اتصال",
+    "connecting": "در حال اتصال",
+    "unhealthy": "ناسالم",
+    "limited": "محدود شده",
+    "error": "خطا"
   }
 }
