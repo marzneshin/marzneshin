@@ -1,5 +1,9 @@
-import { FC, PropsWithChildren } from "react";
+import type { FC, PropsWithChildren, HTMLAttributes } from "react";
+import { cn } from "@marzneshin/utils";
 
-export const HStack: FC<PropsWithChildren> = ({ children }) => {
-    return <div className="flex flex-row gap-2">{children}</div>;
+export const HStack: FC<PropsWithChildren & HTMLAttributes<HTMLDivElement>> = ({
+  children,
+  className,
+}) => {
+  return <div className={cn("flex flex-row gap-2", className)}>{children}</div>;
 };
