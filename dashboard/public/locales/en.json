@@ -1,279 +1,295 @@
 {
-    "name": "Name",
-    "status": "Status",
-    "address": "Address",
-    "users": "Users",
-    "nodes": "Nodes",
-    "services": "Services",
-    "hosts": "Hosts",
-    "username": "Username",
-    "password": "Password",
-    "inbounds": "Inbounds",
-    "submit": "Submit",
-    "login": "Login",
-    "edit": "Edit",
-    "actions": "Actions",
-    "settings": "Settings",
-    "logs": "Logs",
-    "note": "Note",
-    "config": "Config",
-    "tag": "Tag",
-    "protocol": "Protocol",
-    "online": "Online",
-    "offline": "Offline",
-    "not_connected": "Not Connected",
-    "apply": "Apply",
-    "open": "Open",
-    "delete": "Delete",
-    "port": "Port",
-    "create": "Create",
-    "path": "Path",
-    "host": "Host",
-    "alpn": "ALPN",
-    "security": "Security",
-    "user_info": "Users Info",
-    "subscription": "Subscription",
-    "subscription_link": "Subscription Link",
-    "fingerprint": "Fingerprint",
-    "enable": "Enable",
-    "disable": "Disable",
-    "close": "Close",
-    "save": "Save",
-    "days": "Days",
-    "home": "Malê",
-    "page": {
-        "settings": {
-            "certificate": {
-                "copy": "Copy Certificate",
-                "error": "Certificate Unavailable",
-                "copied": "Certificate Copied"
-            }
-        },
-        "login": {
-            "username": {
-                "error": {
-                    "isRequired": "Username is required"
-                }
-            },
-            "password": {
-                "error": {
-                    "is-required": "Password is required"
-                }
-            }
-        },
-        "nodes": {
-            "settings": {
-                "title": "Nodes Settings",
-                "detail": "Details",
-                "log-container": {
-                    "title": "Marznode Xray config logs"
-                }
-            },
-            "dialogs": {
-                "creation": {
-                    "title": "Nodes Creation"
-                },
-                "deletion": {
-                    "title": "Nodes Deletion"
-                },
-                "edition": {
-                    "title": "Nodes Edition"
-                }
-            },
-            "usage_coefficient": "Usage Coefficient",
-            "add_as_new_host": "Add as new hosts",
-            "certificate-alert": {
-                "title": "Nodes Certificate Configuration",
-                "desc": "If you aim to configure your nodes certificate, checkout settings page.",
-                "click": "Click Here"
-            }
-        },
-        "services": {
-            "settings": {
-                "title": "Servicecs Settings",
-                "detail": "Details"
-            },
-            "dialogs": {
-                "creation": {
-                    "title": "Services Creation"
-                },
-                "deletion": {
-                    "title": "Services Deletion"
-                },
-                "edition": {
-                    "title": "Services Edition"
-                }
-            }
-        },
-        "users": {
-            "data_limit": "Data Limit",
-            "used_traffic": "Used Traffic",
-            "data_limit_reset_strategy": "Data Limit Reset Strategy",
-            "online_at": "Online At",
-            "expire_date": "Expire Date",
-            "unlimited": "Unlimited",
-            "limited": "Limited",
-            "data_limit_method": "Data limit type",
-            "determined_expire": "Determined",
-            "expire_method": "Expiration method",
-            "onhold_expire": "On Hold",
-            "reset_usage": "Reset Usage",
-            "revoke_subscription": "Revoke Subscription",
-            "on_hold_expire_duration": "On Hold",
-            "on_hold_timeout": "On Hold Timeout",
-            "settings": {
-                "subscription_link": {
-                    "copied": "Subscription Link Copied",
-                    "copy": "Copy Subscription Link",
-                    "error": "Unable to copy Subscription Link"
-                }
-            },
-            "services-alert": {
-                "title": "No Service were found",
-                "desc": "Make sure you create services to enable your users with inbounds to connect with.",
-                "click": "Click Here"
-            },
-            "dialogs": {
-                "edition": {
-                    "title": "Users Edition"
-                },
-                "creation": {
-                    "title": "Users Creation"
-                },
-                "deletion": {
-                    "title": "Users Deletion"
-                },
-                "mutation": {
-                    "note": {
-                        "desc": "Leave a note about your user"
-                    }
-                }
-            }
-        },
-        "hosts": {
-            "popover-guide": {
-                "title": "Using this setting, you are able to assign specific address for each inbound.",
-                "desc": "Use these variables to make it dynamic",
-                "username": "The username of the user",
-                "dataUsage": "The current usage of the user",
-                "remainingData": "Remaining data of the user",
-                "dataLimit": "The usage limit of the user",
-                "remainingDays": "Remaining days of the user",
-                "expireDate": "Expiry date of the user",
-                "jalaliExpireDate": "Expiry date of the user in solar calendar",
-                "remainingTime": "Remaining time of the user",
-                "statusEmoji": "User status as an emoji (✅,⌛️,🪫,❌,🔌)",
-                "proxyProtocol": "Proxy protocol (e.g. VMess)",
-                "proxyMethod": "Proxy transport method (e.g. ws)",
-                "currentServer": "Current server ip address",
-                "security": "Security Layer",
-                "host": "Request Host",
-                "port": "Port",
-                "path": "Path",
-                "sni": "SNI",
-                "advancedOptions": "Advanced options",
-                "addHost": "Add host",
-                "savedSuccess": "Hosts saved successfully",
-                "loading": "loading...",
-                "apply": "Apply",
-                "port.info": "By default, a host uses the default port of the inbound. You can set a custom port in case this host is a server that forwards traffic from a port that differs from your server's port. For example, the server may forward traffic from port 8443 to the default port of your inbound server.",
-                "path.info": "Set a path for host users, useful behind a reverse proxy.",
-                "sni.info": "By default, a host uses the default SNI of the inbound. You can set a custom SNI in case this host is a server that has a different SNI. For example, the server may receive traffic with a different SSL certificate, perform SSL termination, and forward it to your inbound server.",
-                "host.info": "By default, if a request host is set in the Xray config, this host is used. However, you can set a custom request host here if needed.",
-                "security.info": "If the middleware server of this host uses a different security layer than the inbound's default, you can set a custom security layer here.",
-                "alpn": "ALPN",
-                "fingerprint": "Fingerprint",
-                "host.multiHost": "To set multiple addresses, separate them with <badge>,</badge> Each time an address is chosen randomly.",
-                "host.wildcard": "Use <badge>*</badge> to generate a random string (works for wildcard domain names)"
-            },
-            "no-inbound-selection-alert": {
-                "title": "No inbound is selected",
-                "desc": "You must select an inbound inorder to create host."
-            },
-            "allowinsecure": "Allow insecure",
-            "dialogs": {
-                "edition": {
-                    "title": "Hosts Edition"
-                },
-                "creation": {
-                    "title": "Hosts Creation"
-                },
-                "deletion": {
-                    "title": "Hosts Deletion"
-                },
-                "mutation": {
-                    "allowinsecure": {
-                        "alert": "Due to security concerns, it is not recommended to allow Insecure"
-                    }
-                }
-            }
-        }
-    },
-    "events": {
-        "delete": {
-            "error": "Failed to delete {{name}}",
-            "success": {
-                "title": "{{name}} is successfuly deleted",
-                "desc": ""
-            }
-        },
-        "create": {
-            "error": "Failed to create {{name}}",
-            "success": {
-                "title": "{{name}} is successfuly created",
-                "desc": ""
-            }
-        },
-        "update": {
-            "error": "Failed to update {{name}}",
-            "success": {
-                "title": "{{name}} is successfuly updated",
-                "desc": ""
-            }
-        },
-        "user_revoke": {
-            "error": "Failed to revoke {{name}} subscription",
-            "success": {
-                "title": "{{name}} is successfuly created",
-                "desc": ""
-            }
-        },
-        "user_reset": {
-            "error": "Failed to reset {{name}} data usage",
-            "success": {
-                "title": "{{name}} data usage is successfuly reseted",
-                "desc": ""
-            }
-        },
-        "user_status": {
-            "error": "Failed to toggle {{name}} enable status",
-            "success": {
-                "title": "{{name}} enable status is successfuly updated",
-                "desc": ""
-            }
-        }
-    },
-    "delete-confirmation": {
-        "title": "Are you sure of this?",
-        "desc": "This action cannot be undone. This will permanently delete your account and remove your data from our servers."
-    },
-    "table": {
-        "row-per-page": "Rows per page",
-        "no-result": "No results",
-        "selected": "Selected",
-        "toggle-column": "Toggle columns",
-        "filter-placeholder": "Filter {{name}}"
-    },
-    "statuses": {
-        "active": "Active",
-        "connected": "Connected",
-        "healthy": "Healthy",
-        "disabled": "Disabled",
-        "expired": "Expired",
-        "on_hold": "On Hold",
-        "connecting": "Connecting",
-        "unhealthy": "Unhealthy",
-        "limited": "Limited",
-        "error": "Error"
-    }
+	"name": "Name",
+	"status": "Status",
+	"address": "Address",
+	"users": "Users",
+	"nodes": "Nodes",
+	"services": "Services",
+	"hosts": "Hosts",
+	"username": "Username",
+	"password": "Password",
+	"inbounds": "Inbounds",
+	"submit": "Submit",
+	"login": "Login",
+	"edit": "Edit",
+	"actions": "Actions",
+	"settings": "Settings",
+	"logs": "Logs",
+	"note": "Note",
+	"config": "Config",
+	"tag": "Tag",
+	"protocol": "Protocol",
+	"online": "Online",
+	"offline": "Offline",
+	"not_connected": "Not Connected",
+	"apply": "Apply",
+	"open": "Open",
+	"delete": "Delete",
+	"port": "Port",
+	"create": "Create",
+	"path": "Path",
+	"host": "Host",
+	"alpn": "ALPN",
+	"security": "Security",
+	"user_info": "Users Info",
+	"subscription": "Subscription",
+	"subscription_link": "Subscription Link",
+	"fingerprint": "Fingerprint",
+	"mux": "Mux",
+	"fragment": "Fragment",
+	"enable": "Enable",
+	"disable": "Disable",
+	"close": "Close",
+	"save": "Save",
+	"days": "Days",
+	"home": "Home",
+	"disabled": "Disabled",
+	"advanced-options": "Advanced Options",
+	"page": {
+		"settings": {
+			"certificate": {
+				"copy": "Copy Certificate",
+				"error": "Certificate Unavailable",
+				"copied": "Certificate Copied"
+			}
+		},
+		"login": {
+			"username": {
+				"error": {
+					"isRequired": "Username is required"
+				}
+			},
+			"password": {
+				"error": {
+					"is-required": "Password is required"
+				}
+			}
+		},
+		"nodes": {
+			"settings": {
+				"title": "Nodes Settings",
+				"detail": "Details",
+				"log-container": {
+					"title": "Marznode Xray config logs"
+				}
+			},
+			"dialogs": {
+				"creation": {
+					"title": "Nodes Creation"
+				},
+				"deletion": {
+					"title": "Nodes Deletion"
+				},
+				"edition": {
+					"title": "Nodes Edition"
+				}
+			},
+			"usage_coefficient": "Usage Coefficient",
+			"add_as_new_host": "Add as new hosts",
+			"certificate-alert": {
+				"title": "Nodes Certificate Configuration",
+				"desc": "If you aim to configure your nodes certificate, checkout settings page.",
+				"click": "Click Here"
+			}
+		},
+		"services": {
+			"settings": {
+				"title": "Servicecs Settings",
+				"detail": "Details"
+			},
+			"dialogs": {
+				"creation": {
+					"title": "Services Creation"
+				},
+				"deletion": {
+					"title": "Services Deletion"
+				},
+				"edition": {
+					"title": "Services Edition"
+				}
+			}
+		},
+		"users": {
+			"data_limit": "Data Limit",
+			"used_traffic": "Used Traffic",
+			"data_limit_reset_strategy": "Data Limit Reset Strategy",
+			"online_at": "Online At",
+			"expire_date": "Expire Date",
+			"unlimited": "Unlimited",
+			"limited": "Limited",
+			"data_limit_method": "Data limit type",
+			"determined_expire": "Determined",
+			"expire_method": "Expiration method",
+			"onhold_expire": "On Hold",
+			"reset_usage": "Reset Usage",
+			"revoke_subscription": "Revoke Subscription",
+			"on_hold_expire_duration": "On Hold",
+			"on_hold_timeout": "On Hold Timeout",
+			"settings": {
+				"subscription_link": {
+					"copied": "Subscription Link Copied",
+					"copy": "Copy Subscription Link",
+					"error": "Unable to copy Subscription Link"
+				}
+			},
+			"services-alert": {
+				"title": "No Service were found",
+				"desc": "Make sure you create services to enable your users with inbounds to connect with.",
+				"click": "Click Here"
+			},
+			"dialogs": {
+				"edition": {
+					"title": "Users Edition"
+				},
+				"creation": {
+					"title": "Users Creation"
+				},
+				"deletion": {
+					"title": "Users Deletion"
+				},
+				"mutation": {
+					"note": {
+						"desc": "Leave a note about your user"
+					}
+				}
+			}
+		},
+		"hosts": {
+			"fragment": {
+				"interval": "Interval",
+				"length": "Length",
+				"packets": "Packets",
+				"length-error": "Length can not exceed 32 char and must be number-number",
+				"interval-error": "Interval can not exceed 32 char and must be number-number",
+				"packets-error": "Packets can not exceed 32 char and must be number-number or be tlshello"
+			},
+			"popover-guide": {
+				"title": "Using this setting, you are able to assign specific address for each inbound.",
+				"desc": "Use these variables to make it dynamic",
+				"username": "The username of the user",
+				"dataUsage": "The current usage of the user",
+				"remainingData": "Remaining data of the user",
+				"dataLimit": "The usage limit of the user",
+				"remainingDays": "Remaining days of the user",
+				"expireDate": "Expiry date of the user",
+				"jalaliExpireDate": "Expiry date of the user in solar calendar",
+				"remainingTime": "Remaining time of the user",
+				"statusEmoji": "User status as an emoji (✅,⌛,🪫,❌,🔌)",
+				"proxyProtocol": "Proxy protocol (e.g. VMess)",
+				"proxyMethod": "Proxy transport method (e.g. ws)",
+				"currentServer": "Current server ip address",
+				"security": "Security Layer",
+				"host": "Request Host",
+				"port": "Port",
+				"path": "Path",
+				"sni": "SNI",
+				"advancedOptions": "Advanced options",
+				"addHost": "Add host",
+				"savedSuccess": "Hosts saved successfully",
+				"loading": "loading...",
+				"apply": "Apply",
+				"port.info": "By default, a host uses the default port of the inbound. You can set a custom port in case this host is a server that forwards traffic from a port that differs from your server's port. For example, the server may forward traffic from port 8443 to the default port of your inbound server.",
+				"path.info": "Set a path for host users, useful behind a reverse proxy.",
+				"sni.info": "By default, a host uses the default SNI of the inbound. You can set a custom SNI in case this host is a server that has a different SNI. For example, the server may receive traffic with a different SSL certificate, perform SSL termination, and forward it to your inbound server.",
+				"host.info": "By default, if a request host is set in the Xray config, this host is used. However, you can set a custom request host here if needed.",
+				"security.info": "If the middleware server of this host uses a different security layer than the inbound's default, you can set a custom security layer here.",
+				"alpn": "ALPN",
+				"fingerprint": "Fingerprint",
+				"host.multiHost": "To set multiple addresses, separate them with <badge>,</badge> Each time an address is chosen randomly.",
+				"host.wildcard": "Use <badge>*</badge> to generate a random string (works for wildcard domain names)"
+			},
+			"mux": {
+				"title": "Connection multiplexing",
+				"desc": "Currently supported by v2rayng while using custom config"
+			},
+			"no-inbound-selection-alert": {
+				"title": "No inbound is selected",
+				"desc": "You must select an inbound inorder to create host."
+			},
+			"allowinsecure": "Allow insecure",
+			"dialogs": {
+				"edition": {
+					"title": "Edit Host"
+				},
+				"creation": {
+					"title": "Create Host"
+				},
+				"deletion": {
+					"title": "Delete Host"
+				},
+				"mutation": {
+					"allowinsecure": {
+						"alert": "Due to security concerns, it is not recommended to allow Insecure"
+					}
+				}
+			}
+		}
+	},
+	"events": {
+		"delete": {
+			"error": "Failed to delete {{name}}",
+			"success": {
+				"title": "{{name}} is successfuly deleted",
+				"desc": ""
+			}
+		},
+		"create": {
+			"error": "Failed to create {{name}}",
+			"success": {
+				"title": "{{name}} is successfuly created",
+				"desc": ""
+			}
+		},
+		"update": {
+			"error": "Failed to update {{name}}",
+			"success": {
+				"title": "{{name}} is successfuly updated",
+				"desc": ""
+			}
+		},
+		"user_revoke": {
+			"error": "Failed to revoke {{name}} subscription",
+			"success": {
+				"title": "{{name}} is successfuly created",
+				"desc": ""
+			}
+		},
+		"user_reset": {
+			"error": "Failed to reset {{name}} data usage",
+			"success": {
+				"title": "{{name}} data usage is successfuly reseted",
+				"desc": ""
+			}
+		},
+		"user_status": {
+			"error": "Failed to toggle {{name}} enable status",
+			"success": {
+				"title": "{{name}} enable status is successfuly updated",
+				"desc": ""
+			}
+		}
+	},
+	"delete-confirmation": {
+		"title": "Are you sure of this?",
+		"desc": "This action cannot be undone. This will permanently delete your account and remove your data from our servers."
+	},
+	"table": {
+		"row-per-page": "Rows per page",
+		"no-result": "No results",
+		"selected": "Selected",
+		"toggle-column": "Toggle columns",
+		"filter-placeholder": "Filter {{name}}"
+	},
+	"statuses": {
+		"active": "Active",
+		"connected": "Connected",
+		"healthy": "Healthy",
+		"disabled": "Disabled",
+		"expired": "Expired",
+		"on_hold": "On Hold",
+		"connecting": "Connecting",
+		"unhealthy": "Unhealthy",
+		"limited": "Limited",
+		"error": "Error"
+	}
 }

@@ -6,38 +6,44 @@ import {
     DialogHeader,
     Form,
     Button,
-} from '@marzneshin/components';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useTranslation } from 'react-i18next';
+    Accordion,
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger,
+} from "@marzneshin/components";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslation } from "react-i18next";
 import {
     HostSchema,
     HostType,
     getDefaultValues,
     useHostsCreationMutation,
-    useHostsUpdateMutation
+    useHostsUpdateMutation,
 } from "@marzneshin/features/hosts";
 import { RemarkField } from "./fields/remark";
 import {
     AddressField,
     PortField,
     HostField,
+    MuxField,
+    FragmentField,
     PathField,
     SecurityFields,
 } from "./fields";
 
 interface MutationDialogProps {
-    entity: HostType | null
-    open: boolean
-    inboundId: number
-    onOpenChange: (state: boolean) => void
+    entity: HostType | null;
+    open: boolean;
+    inboundId: number;
+    onOpenChange: (state: boolean) => void;
 }
 
 const transformFormValue = (values: HostType) => {
-    const alpn = values.alpn === "none" ? "" : values.alpn
-    const fingerprint = values.fingerprint === "none" ? "" : values.fingerprint
-    return { ...values, alpn, fingerprint }
-}
+    const alpn = values.alpn === "none" ? "" : values.alpn;
+    const fingerprint = values.fingerprint === "none" ? "" : values.fingerprint;
+    return { ...values, alpn, fingerprint };
+};
 
 export const HostsMutationDialog: FC<MutationDialogProps> = ({
     inboundId,
@@ -47,14 +53,14 @@ export const HostsMutationDialog: FC<MutationDialogProps> = ({
 }) => {
     const form = useForm({
         defaultValues: entity ? entity : getDefaultValues(),
-        resolver: zodResolver(HostSchema)
+        resolver: zodResolver(HostSchema),
     });
     const updateMutation = useHostsUpdateMutation();
     const createMutation = useHostsCreationMutation();
     const { t } = useTranslation();
 
     const submit = (values: HostType) => {
-        const host = transformFormValue(values)
+        const host = transformFormValue(values);
         if (entity && entity.id !== undefined) {
             updateMutation.mutate({ hostId: entity.id, host });
         } else {
@@ -74,26 +80,37 @@ export const HostsMutationDialog: FC<MutationDialogProps> = ({
                 <DialogHeader>
                     <DialogTitle className="text-primary">
                         {entity
-                            ? t('page.hosts.dialogs.edition.title')
-                            : t('page.hosts.dialogs.creation.title')}
+                            ? t("page.hosts.dialogs.edition.title")
+                            : t("page.hosts.dialogs.creation.title")}
                     </DialogTitle>
                 </DialogHeader>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(submit)}>
                         <RemarkField />
-                        <div className="flex flex-row gap-1 items-center">
+                        <div className="flex flex-row gap-2 items-start">
                             <AddressField />
                             <PortField />
                         </div>
-                        <PathField />
-                        <HostField />
-                        <SecurityFields />
+                        <Accordion type="single" collapsible>
+                            <AccordionItem value="item-1">
+                                <AccordionTrigger>{t("advanced-options")}</AccordionTrigger>
+                                <AccordionContent>
+                                    <div className="flex flex-row gap-2 items-start">
+                                        <HostField />
+                                        <PathField />
+                                    </div>
+                                    <FragmentField />
+                                    <MuxField />
+                                    <SecurityFields />
+                                </AccordionContent>
+                            </AccordionItem>
+                        </Accordion>
                         <Button
                             className="mt-3 w-full font-semibold"
                             type="submit"
                             disabled={form.formState.isSubmitting}
                         >
-                            {t('submit')}
+                            {t("submit")}
                         </Button>
                     </form>
                 </Form>

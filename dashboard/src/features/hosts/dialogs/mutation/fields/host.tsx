@@ -4,21 +4,21 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
-    Input
+    Input,
 } from "@marzneshin/components";
 import { useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 export const HostField = () => {
-    const { t } = useTranslation()
-    const form = useFormContext()
+    const { t } = useTranslation();
+    const form = useFormContext();
     return (
         <FormField
             control={form.control}
             name="host"
             render={({ field }) => (
-                <FormItem>
-                    <FormLabel>{t('host')}</FormLabel>
+                <FormItem className="w-full">
+                    <FormLabel>{t("host")}</FormLabel>
                     <FormControl>
                         <Input {...field} />
                     </FormControl>
@@ -26,5 +26,5 @@ export const HostField = () => {
                 </FormItem>
             )}
         />
-    )
-}
+    );
+};

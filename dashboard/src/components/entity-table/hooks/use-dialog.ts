@@ -1,4 +1,3 @@
-import { useState } from "react";
 
 export interface UseDialogProps<T> {
     open: boolean;
@@ -6,4 +5,3 @@ export interface UseDialogProps<T> {
     entity: T | null;
 }
 
-export const useDialog = () => useState<boolean>(false)
