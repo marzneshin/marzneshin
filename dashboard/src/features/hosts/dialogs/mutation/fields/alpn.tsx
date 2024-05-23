@@ -32,8 +32,8 @@ export const AlpnField = () => {
 						<SelectContent>
 							<SelectItem value="none">None</SelectItem>
 							<SelectItem value="h2">h2</SelectItem>
-							<SelectItem value="http/1.1">HTTP 1.1</SelectItem>
-							<SelectItem value="h2,http/1.1"> H2 HTTP 1.1</SelectItem>
+							<SelectItem value="http/1.1">http 1.1</SelectItem>
+							<SelectItem value="h2,http/1.1">h2 http 1.1</SelectItem>
 						</SelectContent>
 					</Select>
 					<FormMessage />
