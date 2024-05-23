@@ -6,6 +6,10 @@ import {
     DialogHeader,
     Form,
     Button,
+    Accordion,
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger,
 } from "@marzneshin/components";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -83,15 +87,24 @@ export const HostsMutationDialog: FC<MutationDialogProps> = ({
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(submit)}>
                         <RemarkField />
-                        <div className="flex flex-row gap-1 items-start">
+                        <div className="flex flex-row gap-2 items-start">
                             <AddressField />
                             <PortField />
                         </div>
-                        <PathField />
-                        <HostField />
-                        <FragmentField />
-                        <MuxField />
-                        <SecurityFields />
+                        <Accordion type="single" collapsible>
+                            <AccordionItem value="item-1">
+                                <AccordionTrigger>Advanced Options</AccordionTrigger>
+                                <AccordionContent>
+                                    <div className="flex flex-row gap-2 items-start">
+                                        <HostField />
+                                        <PathField />
+                                    </div>
+                                    <FragmentField />
+                                    <MuxField />
+                                    <SecurityFields />
+                                </AccordionContent>
+                            </AccordionItem>
+                        </Accordion>
                         <Button
                             className="mt-3 w-full font-semibold"
                             type="submit"
