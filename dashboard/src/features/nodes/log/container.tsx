@@ -41,7 +41,7 @@ export const LogContainer: FC<LogContainerProps> = ({ node }) => {
         >
           {logs.map((log: string, index: number) => (
             <div key={log} className="w-full">
-              <p className="font-mono text-[0.7rem] text-primary my-1 break-all hover:bg-gray-900">
+              <p className="font-mono text-[0.7rem] text-primary my-1 break-all rounded-sm p-[1px] hover:bg-gray-300 dark:hover:bg-gray-900">
                 {log}
               </p>
               {index !== logs.length - 1 && (
