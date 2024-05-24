@@ -60,7 +60,7 @@ export const FragmentField = () => {
     const form = useFormContext();
     const errors = form.formState.errors as FieldErrors<FragmentForm>;
     const fragment = useWatch({ name: "fragment" });
-    const disabled = fragment === null;
+    const disabled = fragment === null || frgament === undefined;
 
     const enable = () => {
         form.setValue(
