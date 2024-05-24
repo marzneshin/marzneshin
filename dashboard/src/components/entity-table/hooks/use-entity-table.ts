@@ -55,9 +55,6 @@ export const useEntityTable = <TData, TValue>({
         getSortedRowModel: getSortedRowModel(),
         onColumnVisibilityChange: visibility.setColumnVisibility,
         onRowSelectionChange: rowSelection?.setSelectedRow,
-        initialState: {
-            pageIndex: 1,
-        },
         state: {
             sorting: sorting.sorting,
             columnVisibility: visibility.columnVisibility,
