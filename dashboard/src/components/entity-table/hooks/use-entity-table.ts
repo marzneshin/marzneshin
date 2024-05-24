@@ -61,7 +61,7 @@ export const useEntityTable = <TData, TValue>({
         state: {
             sorting: sorting.sorting,
             columnVisibility: visibility.columnVisibility,
-            pagination: { pageIndex: 1, pageSize },
+            pagination: { pageIndex: pageIndex - 1, pageSize },
             rowSelection: rowSelection ? rowSelection.selectedRow : {},
         },
     });
