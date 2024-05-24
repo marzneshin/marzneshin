@@ -13,7 +13,7 @@ import {
     DataTableActionsCell,
     buttonVariants,
 } from "@marzneshin/components";
-import { LinkIcon, Podcast } from "lucide-react";
+import { LinkIcon } from "lucide-react";
 import { getSubscriptionLink } from "@marzneshin/utils";
 import { format } from "date-fns";
 
