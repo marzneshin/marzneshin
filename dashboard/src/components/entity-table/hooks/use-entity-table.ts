@@ -1,63 +1,67 @@
 import {
-    ColumnDef,
-    OnChangeFn,
-    PaginationState,
     getCoreRowModel,
     getPaginationRowModel,
     getSortedRowModel,
-    useReactTable
+    useReactTable,
 } from "@tanstack/react-table";
-import {
+import type {
+    ColumnDef,
+    OnChangeFn,
+    PaginationState,
+} from "@tanstack/react-table";
+import type {
     UseRowSelectionReturn,
     UseSortingReturn,
     UseVisibilityReturn,
 } from ".";
 
 interface UseEntityTableProps<TData, TValue> {
-    columns: ColumnDef<TData, TValue>[]
+    columns: ColumnDef<TData, TValue>[];
     data: {
-        entity: TData[]
-        pageCount: number
-    }
-    sorting: UseSortingReturn
-    visibility: UseVisibilityReturn
-    rowSelection?: UseRowSelectionReturn
-    manualSorting?: boolean
-    pageIndex: number
-    pageSize: number
-    onPaginationChange: OnChangeFn<PaginationState>
+        entity: TData[];
+        pageCount: number;
+    };
+    sorting: UseSortingReturn;
+    visibility: UseVisibilityReturn;
+    rowSelection?: UseRowSelectionReturn;
+    manualSorting?: boolean;
+    pageIndex: number;
+    pageSize: number;
+    onPaginationChange: OnChangeFn<PaginationState>;
 }
 
-export const useEntityTable = <TData, TValue>(
-    {
-        columns,
-        data,
-        sorting,
-        manualSorting = false,
-        visibility,
-        rowSelection,
-        pageIndex,
-        pageSize,
-        onPaginationChange
-    }: UseEntityTableProps<TData, TValue>
-) => useReactTable({
-    data: data.entity,
+export const useEntityTable = <TData, TValue>({
     columns,
-    manualPagination: true,
-    manualSorting,
-    pageCount: data.pageCount + 1,
-    autoResetPageIndex: false,
+    data,
+    sorting,
+    manualSorting = false,
+    visibility,
+    rowSelection,
+    pageIndex,
+    pageSize,
     onPaginationChange,
-    onSortingChange: sorting.setSorting,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    onColumnVisibilityChange: visibility.setColumnVisibility,
-    onRowSelectionChange: rowSelection && rowSelection.setSelectedRow,
-    state: {
-        sorting: sorting.sorting,
-        columnVisibility: visibility.columnVisibility,
-        pagination: { pageIndex: pageIndex - 1, pageSize },
-        rowSelection: rowSelection ? rowSelection.selectedRow : {},
-    },
-})
+}: UseEntityTableProps<TData, TValue>) =>
+    useReactTable({
+        data: data.entity,
+        columns,
+        manualPagination: true,
+        manualSorting,
+        pageCount: data.pageCount + 1,
+        autoResetPageIndex: false,
+        onPaginationChange,
+        onSortingChange: sorting.setSorting,
+        getCoreRowModel: getCoreRowModel(),
+        getPaginationRowModel: getPaginationRowModel(),
+        getSortedRowModel: getSortedRowModel(),
+        onColumnVisibilityChange: visibility.setColumnVisibility,
+        onRowSelectionChange: rowSelection?.setSelectedRow,
+        initialState: {
+            pageIndex: 1,
+        },
+        state: {
+            sorting: sorting.sorting,
+            columnVisibility: visibility.columnVisibility,
+            pagination: { pageIndex: 1, pageSize },
+            rowSelection: rowSelection ? rowSelection.selectedRow : {},
+        },
+    });
