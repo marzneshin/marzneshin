@@ -43,16 +43,7 @@ def user_subscription(
     user: UserResponse = UserResponse.model_validate(db_user)
 
     if "text/html" in accept_header:
-        """links = generate_v2ray_links(
-            user.inbounds,
-            user.key,
-            user.model_dump(
-                exclude={"subscription_url", "services", "inbounds", "links"}
-            ),
-        )"""
-        links = generate_subscription(
-            user=user, config_format="v2ray", as_base64=False
-        ).split("\n")
+        links = generate_subscription(user=user, config_format="v2ray").split("\n")
         return HTMLResponse(
             render_template(SUBSCRIPTION_PAGE_TEMPLATE, {"user": user, "links": links})
         )
@@ -109,7 +100,7 @@ def user_subscription_with_client_type(
     client_type: str = Path(regex="sing-box|clash-meta|clash|xray|v2ray"),
 ):
     """
-    Subscription link, v2ray, clash, sing-box, outline and clash-meta supported
+    Subscription by client type; v2ray, xray, sing-box, clash and clash-meta formats supported
     """
 
     user: UserResponse = UserResponse.model_validate(db_user)
