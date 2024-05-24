@@ -65,7 +65,7 @@ export const UsersMutationDialog: FC<UsersMutationDialogProps> = ({
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange} defaultOpen={true}>
-            <DialogContent className="min-w-full h-full md:h-[42rem] md:min-w-[42rem]">
+            <DialogContent className="min-w-full h-full md:h-auto md:min-w-[42rem]">
                 <ScrollArea className="flex flex-col justify-between h-full p-0">
                     <DialogHeader>
                         <DialogTitle className="text-primary">

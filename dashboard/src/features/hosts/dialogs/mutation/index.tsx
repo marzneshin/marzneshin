@@ -1,4 +1,5 @@
-import { FC, useEffect } from "react";
+import { useEffect } from "react";
+import type { FC } from "react";
 import {
     DialogTitle,
     DialogContent,
@@ -10,17 +11,19 @@ import {
     AccordionContent,
     AccordionItem,
     AccordionTrigger,
+    ScrollArea,
+    HStack,
 } from "@marzneshin/components";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslation } from "react-i18next";
 import {
     HostSchema,
-    HostType,
     getDefaultValues,
     useHostsCreationMutation,
     useHostsUpdateMutation,
 } from "@marzneshin/features/hosts";
+import type { HostType } from "@marzneshin/features/hosts";
 import { RemarkField } from "./fields/remark";
 import {
     AddressField,
@@ -76,44 +79,49 @@ export const HostsMutationDialog: FC<MutationDialogProps> = ({
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange} defaultOpen={true}>
-            <DialogContent>
-                <DialogHeader>
-                    <DialogTitle className="text-primary">
-                        {entity
-                            ? t("page.hosts.dialogs.edition.title")
-                            : t("page.hosts.dialogs.creation.title")}
-                    </DialogTitle>
-                </DialogHeader>
-                <Form {...form}>
-                    <form onSubmit={form.handleSubmit(submit)}>
-                        <RemarkField />
-                        <div className="flex flex-row gap-2 items-start">
-                            <AddressField />
-                            <PortField />
-                        </div>
-                        <Accordion type="single" collapsible>
-                            <AccordionItem value="item-1">
-                                <AccordionTrigger>{t("advanced-options")}</AccordionTrigger>
-                                <AccordionContent>
-                                    <div className="flex flex-row gap-2 items-start">
-                                        <HostField />
-                                        <PathField />
-                                    </div>
-                                    <FragmentField />
-                                    <MuxField />
-                                    <SecurityFields />
-                                </AccordionContent>
-                            </AccordionItem>
-                        </Accordion>
-                        <Button
-                            className="mt-3 w-full font-semibold"
-                            type="submit"
-                            disabled={form.formState.isSubmitting}
+            <DialogContent className="min-w-full h-full md:h-auto md:min-w-[32rem]">
+                <ScrollArea className="flex flex-col h-full p-0">
+                    <DialogHeader className="mb-3">
+                        <DialogTitle className="text-primary">
+                            {entity
+                                ? t("page.hosts.dialogs.edition.title")
+                                : t("page.hosts.dialogs.creation.title")}
+                        </DialogTitle>
+                    </DialogHeader>
+                    <Form {...form}>
+                        <form
+                            onSubmit={form.handleSubmit(submit)}
+                            className="h-full flex flex-col justify-between"
                         >
-                            {t("submit")}
-                        </Button>
-                    </form>
-                </Form>
+                            <RemarkField />
+                            <HStack className="gap-2 items-start">
+                                <AddressField />
+                                <PortField />
+                            </HStack>
+                            <Accordion type="single" collapsible>
+                                <AccordionItem value="item-1">
+                                    <AccordionTrigger>{t("advanced-options")}</AccordionTrigger>
+                                    <AccordionContent>
+                                        <div className="flex flex-row gap-2 items-start">
+                                            <HostField />
+                                            <PathField />
+                                        </div>
+                                        <FragmentField />
+                                        <MuxField />
+                                        <SecurityFields />
+                                    </AccordionContent>
+                                </AccordionItem>
+                            </Accordion>
+                            <Button
+                                className="mt-3 w-full font-semibold"
+                                type="submit"
+                                disabled={form.formState.isSubmitting}
+                            >
+                                {t("submit")}
+                            </Button>
+                        </form>
+                    </Form>
+                </ScrollArea>
             </DialogContent>
         </Dialog>
     );
