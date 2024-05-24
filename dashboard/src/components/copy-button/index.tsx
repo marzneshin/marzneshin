@@ -1,8 +1,8 @@
 import {
-    Button,
-    Tooltip,
-    TooltipContent,
-    TooltipTrigger,
+  Button,
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
 } from "@marzneshin/components";
 import CopyToClipboard from "react-copy-to-clipboard";
 import { useEffect, useState } from "react";
@@ -12,78 +12,70 @@ import { toast } from "sonner";
 import { cn } from "@marzneshin/utils";
 
 interface CopyToClipboardButtonProps {
-    text: string;
-    disabled?: boolean;
-    successMessage: string;
-    copyIcon?: LucideIcon;
-    copyLabel?: string;
-    errorLabel?: string;
-    className?: string;
-    tooltipMsg?: string;
+  text: string;
+  disabled?: boolean;
+  successMessage: string;
+  copyIcon?: LucideIcon;
+  copyLabel?: string;
+  errorLabel?: string;
+  className?: string;
+  tooltipMsg?: string;
 }
 
 export const CopyToClipboardButton: React.FC<CopyToClipboardButtonProps> = ({
-    text,
-    disabled = false,
-    successMessage,
-    copyIcon,
-    copyLabel,
-    errorLabel,
-    className,
-    tooltipMsg,
+  text,
+  disabled = false,
+  successMessage,
+  copyIcon,
+  copyLabel,
+  errorLabel,
+  className,
+  tooltipMsg,
 }) => {
-    const { t } = useTranslation();
-    const [copied, setCopied] = useState(false);
-    const [healthy, setHealthy] = useState(false);
+  const { t } = useTranslation();
+  const [copied, setCopied] = useState(false);
+  const [healthy, setHealthy] = useState(false);
 
-    useEffect(() => {
-        if (copied) {
-            toast.success(t(successMessage));
-            setTimeout(() => {
-                setCopied(false);
-            }, 1000);
-        }
-    }, [copied, successMessage, t]);
+  useEffect(() => {
+    if (copied) {
+      toast.success(t(successMessage));
+      setTimeout(() => {
+        setCopied(false);
+      }, 1000);
+    }
+  }, [copied, successMessage, t]);
 
-    useEffect(() => {
-        setHealthy(text !== "");
-    }, [text]);
+  useEffect(() => {
+    setHealthy(text !== "");
+  }, [text]);
 
-    const handleClick = () => {
-        if (!disabled) {
-            setCopied(true);
-        }
-    };
+  const handleClick = () => {
+    if (!disabled) {
+      setCopied(true);
+    }
+  };
 
-    const tooltip = tooltipMsg ? tooltipMsg : copyLabel ? copyLabel : undefined;
+  const tooltip = tooltipMsg ? tooltipMsg : copyLabel ? copyLabel : undefined;
 
-    const Icon = copied
-        ? CopyCheck
-        : healthy
-            ? copyIcon
-                ? copyIcon
-                : ClipboardCopy
-            : CopyX;
-    const isWithLabel = successMessage && copyLabel && errorLabel;
+  const Icon = copied ? CopyCheck : healthy ? copyIcon || ClipboardCopy : CopyX;
+  const isWithLabel = successMessage && copyLabel && errorLabel;
 
-    return (
-        <Tooltip>
-            <TooltipTrigger
-                className={cn(className, "flex flex-row items-center gap-2")}
-            >
-                <CopyToClipboard text={text}>
-                    <Button
-                        className="w-full"
-                        disabled={disabled || !healthy}
-                        onClick={handleClick}
-                    >
-                        <Icon />
-                        {isWithLabel &&
-                            t(copied ? successMessage : healthy ? copyLabel : errorLabel)}
-                    </Button>
-                </CopyToClipboard>
-            </TooltipTrigger>
-            {tooltip && <TooltipContent>{tooltip}</TooltipContent>}
-        </Tooltip>
-    );
+  return (
+    <Tooltip>
+      <TooltipTrigger>
+        <CopyToClipboard text={text}>
+          <Button
+            className={cn(className, "p-2 flex flex-row items-center gap-2")}
+            disabled={disabled || !healthy}
+            onClick={handleClick}
+          >
+            <Icon />
+            {isWithLabel &&
+              t(copied ? successMessage : healthy ? copyLabel : errorLabel)}
+          </Button>
+        </CopyToClipboard>
+      </TooltipTrigger>
+      {tooltip && <TooltipContent>{tooltip}</TooltipContent>}
+    </Tooltip>
+  );
 };
