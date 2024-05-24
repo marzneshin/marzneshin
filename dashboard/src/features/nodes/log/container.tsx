@@ -18,9 +18,10 @@ interface LogContainerProps {
 export const LogContainer: FC<LogContainerProps> = ({ node }) => {
   const { logs, status, logsDiv } = useNodesLog(node);
   const { t } = useTranslation();
+
   return (
-    <Card className="h-1/2">
-      <CardContent className="flex flex-col p-1 h-full">
+    <Card className="h-full w-full">
+      <CardContent className="flex flex-col p-2 h-full w-full">
         <CardHeader className="flex flex-row justify-between items-center p-2">
           <p className="capitalize font-header">
             {t("page.nodes.settings.log-container.title")}
@@ -35,17 +36,19 @@ export const LogContainer: FC<LogContainerProps> = ({ node }) => {
           </div>
         </CardHeader>
         <ScrollArea
-          className="flex p-2 m-1 h-full rounded-md divide-dashed divide-accent bg-secondary text-primary max-w-full"
+          className="flex p-2 h-full max-h-[calc(100vh-20rem)] rounded-md bg-secondary text-primary w-full overflow-auto"
           ref={logsDiv}
         >
-          {logs.map((log: string) => {
-            return (
-              <div key={log}>
-                <p className="font-mono text-[0.7rem] text-primary m-1">{log}</p>
+          {logs.map((log: string, index: number) => (
+            <div key={log} className="w-full">
+              <p className="font-mono text-[0.7rem] text-primary my-1 break-all hover:bg-gray-900">
+                {log}
+              </p>
+              {index !== logs.length - 1 && (
                 <Separator className="bg-gray-600" />
-              </div>
-            );
-          })}
+              )}
+            </div>
+          ))}
         </ScrollArea>
       </CardContent>
     </Card>
