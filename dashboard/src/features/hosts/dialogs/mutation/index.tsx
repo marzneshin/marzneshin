@@ -12,6 +12,7 @@ import {
     AccordionItem,
     AccordionTrigger,
     ScrollArea,
+    HStack,
 } from "@marzneshin/components";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -78,9 +79,9 @@ export const HostsMutationDialog: FC<MutationDialogProps> = ({
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange} defaultOpen={true}>
-            <DialogContent className="min-w-full h-full md:h-[42rem] md:min-w-[42rem]">
-                <ScrollArea className="flex flex-col justify-between h-full p-0">
-                    <DialogHeader>
+            <DialogContent className="min-w-full h-full md:h-auto md:min-w-[32rem]">
+                <ScrollArea className="flex flex-col h-full p-0">
+                    <DialogHeader className="mb-3">
                         <DialogTitle className="text-primary">
                             {entity
                                 ? t("page.hosts.dialogs.edition.title")
@@ -88,12 +89,15 @@ export const HostsMutationDialog: FC<MutationDialogProps> = ({
                         </DialogTitle>
                     </DialogHeader>
                     <Form {...form}>
-                        <form onSubmit={form.handleSubmit(submit)}>
+                        <form
+                            onSubmit={form.handleSubmit(submit)}
+                            className="h-full flex flex-col justify-between"
+                        >
                             <RemarkField />
-                            <div className="flex flex-row gap-2 items-start">
+                            <HStack className="gap-2 items-start">
                                 <AddressField />
                                 <PortField />
-                            </div>
+                            </HStack>
                             <Accordion type="single" collapsible>
                                 <AccordionItem value="item-1">
                                     <AccordionTrigger>{t("advanced-options")}</AccordionTrigger>
