@@ -32,3 +32,4 @@ export * from "./toggle-group";
 export * from "./textarea";
 export * from "./radio-group";
 export * from "./accordion";
+export * from "./command";
