@@ -85,7 +85,6 @@ jobs:
         if: ${{ github.event_name == 'schedule' || github.event.inputs.build-target == 'nightly'}}
         uses: docker/build-push-action@v5
         with:
-          permissions: write-all
           context: .
           platforms: linux/amd64,linux/arm64
           push: true
