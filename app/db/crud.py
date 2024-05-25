@@ -678,6 +678,9 @@ def update_node(db: Session, dbnode: Node, modify: NodeModify):
     if modify.usage_coefficient:
         dbnode.usage_coefficient = modify.usage_coefficient
 
+    if modify.connection_backend:
+        dbnode.connection_backend = modify.connection_backend
+
     db.commit()
     db.refresh(dbnode)
     return dbnode
