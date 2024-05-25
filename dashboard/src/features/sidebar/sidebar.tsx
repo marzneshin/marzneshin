@@ -1,7 +1,4 @@
-import {
-    Sidebar,
-    SidebarItem,
-} from "@marzneshin/components";
+import { Sidebar, type SidebarItem } from "@marzneshin/components";
 import { useRouterState } from "@tanstack/react-router";
 import type { FC } from "react";
 import { sidebarItems } from ".";
