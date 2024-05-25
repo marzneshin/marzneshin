@@ -3,7 +3,7 @@ anyio==4.2.0
 APScheduler==3.10.4
 commentjson==0.9.0
 cryptography==42.0.4
-fastapi==0.110.0
+fastapi==0.111.0
 fastapi-pagination==0.12.21
 fastapi-responses==0.2.1
 grpclib==0.4.7
@@ -12,7 +12,7 @@ Jinja2==3.1.4
 passlib==1.7.4
 protobuf==4.25.2
 psutil==5.9.7
-pydantic==2.5.3
+pydantic==2.7.1
 PyMySQL==1.1.1
 pyOpenSSL==24.0.0
 pyTelegramBotAPI==4.15.2
@@ -22,12 +22,12 @@ python-dateutil==2.8.2
 python-jose==3.3.0
 pytz==2023.3.post1
 qrcode==7.4.2
-Requests==2.32.2
+requests==2.32.2
 rich==13.7.0
 SQLAlchemy==2.0.25
-starlette==0.36.3
-typer==0.9.0
-uvicorn==0.25.0
+starlette==0.37.2
+typer==0.12.3
+uvicorn==0.29.0
 websockets==12.0
 PyYAML==6.0.1
 aiohttp==3.9.4
@@ -35,4 +35,4 @@ python-multipart==0.0.7
 xxhash==3.4.1
 grpcio==1.60.0
 psycopg==3.1.18
-v2share==0.1.0b1
+v2share==0.1.0b3
