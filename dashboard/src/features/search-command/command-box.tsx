@@ -15,7 +15,6 @@ import {
   CommandItem,
   CommandList,
   CommandSeparator,
-  CommandShortcut,
 } from "@marzneshin/components";
 import { useNavigate } from "@tanstack/react-router";
 import { SearchBox } from "./search-box";
@@ -82,15 +81,18 @@ export function CommandBox() {
             >
               <ServerCogIcon className="mr-2 h-4 w-4" />
               <span>{t("hosts")}</span>
-              <CommandShortcut>⌘P</CommandShortcut>
             </CommandItem>
           </CommandGroup>
           <CommandSeparator />
           <CommandGroup heading="Settings">
-            <CommandItem>
+            <CommandItem
+              onSelect={() => {
+                navigate({ to: "/settings" });
+                setOpen(false);
+              }}
+            >
               <SettingsIcon className="mr-2 h-4 w-4" />
               <span>{t("settings")}</span>
-              <CommandShortcut>⌘S</CommandShortcut>
             </CommandItem>
           </CommandGroup>
         </CommandList>
