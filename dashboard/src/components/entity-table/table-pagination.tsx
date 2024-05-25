@@ -3,7 +3,7 @@ import {
     ChevronRightIcon,
     DoubleArrowLeftIcon,
     DoubleArrowRightIcon,
-} from "@radix-ui/react-icons";
+} from "@radix-ui/react-icons"
 import {
     Button,
     Select,
@@ -11,35 +11,30 @@ import {
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from "@marzneshin/components";
-import { useTranslation } from "react-i18next";
+} from "@marzneshin/components"
+import { useTranslation } from "react-i18next"
 import { useEntityTableContext } from "./entity-table-provider";
-import { useEffect } from "react";
+
+export interface DataTablePaginationProps { }
 
 export function DataTablePagination() {
     const { t } = useTranslation();
-    const { table } = useEntityTableContext();
-
-    useEffect(() => {
-        if (table.getState().pagination.pageIndex === 0) table.setPageIndex(1);
-    }, [table]);
-
+    const { table } = useEntityTableContext()
     return (
         <div className="flex justify-between items-center p-2 w-full">
-            {table.options.onRowSelectionChange && (
+            {table.options.onRowSelectionChange &&
                 <div className="flex-1 text-sm text-muted-foreground">
                     {table.getFilteredSelectedRowModel().rows.length} {"/"}
-                    {table.getFilteredRowModel().rows.length} {t("table.selected")}
-                </div>
-            )}
+                    {table.getFilteredRowModel().rows.length} {t('table.selected')}
+                </div>}
             <div className="flex justify-between items-center space-x-6 w-full lg:space-x-8">
                 <div className="flex items-center space-x-2">
-                    <p className="text-sm font-medium">{t("table.row-per-page")}</p>
+                    <p className="text-sm font-medium">{t('table.row-per-page')}</p>
                     <Select
                         value={`${table.getState().pagination.pageSize}`}
                         onValueChange={(value) => {
-                            table.setPageSize(Number(value));
-                            table.setPageIndex(1);
+                            table.setPageSize(Number(value))
+                            table.setPageIndex(1)
                         }}
                     >
                         <SelectTrigger className="h-8 w-[70px]">
@@ -98,5 +93,5 @@ export function DataTablePagination() {
                 </div>
             </div>
         </div>
-    );
+    )
 }
