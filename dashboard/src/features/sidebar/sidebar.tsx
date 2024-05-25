@@ -1,20 +1,23 @@
-import { Sidebar, SidebarItem, Tooltip, TooltipContent, TooltipTrigger } from "@marzneshin/components";
+import {
+    Sidebar,
+    SidebarItem,
+} from "@marzneshin/components";
 import { useRouterState } from "@tanstack/react-router";
-import { FC, useEffect } from "react";
+import type { FC } from "react";
 import { sidebarItems } from ".";
 import { cn } from "@marzneshin/utils";
-
 
 interface DashboardSidebarProps {
     collapsed: boolean;
     setCollapsed: (state: boolean) => void;
 }
 
-export const DashboardSidebar: FC<DashboardSidebarProps> = ({ collapsed, setCollapsed }) => {
+export const DashboardSidebar: FC<DashboardSidebarProps> = ({
+    collapsed,
+    setCollapsed,
+}) => {
     const router = useRouterState();
     const currentActivePath = router.location.pathname;
-
-    useEffect(() => { }, [collapsed]);
 
     return (
         <aside>
@@ -26,33 +29,27 @@ export const DashboardSidebar: FC<DashboardSidebarProps> = ({ collapsed, setColl
                 >
                     <div className="flex flex-col px-4 w-full h-full">
                         <Sidebar.Body className="my-3">
-                            {Object.keys(sidebarItems).map((key) =>
-                            (
+                            {Object.keys(sidebarItems).map((key) => (
                                 <div className="w-full" key={key}>
                                     <Sidebar.Group>{key}</Sidebar.Group>
-                                    {sidebarItems[key].map((item: SidebarItem, i) => (
-                                        <Tooltip>
-                                            <TooltipTrigger className="w-full">
-                                                <Sidebar.Item
-                                                    variant={currentActivePath === item.to ? "active" : "default"}
-                                                    className={cn("my-2 border-transparent", { "w-10 h-10": collapsed })}
-                                                    item={item}
-                                                    key={i}
-                                                />
-                                            </TooltipTrigger>
-                                            <TooltipContent>
-                                                {collapsed && item.title}
-                                            </TooltipContent>
-                                        </Tooltip>
-                                    )
-                                    )}
+                                    {sidebarItems[key].map((item: SidebarItem) => (
+                                        <Sidebar.Item
+                                            variant={
+                                                currentActivePath === item.to ? "active" : "default"
+                                            }
+                                            className={cn("my-2 border-transparent", {
+                                                "w-10 h-10": collapsed,
+                                            })}
+                                            item={item}
+                                            key={item.title}
+                                        />
+                                    ))}
                                 </div>
-                            )
-                            )}
+                            ))}
                         </Sidebar.Body>
                     </div>
                 </Sidebar>
             </nav>
         </aside>
-    )
-}
+    );
+};
