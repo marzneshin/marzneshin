@@ -1,9 +1,7 @@
 import type { FC, HTMLAttributes } from "react";
 import { SearchIcon } from "lucide-react";
 
-export const SearchBox: FC<HTMLAttributes<HTMLDivAttribute>> = ({
-  ...props
-}) => {
+export const SearchBox: FC<HTMLAttributes<HTMLDivElement>> = ({ ...props }) => {
   return (
     <div
       className="bg-gray-800 p-2 md:w-60 flex flex-row items-center rounded-md justify-between"
