@@ -43,7 +43,7 @@ def user_subscription(
     user: UserResponse = UserResponse.model_validate(db_user)
 
     if "text/html" in accept_header:
-        links = generate_subscription(user=user, config_format="v2ray").split("\n")
+        links = generate_subscription(user=user, config_format="v2ray").split()
         return HTMLResponse(
             render_template(SUBSCRIPTION_PAGE_TEMPLATE, {"user": user, "links": links})
         )
