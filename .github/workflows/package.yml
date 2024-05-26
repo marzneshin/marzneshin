@@ -28,7 +28,7 @@ on:
         required: true
         default: true
   schedule:
-    - cron: "0 10 * * *"
+    - cron: "0 3 * * *"
 
 jobs:
   build-docker-image:
