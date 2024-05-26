@@ -197,11 +197,11 @@ def process_inbounds_and_tags(
                 sni=sni,
                 host=req_host,
                 tls=host_tls or inbound["tls"],
-                alpn=host.alpn.value or inbound.get("alpn", ""),
+                alpn=host.alpn.value or None,
                 path=(
                     host.path.format_map(format_variables)
                     if host.path
-                    else inbound.get("path", "")
+                    else inbound.get("path")
                 ),
                 fingerprint=host.fingerprint.value,
                 allow_insecure=host.allowinsecure,
