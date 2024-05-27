@@ -26,10 +26,8 @@ export const UserServicesTable: FC<UserServicesTableProps> = ({ user }) => {
     useEffect(() => {
         setSelectedService((prevSelected) => {
             const updatedSelected: RowSelectionState = { ...prevSelected };
-            for (let j = 0; j < user.services.length; j++) {
-                const serviceId = user.services[j];
-                for (let i = 0; i < data.entity.length; i++) {
-                    const fetchedService = data.entity[i];
+            for (const serviceId of user.services) {
+                for (const [i, fetchedService] of data.entity.entries()) {
                     if (fetchedService.id === serviceId) {
                         updatedSelected[i] = true;
                     }

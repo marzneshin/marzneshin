@@ -23,10 +23,8 @@ export const ServiceInboundsTable: FC<ServiceInboundsTableProps> = ({
     useEffect(() => {
         setSelectedInbound((prevSelected) => {
             const updatedSelected: RowSelectionState = { ...prevSelected };
-            for (let j = 0; j < service.inbounds.length; j++) {
-                const inboundId = service.inbounds[j];
-                for (let i = 0; i < data.length; i++) {
-                    const fetchedInbound = data[i];
+            for (const inboundId of service.inbounds) {
+                for (const [i, fetchedInbound] of data.entries()) {
                     if (fetchedInbound.id === inboundId) {
                         updatedSelected[i] = true;
                     }
