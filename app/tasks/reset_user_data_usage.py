@@ -36,7 +36,11 @@ async def reset_user_data_usage():
             old_status = user.status
             crud.reset_user_data_usage(db, user)
             # make user active if limited on usage reset
-            if user.status == UserStatus.active and old_status == UserStatus.limited:
+            if (
+                user.enabled
+                and user.status == UserStatus.active
+                and old_status == UserStatus.limited
+            ):
                 await marznode.operations.update_user(user)
 
             logger.info(f'User data usage reset for User "{user.username}"')
