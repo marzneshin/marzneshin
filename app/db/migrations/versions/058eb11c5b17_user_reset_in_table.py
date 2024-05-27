@@ -1,4 +1,4 @@
-"""empty message
+"""hold user last reset and lifetime_used_traffic inside the table
 
 Revision ID: 058eb11c5b17
 Revises: 74e234a3bd4b
