@@ -1,4 +1,4 @@
-import { type FC, useState } from "react";
+import { type FC, useMemo, useState } from "react";
 import { Button, DataTableViewOptions } from "@marzneshin/components";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
@@ -107,9 +107,13 @@ export function EntityTable<T>({
         onPaginationChange,
     });
 
+    const contextValue = useMemo(() => (
+        { table, data: data.entity, filtering, isLoading }
+    ), [table, data.entity, filtering, isLoading])
+
     return (
         <EntityTableContext.Provider
-            value={{ table, data: data.entity, filtering, isLoading }}
+            value={contextValue}
         >
             <SettingsDialog
                 open={settingsDialogOpen}
