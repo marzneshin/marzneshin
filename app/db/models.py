@@ -91,6 +91,8 @@ class User(Base):
     # proxies = relationship("Proxy", back_populates="user", cascade="all, delete-orphan")
     status = Column(Enum(UserStatus), nullable=False, default=UserStatus.active)
     used_traffic = Column(BigInteger, default=0)
+    lifetime_used_traffic = Column(BigInteger, default=0)
+    traffic_reset_at = Column(DateTime)
     node_usages = relationship(
         "NodeUserUsage",
         back_populates="user",
@@ -110,9 +112,6 @@ class User(Base):
     )
     ip_limit = Column(Integer, nullable=False, default=-1)
     settings = Column(String(1024))
-    usage_logs = relationship(
-        "UserUsageResetLogs", back_populates="user", lazy="joined"
-    )
     expire = Column(DateTime)
     admin_id = Column(Integer, ForeignKey("admins.id"))
     admin = relationship("Admin", back_populates="users")
@@ -124,27 +123,6 @@ class User(Base):
     on_hold_expire_duration = Column(BigInteger)
     on_hold_timeout = Column(DateTime)
     edit_at = Column(DateTime)
-
-    @property
-    def lifetime_used_traffic(self):
-        return (
-            sum([log.used_traffic_at_reset for log in self.usage_logs])
-            + self.used_traffic
-        )
-
-    @property
-    def last_traffic_reset_time(self):
-        return self.usage_logs[-1].reset_at if self.usage_logs else self.created_at
-
-
-class UserUsageResetLogs(Base):
-    __tablename__ = "user_usage_logs"
-
-    id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey("users.id"))
-    user = relationship("User", back_populates="usage_logs")
-    used_traffic_at_reset = Column(BigInteger, nullable=False)
-    reset_at = Column(DateTime, default=datetime.utcnow)
 
 
 class Inbound(Base):

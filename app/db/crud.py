@@ -20,7 +20,6 @@ from app.db.models import (
     Inbound,
     System,
     User,
-    UserUsageResetLogs,
 )
 from app.models.admin import AdminCreate, AdminModify, AdminPartialModify
 from app.models.node import NodeCreate, NodeModify, NodeStatus, NodeUsageResponse
@@ -396,14 +395,11 @@ def update_user(db: Session, dbuser: User, modify: UserModify):
 
 
 def reset_user_data_usage(db: Session, dbuser: User):
-    usage_log = UserUsageResetLogs(
-        user=dbuser,
-        used_traffic_at_reset=dbuser.used_traffic,
-    )
-    db.add(usage_log)
+    dbuser.lifetime_used_traffic += dbuser.used_traffic
+    dbuser.traffic_reset_at = datetime.utcnow()
 
     dbuser.used_traffic = 0
-    dbuser.node_usages.clear()
+
     if dbuser.status == UserStatus.limited:
         dbuser.status = UserStatus.active.value
     db.add(dbuser)
@@ -677,6 +673,9 @@ def update_node(db: Session, dbnode: Node, modify: NodeModify):
 
     if modify.usage_coefficient:
         dbnode.usage_coefficient = modify.usage_coefficient
+
+    if modify.connection_backend:
+        dbnode.connection_backend = modify.connection_backend
 
     db.commit()
     db.refresh(dbnode)
