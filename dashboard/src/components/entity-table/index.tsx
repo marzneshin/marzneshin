@@ -98,12 +98,9 @@ export function EntityTable<T>({
         rowSelection,
         visibility,
         sorting,
-        onPaginationChange
-    })
+        onPaginationChange,
+    });
 
-    useEffect(() => table.setPageIndex(1), [filtering.columnFilters, table])
-
-    // TODO: Move the selectedEntity to context
     return (
         <EntityTableContext.Provider value={{ table, data: data.entity, filtering, isLoading }}>
             <SettingsDialog
