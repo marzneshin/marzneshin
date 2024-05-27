@@ -22,13 +22,15 @@ export const ServiceInboundsTable: FC<ServiceInboundsTableProps> = ({ service })
     useEffect(() => {
         setSelectedInbound((prevSelected) => {
             const updatedSelected: RowSelectionState = { ...prevSelected };
-            service.inbounds.forEach((inboundId) => {
-                data.forEach((fetchedInbound, i) => {
+            for (let j = 0; j < service.inbounds.length; j++) {
+                const inboundId = service.inbounds[j];
+                for (let i = 0; i < data.length; i++) {
+                    const fetchedInbound = data[i];
                     if (fetchedInbound.id === inboundId) {
                         updatedSelected[i] = true;
                     }
-                });
-            });
+                }
+            }
             return updatedSelected;
         });
     }, [data, service.inbounds])
