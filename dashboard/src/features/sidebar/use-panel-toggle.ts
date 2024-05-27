@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { ImperativePanelHandle } from "react-resizable-panels";
+import type { ImperativePanelHandle } from "react-resizable-panels";
 
 export const usePanelToggle = (isDesktop: boolean) => {
     const [collapsed, setCollapsed] = useState(false);
@@ -22,5 +22,13 @@ export const usePanelToggle = (isDesktop: boolean) => {
         }
     };
 
-    return { collapsed, open, panelRef, setCollapsed, setOpen, toggleCollapse, toggleOpen };
+    return {
+        collapsed,
+        open,
+        panelRef,
+        setCollapsed,
+        setOpen,
+        toggleCollapse,
+        toggleOpen,
+    };
 };
