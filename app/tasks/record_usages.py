@@ -11,7 +11,7 @@ from app.db.models import NodeUsage, NodeUserUsage, User
 from app.marznode import MarzNodeBase
 
 
-def record_user_stats(params: list, node_id: int, consumption_factor: int = 1):
+def record_user_usage_logs(params: list, node_id: int, consumption_factor: int = 1):
     if not params:
         return
 
@@ -63,8 +63,8 @@ def record_user_stats(params: list, node_id: int, consumption_factor: int = 1):
         db.commit()
 
 
-def record_node_stats(params: dict, node_id: int):
-    if not params:
+def record_node_stats(node_id: int, usage: int):
+    if not usage:
         return
 
     created_at = datetime.fromisoformat(datetime.utcnow().strftime("%Y-%m-%dT%H:00:00"))
@@ -81,21 +81,20 @@ def record_node_stats(params: dict, node_id: int):
                 created_at=created_at, node_id=node_id, uplink=0, downlink=0
             )
             db.execute(stmt)
-            db.commit()
 
         # record
         stmt = (
             update(NodeUsage)
             .values(
-                uplink=NodeUsage.uplink + bindparam("up"),
-                downlink=NodeUsage.downlink + bindparam("down"),
+                downlink=NodeUsage.downlink + usage,
             )
             .where(
                 and_(NodeUsage.node_id == node_id, NodeUsage.created_at == created_at)
             )
         )
 
-        db.execute(stmt, params)
+        db.execute(stmt)
+        db.commit()
 
 
 async def get_users_stats(node_id: int, node: MarzNodeBase) -> tuple[int, list[dict]]:
@@ -122,10 +121,13 @@ async def record_user_usages():
         coefficient = (
             node.usage_coefficient if (node := marznode.nodes.get(node_id)) else 1
         )
+        node_usage = 0
         for param in params:
             users_usage[param["uid"]] += (
                 param["value"] * coefficient
             )  # apply the usage coefficient
+            node_usage += param["value"]
+        record_node_stats(node_id, node_usage)
 
     users_usage = list(
         {"id": uid, "value": value} for uid, value in users_usage.items()
@@ -145,7 +147,7 @@ async def record_user_usages():
         db.commit()
 
     for node_id, params in api_params.items():
-        record_user_stats(
+        record_user_usage_logs(
             params,
             node_id,
             node.usage_coefficient if (node := marznode.nodes.get(node_id)) else 1,
