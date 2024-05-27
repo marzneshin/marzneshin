@@ -7,7 +7,10 @@ import {
     FormMessage,
     ScrollArea,
 } from "@marzneshin/components";
-import { useServicesQuery } from "@marzneshin/features/services";
+import {
+    useServicesQuery,
+    type ServiceType,
+} from "@marzneshin/features/services";
 import { ServiceCard } from "@marzneshin/features/users";
 import { cn } from "@marzneshin/utils";
 import type { FC } from "react";
@@ -18,14 +21,15 @@ import {
 } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-const ServiceCheckboxCard: FC = ({
-    service,
-    field,
-}: {
+interface ServiceCheckboxCardProps {
     service: ServiceType;
     field: ControllerRenderProps<FieldValues, "services">;
+}
+
+const ServiceCheckboxCard: FC<ServiceCheckboxCardProps> = ({
+    service,
+    field,
 }) => {
-    const { t } = useTranslation();
     return (
         <div
             className={cn(
@@ -71,7 +75,7 @@ export const ServicesField: FC = () => {
                                 render={({ field }) => (
                                     <FormItem key={service.id}>
                                         <FormControl>
-                                            <ServiceCard service={service} field={field} />
+                                            <ServiceCheckboxCard service={service} field={field} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
