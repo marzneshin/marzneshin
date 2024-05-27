@@ -7,12 +7,12 @@ from fastapi import APIRouter, Body, Query
 from fastapi import HTTPException, WebSocket
 from fastapi_pagination.ext.sqlalchemy import paginate
 from fastapi_pagination.links import Page
+from starlette.websockets import WebSocketDisconnect
 
 from app import marznode
 from app.db import crud, get_tls_certificate
 from app.db.models import Node
 from app.dependencies import DBDep, SudoAdminDep, EndDateDep, StartDateDep, get_admin
-
 from app.models.node import (
     NodeCreate,
     NodeModify,
@@ -108,8 +108,16 @@ async def node_logs(
     #    return await websocket.close(reason="Node is not connected", code=4400)
 
     await websocket.accept()
-    async for line in marznode.nodes[node_id].get_logs(include_buffer=include_buffer):
-        await websocket.send_text(line)
+    try:
+        async for line in marznode.nodes[node_id].get_logs(
+            include_buffer=include_buffer
+        ):
+            try:
+                await websocket.send_text(line)
+            except WebSocketDisconnect:
+                break
+    except:
+        await websocket.close()
 
 
 @router.put("/{node_id}", response_model=NodeResponse)
@@ -157,7 +165,13 @@ async def reconnect_node(node_id: int, db: DBDep, admin: SudoAdminDep):
 async def get_node_xray_config(node_id: int, db: DBDep, admin: SudoAdminDep):
     if not (node := marznode.nodes.get(node_id)):
         raise HTTPException(status_code=404, detail="Node not found")
-    return json.loads(await node.get_xray_config())
+
+    try:
+        config = await node.get_xray_config()
+    except:
+        raise HTTPException(status_code=502, detail="Node isn't responsive")
+    else:
+        return json.loads(config)
 
 
 @router.put("/{node_id}/xray_config")
@@ -167,5 +181,8 @@ async def alter_node_xray_config(
     if not (node := marznode.nodes.get(node_id)):
         raise HTTPException(status_code=404, detail="Node not found")
     xray_config = json.dumps(body)
-    await node.restart_xray(xray_config)
+    try:
+        await node.restart_xray(xray_config)
+    except:
+        raise HTTPException(status_code=502, detail="Node isn't responsive")
     return {}
