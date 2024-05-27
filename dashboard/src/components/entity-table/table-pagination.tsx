@@ -21,7 +21,7 @@ export function DataTablePagination() {
     const { table } = useEntityTableContext();
 
     useEffect(() => {
-        if (table.getState().pagination.pageIndex === 0) table.setPageIndex(1);
+        if (table.getState().pagination.pageIndex === 1) table.setPageIndex(2);
     }, [table]);
 
     return (
