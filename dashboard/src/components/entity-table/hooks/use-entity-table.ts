@@ -37,7 +37,7 @@ export const useEntityTable = <TData, TValue>({
   manualSorting = false,
   visibility,
   rowSelection,
-  pageIndex = 1,
+  pageIndex,
   pageSize,
   onPaginationChange,
 }: UseEntityTableProps<TData, TValue>) =>
@@ -58,7 +58,7 @@ export const useEntityTable = <TData, TValue>({
     state: {
       sorting: sorting.sorting,
       columnVisibility: visibility.columnVisibility,
-      pagination: { pageIndex, pageSize },
+      pagination: { pageIndex: pageIndex === 0 ? 1 : pageIndex - 1, pageSize },
       rowSelection: rowSelection ? rowSelection.selectedRow : {},
     },
   });
