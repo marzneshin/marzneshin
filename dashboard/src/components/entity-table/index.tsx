@@ -3,8 +3,8 @@ import { Button, DataTableViewOptions } from "@marzneshin/components";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
 import { EntityTableContext } from "./entity-table-provider";
-import { EntityDataTable } from "./table"
-import { DataTablePagination } from "./table-pagination"
+import { EntityDataTable } from "./table";
+import { DataTablePagination } from "./table-pagination";
 import { TableFiltering } from "./table-filtering";
 import {
     UseRowSelectionReturn,
@@ -19,7 +19,7 @@ import {
     QueryKey,
     EntityQueryKeyType,
 } from "./hooks";
-import { useDialog } from "@marzneshin/hooks"
+import { useDialog } from "@marzneshin/hooks";
 
 interface EntityTableProps<T> {
     fetchEntity: ({ queryKey }: EntityQueryKeyType) => FetchEntityReturn<T>;
@@ -28,9 +28,9 @@ interface EntityTableProps<T> {
     SettingsDialog: FC<UseDialogProps<T | any>>;
     columnsFn: any;
     filteredColumn: string;
-    entityKey: string
-    rowSelection?: UseRowSelectionReturn
-    manualSorting?: boolean
+    entityKey: string;
+    rowSelection?: UseRowSelectionReturn;
+    manualSorting?: boolean;
 }
 
 export function EntityTable<T>({
@@ -42,7 +42,7 @@ export function EntityTable<T>({
     filteredColumn,
     rowSelection,
     entityKey,
-    manualSorting = false
+    manualSorting = false,
 }: EntityTableProps<T>) {
     const [mutationDialogOpen, setMutationDialogOpen] = useDialog();
     const [deleteDialogOpen, setDeleteDialogOpen] = useDialog();
@@ -69,10 +69,10 @@ export function EntityTable<T>({
         setSettingsDialogOpen(true);
     };
 
-    const { t } = useTranslation()
-    const filtering = useFiltering({ column: filteredColumn })
-    const sorting = useSorting()
-    const visibility = useVisibility()
+    const { t } = useTranslation();
+    const filtering = useFiltering({ column: filteredColumn });
+    const sorting = useSorting();
+    const visibility = useVisibility();
     const { onPaginationChange, pageIndex, pageSize } = usePagination();
     const sortedQuery: SortableQueryKey = [
         entityKey,
@@ -80,16 +80,22 @@ export function EntityTable<T>({
         pageSize,
         filtering.columnFilters,
         sorting.sorting[0]?.id ? sorting.sorting[0].id : "created_at",
-        sorting.sorting[0]?.desc]
-    const query: QueryKey = [entityKey, pageIndex, pageSize, filtering.columnFilters]
+        sorting.sorting[0]?.desc,
+    ];
+    const query: QueryKey = [
+        entityKey,
+        pageIndex,
+        pageSize,
+        filtering.columnFilters,
+    ];
 
     const { data, isLoading } = useQuery({
         queryFn: fetchEntity,
         queryKey: manualSorting ? sortedQuery : query,
-        initialData: { entity: [], pageCount: 1 }
+        initialData: { entity: [], pageCount: 1 },
     });
 
-    const columns = columnsFn({ onEdit, onDelete, onOpen })
+    const columns = columnsFn({ onEdit, onDelete, onOpen });
     const table = useEntityTable({
         data,
         columns,
@@ -102,7 +108,9 @@ export function EntityTable<T>({
     });
 
     return (
-        <EntityTableContext.Provider value={{ table, data: data.entity, filtering, isLoading }}>
+        <EntityTableContext.Provider
+            value={{ table, data: data.entity, filtering, isLoading }}
+        >
             <SettingsDialog
                 open={settingsDialogOpen}
                 onOpenChange={setSettingsDialogOpen}
@@ -123,18 +131,13 @@ export function EntityTable<T>({
                     <TableFiltering />
                     <DataTableViewOptions table={table} />
                     {onCreate && (
-                        <Button
-                            aria-label={`create-${entityKey}`}
-                            onClick={onCreate}>
-                            {t('create')}
+                        <Button aria-label={`create-${entityKey}`} onClick={onCreate}>
+                            {t("create")}
                         </Button>
                     )}
                 </div>
                 <div className="w-full rounded-md border">
-                    <EntityDataTable
-                        columns={columns}
-                        onRowClick={onOpen}
-                    />
+                    <EntityDataTable columns={columns} onRowClick={onOpen} />
                     <DataTablePagination />
                 </div>
             </div>
@@ -142,4 +145,4 @@ export function EntityTable<T>({
     );
 }
 
-export * from './hooks'
+export * from "./hooks";
