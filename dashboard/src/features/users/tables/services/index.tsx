@@ -14,7 +14,7 @@ interface UserServicesTableProps {
     user: UserType;
 }
 
-// TODO: Implement pagination for row selectable with appliedable action table
+// TODO: #322 Implement pagination for row selectable with appliedable action table
 export const UserServicesTable: FC<UserServicesTableProps> = ({ user }) => {
     const { mutate: updateUser } = useUsersUpdateMutation();
     const { data } = useServicesQuery({ page: 1, size: 100 });
