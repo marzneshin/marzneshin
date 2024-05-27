@@ -197,6 +197,7 @@ def process_inbounds_and_tags(
                 sni=sni,
                 host=req_host,
                 tls=host_tls or inbound["tls"],
+                header_type=inbound.get("header_type"),
                 alpn=host.alpn.value or None,
                 path=(
                     host.path.format_map(format_variables)
