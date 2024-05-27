@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { type FC, useState } from "react";
 import { Button, DataTableViewOptions } from "@marzneshin/components";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
@@ -7,17 +7,17 @@ import { EntityDataTable } from "./table";
 import { DataTablePagination } from "./table-pagination";
 import { TableFiltering } from "./table-filtering";
 import {
-    UseRowSelectionReturn,
-    UseDialogProps,
+    type UseRowSelectionReturn,
+    type UseDialogProps,
     useFiltering,
     usePagination,
-    FetchEntityReturn,
+    type FetchEntityReturn,
     useEntityTable,
     useVisibility,
     useSorting,
-    SortableQueryKey,
-    QueryKey,
-    EntityQueryKeyType,
+    type SortableQueryKey,
+    type QueryKey,
+    type EntityQueryKeyType,
 } from "./hooks";
 import { useDialog } from "@marzneshin/hooks";
 
