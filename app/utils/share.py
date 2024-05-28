@@ -14,9 +14,9 @@ from app.db import GetDB, crud
 from app.models.proxy import (
     InboundHostSecurity,
 )
+from app.models.user import UserStatus
 from app.utils.keygen import gen_uuid, gen_password
 from app.utils.system import get_public_ip, readable_size
-from app.models.user import UserStatus
 
 if TYPE_CHECKING:
     from app.models.user import UserResponse
@@ -204,7 +204,10 @@ def process_inbounds_and_tags(
                     if host.path
                     else inbound.get("path")
                 ),
-                fingerprint=host.fingerprint.value,
+                fingerprint=host.fingerprint.value or inbound.get("fp"),
+                reality_pbk=inbound.get("pbk"),
+                reality_sid=inbound.get("sid"),
+                flow=inbound.get("flow"),
                 allow_insecure=host.allowinsecure,
                 uuid=UUID(gen_uuid(key)),
                 password=gen_password(key),
