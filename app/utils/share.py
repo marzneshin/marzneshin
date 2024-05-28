@@ -207,7 +207,13 @@ def process_inbounds_and_tags(
                 allow_insecure=host.allowinsecure,
                 uuid=UUID(gen_uuid(key)),
                 password=gen_password(key),
+                enable_mux=host.mux,
             )
+            if host.fragment:
+                data.fragment = True
+                data.fragment_packets = host.fragment["packets"]
+                data.fragment_length = host.fragment["length"]
+                data.fragment_interval = host.fragment["interval"]
             conf.add_proxies([data])
     return conf.render()
 
