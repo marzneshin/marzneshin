@@ -12,8 +12,8 @@ import {
 import { useServicesQuery } from '@marzneshin/features/services';
 import { UsersTable } from '@marzneshin/features/users';
 import { ExclamationTriangleIcon } from '@radix-ui/react-icons';
-import { Link, createFileRoute } from '@tanstack/react-router'
-import { FC } from 'react';
+import { Link, createFileRoute, Outlet } from '@tanstack/react-router'
+import type { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 
 export const UsersPage: FC = () => {
@@ -29,6 +29,7 @@ export const UsersPage: FC = () => {
                 </CardHeader>
                 <CardContent>
                     <UsersTable />
+                    <Outlet />
                 </CardContent>
                 <CardFooter>
                     {(data && data.pageCount === 0) && (
