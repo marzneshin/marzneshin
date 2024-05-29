@@ -12,16 +12,8 @@ from app.db.models import Admin as DBAdmin
 from app.dependencies import AdminDep, SudoAdminDep, DBDep
 from app.models.admin import Admin, AdminCreate, AdminInDB, AdminModify, Token
 from app.utils.auth import create_admin_token
-from config import SUDOERS
 
 router = APIRouter(tags=["Admin"], prefix="/admins")
-
-
-def authenticate_env_sudo(username: str, password: str) -> bool:
-    try:
-        return password == SUDOERS[username]
-    except KeyError:
-        return False
 
 
 def authenticate_admin(db: Session, username: str, password: str) -> Optional[Admin]:
@@ -60,9 +52,6 @@ def get_current_admin(admin: AdminDep):
 
 @router.post("/token", response_model=Token)
 def admin_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: DBDep):
-    if authenticate_env_sudo(form_data.username, form_data.password):
-        return Token(access_token=create_admin_token(form_data.username, is_sudo=True))
-
     if dbadmin := authenticate_admin(db, form_data.username, form_data.password):
         return Token(
             access_token=create_admin_token(form_data.username, is_sudo=dbadmin.is_sudo)

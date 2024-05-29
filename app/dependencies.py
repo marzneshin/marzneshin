@@ -7,7 +7,6 @@ from sqlalchemy.orm import Session
 from app.db import crud, User, GetDB
 from app.models.admin import Admin, oauth2_scheme
 from app.utils.auth import get_admin_payload
-from config import SUDOERS
 
 
 def get_db():  # Dependency
@@ -22,9 +21,6 @@ def get_admin(
     payload = get_admin_payload(token)
     if not payload:
         return
-
-    if payload["username"] in SUDOERS and payload["is_sudo"] is True:
-        return Admin(username=payload["username"], is_sudo=True)
 
     dbadmin = crud.get_admin(db, payload["username"])
     if not dbadmin:
