@@ -2,12 +2,11 @@ from datetime import datetime
 from typing import Annotated
 
 from fastapi import Depends, HTTPException, status
-from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
 from app.db import crud, User, GetDB
 from app.models.admin import Admin, oauth2_scheme
-from app.utils.jwt import get_admin_payload
+from app.utils.auth import get_admin_payload
 from config import SUDOERS
 
 
