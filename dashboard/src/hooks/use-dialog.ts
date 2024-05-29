@@ -1,3 +1,2 @@
-
 import { useState } from "react";
-export const useDialog = () => useState<boolean>(false)
+export const useDialog = (open = false) => useState<boolean>(open);
