@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from functools import lru_cache
 from typing import Union
 
@@ -19,10 +19,12 @@ def create_admin_token(username: str, is_sudo=False) -> str:
     data = {
         "sub": username,
         "access": "sudo" if is_sudo else "admin",
-        "iat": datetime.utcnow(),
+        "iat": datetime.now(timezone.utc),
     }
     if JWT_ACCESS_TOKEN_EXPIRE_MINUTES > 0:
-        expire = datetime.utcnow() + timedelta(minutes=JWT_ACCESS_TOKEN_EXPIRE_MINUTES)
+        expire = datetime.now(timezone.utc) + timedelta(
+            minutes=JWT_ACCESS_TOKEN_EXPIRE_MINUTES
+        )
         data["exp"] = expire
     encoded_jwt = jwt.encode(data, get_secret_key(), algorithm="HS256")
     return encoded_jwt
@@ -39,7 +41,7 @@ def get_admin_payload(token: str) -> Union[dict, None]:
     if not username or access not in ("admin", "sudo"):
         return
     try:
-        created_at = datetime.utcfromtimestamp(payload["iat"])
+        created_at = datetime.fromtimestamp(payload["iat"], timezone.utc)
     except KeyError:
         created_at = None
 
