@@ -16,9 +16,11 @@ export const UsersDeleteConfirmationDialog: FC<
     UsersDeleteConfirmationDialogProps
 > = ({ onOpenChange, open, entity, onClose }) => {
     const deleteMutation = useUsersDeletionMutation();
+
     useEffect(() => {
         if (!open) onClose();
     }, [open, onClose]);
+
     return (
         <DeleteConfirmation
             open={open}
