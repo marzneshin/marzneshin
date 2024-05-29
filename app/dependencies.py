@@ -17,9 +17,10 @@ def get_db():  # Dependency
 def get_admin(
     db: Annotated[Session, Depends(get_db)],
     token: Annotated[str, Depends(oauth2_scheme)],
+    token_type: str = "access",
 ):
     payload = get_admin_payload(token)
-    if not payload:
+    if not payload or payload["type"] != token_type:
         return
 
     dbadmin = crud.get_admin(db, payload["username"])
