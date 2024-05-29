@@ -1,23 +1,29 @@
-
-import { DeleteConfirmation } from '@marzneshin/components'
-import { FC } from 'react'
-import { UserMutationType, useUsersDeletionMutation } from '@marzneshin/features/users'
+import { DeleteConfirmation } from "@marzneshin/components";
+import { type FC, useEffect } from "react";
+import {
+    type UserMutationType,
+    useUsersDeletionMutation,
+} from "@marzneshin/features/users";
 
 interface UsersDeleteConfirmationDialogProps {
-    onOpenChange: (state: boolean) => void
-    open: boolean
-    entity: UserMutationType | null
+    onOpenChange: (state: boolean) => void;
+    open: boolean;
+    entity: UserMutationType;
+    onClose: () => void;
 }
 
-export const UsersDeleteConfirmationDialog: FC<UsersDeleteConfirmationDialogProps> = ({ onOpenChange, open, entity }) => {
+export const UsersDeleteConfirmationDialog: FC<
+    UsersDeleteConfirmationDialogProps
+> = ({ onOpenChange, open, entity, onClose }) => {
     const deleteMutation = useUsersDeletionMutation();
-    if (entity !== null) {
-        return (
-            <DeleteConfirmation
-                open={open}
-                onOpenChange={onOpenChange}
-                action={() => deleteMutation.mutate(entity)}
-            />
-        )
-    }
-}
+    useEffect(() => {
+        if (!open) onClose();
+    }, [open, onClose]);
+    return (
+        <DeleteConfirmation
+            open={open}
+            onOpenChange={onOpenChange}
+            action={() => deleteMutation.mutate(entity)}
+        />
+    );
+};
