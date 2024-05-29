@@ -1,5 +1,4 @@
-import type { FC } from "react";
-import { useCallback } from "react";
+import { type FC, useEffect, useCallback } from "react";
 import {
     DialogTitle,
     DialogContent,
@@ -27,12 +26,14 @@ interface UsersMutationDialogProps {
     entity: UserMutationType | null;
     open: boolean;
     onOpenChange: (state: boolean) => void;
+    onClose: () => void;
 }
 
 export const UsersMutationDialog: FC<UsersMutationDialogProps> = ({
     entity,
     open,
     onOpenChange,
+    onClose,
 }) => {
     const { t } = useTranslation();
     const getDefaultValues = useCallback(
@@ -62,6 +63,10 @@ export const UsersMutationDialog: FC<UsersMutationDialogProps> = ({
             data_limit: (d.data_limit ? d.data_limit : 0) / DATA_LIMIT_METRIC,
         }),
     });
+
+    useEffect(() => {
+        if (!open) onClose();
+    }, [open, onClose]);
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange} defaultOpen={true}>
