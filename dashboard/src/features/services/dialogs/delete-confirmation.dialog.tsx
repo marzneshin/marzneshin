@@ -1,25 +1,25 @@
 
 import { DeleteConfirmation } from '@marzneshin/components'
-import { FC } from 'react'
+import { type FC, useEffect } from 'react'
 import { ServiceType, useServicesDeletionMutation } from '@marzneshin/features/services'
 
 interface ServicesDeleteConfirmationDialogProps {
     onOpenChange: (state: boolean) => void
     open: boolean
-    entity: ServiceType | null
+    entity: ServiceType
+    onClose: () => void;
 }
 
-export const ServicesDeleteConfirmationDialog: FC<ServicesDeleteConfirmationDialogProps> = ({ onOpenChange, open, entity }) => {
+export const ServicesDeleteConfirmationDialog: FC<ServicesDeleteConfirmationDialogProps> = ({ onOpenChange, open, entity, onClose }) => {
     const deleteMutation = useServicesDeletionMutation();
-    if (entity !== null) {
-        return (
-            <DeleteConfirmation
-                open={open}
-                onOpenChange={onOpenChange}
-                action={() => deleteMutation.mutate(entity)}
-            />
-        )
-    } else {
-        return null
-    }
+    useEffect(() => {
+        if (!open) onClose();
+    }, [open, onClose]);
+    return (
+        <DeleteConfirmation
+            open={open}
+            onOpenChange={onOpenChange}
+            action={() => deleteMutation.mutate(entity)}
+        />
+    )
 }
