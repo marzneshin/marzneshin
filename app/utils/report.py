@@ -13,7 +13,6 @@ from app.utils.notification import (
     UserCreated,
     UserDataUsageReset,
     UserDeleted,
-    UserDisabled,
     UserEnabled,
     UserExpired,
     UserLimited,
@@ -40,15 +39,6 @@ async def status_change(
         await notify(
             UserExpired(
                 username=username, action=Notification.Type.user_expired, user=user
-            )
-        )
-    elif status == UserStatus.disabled:
-        await notify(
-            UserDisabled(
-                username=username,
-                action=Notification.Type.user_disabled,
-                user=user,
-                by=by,
             )
         )
     elif status == UserStatus.active:
