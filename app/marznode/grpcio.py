@@ -1,14 +1,13 @@
 import asyncio
 import atexit
 import logging
-from _testcapi import INT_MAX
 
+from _testcapi import INT_MAX
 from grpc import ChannelConnectivity
 from grpc.aio import insecure_channel
 
 from .base import MarzNodeBase
 from .database import MarzNodeDB
-from .marznode_pb2_grpc import MarzServiceStub
 from .marznode_pb2 import (
     UserData,
     UsersData,
@@ -18,6 +17,7 @@ from .marznode_pb2 import (
     XrayLogsRequest,
     XrayConfig,
 )
+from .marznode_pb2_grpc import MarzServiceStub
 from ..models.node import NodeStatus
 
 logger = logging.getLogger(__name__)
@@ -48,7 +48,7 @@ class MarzNodeGRPCIO(MarzNodeBase, MarzNodeDB):
         asyncio.create_task(self._monitor_channel())
         self._streaming_task = None
 
-        self._updates_queue = asyncio.Queue(1)
+        self._updates_queue = asyncio.Queue(5)
         self.synced = False
         self.usage_coefficient = usage_coefficient
         atexit.register(self._close_channel)
@@ -84,12 +84,15 @@ class MarzNodeGRPCIO(MarzNodeBase, MarzNodeDB):
             user_update = await self._updates_queue.get()
             logger.debug("got something from queue")
             user = user_update["user"]
-            await stream.write(
-                UserData(
-                    user=User(id=user.id, username=user.username, key=user.key),
-                    inbounds=[Inbound(tag=t) for t in user_update["inbounds"]],
+            try:
+                await stream.write(
+                    UserData(
+                        user=User(id=user.id, username=user.username, key=user.key),
+                        inbounds=[Inbound(tag=t) for t in user_update["inbounds"]],
+                    )
                 )
-            )
+            except:
+                pass
 
     async def update_user(self, user, inbounds: set[str] | None = None):
         if inbounds is None:

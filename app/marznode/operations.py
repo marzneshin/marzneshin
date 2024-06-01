@@ -1,3 +1,4 @@
+import asyncio
 from collections import defaultdict
 from typing import TYPE_CHECKING
 
@@ -30,7 +31,9 @@ async def update_user(user: "DBUser", old_inbounds: set | None = None):
 
     for node_id, tags in node_inbounds.items():
         if marznode.nodes.get(node_id):
-            await marznode.nodes[node_id].update_user(user=user, inbounds=tags)
+            asyncio.create_task(
+                marznode.nodes[node_id].update_user(user=user, inbounds=tags)
+            )
 
 
 async def remove_user(user: "DBUser"):
