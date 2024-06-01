@@ -10,7 +10,7 @@ import {
     Page
 } from '@marzneshin/components';
 import { NodesTable } from '@marzneshin/features/nodes';
-import { Link, createFileRoute } from '@tanstack/react-router'
+import { Link, createFileRoute, Outlet } from '@tanstack/react-router'
 import { Info } from 'lucide-react';
 import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -27,6 +27,7 @@ export const NodesPage: FC = () => {
                 </CardHeader>
                 <CardContent>
                     <NodesTable />
+                    <Outlet />
                 </CardContent>
                 <CardFooter>
                     <Alert>
