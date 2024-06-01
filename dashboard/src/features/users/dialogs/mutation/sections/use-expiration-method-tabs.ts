@@ -7,7 +7,7 @@ type ExpirationMethodStrategy = "onhold" | "determined" | "unlimited";
 const getUserExpirationMethod = (entity: UserMutationType): ExpirationMethodStrategy => {
     if (entity.status === "on_hold")
         return 'onhold'
-    else if (entity.expire !== undefined)
+    else if (entity.expire !== undefined && entity.expire !== null)
         return 'determined'
     else
         return 'unlimited'
@@ -17,7 +17,8 @@ const getUserExpirationMethod = (entity: UserMutationType): ExpirationMethodStra
 export const useExpirationMethodTabs = ({ entity }: { entity: UserMutationType | null }) => {
     const form = useFormContext()
 
-    const defaultExpirationMethodTab = entity?.username ? getUserExpirationMethod(entity) : 'determined'
+    const defaultExpirationMethodTab =
+        (entity !== null) ? getUserExpirationMethod(entity) : 'determined'
     const [
         selectedExpirationMethodTab,
         setSelectedExpirationMethodTab
