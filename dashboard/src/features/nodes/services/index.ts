@@ -1,4 +1,5 @@
 export * from './nodes.query'
+export * from './node.query'
 export * from './logs.socket'
 export * from './settings.query'
 export * from './settings.mutate'
