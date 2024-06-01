@@ -30,6 +30,18 @@ def get_hosts(db: DBDep):
     return paginate(db.query(DBInboundHost))
 
 
+@router.get("/hosts/{id}", response_model=InboundHostResponse)
+def get_host(id: int, db: DBDep):
+    """
+    Get a specific inbound
+    """
+    host = crud.get_host(db, id)
+    if not host:
+        raise HTTPException(status_code=404, detail="Host not found")
+
+    return host
+
+
 @router.put("/hosts/{id}", response_model=InboundHostResponse)
 def update_host(id: int, host: InboundHost, db: DBDep):
     """
