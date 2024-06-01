@@ -52,7 +52,12 @@ async def remove_node(node_id: int):
 async def add_node(db_node, certificate):
     await remove_node(db_node.id)
     if db_node.connection_backend == NodeConnectionBackend.grpcio:
-        node = MarzNodeGRPCIO(db_node.id, db_node.address, db_node.port)
+        node = MarzNodeGRPCIO(
+            db_node.id,
+            db_node.address,
+            db_node.port,
+            usage_coefficient=db_node.usage_coefficient,
+        )
     else:
         node = MarzNodeGRPCLIB(
             db_node.id,
@@ -60,6 +65,7 @@ async def add_node(db_node, certificate):
             db_node.port,
             certificate.key,
             certificate.certificate,
+            usage_coefficient=db_node.usage_coefficient,
         )
     marznode.nodes[db_node.id] = node
 
