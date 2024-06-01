@@ -11,7 +11,7 @@ import {
     TabsList,
     TabsTrigger,
 } from "@marzneshin/components";
-import type { FC } from "react";
+import { type FC, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import type { NodeType } from "../..";
 import { LogContainer } from "../../log";
@@ -22,14 +22,20 @@ interface NodesSettingsDialogProps {
     onOpenChange: (state: boolean) => void;
     open: boolean;
     entity: NodeType;
+    onClose: () => void;
 }
 
 export const NodesSettingsDialog: FC<NodesSettingsDialogProps> = ({
     onOpenChange,
     open,
     entity,
+    onClose,
 }) => {
     const { t } = useTranslation();
+
+    useEffect(() => {
+        if (!open) onClose();
+    }, [open, onClose]);
 
     return (
         <Sheet open={open} onOpenChange={onOpenChange}>
