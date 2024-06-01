@@ -1,3 +1,3 @@
-export * from './delete-confirmation.dialog'
 export * from './mutation'
+export * from './delete-confirmation'
 export * from './settings'
