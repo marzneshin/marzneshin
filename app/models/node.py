@@ -24,7 +24,7 @@ class NodeBase(BaseModel):
     id: Optional[int] = Field(None)
     name: str
     address: str
-    port: int = 62050
+    port: int = 53042
     connection_backend: NodeConnectionBackend = Field(
         default=NodeConnectionBackend.grpclib
     )
