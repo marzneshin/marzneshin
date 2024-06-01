@@ -9,7 +9,7 @@ import { useDialog } from "@marzneshin/hooks";
 const ServiceDelete = () => {
     const [deleteDialogOpen, setDeleteDialogOpen] = useDialog(true);
     const { serviceId } = Route.useParams();
-    const { data: service } = useServiceQuery({ servicename: serviceId });
+    const { data: service } = useServiceQuery({ serviceId: Number.parseInt(serviceId) });
     const navigate = useNavigate();
 
     return service ? (
