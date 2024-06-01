@@ -8,6 +8,8 @@ from app.db.models import InboundHost as DBInboundHost, Inbound as DBInbound
 from app.dependencies import DBDep, sudo_admin
 from app.models.proxy import Inbound, InboundHost, InboundHostResponse
 
+HOST_NOT_FOUND_ERROR_MSG="Host not found"
+
 router = APIRouter(
     prefix="/inbounds", dependencies=[Depends(sudo_admin)], tags=["Inbounds"]
 )
@@ -37,7 +39,7 @@ def get_host(id: int, db: DBDep):
     """
     host = crud.get_host(db, id)
     if not host:
-        raise HTTPException(status_code=404, detail="Host not found")
+        raise HTTPException(status_code=404, detail=HOST_NOT_FOUND_ERROR_MSG)
 
     return host
 
@@ -50,7 +52,7 @@ def update_host(id: int, host: InboundHost, db: DBDep):
 
     db_host = crud.get_host(db, id)
     if not db_host:
-        raise HTTPException(status_code=404, detail="Host not found")
+        raise HTTPException(status_code=404, detail=HOST_NOT_FOUND_ERROR_MSG)
 
     return crud.update_host(db, db_host, host)
 
@@ -62,7 +64,7 @@ def delete_host(id: int, db: DBDep):
     """
     db_host = crud.get_host(db, id)
     if not db_host:
-        raise HTTPException(status_code=404, detail="Host not found")
+        raise HTTPException(status_code=404, detail=HOST_NOT_FOUND_ERROR_MSG)
 
     db.delete(db_host)
     db.commit()
