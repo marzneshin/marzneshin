@@ -58,7 +58,7 @@ class NodeModify(Node):
     port: Optional[int] = Field(None)
     connection_backend: Optional[NodeConnectionBackend] = Field(None)
     status: Optional[NodeStatus] = Field(None)
-    usage_coefficient: Optional[float] = Field(None)
+    usage_coefficient: Optional[float] = Field(None, ge=0)
     model_config = ConfigDict(
         json_schema_extra={
             "example": {
