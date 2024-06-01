@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { type FC, useEffect } from "react";
 import {
     Sheet,
     SheetContent,
@@ -10,7 +10,6 @@ import {
     TableHead,
     TableRow,
 } from "@marzneshin/components"
-import { FC } from "react"
 import { useTranslation } from "react-i18next"
 import { HostType } from "../.."
 
