@@ -66,7 +66,7 @@ class MarzNodeGRPCIO(MarzNodeBase, MarzNodeDB):
             logger.debug("node %i state: %s", self.id, state.value)
             try:
                 if state != ChannelConnectivity.READY:
-                    raise
+                    raise RpcError
                 await self._sync()
                 self._streaming_task = asyncio.create_task(self._stream_user_updates())
             except RpcError:
