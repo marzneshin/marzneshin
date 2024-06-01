@@ -5,7 +5,7 @@ import {
     DoubleArrowRightIcon,
 } from "@radix-ui/react-icons"
 import { Table } from "@tanstack/react-table"
-
+import { cn } from "@marzneshin/utils"
 import {
     Button,
     Select,
@@ -18,19 +18,22 @@ import { useTranslation } from "react-i18next"
 
 interface DataTablePaginationProps<TData> {
     table: Table<TData>
+    disableSelected?: boolean
 }
 
 export function DataTablePagination<TData>({
-    table,
+    table, disableSelected
 }: DataTablePaginationProps<TData>) {
     const { t } = useTranslation();
     return (
-        <div className="flex justify-between items-center p-2">
-            <div className="flex-1 text-sm text-muted-foreground">
-                {table.getFilteredSelectedRowModel().rows.length} {"/"}
-                {table.getFilteredRowModel().rows.length} {t('table.selected')}
-            </div>
-            <div className="flex items-center space-x-6 lg:space-x-8">
+        <div className={cn("flex items-center p-2 w-full", disableSelected && "justify-between")}>
+            {disableSelected || (
+                <div className="flex-1 text-sm text-muted-foreground">
+                    {table.getFilteredSelectedRowModel().rows.length} {"/"}
+                    {table.getFilteredRowModel().rows.length} {t('table.selected')}
+                </div>
+            )}
+            <div className="flex items-center space-x-6 lg:space-x-8 w-full justify-between">
                 <div className="flex items-center space-x-2">
                     <p className="text-sm font-medium">{t('table.row-per-page')}</p>
                     <Select

@@ -164,7 +164,7 @@ export function InboundHostsDataTable<TData, TValue>({
                     </Table>
 
                 </div>
-                <DataTablePagination table={table} />
+                <DataTablePagination table={table} disableSelected={true} />
             </div>
         </div >
     )
