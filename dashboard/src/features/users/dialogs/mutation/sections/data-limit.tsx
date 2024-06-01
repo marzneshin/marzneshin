@@ -14,8 +14,6 @@ import {
 import { TabsList } from "@radix-ui/react-tabs";
 import { useFormContext } from 'react-hook-form';
 
-export type DataLimitResetStrategyType = 'limited' | 'unlimited' | string
-
 export const DataLimitFields: FC = () => {
     const form = useFormContext()
 
@@ -23,7 +21,7 @@ export const DataLimitFields: FC = () => {
     const [
         selectedDataLimitTab,
         setSelectedDataLimitTab
-    ] = useState<DataLimitResetStrategyType>('limited');
+    ] = useState('limited');
     useEffect(() => {
         if (selectedDataLimitTab === 'limited') {
             form.setValue("data_limit_reset_strategy", "no_reset");
@@ -36,7 +34,6 @@ export const DataLimitFields: FC = () => {
 
     return (
         <>
-
             <FormLabel>
                 {t('page.users.data_limit_method')}
             </FormLabel>
