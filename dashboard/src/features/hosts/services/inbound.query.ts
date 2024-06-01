@@ -12,6 +12,6 @@ export const useInboundQuery = ({ inboundId }: { inboundId: number }) => {
     return useQuery({
         queryKey: [InboundsQueryFetchKey, inboundId],
         queryFn: fetchInbound,
-        initialData: []
+        initialData: undefined
     })
 }
