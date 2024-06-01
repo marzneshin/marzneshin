@@ -1,6 +1,6 @@
 import { Card, CardContent, CardFooter, CardHeader, CardTitle, Page } from '@marzneshin/components'
 import { InboundHostsTable } from '@marzneshin/features/hosts'
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, Outlet } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 
 export const HostsPage = () => {
@@ -15,6 +15,7 @@ export const HostsPage = () => {
                 </CardHeader>
                 <CardContent>
                     <InboundHostsTable />
+                    <Outlet />
                 </CardContent>
                 <CardFooter>
                 </CardFooter>

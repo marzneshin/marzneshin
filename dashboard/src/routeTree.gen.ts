@@ -23,15 +23,19 @@ import { Route as AuthLoginImport } from './routes/_auth/login'
 import { Route as DashboardUsersCreateImport } from './routes/_dashboard/users/create'
 import { Route as DashboardServicesCreateImport } from './routes/_dashboard/services/create'
 import { Route as DashboardNodesCreateImport } from './routes/_dashboard/nodes/create'
+import { Route as DashboardHostsCreateImport } from './routes/_dashboard/hosts/create'
 import { Route as DashboardUsersUserIdIndexImport } from './routes/_dashboard/users/$userId/index'
 import { Route as DashboardServicesServiceIdIndexImport } from './routes/_dashboard/services/$serviceId/index'
 import { Route as DashboardNodesNodeIdIndexImport } from './routes/_dashboard/nodes/$nodeId/index'
+import { Route as DashboardHostsHostIdIndexImport } from './routes/_dashboard/hosts/$hostId/index'
 import { Route as DashboardUsersUserIdEditImport } from './routes/_dashboard/users/$userId/edit'
 import { Route as DashboardUsersUserIdDeleteImport } from './routes/_dashboard/users/$userId/delete'
 import { Route as DashboardServicesServiceIdEditImport } from './routes/_dashboard/services/$serviceId/edit'
 import { Route as DashboardServicesServiceIdDeleteImport } from './routes/_dashboard/services/$serviceId/delete'
 import { Route as DashboardNodesNodeIdEditImport } from './routes/_dashboard/nodes/$nodeId/edit'
 import { Route as DashboardNodesNodeIdDeleteImport } from './routes/_dashboard/nodes/$nodeId/delete'
+import { Route as DashboardHostsHostIdEditImport } from './routes/_dashboard/hosts/$hostId/edit'
+import { Route as DashboardHostsHostIdDeleteImport } from './routes/_dashboard/hosts/$hostId/delete'
 
 // Create/Update Routes
 
@@ -95,6 +99,11 @@ const DashboardNodesCreateRoute = DashboardNodesCreateImport.update({
   getParentRoute: () => DashboardNodesRoute,
 } as any)
 
+const DashboardHostsCreateRoute = DashboardHostsCreateImport.update({
+  path: '/create',
+  getParentRoute: () => DashboardHostsRoute,
+} as any)
+
 const DashboardUsersUserIdIndexRoute = DashboardUsersUserIdIndexImport.update({
   path: '/$userId/',
   getParentRoute: () => DashboardUsersRoute,
@@ -109,6 +118,11 @@ const DashboardServicesServiceIdIndexRoute =
 const DashboardNodesNodeIdIndexRoute = DashboardNodesNodeIdIndexImport.update({
   path: '/$nodeId/',
   getParentRoute: () => DashboardNodesRoute,
+} as any)
+
+const DashboardHostsHostIdIndexRoute = DashboardHostsHostIdIndexImport.update({
+  path: '/$hostId/',
+  getParentRoute: () => DashboardHostsRoute,
 } as any)
 
 const DashboardUsersUserIdEditRoute = DashboardUsersUserIdEditImport.update({
@@ -144,6 +158,18 @@ const DashboardNodesNodeIdDeleteRoute = DashboardNodesNodeIdDeleteImport.update(
   {
     path: '/$nodeId/delete',
     getParentRoute: () => DashboardNodesRoute,
+  } as any,
+)
+
+const DashboardHostsHostIdEditRoute = DashboardHostsHostIdEditImport.update({
+  path: '/$hostId/edit',
+  getParentRoute: () => DashboardHostsRoute,
+} as any)
+
+const DashboardHostsHostIdDeleteRoute = DashboardHostsHostIdDeleteImport.update(
+  {
+    path: '/$hostId/delete',
+    getParentRoute: () => DashboardHostsRoute,
   } as any,
 )
 
@@ -214,6 +240,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardIndexImport
       parentRoute: typeof DashboardImport
     }
+    '/_dashboard/hosts/create': {
+      id: '/_dashboard/hosts/create'
+      path: '/create'
+      fullPath: '/hosts/create'
+      preLoaderRoute: typeof DashboardHostsCreateImport
+      parentRoute: typeof DashboardHostsImport
+    }
     '/_dashboard/nodes/create': {
       id: '/_dashboard/nodes/create'
       path: '/create'
@@ -234,6 +267,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/users/create'
       preLoaderRoute: typeof DashboardUsersCreateImport
       parentRoute: typeof DashboardUsersImport
+    }
+    '/_dashboard/hosts/$hostId/delete': {
+      id: '/_dashboard/hosts/$hostId/delete'
+      path: '/$hostId/delete'
+      fullPath: '/hosts/$hostId/delete'
+      preLoaderRoute: typeof DashboardHostsHostIdDeleteImport
+      parentRoute: typeof DashboardHostsImport
+    }
+    '/_dashboard/hosts/$hostId/edit': {
+      id: '/_dashboard/hosts/$hostId/edit'
+      path: '/$hostId/edit'
+      fullPath: '/hosts/$hostId/edit'
+      preLoaderRoute: typeof DashboardHostsHostIdEditImport
+      parentRoute: typeof DashboardHostsImport
     }
     '/_dashboard/nodes/$nodeId/delete': {
       id: '/_dashboard/nodes/$nodeId/delete'
@@ -277,6 +324,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardUsersUserIdEditImport
       parentRoute: typeof DashboardUsersImport
     }
+    '/_dashboard/hosts/$hostId/': {
+      id: '/_dashboard/hosts/$hostId/'
+      path: '/$hostId'
+      fullPath: '/hosts/$hostId'
+      preLoaderRoute: typeof DashboardHostsHostIdIndexImport
+      parentRoute: typeof DashboardHostsImport
+    }
     '/_dashboard/nodes/$nodeId/': {
       id: '/_dashboard/nodes/$nodeId/'
       path: '/$nodeId'
@@ -306,7 +360,12 @@ declare module '@tanstack/react-router' {
 export const routeTree = rootRoute.addChildren({
   AuthRoute: AuthRoute.addChildren({ AuthLoginRoute }),
   DashboardRoute: DashboardRoute.addChildren({
-    DashboardHostsRoute,
+    DashboardHostsRoute: DashboardHostsRoute.addChildren({
+      DashboardHostsCreateRoute,
+      DashboardHostsHostIdDeleteRoute,
+      DashboardHostsHostIdEditRoute,
+      DashboardHostsHostIdIndexRoute,
+    }),
     DashboardNodesRoute: DashboardNodesRoute.addChildren({
       DashboardNodesCreateRoute,
       DashboardNodesNodeIdDeleteRoute,
