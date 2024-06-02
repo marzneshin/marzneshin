@@ -14,7 +14,7 @@ export const UserUsedTraffic: FC<UserUsedTrafficProps> = (
 ) => {
     const { t } = useTranslation()
     const formatedUsedTraffic = format(user.used_traffic)
-    const formatedDatalimit = user.data_limit !== null ? format(user.data_limit) : []
+    const formatedDatalimit = (user.data_limit != null) ? format(user.data_limit) : []
     return (
         <div className="flex gap-x-5 justify-start items-center">
             <CircularProgress
