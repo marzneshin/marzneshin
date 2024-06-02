@@ -391,3 +391,150 @@ export const routeTree = rootRoute.addChildren({
 })
 
 /* prettier-ignore-end */
+
+/* ROUTE_MANIFEST_START
+{
+  "routes": {
+    "__root__": {
+      "filePath": "__root.tsx",
+      "children": [
+        "/_auth",
+        "/_dashboard"
+      ]
+    },
+    "/_auth": {
+      "filePath": "_auth.tsx",
+      "children": [
+        "/_auth/login"
+      ]
+    },
+    "/_dashboard": {
+      "filePath": "_dashboard.tsx",
+      "children": [
+        "/_dashboard/hosts",
+        "/_dashboard/nodes",
+        "/_dashboard/services",
+        "/_dashboard/settings",
+        "/_dashboard/users",
+        "/_dashboard/"
+      ]
+    },
+    "/_auth/login": {
+      "filePath": "_auth/login.tsx",
+      "parent": "/_auth"
+    },
+    "/_dashboard/hosts": {
+      "filePath": "_dashboard/hosts.tsx",
+      "parent": "/_dashboard",
+      "children": [
+        "/_dashboard/hosts/$hostId/delete",
+        "/_dashboard/hosts/$hostId/edit",
+        "/_dashboard/hosts/$inboundId/create",
+        "/_dashboard/hosts/$hostId/"
+      ]
+    },
+    "/_dashboard/nodes": {
+      "filePath": "_dashboard/nodes.tsx",
+      "parent": "/_dashboard",
+      "children": [
+        "/_dashboard/nodes/create",
+        "/_dashboard/nodes/$nodeId/delete",
+        "/_dashboard/nodes/$nodeId/edit",
+        "/_dashboard/nodes/$nodeId/"
+      ]
+    },
+    "/_dashboard/services": {
+      "filePath": "_dashboard/services.tsx",
+      "parent": "/_dashboard",
+      "children": [
+        "/_dashboard/services/create",
+        "/_dashboard/services/$serviceId/delete",
+        "/_dashboard/services/$serviceId/edit",
+        "/_dashboard/services/$serviceId/"
+      ]
+    },
+    "/_dashboard/settings": {
+      "filePath": "_dashboard/settings.tsx",
+      "parent": "/_dashboard"
+    },
+    "/_dashboard/users": {
+      "filePath": "_dashboard/users.tsx",
+      "parent": "/_dashboard",
+      "children": [
+        "/_dashboard/users/create",
+        "/_dashboard/users/$userId/delete",
+        "/_dashboard/users/$userId/edit",
+        "/_dashboard/users/$userId/"
+      ]
+    },
+    "/_dashboard/": {
+      "filePath": "_dashboard/index.tsx",
+      "parent": "/_dashboard"
+    },
+    "/_dashboard/nodes/create": {
+      "filePath": "_dashboard/nodes/create.tsx",
+      "parent": "/_dashboard/nodes"
+    },
+    "/_dashboard/services/create": {
+      "filePath": "_dashboard/services/create.tsx",
+      "parent": "/_dashboard/services"
+    },
+    "/_dashboard/users/create": {
+      "filePath": "_dashboard/users/create.tsx",
+      "parent": "/_dashboard/users"
+    },
+    "/_dashboard/hosts/$hostId/delete": {
+      "filePath": "_dashboard/hosts/$hostId/delete.tsx",
+      "parent": "/_dashboard/hosts"
+    },
+    "/_dashboard/hosts/$hostId/edit": {
+      "filePath": "_dashboard/hosts/$hostId/edit.tsx",
+      "parent": "/_dashboard/hosts"
+    },
+    "/_dashboard/hosts/$inboundId/create": {
+      "filePath": "_dashboard/hosts/$inboundId/create.tsx",
+      "parent": "/_dashboard/hosts"
+    },
+    "/_dashboard/nodes/$nodeId/delete": {
+      "filePath": "_dashboard/nodes/$nodeId/delete.tsx",
+      "parent": "/_dashboard/nodes"
+    },
+    "/_dashboard/nodes/$nodeId/edit": {
+      "filePath": "_dashboard/nodes/$nodeId/edit.tsx",
+      "parent": "/_dashboard/nodes"
+    },
+    "/_dashboard/services/$serviceId/delete": {
+      "filePath": "_dashboard/services/$serviceId/delete.tsx",
+      "parent": "/_dashboard/services"
+    },
+    "/_dashboard/services/$serviceId/edit": {
+      "filePath": "_dashboard/services/$serviceId/edit.tsx",
+      "parent": "/_dashboard/services"
+    },
+    "/_dashboard/users/$userId/delete": {
+      "filePath": "_dashboard/users/$userId/delete.tsx",
+      "parent": "/_dashboard/users"
+    },
+    "/_dashboard/users/$userId/edit": {
+      "filePath": "_dashboard/users/$userId/edit.tsx",
+      "parent": "/_dashboard/users"
+    },
+    "/_dashboard/hosts/$hostId/": {
+      "filePath": "_dashboard/hosts/$hostId/index.tsx",
+      "parent": "/_dashboard/hosts"
+    },
+    "/_dashboard/nodes/$nodeId/": {
+      "filePath": "_dashboard/nodes/$nodeId/index.tsx",
+      "parent": "/_dashboard/nodes"
+    },
+    "/_dashboard/services/$serviceId/": {
+      "filePath": "_dashboard/services/$serviceId/index.tsx",
+      "parent": "/_dashboard/services"
+    },
+    "/_dashboard/users/$userId/": {
+      "filePath": "_dashboard/users/$userId/index.tsx",
+      "parent": "/_dashboard/users"
+    }
+  }
+}
+ROUTE_MANIFEST_END */
