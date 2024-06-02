@@ -1,7 +1,6 @@
 import sqlalchemy
 from fastapi import APIRouter, Depends, Query
 from fastapi import HTTPException
-from fastapi_pagination.customization import UseParamsFields, CustomizedPage
 from fastapi_pagination.ext.sqlalchemy import paginate
 from fastapi_pagination.links import Page
 
@@ -62,7 +61,6 @@ async def modify_service(id: int, modification: ServiceModify, db: DBDep):
     - **inbounds** list of inbound ids. if not specified no change will be applied;
     in case of an empty list all inbounds would be removed.
     """
-    # TODO: Update all affected users in nodes
     dbservice = crud.get_service(db, id)
     if not dbservice:
         raise HTTPException(status_code=404, detail="Service not found")
