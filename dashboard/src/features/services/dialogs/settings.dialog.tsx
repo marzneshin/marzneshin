@@ -8,7 +8,7 @@ import {
     TabsList,
     TabsTrigger,
 } from "@marzneshin/components"
-import { FC } from "react"
+import { type FC, useEffect } from "react"
 import { useTranslation } from "react-i18next"
 import { ServiceType } from "..";
 import { ServiceInboundsTable } from "../tables/inbounds";
@@ -21,8 +21,14 @@ interface ServicecSettingsDialogProps {
     onClose: () => void;
 }
 
-export const ServiceSettingsDialog: FC<ServicecSettingsDialogProps> = ({ onOpenChange, open, entity }) => {
+export const ServiceSettingsDialog: FC<ServicecSettingsDialogProps> = ({
+    onOpenChange, open, entity, onClose
+}) => {
     const { t } = useTranslation();
+
+    useEffect(() => {
+        if (!open) onClose();
+    }, [open, onClose]);
 
     return (
         <Sheet open={open} onOpenChange={onOpenChange}>
