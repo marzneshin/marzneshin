@@ -5,10 +5,7 @@ import type { NodeType } from "../types";
 export async function fetchNode({
     queryKey,
 }: { queryKey: [string, number] }): Promise<NodeType> {
-    console.log(queryKey)
-    const res =  await fetch(`/nodes/${queryKey[1]}`).then(result => result);
-    console.log(res)
-    return res;
+    return await fetch(`/nodes/${queryKey[1]}`).then(result => result);
 }
 
 export const NodeQueryFetchKey = "nodes";
