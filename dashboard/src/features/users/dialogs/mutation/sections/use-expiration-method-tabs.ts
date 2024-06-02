@@ -31,7 +31,7 @@ export const useExpirationMethodTabs = ({ entity }: { entity: UserMutationType |
             form.setValue("expire", undefined);
             form.clearErrors("expire");
         } else if (selectedExpirationMethodTab === "unlimited") {
-            form.setValue("expire", undefined);
+            form.setValue("expire", 0);
             form.setValue("on_hold_expire_duration", undefined);
             form.setValue("on_hold_timeout", undefined);
             form.clearErrors("expire");
