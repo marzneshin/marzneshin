@@ -30,7 +30,7 @@ export const HostSettingsDialog: FC<HostsSettingsDialogProps> = ({ onOpenChange,
                 <SheetContent className="sm:min-w-full md:min-w-[700px]" >
                     <SheetHeader>
                         <SheetTitle>
-                            {t('page.services.settings.title')}
+                            {t('page.hosts.settings.title')}
                         </SheetTitle>
                     </SheetHeader>
                     <Table>
