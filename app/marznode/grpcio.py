@@ -1,14 +1,13 @@
 import asyncio
 import atexit
 import logging
-from _testcapi import INT_MAX
 
-from grpc import ChannelConnectivity
+from _testcapi import INT_MAX
+from grpc import ChannelConnectivity, RpcError
 from grpc.aio import insecure_channel
 
 from .base import MarzNodeBase
 from .database import MarzNodeDB
-from .marznode_pb2_grpc import MarzServiceStub
 from .marznode_pb2 import (
     UserData,
     UsersData,
@@ -18,6 +17,7 @@ from .marznode_pb2 import (
     XrayLogsRequest,
     XrayConfig,
 )
+from .marznode_pb2_grpc import MarzServiceStub
 from ..models.node import NodeStatus
 
 logger = logging.getLogger(__name__)
@@ -48,7 +48,7 @@ class MarzNodeGRPCIO(MarzNodeBase, MarzNodeDB):
         asyncio.create_task(self._monitor_channel())
         self._streaming_task = None
 
-        self._updates_queue = asyncio.Queue(1)
+        self._updates_queue = asyncio.Queue(5)
         self.synced = False
         self.usage_coefficient = usage_coefficient
         atexit.register(self._close_channel)
@@ -64,16 +64,19 @@ class MarzNodeGRPCIO(MarzNodeBase, MarzNodeDB):
             self.set_status(NodeStatus.unhealthy, "timeout")
         while state := self._channel.get_state():
             logger.debug("node %i state: %s", self.id, state.value)
-            if state == ChannelConnectivity.READY:
+            try:
+                if state != ChannelConnectivity.READY:
+                    raise RpcError
                 await self._sync()
                 self._streaming_task = asyncio.create_task(self._stream_user_updates())
-                self.set_status(NodeStatus.healthy)
-                logger.info("Connected to node %i", self.id)
-            else:
+            except RpcError:
                 self.synced = False
                 self.set_status(NodeStatus.unhealthy)
                 if self._streaming_task:
                     self._streaming_task.cancel()
+            else:
+                self.set_status(NodeStatus.healthy)
+                logger.info("Connected to node %i", self.id)
 
             await self._channel.wait_for_state_change(state)
 
@@ -84,12 +87,17 @@ class MarzNodeGRPCIO(MarzNodeBase, MarzNodeDB):
             user_update = await self._updates_queue.get()
             logger.debug("got something from queue")
             user = user_update["user"]
-            await stream.write(
-                UserData(
-                    user=User(id=user.id, username=user.username, key=user.key),
-                    inbounds=[Inbound(tag=t) for t in user_update["inbounds"]],
+            try:
+                await stream.write(
+                    UserData(
+                        user=User(id=user.id, username=user.username, key=user.key),
+                        inbounds=[Inbound(tag=t) for t in user_update["inbounds"]],
+                    )
                 )
-            )
+            except RpcError:
+                self.synced = False
+                self.set_status(NodeStatus.unhealthy)
+                return
 
     async def update_user(self, user, inbounds: set[str] | None = None):
         if inbounds is None:
@@ -130,8 +138,15 @@ class MarzNodeGRPCIO(MarzNodeBase, MarzNodeDB):
             yield response.line
 
     async def restart_xray(self, config: str):
-        await self._stub.RestartXray(XrayConfig(configuration=config))
-        await self._sync()
+        try:
+            await self._stub.RestartXray(XrayConfig(configuration=config))
+            await self._sync()
+        except RpcError:
+            self.synced = False
+            self.set_status(NodeStatus.unhealthy)
+            raise
+        else:
+            self.set_status(NodeStatus.healthy)
 
     async def get_xray_config(self):
         response = await self._stub.FetchXrayConfig(Empty())

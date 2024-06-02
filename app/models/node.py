@@ -24,7 +24,7 @@ class NodeBase(BaseModel):
     id: Optional[int] = Field(None)
     name: str
     address: str
-    port: int = 62050
+    port: int = 53042
     connection_backend: NodeConnectionBackend = Field(
         default=NodeConnectionBackend.grpclib
     )
@@ -58,7 +58,7 @@ class NodeModify(Node):
     port: Optional[int] = Field(None)
     connection_backend: Optional[NodeConnectionBackend] = Field(None)
     status: Optional[NodeStatus] = Field(None)
-    usage_coefficient: Optional[float] = Field(None)
+    usage_coefficient: Optional[float] = Field(None, ge=0)
     model_config = ConfigDict(
         json_schema_extra={
             "example": {

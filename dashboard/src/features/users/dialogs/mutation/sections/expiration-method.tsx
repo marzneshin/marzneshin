@@ -24,14 +24,21 @@ interface ExpirationMethodProps {
 
 export const ExpirationMethodFields: FC<ExpirationMethodProps> = ({ entity }) => {
     const { t } = useTranslation()
-    const { setSelectedExpirationMethodTab, defaultExpirationMethodTab } = useExpirationMethodTabs({ entity })
+    const {
+        setSelectedExpirationMethodTab,
+        defaultExpirationMethodTab
+    } = useExpirationMethodTabs({ entity })
 
     return (
         <>
             <FormLabel>
                 {t('page.users.expire_method')}
             </FormLabel>
-            <Tabs defaultValue={defaultExpirationMethodTab} onValueChange={setSelectedExpirationMethodTab} className="mt-2 w-full">
+            <Tabs 
+                defaultValue={defaultExpirationMethodTab} 
+                onValueChange={setSelectedExpirationMethodTab} 
+                className="mt-2 w-full"
+            >
                 <TabsList className="flex flex-row items-center p-1 w-full rounded-md bg-accent">
                     <TabsTrigger
                         className="w-full"
