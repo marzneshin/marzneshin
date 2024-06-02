@@ -75,7 +75,7 @@ export const HostsMutationDialog: FC<MutationDialogProps> = ({
     useEffect(() => {
         if (entity) form.reset(entity);
         else form.reset(getDefaultValues());
-    }, [entity, form]);
+    }, [entity, form, open]);
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange} defaultOpen={true}>
