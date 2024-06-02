@@ -19,11 +19,10 @@ export const columns = (actions: ColumnAction): ColumnDef<HostType>[] => ([
     {
         accessorKey: "address",
         header: ({ column }) => <DataTableColumnHeader title={i18n.t('address')} column={column} />,
-        cell: ({ row }) => `${row.original.address}:${row.original.port}`
     },
     {
         accessorKey: "port",
-        header: ({ column }) => <DataTableColumnHeader title={i18n.t('page.nodes.usage_coefficient')} column={column} />,
+        header: ({ column }) => <DataTableColumnHeader title={i18n.t('port')} column={column} />,
     },
     {
         id: "actions",
