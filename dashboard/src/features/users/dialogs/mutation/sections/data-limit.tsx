@@ -31,7 +31,7 @@ export const DataLimitFields: FC = () => {
 
     useEffect(() => {
         if (selectedDataLimitTab !== 'limited') {
-            form.setValue("data_limit", 0)
+            form.setValue("data_limit", undefined)
             form.setValue("data_limit_reset_strategy", "no_reset");
         } 
         // eslint-disable-next-line
