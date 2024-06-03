@@ -132,10 +132,8 @@ class InboundHost(BaseModel):
     def validate_fmt_variables(cls, v: str) -> str:
         if not v:
             return v
-        try:
-            v.format_map(FormatVariables())
-        except ValueError as exc:
-            raise exc
+
+        v.format_map(FormatVariables())
 
         return v
 
