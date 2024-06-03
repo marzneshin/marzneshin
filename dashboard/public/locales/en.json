@@ -212,6 +212,9 @@
         "title": "No inbound is selected",
         "desc": "You must select an inbound in order to add a host."
       },
+      "settings": {
+        "title": "Host Settings"
+      },
       "allowinsecure": "Allow Insecure",
       "dialogs": {
         "edition": {
