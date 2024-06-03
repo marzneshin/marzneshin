@@ -129,7 +129,9 @@ class InboundHost(BaseModel):
 
     @field_validator("remark", "address", "path")
     @classmethod
-    def validate_remark(cls, v: str) -> str:
+    def validate_fmt_variables(cls, v: str) -> str:
+        if not v:
+            return v
         try:
             v.format_map(FormatVariables())
         except ValueError as exc:
