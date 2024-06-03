@@ -1,8 +1,8 @@
 import json
 from enum import Enum
-from typing import Optional, Union, List
+from typing import Optional, List
 
-from pydantic import ConfigDict, BaseModel, Field, validator
+from pydantic import ConfigDict, BaseModel, Field, field_validator
 
 
 class XTLSFlows(Enum):
@@ -121,44 +121,19 @@ class InboundHost(BaseModel):
     security: InboundHostSecurity = InboundHostSecurity.inbound_default
     alpn: InboundHostALPN = InboundHostALPN.none
     fingerprint: InboundHostFingerprint = InboundHostFingerprint.none
-    allowinsecure: Union[bool, None] = None
-    is_disabled: Union[bool, None] = None
+    allowinsecure: Optional[bool] = None
+    is_disabled: Optional[bool] = None
     mux: bool = Field(False)
     fragment: Optional[FragmentSettings] = Field(None)
     model_config = ConfigDict(from_attributes=True)
 
-    # TODO[pydantic]: We couldn't refactor the `validator`, please replace it by `field_validator` manually.
-    # Check https://docs.pydantic.dev/dev-v2/migration/#changes-to-validators for more information.
-    @validator("remark", pre=False, always=True)
-    def validate_remark(cls, v):
-        try:
-            v.format_map(FormatVariables())
-        except ValueError as exc:
-            raise ValueError("Invalid formatting variables")
-
-        return v
-
-    # TODO[pydantic]: We couldn't refactor the `validator`, please replace it by `field_validator` manually.
-    # Check https://docs.pydantic.dev/dev-v2/migration/#changes-to-validators for more information.
-    @validator("address", pre=False, always=True)
-    def validate_address(cls, v):
-        try:
-            v.format_map(FormatVariables())
-        except ValueError as exc:
-            raise ValueError("Invalid formatting variables")
-
-        return v
-
-    # TODO[pydantic]: We couldn't refactor the `validator`, please replace it by `field_validator` manually.
-    # Check https://docs.pydantic.dev/dev-v2/migration/#changes-to-validators for more information.
-    @validator("path", pre=False, always=True)
-    def validate_path(cls, v):
+    @field_validator("remark", "address", "path")
+    @classmethod
+    def validate_fmt_variables(cls, v: str) -> str:
         if not v:
             return v
-        try:
-            v.format_map(FormatVariables())
-        except ValueError:
-            raise ValueError("Invalid formatting variables")
+
+        v.format_map(FormatVariables())
 
         return v
 
