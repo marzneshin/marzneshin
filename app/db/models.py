@@ -91,7 +91,9 @@ class User(Base):
     # proxies = relationship("Proxy", back_populates="user", cascade="all, delete-orphan")
     status = Column(Enum(UserStatus), nullable=False, default=UserStatus.active)
     used_traffic = Column(BigInteger, default=0)
-    lifetime_used_traffic = Column(BigInteger, default=0)
+    lifetime_used_traffic = Column(
+        BigInteger, default=0, server_default="0", nullable=False
+    )
     traffic_reset_at = Column(DateTime)
     node_usages = relationship(
         "NodeUserUsage",

@@ -24,8 +24,8 @@ def upgrade() -> None:
         sa.Column(
             "lifetime_used_traffic",
             sa.BigInteger(),
-            server_default=sa.sql.null(),
-            nullable=True,
+            server_default="0",
+            nullable=False,
         ),
     )
     op.add_column(
