@@ -2,6 +2,7 @@ import base64
 import json
 import random
 import secrets
+from collections import defaultdict
 from datetime import datetime as dt, timedelta
 from typing import TYPE_CHECKING, Literal, Union, List
 from uuid import UUID
@@ -128,18 +129,21 @@ def setup_format_variables(extra_data: dict) -> dict:
 
     status_emoji = STATUS_EMOJIS.get(extra_data.get("status")) or ""
 
-    format_variables = {
-        "SERVER_IP": SERVER_IP,
-        "USERNAME": extra_data.get("username", "{USERNAME}"),
-        "DATA_USAGE": readable_size(extra_data.get("used_traffic")),
-        "DATA_LIMIT": data_limit,
-        "DATA_LEFT": data_left,
-        "DAYS_LEFT": days_left,
-        "EXPIRE_DATE": expire_date,
-        "JALALI_EXPIRE_DATE": jalali_expire_date,
-        "TIME_LEFT": time_left,
-        "STATUS_EMOJI": status_emoji,
-    }
+    format_variables = defaultdict(
+        lambda: "<missing>",
+        {
+            "SERVER_IP": SERVER_IP,
+            "USERNAME": extra_data.get("username", "{USERNAME}"),
+            "DATA_USAGE": readable_size(extra_data.get("used_traffic")),
+            "DATA_LIMIT": data_limit,
+            "DATA_LEFT": data_left,
+            "DAYS_LEFT": days_left,
+            "EXPIRE_DATE": expire_date,
+            "JALALI_EXPIRE_DATE": jalali_expire_date,
+            "TIME_LEFT": time_left,
+            "STATUS_EMOJI": status_emoji,
+        },
+    )
 
     return format_variables
 
