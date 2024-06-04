@@ -14,7 +14,8 @@
     "test:watch": "vitest --watch",
     "test:coverage": "vitest run --coverage",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "chromatic": "npx chromatic"
   },
   "dependencies": {
     "@chbphone55/pretty-bytes": "^1.0.0",

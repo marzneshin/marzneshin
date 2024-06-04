@@ -1,0 +1,59 @@
+name: Chromatic
+
+on: workflow_call
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-chromatic
+  cancel-in-progress: true
+
+permissions:
+  actions: write
+  contents: read
+
+jobs:
+  chromatic:
+    name: Chromatic
+    runs-on: ubuntu-latest
+    env:
+      CI: true
+    defaults:
+      run:
+        working-directory: ./dashboard
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v3
+        name: Install pnpm
+        with:
+          version: 8
+          run_install: false
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - uses: actions/cache@v3
+        name: Setup pnpm cache
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: 📥 Install deps
+        run: pnpm install
+
+      - name: Build Storybook
+        run: pnpm run build-storybook
+
+      - name: ⚡ Run chromatic
+        uses: chromaui/action@latest
+        with:
+          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+          exitZeroOnChanges: true
+          workingDir: ./dashboard 
+          autoAcceptChanges: "main"
+          exitOnceUploaded: true
+          onlyChanged: true
+          skip: "@(renovate/**|dependabot/**)"
+          zip: true
