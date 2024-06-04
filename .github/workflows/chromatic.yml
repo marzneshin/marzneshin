@@ -62,6 +62,9 @@ jobs:
           skip: "@(renovate/**|dependabot/**)"
           zip: true
 
+      - name: Publish Chromatic Action Summary
+        run: echo -e "| Results |  |\n| --- | --- |\n| Build Results | ${{steps.chromatic.outputs.buildUrl}} |\n| Storybook Preview | ${{steps.chromatic.outputs.storybookUrl}} |\n| Component Count | ${{steps.chromatic.outputs.componentCount}} |" >> $GITHUB_STEP_SUMMARY
+
       - name: Publish Chromatic Link in the comments
         uses: dannyhw/storybook-chromatic-link-comment@v0.11
         with:
