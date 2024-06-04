@@ -1,0 +1,69 @@
+
+import { 
+  Meta, 
+  Title, 
+  Subtitle, 
+  Description,
+  Primary,
+  Controls,
+  Stories,
+  ColorPalette,
+  ColorItem
+} from '@storybook/blocks';
+import { Card, CardContent } from '../../ui'
+import * as ButtonStoires from './button.stories';
+import resolveConfig from 'tailwindcss/resolveConfig'
+import tailwindConfig from '../../../../tailwind.config.js'
+
+<Meta of={ButtonStoires} />
+
+<Title />
+<Subtitle />
+<Description />
+
+## Variants
+
+<ColorPalette>
+  <ColorItem
+    title="default"
+    subtitle="Primary"
+    colors={{ primary: resolveConfig(tailwindConfig).theme.colors.primary.DEFAULT }}
+  />
+  <ColorItem 
+    title="secondary" 
+    subtitle="Secondary" 
+    colors={{ success: resolveConfig(tailwindConfig).theme.colors.secondary.DEFAULT }}
+  />
+  <ColorItem 
+    title="success" 
+    subtitle="Success" 
+    colors={{ success: resolveConfig(tailwindConfig).theme.colors.success.DEFAULT }}
+  />
+  <ColorItem
+    title="destructive"
+    subtitle="Red"
+    colors={{
+      destructive: resolveConfig(tailwindConfig).theme.colors.destructive.DEFAULT
+    }}
+  />
+  <ColorItem
+    title="ghost"
+    subtitle="Accent"
+    colors={{
+      destructive: resolveConfig(tailwindConfig).theme.colors.accent.DEFAULT
+    }}
+  />
+</ColorPalette>
+
+## Sizes
+
+    <ButtonStoires.Primary children="Small" size="sm"/>
+    <ButtonStoires.Primary children="Default" size="default"/>
+    <ButtonStoires.Primary children="Large" size="lg"/>
+    <ButtonStoires.Primary children="Icon" size="icon"/>
+
+##
+
+<Primary />
+<Controls />
+<Stories />
