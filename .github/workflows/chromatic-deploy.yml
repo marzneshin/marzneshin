@@ -1,4 +1,4 @@
-name: Invoke Chromatic
+name: Chromatic Deploy
 
 on:
   push:
@@ -17,7 +17,7 @@ permissions:
 jobs:
   changed-files:
     runs-on: ubuntu-latest
-    name: changed-files
+    name: Check UI Changes
     outputs:
       all_changed_files: ${{ steps.changed-files.outputs.all_changed_files }}
       any_changed: ${{ steps.changed-files.outputs.any_changed }}
@@ -32,7 +32,7 @@ jobs:
           files: |
             dashboard/**
   chromatic:
-    name: Run visual tests
+    name: Visual tests
     needs: [changed-files]
     if: ${{ needs.changed-files.outputs.any_changed == 'true' }}
     uses: ./.github/workflows/chromatic.yml
