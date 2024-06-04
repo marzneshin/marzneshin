@@ -153,3 +153,62 @@ export const routeTree = rootRoute.addChildren({
 })
 
 /* prettier-ignore-end */
+
+/* ROUTE_MANIFEST_START
+{
+  "routes": {
+    "__root__": {
+      "filePath": "__root.tsx",
+      "children": [
+        "/_auth",
+        "/_dashboard"
+      ]
+    },
+    "/_auth": {
+      "filePath": "_auth.tsx",
+      "children": [
+        "/_auth/login"
+      ]
+    },
+    "/_dashboard": {
+      "filePath": "_dashboard.tsx",
+      "children": [
+        "/_dashboard/hosts",
+        "/_dashboard/nodes",
+        "/_dashboard/services",
+        "/_dashboard/settings",
+        "/_dashboard/users",
+        "/_dashboard/"
+      ]
+    },
+    "/_auth/login": {
+      "filePath": "_auth/login.tsx",
+      "parent": "/_auth"
+    },
+    "/_dashboard/hosts": {
+      "filePath": "_dashboard/hosts.tsx",
+      "parent": "/_dashboard"
+    },
+    "/_dashboard/nodes": {
+      "filePath": "_dashboard/nodes.tsx",
+      "parent": "/_dashboard"
+    },
+    "/_dashboard/services": {
+      "filePath": "_dashboard/services.tsx",
+      "parent": "/_dashboard"
+    },
+    "/_dashboard/settings": {
+      "filePath": "_dashboard/settings.tsx",
+      "parent": "/_dashboard"
+    },
+    "/_dashboard/users": {
+      "filePath": "_dashboard/users.tsx",
+      "parent": "/_dashboard"
+    },
+    "/_dashboard/": {
+      "filePath": "_dashboard/index.tsx",
+      "parent": "/_dashboard"
+    }
+  }
+}
+ROUTE_MANIFEST_END */
