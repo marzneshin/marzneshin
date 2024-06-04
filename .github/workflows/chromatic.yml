@@ -50,6 +50,7 @@ jobs:
 
       - name: ⚡ Run chromatic
         uses: chromaui/action@latest
+        id: chromatic
         with:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
           exitZeroOnChanges: true
@@ -59,6 +60,7 @@ jobs:
           onlyChanged: true
           skip: "@(renovate/**|dependabot/**)"
           zip: true
+
       - name: Publish Chromatic Link in the comments
         uses: dannyhw/storybook-chromatic-link-comment@v0.11
         with:
