@@ -27,7 +27,7 @@ async def reset_user_data_usage():
                 UserDataLimitResetStrategy.year.value,
             ],
         ):
-            last_reset_time = user.last_traffic_reset_time
+            last_reset_time = user.traffic_reset_at or user.created_at
             num_days_to_reset = reset_strategy_to_days[user.data_limit_reset_strategy]
 
             if not (now - last_reset_time).days >= num_days_to_reset:
