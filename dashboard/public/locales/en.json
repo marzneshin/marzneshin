@@ -49,6 +49,10 @@
   "system": "System",
   "disabled": "Disabled",
   "advanced-options": "Advanced Options",
+  "support-us": {
+    "desc": "Marzneshin is free and open-source software (FOSS), join us and show your support by donating.",
+    "donate": "Donate"
+  },
   "page": {
     "settings": {
       "certificate": {
