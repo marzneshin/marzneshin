@@ -3,17 +3,16 @@ import { Button, Card, CardTitle, CardContent, PopoverTrigger, Popover, PopoverC
 import { type FC, type HTMLAttributes } from "react";
 import { cn } from "@marzneshin/utils";
 import { useTranslation } from "react-i18next";
-import { SupportUsVariation } from "./types";
+import { SupportUsVariation, SupportUsStructure } from "./types";
 import { useSupportUs } from "./use-support-us";
 
 export interface SupportUsProps extends HTMLAttributes<HTMLDivElement> {
     open?: boolean;
     variant?: SupportUsVariation;
-    structure: "card" | "popover"
+    structure?: SupportUsStructure;
 }
 
-
-export const SupportUs: FC<SupportUsProps> = ({ open = true, variant = "status", className, structure }) => {
+export const SupportUs: FC<SupportUsProps> = ({ open = true, variant = "status", className, structure = "card" }) => {
     const [, setSupportUsOpen] = useSupportUs(variant, open);
     const { t } = useTranslation();
 
@@ -75,8 +74,6 @@ export const SupportUs: FC<SupportUsProps> = ({ open = true, variant = "status",
             </PopoverContent>
         </Popover>
     );
-
-    if (!structure) return null;
 
     return structure === "popover" ? <PopoverStructure /> : <CardStructure />;
 };
