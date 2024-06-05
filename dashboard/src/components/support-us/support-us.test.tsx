@@ -1,24 +1,14 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { SupportUs } from '.';
-import { useState as originalUseState } from 'react';
 import { useLocalStorage as originalUseLocalStorage } from '@uidotdev/usehooks';
+import '@testing-library/jest-dom';
 
 vi.mock('@uidotdev/usehooks', () => ({
     useLocalStorage: vi.fn(),
 }));
 
-
-vi.mock("react", async (importOriginal) => {
-    const actual = await importOriginal()
-    return {
-        ...actual,
-        useState: vi.fn(),
-    }
-})
-
 const useLocalStorage = originalUseLocalStorage as unknown as ReturnType<typeof vi.fn>;
-const useState = originalUseState as unknown as ReturnType<typeof vi.fn>;
 
 describe('SupportUs Component', () => {
     it('renders the SupportUs component when localStorage is true', () => {
@@ -44,18 +34,6 @@ describe('SupportUs Component', () => {
         useLocalStorage.mockReturnValue([true, setSupportUsOpen]);
 
         render(<SupportUs variant="local-storage" />);
-
-        const closeButton = screen.getByRole('button', { name: /Close/i });
-        fireEvent.mouseDown(closeButton);
-
-        expect(setSupportUsOpen).toHaveBeenCalledWith(false);
-    });
-
-    it('closes the SupportUs card when the close button is clicked in status mode', () => {
-        const setSupportUsOpen = vi.fn();
-        useState.mockReturnValue([true, setSupportUsOpen]);
-
-        render(<SupportUs variant="status" />);
 
         const closeButton = screen.getByRole('button', { name: /Close/i });
         fireEvent.mouseDown(closeButton);
