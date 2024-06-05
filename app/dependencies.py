@@ -2,7 +2,6 @@ from datetime import datetime
 from typing import Annotated
 
 from fastapi import Depends, HTTPException, status
-from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
 from app.db import crud, User, GetDB

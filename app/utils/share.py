@@ -212,6 +212,9 @@ def process_inbounds_and_tags(
                 uuid=UUID(gen_uuid(key)),
                 password=gen_password(key),
                 enable_mux=host.mux,
+                http_headers={
+                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.3"
+                },
             )
             if host.fragment:
                 data.fragment = True
