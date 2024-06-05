@@ -13,7 +13,7 @@ export interface SupportUsProps extends HTMLAttributes<HTMLDivElement> {
 }
 
 export const SupportUs: FC<SupportUsProps> = ({ open = true, variant = "status", className, structure = "card" }) => {
-    const [, setSupportUsOpen] = useSupportUs(variant, open);
+    const [supportUsOpen, setSupportUsOpen] = useSupportUs(variant, open);
     const { t } = useTranslation();
 
     const CardStructure = () => (
@@ -21,7 +21,7 @@ export const SupportUs: FC<SupportUsProps> = ({ open = true, variant = "status",
             <CardContent className={cn("p-4 flex flex-col w-fit gap-2 text-muted-foreground text-sm", className)}>
                 <CardTitle className="flex-row flex items-center justify-between w-full text-primary">
                     <div className="text-medium flex-row flex gap-1">
-                        <HeartHandshake /> Support Us
+                        <HeartHandshake /> {t('support-us.title')}
                     </div>
                     {variant !== "view" && (
                         <Button
@@ -58,7 +58,7 @@ export const SupportUs: FC<SupportUsProps> = ({ open = true, variant = "status",
             <PopoverContent sideOffset={10} className={cn("p-4 flex flex-col w-80 gap-2 text-muted-foreground text-sm", className)}>
                 <div className="flex-row flex items-center justify-between w-full text-primary">
                     <div className="text-medium flex-row flex gap-1">
-                        <HeartHandshake /> Support Us
+                        <HeartHandshake /> {t('support-us.title')}
                     </div>
                 </div>
                 <p>{t('support-us.desc')}</p>
@@ -75,5 +75,6 @@ export const SupportUs: FC<SupportUsProps> = ({ open = true, variant = "status",
         </Popover>
     );
 
+    if (!supportUsOpen) return null;
     return structure === "popover" ? <PopoverStructure /> : <CardStructure />;
 };
