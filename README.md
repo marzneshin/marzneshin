@@ -39,8 +39,8 @@
 ## Table of Contents
 
 - [Overview](#overview)
-	- [Features](#features)
-	- [Supported Languages](#supported-languages)
+    - [Features](#features)
+    - [Supported Languages](#supported-languages)
 - [Installation guide](#installation-guide)
 - [Configuration](#configuration)
 - [API](#api)
@@ -57,18 +57,18 @@
 
 Marzneshin is a censorship circumvention tool utilizing other censorship circumvention tools.
 
-Dashboard enables access to nodes(configurations, status and stats, logs), 
+Dashboard enables access to nodes(configurations, status and stats, logs),
 hosts, users, service entities; while providing monitoring and system statistics.
 
-On the other hand, the backend manages nodes, users, users' subscriptions, etc. 
+On the other hand, the backend manages nodes, users, users' subscriptions, etc.
 
-Marzneshin controls the [Marznodes](https://github.com/khodedawsh/marznode) 
+Marzneshin controls the [Marznodes](https://github.com/khodedawsh/marznode)
 connected to it; monitoring/disabling/enabling users on marznode instances while
 marznode manages and interacts with vpn backends (such as xray).
 
 ### Features
 
-- **Web UI** Dashboard 
+- **Web UI** Dashboard
 - **Multi Nodes** support for traffic distribution, scalability, and fault tolerance
 - Supports protocols **Vmess**, **VLESS**, **Trojan** and **Shadowsocks** as provided by xray
 - **Multi-protocol** for a single user
@@ -78,21 +78,22 @@ marznode manages and interacts with vpn backends (such as xray).
 - reset traffic periodically (daily, weekly,...)
 - **Subscription link** compatible with **V2ray** (e.g. V2RayNG, OneClick, Nekoray, etc.), **Clash** and **ClashMeta**
 - Automated **Share link** and **QRcode** generator
-- System, nodes, traffic statistics, users monitoring 
+- System, nodes, traffic statistics, users monitoring
 - Integrated **Command Line Interface (CLI)**
 - **Multi-admin** support (WIP)
 - Marzneshin is decoupled from VPN backends
 - Resilient and fault tolerant node management
 - UI performance and redesign
 
-
 Deployment and Developer Kit:
+
 - REST-full API
 - Kubernetes and multiple deployment strategy and options (WIP)
 
 ### Supported Languages
+
 - Russian (WIP)
-- English 
+- English
 - Kurdish (Soranî, Kurmancî)
 - Persian (WIP)
 
@@ -109,15 +110,18 @@ To install with mariadb:
 ```bash
 sudo bash -c "$(curl -sL https://github.com/khodedawsh/Marzneshin/raw/master/script.sh)" @ install --database mariadb
 ```
+
 You could also use mysql by writing mysql instead, however mariadb is **recommended**.
 Also to install the latest nightly release use the `--nightly` option.
 
 Once the installation is complete:
 
 - You'd notice the logs, which you could stop watching by pressing `Ctrl+C`; The process will continue running normally.
-- the configuration file can be found at `/etc/opt/marzneshin/.env` (refer to [configurations](#configuration) section to see variables)
+- the configuration file can be found at `/etc/opt/marzneshin/.env` (refer to [configurations](#configuration) section
+  to see variables)
 - Data files will be placed at `/var/lib/marzneshin`; e.g. the sqlite database.
-- You can access the Marzneshin dashboard by opening a web browser and navigating to `http://<SERVER_IP>:8000/dashboard/`
+- You can access the Marzneshin dashboard by opening a web browser and navigating
+  to `http://<SERVER_IP>:8000/dashboard/`
 
 Next, you need to create a sudo admin for logging into the Marzneshin dashboard by the following command
 
@@ -162,7 +166,8 @@ Then run the following command to run the database migration scripts
 alembic upgrade head
 ```
 
-If you want to use `marzneshin-cli`, you should link it to a file in your `$PATH`, make it executable, and install the auto-completion:
+If you want to use `marzneshin-cli`, you should link it to a file in your `$PATH`, make it executable, and install the
+auto-completion:
 
 ```bash
 sudo ln -s $(pwd)/marzneshin-cli.py /usr/bin/marzneshin-cli
@@ -254,7 +259,8 @@ server {
 }
 ```
 
-By default the app will be run on `http://localhost:8000/dashboard`. You can configure it using changing the `UVICORN_HOST` and `UVICORN_PORT` environment variables.
+By default the app will be run on `http://localhost:8000/dashboard`. You can configure it using changing
+the `UVICORN_HOST` and `UVICORN_PORT` environment variables.
 </details>
 
 # Configuration
@@ -262,16 +268,14 @@ By default the app will be run on `http://localhost:8000/dashboard`. You can con
 > You can set settings below using environment variables or placing them in `.env` file.
 
 | Variable                          | Description                                                                                           |
-| --------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| SUDO_USERNAME                     | Superuser's username                                                                                  |
-| SUDO_PASSWORD                     | Superuser's password                                                                                  |
+|-----------------------------------|-------------------------------------------------------------------------------------------------------|
 | SQLALCHEMY_DATABASE_URL           | Database URL ([SQLAlchemy's docs](https://docs.sqlalchemy.org/en/20/core/engines.html#database-urls)) |
 | UVICORN_HOST                      | Bind application to this host (default: `0.0.0.0`)                                                    |
 | UVICORN_PORT                      | Bind application to this port (default: `8000`)                                                       |
 | UVICORN_UDS                       | Bind application to a UNIX domain socket                                                              |
 | UVICORN_SSL_CERTFILE              | SSL certificate file to have application on https                                                     |
 | UVICORN_SSL_KEYFILE               | SSL key file to have application on https                                                             |
-| XRAY_SUBSCRIPTION_URL_PREFIX      | Prefix of subscription URLs                                                                           |
+| SUBSCRIPTION_URL_PREFIX           | Prefix of subscription URLs                                                                           |
 | CUSTOM_TEMPLATES_DIRECTORY        | Customized templates directory (default: `app/templates`)                                             |
 | CLASH_SUBSCRIPTION_TEMPLATE       | The template that will be used for generating clash configs (default: `clash/default.yml`)            |
 | SUBSCRIPTION_PAGE_TEMPLATE        | The template used for generating subscription info page (default: `subscription/index.html`)          |
@@ -291,29 +295,42 @@ By default the app will be run on `http://localhost:8000/dashboard`. You can con
 
 # API
 
-Marzneshin provides a REST API that enables developers to interact with Marzneshin services programmatically. To view the API documentation in Swagger UI or ReDoc, set the configuration variable `DOCS=True` and navigate to the `/docs` and `/redoc`.
+Marzneshin provides a REST API that enables developers to interact with Marzneshin services programmatically. To view
+the API documentation in Swagger UI or ReDoc, set the configuration variable `DOCS=True` and navigate to the `/docs`
+and `/redoc`.
 
 # Backup
 
-It's always a good idea to backup your Marzneshin files regularly to prevent data loss in case of system failures or accidental deletion. Here are the steps to backup Marzneshin:
+It's always a good idea to backup your Marzneshin files regularly to prevent data loss in case of system failures or
+accidental deletion. Here are the steps to backup Marzneshin:
 
-1. By default, all Marzneshin important files are saved in `/var/lib/marzneshin` (Docker versions). Copy the entire `/var/lib/marzneshin` directory to a backup location of your choice, such as an external hard drive or cloud storage.
-2. Additionally, make sure to backup your env file, which contains your configuration variables. If you installed Marzneshin using the script (recommended installation approach), the env and other configurations should be inside `/etc/opt/marzneshin/` directory.
+1. By default, all Marzneshin important files are saved in `/var/lib/marzneshin` (Docker versions). Copy the
+   entire `/var/lib/marzneshin` directory to a backup location of your choice, such as an external hard drive or cloud
+   storage.
+2. Additionally, make sure to backup your env file, which contains your configuration variables. If you installed
+   Marzneshin using the script (recommended installation approach), the env and other configurations should be
+   inside `/etc/opt/marzneshin/` directory.
 
-By following these steps, you can ensure that you have a backup of all your Marzneshin files and data, as well as your configuration variables and Xray configuration, in case you need to restore them in the future. Remember to update your backups regularly to keep them up-to-date.
+By following these steps, you can ensure that you have a backup of all your Marzneshin files and data, as well as your
+configuration variables and Xray configuration, in case you need to restore them in the future. Remember to update your
+backups regularly to keep them up-to-date.
 
 # Telegram Bot
 
-Marzneshin comes with an integrated Telegram bot that can handle server management, user creation and removal, and send notifications. This bot can be easily enabled by following a few simple steps, and it provides a convenient way to interact with Marzneshin without having to log in to the server every time.
+Marzneshin comes with an integrated Telegram bot that can handle server management, user creation and removal, and send
+notifications. This bot can be easily enabled by following a few simple steps, and it provides a convenient way to
+interact with Marzneshin without having to log in to the server every time.
 
 To enable Telegram Bot:
 
 1. set `TELEGRAM_API_TOKEN` to your bot's API Token
-2. set `TELEGRAM_ADMIN_ID` to your Telegram account's numeric ID, you can get your ID from [@userinfobot](https://t.me/userinfobot)
+2. set `TELEGRAM_ADMIN_ID` to your Telegram account's numeric ID, you can get your ID
+   from [@userinfobot](https://t.me/userinfobot)
 
 # Marzneshin CLI
 
-Marzneshin comes with an integrated CLI named `marzneshin-cli` which allows administrators to have direct interaction with it.
+Marzneshin comes with an integrated CLI named `marzneshin-cli` which allows administrators to have direct interaction
+with it.
 
 If you've installed Marzneshin using the installation script, you can access the cli commands by running
 
@@ -331,7 +348,8 @@ For more information, You can read [Marzneshin CLI's documentation](./cli/README
 
 You can set a webhook address and Marzneshin will send the notifications to that address.
 
-the requests will be sent as a post request to the adress provided by `WEBHOOK_ADDRESS` with `WEBHOOK_SECRET` as `x-webhook-secret` in the headers.
+the requests will be sent as a post request to the adress provided by `WEBHOOK_ADDRESS` with `WEBHOOK_SECRET`
+as `x-webhook-secret` in the headers.
 
 Example request sent from Marzneshin:
 
@@ -352,11 +370,13 @@ Body:
 {"username": "marzneshin_test_user", "action": "user_updated", "enqueued_at": 1680506457.636369, "tries": 0}
 ```
 
-Different action typs are: `user_created`, `user_updated`, `user_deleted`, `user_limited`, `user_expired`, `user_disabled`, `user_enabled`
+Different action typs
+are: `user_created`, `user_updated`, `user_deleted`, `user_limited`, `user_expired`, `user_disabled`, `user_enabled`
 
 # Donation
 
-If you found Marzneshin useful and would like to support its development, you can make a donation in one of the following crypto networks:
+If you found Marzneshin useful and would like to support its development, you can make a donation in one of the
+following crypto networks:
 
 - Bitcoin network: 13ZDhE5KHGsfjM4A22eLTUgW98WpXhQTuF
 - TRON network (TRC20): TYxFCiRqJ3SiV6rAQAmJUd3DgVmJvEAfz4
@@ -372,7 +392,9 @@ Published under [AGPL-3.0](./LICENSE).
 
 # Contributors
 
-We ❤️‍🔥 contributors! If you'd like to contribute, please check out our [Contributing Guidelines](CONTRIBUTING.md) and feel free to submit a pull request or open an issue. We also welcome you to join our [Telegram](https://t.me/marzneshins) group for either support or contributing guidance.
+We ❤️‍🔥 contributors! If you'd like to contribute, please check out our [Contributing Guidelines](CONTRIBUTING.md) and
+feel free to submit a pull request or open an issue. We also welcome you to join
+our [Telegram](https://t.me/marzneshins) group for either support or contributing guidance.
 
 Check [open issues](https://github.com/khodedawsh/marzneshin/issues) to help the progress of this project.
 
