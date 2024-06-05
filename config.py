@@ -1,4 +1,3 @@
-import os
 from decouple import config
 from dotenv import load_dotenv
 
@@ -61,14 +60,6 @@ HOME_PAGE_TEMPLATE = config("HOME_PAGE_TEMPLATE", default="home/index.html")
 
 SINGBOX_SUBSCRIPTION_TEMPLATE = config(
     "SINGBOX_SUBSCRIPTION_TEMPLATE", default="singbox/default.json"
-)
-
-
-# USERNAME: PASSWORD
-SUDOERS = (
-    {config("SUDO_USERNAME"): config("SUDO_PASSWORD")}
-    if config("SUDO_USERNAME", default="") and config("SUDO_PASSWORD", default="")
-    else {}
 )
 
 

@@ -1,37 +1,15 @@
-from typing import Optional, Annotated
-
 import sqlalchemy
 from fastapi import APIRouter
-from fastapi import Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordRequestForm
+from fastapi import HTTPException
 from fastapi_pagination import Page
 from fastapi_pagination.ext.sqlalchemy import paginate
 
-from app.db import Session, crud
+from app.db import crud
 from app.db.models import Admin as DBAdmin
 from app.dependencies import AdminDep, SudoAdminDep, DBDep
-from app.models.admin import Admin, AdminCreate, AdminInDB, AdminModify, Token
-from app.utils.jwt import create_admin_token
-from config import SUDOERS
+from app.models.admin import Admin, AdminCreate, AdminModify
 
 router = APIRouter(tags=["Admin"], prefix="/admins")
-
-
-def authenticate_env_sudo(username: str, password: str) -> bool:
-    try:
-        return password == SUDOERS[username]
-    except KeyError:
-        return False
-
-
-def authenticate_admin(db: Session, username: str, password: str) -> Optional[Admin]:
-    dbadmin = crud.get_admin(db, username)
-    if not dbadmin:
-        return None
-
-    return (
-        dbadmin if AdminInDB.model_validate(dbadmin).verify_password(password) else None
-    )
 
 
 @router.get("", response_model=Page[Admin])
@@ -58,23 +36,6 @@ def get_current_admin(admin: AdminDep):
     return admin
 
 
-@router.post("/token", response_model=Token)
-def admin_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: DBDep):
-    if authenticate_env_sudo(form_data.username, form_data.password):
-        return Token(access_token=create_admin_token(form_data.username, is_sudo=True))
-
-    if dbadmin := authenticate_admin(db, form_data.username, form_data.password):
-        return Token(
-            access_token=create_admin_token(form_data.username, is_sudo=dbadmin.is_sudo)
-        )
-
-    raise HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Incorrect username or password",
-        headers={"WWW-Authenticate": "Bearer"},
-    )
-
-
 @router.put("/{username}", response_model=Admin)
 def modify_admin(
     username: str, modified_admin: AdminModify, db: DBDep, admin: AdminDep
@@ -94,7 +55,7 @@ def modify_admin(
     if (username != admin.username) and dbadmin.is_sudo:
         raise HTTPException(
             status_code=403,
-            detail="You're not allowed to edit another sudoers account. Use marzban-cli instead.",
+            detail="You're not allowed to edit another sudoers account. Use marzneshin-cli instead.",
         )
 
     dbadmin = crud.update_admin(db, dbadmin, modified_admin)
@@ -110,7 +71,7 @@ def remove_admin(username: str, db: DBDep, admin: SudoAdminDep):
     if dbadmin.is_sudo:
         raise HTTPException(
             status_code=403,
-            detail="You're not allowed to delete sudoers accounts. Use marzban-cli instead.",
+            detail="You're not allowed to delete sudoers accounts. Use marzneshin-cli instead.",
         )
 
     crud.remove_admin(db, dbadmin)

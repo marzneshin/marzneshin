@@ -2,13 +2,11 @@ from datetime import datetime
 from typing import Annotated
 
 from fastapi import Depends, HTTPException, status
-from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
 from app.db import crud, User, GetDB
 from app.models.admin import Admin, oauth2_scheme
-from app.utils.jwt import get_admin_payload
-from config import SUDOERS
+from app.utils.auth import get_admin_payload
 
 
 def get_db():  # Dependency
@@ -19,13 +17,11 @@ def get_db():  # Dependency
 def get_admin(
     db: Annotated[Session, Depends(get_db)],
     token: Annotated[str, Depends(oauth2_scheme)],
+    token_type: str = "access",
 ):
     payload = get_admin_payload(token)
-    if not payload:
+    if not payload or payload["type"] != token_type:
         return
-
-    if payload["username"] in SUDOERS and payload["is_sudo"] is True:
-        return Admin(username=payload["username"], is_sudo=True)
 
     dbadmin = crud.get_admin(db, payload["username"])
     if not dbadmin:
