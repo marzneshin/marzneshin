@@ -2,16 +2,11 @@ import {
     Sidebar,
     type SidebarItem,
     SupportUs,
-    Popover,
-    PopoverContent,
-    Button,
-    PopoverTrigger
 } from "@marzneshin/components";
 import { useRouterState } from "@tanstack/react-router";
 import type { FC } from "react";
 import { sidebarItems } from ".";
 import { cn } from "@marzneshin/utils";
-import { HeartHandshake } from "lucide-react";
 
 interface DashboardSidebarProps {
     collapsed: boolean;
@@ -61,20 +56,9 @@ export const DashboardSidebar: FC<DashboardSidebarProps> = ({
                         </Sidebar.Body>
                         <Sidebar.Footer>
                             {collapsed ?
-                                (
-                                    <Popover>
-                                        <PopoverTrigger asChild>
-                                            <Button size="icon" variant="secondary">
-                                                <HeartHandshake />
-                                            </Button>
-                                        </PopoverTrigger>
-                                        <PopoverContent className="w-80" asChild>
-                                            <SupportUs variant="view" />
-                                        </PopoverContent>
-                                    </Popover>
-                                )
+                                <SupportUs variant="view" structure="popover" />
                                 :
-                                <SupportUs variant="local-storage" />
+                                <SupportUs variant="local-storage" structure="card" />
                             }
                         </Sidebar.Footer>
                     </div>
