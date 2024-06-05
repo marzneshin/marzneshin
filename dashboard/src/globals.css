@@ -88,6 +88,14 @@
     font-family: 'Ubuntu';
   }
 
+  .vstack {
+    @apply flex flex-col;
+  }
+
+  .hstack {
+    @apply flex flex-row;
+  }
+
   * {
     @apply border-border font-body;
   }
