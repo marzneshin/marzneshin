@@ -1,10 +1,10 @@
 import { X, HeartHandshake } from "lucide-react";
 import { Button, Card, CardTitle, CardContent } from "@marzneshin/components";
-import {  type FC, type HTMLAttributes } from "react";
+import { type FC, type HTMLAttributes } from "react";
 import { cn } from "@marzneshin/utils";
 import { useTranslation } from "react-i18next";
 import { SupportUsVariation } from "./types";
-import { useSupportUs} from "./use-support-us";
+import { useSupportUs } from "./use-support-us";
 
 export interface SupportUsProps extends HTMLAttributes<HTMLDivElement> {
     open?: boolean;
@@ -33,7 +33,13 @@ export const SupportUs: FC<SupportUsProps> = ({ open = true, variant = "status",
                 </CardTitle>
                 {t('support-us.desc')}
                 <Button size="sm" variant="secondary" className="w-fit" asChild>
-                    <a href="https://github.com/khodedawsh/marzneshin#donation">{t('support-us.donate')}</a>
+                    <a
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        href="https://github.com/khodedawsh/marzneshin#donation"
+                    >
+                        {t('support-us.donate')}
+                    </a>
                 </Button>
             </CardContent>
         </Card>
