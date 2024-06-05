@@ -1,17 +1,18 @@
 import { X, HeartHandshake } from "lucide-react";
 import { Button, Card, CardTitle, CardContent } from "@marzneshin/components";
-import { useState, type FC, type HTMLAttributes } from "react";
-import { useLocalStorage } from "@uidotdev/usehooks";
+import {  type FC, type HTMLAttributes } from "react";
 import { cn } from "@marzneshin/utils";
 import { useTranslation } from "react-i18next";
+import { SupportUsVariation } from "./types";
+import { useSupportUs} from "./use-support-us";
 
-interface SupportUsProps extends HTMLAttributes<HTMLDivElement> {
+export interface SupportUsProps extends HTMLAttributes<HTMLDivElement> {
     open?: boolean;
-    variant?: "status" | "local-storage" | "view";
+    variant?: SupportUsVariation;
 }
 
 export const SupportUs: FC<SupportUsProps> = ({ open = true, variant = "status", className }) => {
-    const [supportUsOpen, setSupportUsOpen] = variant === "local-storage" ? useLocalStorage("marzneshin-support-us", open) : useState(open);
+    const [supportUsOpen, setSupportUsOpen] = useSupportUs(variant, open);
     const { t } = useTranslation()
     return supportUsOpen && (
         <Card>
