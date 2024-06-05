@@ -13,6 +13,7 @@ concurrency:
 permissions:
   actions: write
   contents: read
+  pull-request: write
 
 jobs:
   changed-files:
