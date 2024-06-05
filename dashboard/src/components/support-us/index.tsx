@@ -1,24 +1,40 @@
-import { HeartHandshake, Github } from 'lucide-react';
-import { Button, Separator } from "@marzneshin/components";
+import { X, HeartHandshake } from "lucide-react";
+import { Button, Card, CardTitle, CardContent } from "@marzneshin/components";
+import { useState, type FC, type HTMLAttributes } from "react";
+import { useLocalStorage } from "@uidotdev/usehooks";
+import { cn } from "@marzneshin/utils";
+import { useTranslation } from "react-i18next";
 
-export const SupportUs = () => {
-    return (
-        <div className="border-2 p-5 rounded-md font-body flex flex-col text-neutral-600 text-sm">
-            <h3 className="flex flex-row gap-2 text-lg items-center font-semibold font-header text-neutral-800">
-                <HeartHandshake /> Support Us
-            </h3>
-            Marzneshin is a free open-source software (FOSS),
-            join us and show your support by donating.
-            <div className="gap-1 flex flex-row items-center  space-x-4 ">
-                <Button variant="link" className="p-0" size="icon" asChild>
-                    <a href="https://github.com/khodedawsh/marzneshin"><Github /></a>
-                </Button>
-                <Separator orientation="vertical" className="bg-black" />
-                <Button variant="link" className="p-0" asChild>
-                    <a href="https://github.com/khodedawsh/marzneshin#donation">Donation</a>
-                </Button>
+interface SupportUsProps extends HTMLAttributes<HTMLDivElement> {
+    open?: boolean;
+    variant?: "status" | "local-storage" | "view";
+}
 
-            </div>
-        </div>
+export const SupportUs: FC<SupportUsProps> = ({ open = true, variant = "status", className }) => {
+    const [supportUsOpen, setSupportUsOpen] = variant === "local-storage" ? useLocalStorage("marzneshin-support-us", open) : useState(open);
+    const { t } = useTranslation()
+    return supportUsOpen && (
+        <Card>
+            <CardContent className={cn("p-4 flex flex-col w-fit gap-2 text-muted-foreground text-sm", className)}>
+                <CardTitle className="flex-row flex items-center justify-between w-full text-primary">
+                    <div className="text-medium flex-row flex gap-1">
+                        <HeartHandshake /> Support Us
+                    </div>
+                    {variant !== "view" &&
+                        <Button
+                            variant="ghost"
+                            className="size-6 p-0 rounded-sm opacity-70 ring-offset-background transition-opacity  hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none text-muted-foreground"
+                            onMouseDown={() => setSupportUsOpen(false)}
+                        >
+                            <X className="size-4" />
+                            <span className="sr-only">Close</span>
+                        </Button>}
+                </CardTitle>
+                {t('support-us.desc')}
+                <Button size="sm" variant="secondary" className="w-fit" asChild>
+                    <a href="https://github.com/khodedawsh/marzneshin#donation">{t('support-us.donate')}</a>
+                </Button>
+            </CardContent>
+        </Card>
     )
 }
