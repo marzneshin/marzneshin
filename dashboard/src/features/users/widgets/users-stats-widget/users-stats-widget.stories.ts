@@ -1,6 +1,5 @@
 import { UsersStatsWidget } from "./index"
 import type { Meta, StoryObj } from "@storybook/react";
-import { UsersStatsLegend } from "./legend"
 
 const meta: Meta<typeof UsersStatsWidget> = {
     title: "Features/Users/Users Stats",
@@ -13,7 +12,8 @@ export default meta;
 type WidgetStory = StoryObj<typeof UsersStatsWidget>;
 
 /**
- * Users chart widget which shows the active, online, expired, on hold, and limited users.
+ * Users chart widget which shows the active,
+ * online, expired, on hold, and limited users.
  * */
 export const UsersChart: WidgetStory = {
     args: {
@@ -24,6 +24,3 @@ export const UsersChart: WidgetStory = {
         limited: 5,
     }
 }
-
-type LegendStory = StoryObj<typeof UsersStatsLegend>;
-export const UsersLegend: LegendStory = {}
