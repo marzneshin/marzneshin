@@ -4,6 +4,7 @@ import random
 import secrets
 from collections import defaultdict
 from datetime import datetime as dt, timedelta
+from importlib import resources
 from typing import TYPE_CHECKING, Literal, Union, List
 from uuid import UUID
 
@@ -18,6 +19,11 @@ from app.models.proxy import (
 from app.models.user import UserStatus
 from app.utils.keygen import gen_uuid, gen_password
 from app.utils.system import get_public_ip, readable_size
+from config import (
+    XRAY_SUBSCRIPTION_TEMPLATE,
+    SINGBOX_SUBSCRIPTION_TEMPLATE,
+    CLASH_SUBSCRIPTION_TEMPLATE,
+)
 
 if TYPE_CHECKING:
     from app.models.user import UserResponse
@@ -40,6 +46,16 @@ subscription_handlers = {
     "sing-box": SingBoxConfig,
 }
 
+handlers_templates = {
+    LinksConfig: None,
+    XrayConfig: XRAY_SUBSCRIPTION_TEMPLATE
+    or resources.files("app.templates") / "xray.json",
+    ClashConfig: CLASH_SUBSCRIPTION_TEMPLATE,
+    ClashMetaConfig: CLASH_SUBSCRIPTION_TEMPLATE,
+    SingBoxConfig: SINGBOX_SUBSCRIPTION_TEMPLATE
+    or resources.files("app.templates") / "sing-box.json",
+}
+
 
 def generate_subscription(
     user: "UserResponse",
@@ -55,8 +71,14 @@ def generate_subscription(
     if config_format not in subscription_handlers.keys():
         raise ValueError(f'Unsupported format "{config_format}"')
 
+    subscription_handler_class = subscription_handlers[config_format]
+    if template_path := handlers_templates[subscription_handler_class]:
+        subscription_handler = subscription_handler_class(template_path=template_path)
+    else:
+        subscription_handler = subscription_handler_class()
+
     config = process_inbounds_and_tags(
-        inbounds, key, format_variables, conf=subscription_handlers[config_format]()
+        inbounds, key, format_variables, conf=subscription_handler
     )
 
     return config if not as_base64 else base64.b64encode(config.encode()).decode()
