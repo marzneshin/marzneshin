@@ -6,17 +6,17 @@ import {
     DropdownMenuItem,
     DropdownMenuPortal,
 } from "@marzneshin/components";
-import { useTheme } from "../theme-provider";
+import { useTheme, Theme } from "../theme-provider";
 import { useTranslation } from "react-i18next";
 import { cn } from "@marzneshin/utils";
 
-const ThemeItem = ({ schema }: { schema: string }) => {
+const ThemeItem = ({ schema }: { schema: Theme }) => {
     const { theme, setTheme } = useTheme();
     const { t } = useTranslation();
     return (
         <DropdownMenuItem
             className={cn({ "bg-primary text-secondary": theme === schema })}
-            onMouseDown={() => setTheme("light")}>
+            onMouseDown={() => setTheme(schema)}>
             {t(schema)}
         </DropdownMenuItem>
     );
