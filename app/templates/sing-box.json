@@ -66,9 +66,8 @@
   "outbounds": [
     {
       "type": "selector",
-      "tag": "Green Zone",
+      "tag": "Connection",
       "interrupt_exist_connections": true,
-      "default": "\ud83c\udde9\ud83c\uddea - CD\u03a0 - MEDI\u039b",
       "outbounds": null
     },
     {
