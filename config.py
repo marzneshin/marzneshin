@@ -1,4 +1,3 @@
-import os
 from decouple import config
 from dotenv import load_dotenv
 
@@ -27,12 +26,7 @@ VITE_BASE_API = (
     else config("VITE_BASE_API", default="/api/")
 )
 
-XRAY_FALLBACKS_INBOUND_TAG = config(
-    "XRAY_FALLBACKS_INBOUND_TAG", cast=str, default=""
-) or config("XRAY_FALLBACK_INBOUND_TAG", cast=str, default="")
-XRAY_SUBSCRIPTION_URL_PREFIX = config("XRAY_SUBSCRIPTION_URL_PREFIX", default="").strip(
-    "/"
-)
+SUBSCRIPTION_URL_PREFIX = config("SUBSCRIPTION_URL_PREFIX", default="").strip("/")
 
 TELEGRAM_API_TOKEN = config("TELEGRAM_API_TOKEN", default="")
 TELEGRAM_ADMIN_ID = config(
@@ -44,33 +38,21 @@ TELEGRAM_ADMIN_ID = config(
 )
 TELEGRAM_PROXY_URL = config("TELEGRAM_PROXY_URL", default="")
 TELEGRAM_LOGGER_CHANNEL_ID = config("TELEGRAM_LOGGER_CHANNEL_ID", cast=int, default=0)
-TELEGRAM_DEFAULT_VLESS_FLOW = config("TELEGRAM_DEFAULT_VLESS_FLOW", default="")
 
 JWT_ACCESS_TOKEN_EXPIRE_MINUTES = config(
     "JWT_ACCESS_TOKEN_EXPIRE_MINUTES", cast=int, default=1440
 )
 
 CUSTOM_TEMPLATES_DIRECTORY = config("CUSTOM_TEMPLATES_DIRECTORY", default=None)
-CLASH_SUBSCRIPTION_TEMPLATE = config(
-    "CLASH_SUBSCRIPTION_TEMPLATE", default="clash/default.yml"
-)
+
 SUBSCRIPTION_PAGE_TEMPLATE = config(
     "SUBSCRIPTION_PAGE_TEMPLATE", default="subscription/index.html"
 )
 HOME_PAGE_TEMPLATE = config("HOME_PAGE_TEMPLATE", default="home/index.html")
 
-SINGBOX_SUBSCRIPTION_TEMPLATE = config(
-    "SINGBOX_SUBSCRIPTION_TEMPLATE", default="singbox/default.json"
-)
-
-
-# USERNAME: PASSWORD
-SUDOERS = (
-    {config("SUDO_USERNAME"): config("SUDO_PASSWORD")}
-    if config("SUDO_USERNAME", default="") and config("SUDO_PASSWORD", default="")
-    else {}
-)
-
+SINGBOX_SUBSCRIPTION_TEMPLATE = config("SINGBOX_SUBSCRIPTION_TEMPLATE", default=None)
+XRAY_SUBSCRIPTION_TEMPLATE = config("XRAY_SUBSCRIPTION_TEMPLATE", default=None)
+CLASH_SUBSCRIPTION_TEMPLATE = config("CLASH_SUBSCRIPTION_TEMPLATE", default=None)
 
 WEBHOOK_ADDRESS = config("WEBHOOK_ADDRESS", default=None)
 WEBHOOK_SECRET = config("WEBHOOK_SECRET", default=None)

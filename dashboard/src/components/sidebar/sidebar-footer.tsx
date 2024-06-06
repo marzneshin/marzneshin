@@ -1,12 +1,12 @@
-import { PropsWithChildren } from "react"
+import type { FC, PropsWithChildren } from "react"
 
 export interface SidebarFooterProps
     extends PropsWithChildren {
 }
 
 
-export const SidebarFooter = () => {
+export const SidebarFooter:FC<SidebarFooterProps> = ({children}) => {
     return (
-        <div>SidebarHeader = </div>
+        <div>{children}</div>
     )
 }

@@ -5,6 +5,7 @@ import { ThemeProvider } from "../src/features/theme-switch";
 import { queryClient } from "../src/utils";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { I18nextProvider } from "react-i18next";
+import { Title, Subtitle, Description, Primary, Controls, Stories } from '@storybook/blocks';
 import i18n from "../src/features/i18n";
 
 import "./../src/globals.css";
@@ -30,7 +31,19 @@ const preview: Preview = {
                 date: /Date$/i,
             },
         },
+        docs: {
+            page: () => (
+                <>
+                    <Title />
+                    <Subtitle />
+                    <Description />
+                    <Primary />
+                    <Controls />
+                    <Stories />
+                </>
+            ),
+        },
     },
-};
+}
 
 export default preview;

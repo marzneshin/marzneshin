@@ -2,7 +2,9 @@ import base64
 import json
 import random
 import secrets
+from collections import defaultdict
 from datetime import datetime as dt, timedelta
+from importlib import resources
 from typing import TYPE_CHECKING, Literal, Union, List
 from uuid import UUID
 
@@ -17,6 +19,11 @@ from app.models.proxy import (
 from app.models.user import UserStatus
 from app.utils.keygen import gen_uuid, gen_password
 from app.utils.system import get_public_ip, readable_size
+from config import (
+    XRAY_SUBSCRIPTION_TEMPLATE,
+    SINGBOX_SUBSCRIPTION_TEMPLATE,
+    CLASH_SUBSCRIPTION_TEMPLATE,
+)
 
 if TYPE_CHECKING:
     from app.models.user import UserResponse
@@ -39,6 +46,16 @@ subscription_handlers = {
     "sing-box": SingBoxConfig,
 }
 
+handlers_templates = {
+    LinksConfig: None,
+    XrayConfig: XRAY_SUBSCRIPTION_TEMPLATE
+    or resources.files("app.templates") / "xray.json",
+    ClashConfig: CLASH_SUBSCRIPTION_TEMPLATE,
+    ClashMetaConfig: CLASH_SUBSCRIPTION_TEMPLATE,
+    SingBoxConfig: SINGBOX_SUBSCRIPTION_TEMPLATE
+    or resources.files("app.templates") / "sing-box.json",
+}
+
 
 def generate_subscription(
     user: "UserResponse",
@@ -54,8 +71,14 @@ def generate_subscription(
     if config_format not in subscription_handlers.keys():
         raise ValueError(f'Unsupported format "{config_format}"')
 
+    subscription_handler_class = subscription_handlers[config_format]
+    if template_path := handlers_templates[subscription_handler_class]:
+        subscription_handler = subscription_handler_class(template_path=template_path)
+    else:
+        subscription_handler = subscription_handler_class()
+
     config = process_inbounds_and_tags(
-        inbounds, key, format_variables, conf=subscription_handlers[config_format]()
+        inbounds, key, format_variables, conf=subscription_handler
     )
 
     return config if not as_base64 else base64.b64encode(config.encode()).decode()
@@ -128,18 +151,21 @@ def setup_format_variables(extra_data: dict) -> dict:
 
     status_emoji = STATUS_EMOJIS.get(extra_data.get("status")) or ""
 
-    format_variables = {
-        "SERVER_IP": SERVER_IP,
-        "USERNAME": extra_data.get("username", "{USERNAME}"),
-        "DATA_USAGE": readable_size(extra_data.get("used_traffic")),
-        "DATA_LIMIT": data_limit,
-        "DATA_LEFT": data_left,
-        "DAYS_LEFT": days_left,
-        "EXPIRE_DATE": expire_date,
-        "JALALI_EXPIRE_DATE": jalali_expire_date,
-        "TIME_LEFT": time_left,
-        "STATUS_EMOJI": status_emoji,
-    }
+    format_variables = defaultdict(
+        lambda: "<missing>",
+        {
+            "SERVER_IP": SERVER_IP,
+            "USERNAME": extra_data.get("username", "{USERNAME}"),
+            "DATA_USAGE": readable_size(extra_data.get("used_traffic")),
+            "DATA_LIMIT": data_limit,
+            "DATA_LEFT": data_left,
+            "DAYS_LEFT": days_left,
+            "EXPIRE_DATE": expire_date,
+            "JALALI_EXPIRE_DATE": jalali_expire_date,
+            "TIME_LEFT": time_left,
+            "STATUS_EMOJI": status_emoji,
+        },
+    )
 
     return format_variables
 
@@ -212,6 +238,9 @@ def process_inbounds_and_tags(
                 uuid=UUID(gen_uuid(key)),
                 password=gen_password(key),
                 enable_mux=host.mux,
+                http_headers={
+                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.3"
+                },
             )
             if host.fragment:
                 data.fragment = True

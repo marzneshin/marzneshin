@@ -1,13 +1,12 @@
 name: Dashboard CI
 
 on:
-
   push:
     branches: [ "master" ]
   pull_request:
 
 jobs:
-  build:
+  lint:
     env: 
       VITE_BASE_API: /api/
     runs-on: ubuntu-latest
@@ -15,37 +14,104 @@ jobs:
       run:
         working-directory: ./dashboard
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - uses: pnpm/action-setup@v3
-      name: Install pnpm
-      with:
-        version: 8
-        run_install: false
-    - name: Get pnpm store directory
-      shell: bash
-      run: |
-        echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+      - uses: pnpm/action-setup@v3
+        name: Install pnpm
+        with:
+          version: 8
+          run_install: false
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
 
-    - uses: actions/cache@v3
-      name: Setup pnpm cache
-      with:
-        path: ${{ env.STORE_PATH }}
-        key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-        restore-keys: |
-          ${{ runner.os }}-pnpm-store-
+      - uses: actions/cache@v3
+        name: Setup pnpm cache
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
 
-    - name: Install dependencies
-      run: pnpm install
+      - name: 📥 Install deps
+        run: pnpm install
 
-    - name: Lint Dashboard
-      run: pnpm lint
+      - name: Lint Dashboard
+        run: pnpm lint
 
-    - name: Build Dashboard
-      run: pnpm build --base '/dashboard/'
+  build:
+    needs: [lint]
+    env: 
+      VITE_BASE_API: /api/
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./dashboard
+    steps:
+      - uses: actions/checkout@v4
 
-    - name: Upload a Build Artifact
-      uses: actions/upload-artifact@v4.2.0
-      with:
-        name: artifact
-        path: dashboard/dist
+      - uses: pnpm/action-setup@v3
+        name: Install pnpm
+        with:
+          version: 8
+          run_install: false
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - uses: actions/cache@v3
+        name: Setup pnpm cache
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: 📥 Install deps
+        run: pnpm install
+
+      - name: Build Dashboard
+        run: pnpm build --base '/dashboard/'
+      
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v4.2.0
+        with:
+          name: artifact
+          path: dashboard/dist
+
+  unit-test:
+    needs: [lint, build]
+    env: 
+      VITE_BASE_API: /api/
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./dashboard
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v3
+        name: Install pnpm
+        with:
+          version: 8
+          run_install: false
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - uses: actions/cache@v3
+        name: Setup pnpm cache
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: 📥 Install deps
+        run: pnpm install
+
+      - name: Build Dashboard
+        run: pnpm test

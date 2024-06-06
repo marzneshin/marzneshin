@@ -13,7 +13,7 @@ from pydantic import (
     model_validator,
 )
 
-from config import XRAY_SUBSCRIPTION_URL_PREFIX
+from config import SUBSCRIPTION_URL_PREFIX
 
 USERNAME_REGEXP = r"^\w{3,32}$"
 
@@ -106,10 +106,10 @@ class UserCreate(User):
                 )
             if self.expire:
                 raise ValueError("User cannot be on hold with specified expire.")
-        elif self.status == UserStatusCreate.active and (self.on_hold_expire_duration or self.on_hold_timeout):
-                raise ValueError(
-                    "on hold parametrs set when user status isn't on_hold."
-                )
+        elif self.status == UserStatusCreate.active and (
+            self.on_hold_expire_duration or self.on_hold_timeout
+        ):
+            raise ValueError("on hold parametrs set when user status isn't on_hold.")
         return self
 
     @field_validator("expire")
@@ -186,7 +186,7 @@ class UserResponse(User):
     @property
     def subscription_url(self) -> str:
         salt = secrets.token_hex(8)
-        url_prefix = XRAY_SUBSCRIPTION_URL_PREFIX.replace("*", salt)
+        url_prefix = SUBSCRIPTION_URL_PREFIX.replace("*", salt)
         return f"{url_prefix}/sub/{self.username}/{self.key}"
 
 

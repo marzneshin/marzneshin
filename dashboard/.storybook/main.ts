@@ -1,3 +1,4 @@
+
 import type { StorybookConfig } from "@storybook/react-vite";
 
 const config: StorybookConfig = {
@@ -8,12 +9,14 @@ const config: StorybookConfig = {
         "@storybook/addon-essentials",
         "@chromatic-com/storybook",
         "@storybook/addon-interactions",
+        "@storybook/addon-a11y",
     ],
-    staticDirs: ["../public", "../src/assets/images"],
+    staticDirs: ["../public", "../src/assets"],
 
     framework: {
         name: "@storybook/react-vite",
         options: {},
     },
 };
+
 export default config;

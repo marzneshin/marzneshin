@@ -30,7 +30,7 @@ export const LogContainer: FC<LogContainerProps> = ({ node }) => {
                     <div className="flex flex-row gap-2 justify-center items-center">
                         <Badge
                             variant={status === "closed" ? "destructive" : "default"}
-                            className={cn("flex justify-center items-center w-full h-6 capitalize hover:text-primary-foreground", { "bg-green-600 text-neutral-100": (status !== "closed") })}
+                            className={cn("flex justify-center items-center w-full h-6 capitalize hover:text-primary-foreground", { "bg-success text-success-foreground": (status !== "closed") })}
                         >
                             {status}
                         </Badge>

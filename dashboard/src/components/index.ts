@@ -10,3 +10,4 @@ export * from "./copy-button";
 export * from "./page";
 export * from "./stacks";
 export * from "./stats-widgets";
+export * from "./support-us";
