@@ -32,7 +32,7 @@
 
 <p align="center">
   <a href="https://github.com/khodedawsh/marzneshin" target="_blank" rel="noopener noreferrer" >
-    <img src="https://github.com/Gozargah/Marzban-docs/raw/master/screenshots/preview.png" alt="screenshots" width="600" height="auto">
+    <img src="https://github.com/khodedawsh/marzneshin/raw/master/docs/assets/Desktop-full.png" alt="screenshots" width="600" height="auto">
   </a>
 </p>
 
