@@ -16,6 +16,8 @@ type Story = StoryObj<typeof Button>;
 
 export const Primary: Story = {
     args: {
+        variant: "default",
+        size: "default",
         onMouseDown: action('clicked'),
         children: 'Primary'
     }

@@ -1,53 +1,52 @@
 import {
-    Button,
-    DropdownMenu,
-    DropdownMenuContent,
+    DropdownMenuSub,
+    DropdownMenuSubContent,
     DropdownMenuItem,
-    DropdownMenuTrigger,
+    DropdownMenuSubTrigger,
+    DropdownMenuPortal
 } from "@marzneshin/components";
 import { Languages } from "lucide-react";
 import { FC } from "react";
 import { useTranslation } from "react-i18next";
+import { cn } from "@marzneshin/utils";
 
-export const LanguageSwitch: FC = () => {
+const LanguageItem = ({ language, title }: { language: string, title: string }) => {
     const { i18n } = useTranslation();
 
     const changeLanguage = (lang: string) => {
         i18n.changeLanguage(lang);
     };
+    return (
+        <DropdownMenuItem
+            className={cn({ "bg-primary text-secondary": i18n.language === language })}
+            onClick={() => changeLanguage(language)}
+        >
+            {title}
+        </DropdownMenuItem>
+    );
+}
+
+export const LanguageSwitchMenu: FC = () => {
+    const { t } = useTranslation();
 
     return (
-        <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-                <Button
-                    variant="outline"
-                    className="bg-gray-800 text-secondary dark:hover:bg-secondary-foreground dark:hover:text-secondary dark:text-secondary-foreground"
-                    size="icon"
-                >
-                    <Languages className="h-[1rem] w-[1rem]" />
-                    <span className="sr-only">Toggle Language</span>
-                </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => changeLanguage("en")}>
-                    English
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => changeLanguage("kmr")}>
-                    Kurdî Kurmancî
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => changeLanguage("kur")}>
-                    Kurdî Soranî
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => changeLanguage("ckb")}>
-                    کوردی سورانی
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => changeLanguage("fa")}>
-                    فارسی
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => changeLanguage("ru")}>
-                    Русский
-                </DropdownMenuItem>
-            </DropdownMenuContent>
-        </DropdownMenu>
+        <DropdownMenuSub>
+            <DropdownMenuSubTrigger arrowDir="left">
+                <div className="hstack items-center justify-end">
+                    <span className="mx-1">{t("language")}</span>
+                    <Languages className="size-[1rem]" />
+                </div>
+            </DropdownMenuSubTrigger>
+            <DropdownMenuPortal>
+                <DropdownMenuSubContent>
+                    <LanguageItem language="en" title="English" />
+                    <LanguageItem language="kmr" title="Kurdî Kurmancî" />
+                    <LanguageItem language="kur" title="Kurdî Soranî" />
+                    <LanguageItem language="ckb" title="کوردی سورانی" />
+                    <LanguageItem language="fa" title="فارسی" />
+                    <LanguageItem language="ru" title="Русский" />
+                </DropdownMenuSubContent>
+            </DropdownMenuPortal>
+        </DropdownMenuSub>
     );
 };
