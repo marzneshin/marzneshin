@@ -6,12 +6,14 @@ import {
     CardTitle,
     Page,
 } from '@marzneshin/components';
-import { UsersStatsWidget } from '@marzneshin/features/users';
+import { UsersStatsWidget, useUsersStatsQuery } from '@marzneshin/features/users';
 import { useTranslation } from 'react-i18next';
 import { FC } from 'react';
 
 export const DashboardPage: FC = () => {
     const { t } = useTranslation();
+    const { data: stats } = useUsersStatsQuery()
+
     return (
         <Page>
             <Card className="border-0 sm:w-screen md:w-full">
@@ -21,7 +23,7 @@ export const DashboardPage: FC = () => {
                     </CardTitle>
                 </CardHeader>
                 <CardContent className="md:flex">
-                    <UsersStatsWidget />
+                    <UsersStatsWidget {...stats} />
                 </CardContent>
             </Card>
         </Page>
