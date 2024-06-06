@@ -9,5 +9,6 @@ export * from "./entity-table";
 export * from "./copy-button";
 export * from "./page";
 export * from "./stacks";
-export * from "./stats-widgets";
+export * from "./widgets";
+export * from "./charts";
 export * from "./support-us";
