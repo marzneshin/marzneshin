@@ -22,7 +22,7 @@ export const MiniWidget: FC<MiniWidgetProps> = ({ footer, content, children, tit
                 </CardTitle>
             </CardHeader>
             <CardContent className="p-4">
-                {content ? content : children}
+                {content || children}
             </CardContent>
             {footer && <CardFooter> {footer} </CardFooter>}
         </Card>
