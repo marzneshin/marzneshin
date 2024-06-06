@@ -1,6 +1,5 @@
 import { GithubRepo } from './index'
 import type { Meta, StoryObj } from "@storybook/react";
-import { within, userEvent, expect } from '@storybook/test';
 
 const meta: Meta<typeof GithubRepo> = {
     title: "Features/Github Repo Stats",
