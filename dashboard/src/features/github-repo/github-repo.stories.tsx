@@ -20,3 +20,12 @@ export const GithubRepoStats: Story = {
 }
 
 
+/**
+ * Mini variant of Github repo present repo only the github logo and stars.
+ * */
+export const GithubRepoStatsMini: Story = {
+    args: {
+        variant: "mini"
+    }
+}
+
