@@ -92,7 +92,7 @@ class Inbound(BaseModel):
     id: int
     tag: str
     protocol: ProxyTypes
-    config: dict
+    config: str
     node_id: int
     service_ids: list[int]
     model_config = ConfigDict(from_attributes=True)
