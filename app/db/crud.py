@@ -309,7 +309,7 @@ def create_user(db: Session, user: UserCreate, admin: Admin = None):
         # proxies=proxies,
         key=user.key,
         services=db.query(Service)
-        .filter(Service.id.in_(user.services))
+        .filter(Service.id.in_(user.service_ids))
         .all(),  # user.services,
         status=user.status,
         data_limit=(user.data_limit or None),
