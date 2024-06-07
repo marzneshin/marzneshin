@@ -8,7 +8,7 @@ from app.db.models import InboundHost as DBInboundHost, Inbound as DBInbound
 from app.dependencies import DBDep, sudo_admin
 from app.models.proxy import Inbound, InboundHost, InboundHostResponse
 
-HOST_NOT_FOUND_ERROR_MSG="Host not found"
+HOST_NOT_FOUND_ERROR_MSG = "Host not found"
 
 router = APIRouter(
     prefix="/inbounds", dependencies=[Depends(sudo_admin)], tags=["Inbounds"]
@@ -35,7 +35,7 @@ def get_hosts(db: DBDep):
 @router.get("/hosts/{id}", response_model=InboundHostResponse)
 def get_host(id: int, db: DBDep):
     """
-    Get a specific inbound
+    Get a host
     """
     host = crud.get_host(db, id)
     if not host:
