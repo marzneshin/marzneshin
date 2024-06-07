@@ -4,10 +4,11 @@ import {
     CardHeader,
     CardTitle,
     Page,
+    Loading,
 } from "@marzneshin/components";
 import { ServicesTable } from "@marzneshin/features/services";
 import { createFileRoute, Outlet } from "@tanstack/react-router";
-import type { FC } from "react";
+import { type FC, Suspense } from "react";
 import { useTranslation } from "react-i18next";
 
 export const ServicesPage: FC = () => {
@@ -20,7 +21,9 @@ export const ServicesPage: FC = () => {
                 </CardHeader>
                 <CardContent>
                     <ServicesTable />
-                    <Outlet />
+                    <Suspense fallback={<Loading />}>
+                        <Outlet />
+                    </Suspense>
                 </CardContent>
             </Card>
         </Page>

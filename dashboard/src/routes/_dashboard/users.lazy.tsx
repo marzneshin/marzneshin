@@ -8,12 +8,13 @@ import {
     CardHeader,
     CardTitle,
     Page,
+    Loading,
 } from '@marzneshin/components';
 import { useServicesQuery } from '@marzneshin/features/services';
 import { UsersTable } from '@marzneshin/features/users';
 import { ExclamationTriangleIcon } from '@radix-ui/react-icons';
 import { Link, createFileRoute, Outlet } from '@tanstack/react-router'
-import type { FC } from 'react';
+import { type FC, Suspense } from 'react';
 import { useTranslation } from 'react-i18next';
 
 export const UsersPage: FC = () => {
@@ -29,7 +30,9 @@ export const UsersPage: FC = () => {
                 </CardHeader>
                 <CardContent>
                     <UsersTable />
-                    <Outlet />
+                    <Suspense fallback={<Loading />}>
+                        <Outlet />
+                    </Suspense>
                 </CardContent>
                 <CardFooter>
                     {(data && data.pageCount === 0) && (
@@ -50,5 +53,5 @@ export const UsersPage: FC = () => {
 
 
 export const Route = createFileRoute('/_dashboard/users')({
-    component: () => <UsersPage />
+    component: () => <UsersPage />,
 })

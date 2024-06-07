@@ -27,7 +27,9 @@ export const NodesPage: FC = () => {
                 </CardHeader>
                 <CardContent>
                     <NodesTable />
-                    <Outlet />
+                    <Suspense fallback={<Loading />}>
+                        <Outlet />
+                    </Suspense>
                 </CardContent>
                 <CardFooter>
                     <Alert>
