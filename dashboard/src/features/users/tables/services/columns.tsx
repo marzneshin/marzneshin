@@ -35,12 +35,12 @@ export const columns: ColumnDef<ServiceType>[] = [
     },
     {
         accessorKey: 'users',
-        header: ({ column }) => <DataTableColumnHeader title={i18n.t('Users')} column={column} />,
-        cell: ({ row }) => row.original.users.length
+        header: ({ column }) => <DataTableColumnHeader title={i18n.t('users')} column={column} />,
+        cell: ({ row }) => row.original.user_ids.length
     },
     {
         accessorKey: 'inbounds',
         header: ({ column }) => <DataTableColumnHeader title={i18n.t('inbounds')} column={column} />,
-        cell: ({ row }) => row.original.inbounds.length
+        cell: ({ row }) => row.original.inbound_ids.length
     }
 ];

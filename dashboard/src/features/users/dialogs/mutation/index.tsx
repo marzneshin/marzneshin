@@ -37,7 +37,7 @@ export const UsersMutationDialog: FC<UsersMutationDialogProps> = ({
     const { t } = useTranslation();
     const getDefaultValues = useCallback(
         (): UserMutationType => ({
-            services: [],
+            service_ids: [],
             data_limit: undefined,
             expire: null,
             username: "",

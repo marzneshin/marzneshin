@@ -23,7 +23,7 @@ import { useTranslation } from "react-i18next";
 
 interface ServiceCheckboxCardProps {
     service: ServiceType;
-    field: ControllerRenderProps<FieldValues, "services">;
+    field: ControllerRenderProps<FieldValues, "service_ids">;
 }
 
 const ServiceCheckboxCard: FC<ServiceCheckboxCardProps> = ({
@@ -62,7 +62,7 @@ export const ServicesField: FC = () => {
     return (
         <FormField
             control={form.control}
-            name="services"
+            name="service_ids"
             render={() => (
                 <FormItem>
                     <FormLabel>{t("services")}</FormLabel>
@@ -71,7 +71,7 @@ export const ServicesField: FC = () => {
                             <FormField
                                 key={service.id}
                                 control={form.control}
-                                name="services"
+                                name="service_ids"
                                 render={({ field }) => (
                                     <FormItem key={service.id}>
                                         <FormControl>
