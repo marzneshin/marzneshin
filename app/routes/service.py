@@ -70,7 +70,7 @@ def get_service_users(id: int, db: DBDep):
 
 
 @router.get("/{id}/inbounds", response_model=Page[Inbound])
-def get_service_users(id: int, db: DBDep):
+def get_service_inbounds(id: int, db: DBDep):
     """
     Get service inbounds
     """
