@@ -547,8 +547,8 @@ def get_admins(
 def create_service(db: Session, service: ServiceCreate) -> Service:
     dbservice = Service(
         name=service.name,
-        inbounds=db.query(Inbound).filter(Inbound.id.in_(service.inbounds)).all(),
-        users=db.query(User).filter(User.id.in_(service.users)).all(),
+        inbounds=db.query(Inbound).filter(Inbound.id.in_(service.inbound_ids)).all(),
+        users=[],
     )
     db.add(dbservice)
     db.commit()
