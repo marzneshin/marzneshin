@@ -12,3 +12,4 @@ export * from "./stacks";
 export * from "./widgets";
 export * from "./charts";
 export * from "./support-us";
+export * from "./entity-field-card";
