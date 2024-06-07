@@ -6,9 +6,10 @@ from fastapi_pagination.links import Page
 
 from app import marznode
 from app.db import crud
-from app.db.models import Service
+from app.db.models import Service, User
 from app.dependencies import DBDep, sudo_admin
 from app.models.service import ServiceCreate, ServiceModify, ServiceResponse
+from app.models.user import UserResponse
 
 router = APIRouter(
     prefix="/services", dependencies=[Depends(sudo_admin)], tags=["Service"]
@@ -50,6 +51,21 @@ def get_service(id: int, db: DBDep):
         raise HTTPException(status_code=404, detail="Service not found")
 
     return dbservice
+
+
+@router.get("/{id}/users", response_model=Page[UserResponse])
+def get_service_users(id: int, db: DBDep):
+    """
+    Get service users
+    """
+    service = crud.get_service(db, id)
+
+    if not service:
+        raise HTTPException(status_code=404, detail="Service not found")
+
+    query = db.query(User).join(User.services).where(Service.id == service.id)
+
+    return paginate(query)
 
 
 @router.put("/{id}", response_model=ServiceResponse)

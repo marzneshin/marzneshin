@@ -11,6 +11,7 @@ from fastapi_pagination.links import Page
 
 from app import marznode
 from app.db import crud, User
+from app.db.models import Service
 from app.dependencies import (
     DBDep,
     AdminDep,
@@ -19,6 +20,7 @@ from app.dependencies import (
     StartDateDep,
     EndDateDep,
 )
+from app.models.service import ServiceResponse
 from app.models.user import (
     UserCreate,
     UserModify,
@@ -89,7 +91,6 @@ async def add_user(new_user: UserCreate, db: DBDep, admin: AdminDep):
     - **data_limit** must be in Bytes, e.g. 1073741824B = 1GB
     - **services** list of service ids
     """
-    # TODO expire should be datetime instead of timestamp
 
     try:
         db_user = crud.create_user(
@@ -223,6 +224,21 @@ async def remove_user(db_user: UserDep, db: DBDep, admin: AdminDep):
     asyncio.create_task(report.user_deleted(username=db_user.username, by=admin))
     logger.info("User %s deleted", db_user.username)
     return {}
+
+
+@router.get("/{username}/services", response_model=Page[ServiceResponse])
+def get_user_services(username: str, db: DBDep):
+    """
+    Get user services
+    """
+    user = crud.get_user(db, username)
+
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    query = db.query(Service).join(Service.users).where(User.username == username)
+
+    return paginate(query)
 
 
 @router.post("/{username}/reset", response_model=UserResponse)
