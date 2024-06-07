@@ -8,6 +8,7 @@ from app import marznode
 from app.db import crud
 from app.db.models import Service, User
 from app.dependencies import DBDep, sudo_admin
+from app.models.proxy import Inbound
 from app.models.service import ServiceCreate, ServiceModify, ServiceResponse
 from app.models.user import UserResponse
 
@@ -64,6 +65,21 @@ def get_service_users(id: int, db: DBDep):
         raise HTTPException(status_code=404, detail="Service not found")
 
     query = db.query(User).join(User.services).where(Service.id == service.id)
+
+    return paginate(query)
+
+
+@router.get("/{id}/inbounds", response_model=Page[Inbound])
+def get_service_users(id: int, db: DBDep):
+    """
+    Get service inbounds
+    """
+    service = crud.get_service(db, id)
+
+    if not service:
+        raise HTTPException(status_code=404, detail="Service not found")
+
+    query = db.query(Inbound).join(Inbound.services).where(Service.id == service.id)
 
     return paginate(query)
 
