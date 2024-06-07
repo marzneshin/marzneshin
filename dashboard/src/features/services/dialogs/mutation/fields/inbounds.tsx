@@ -5,7 +5,7 @@ import {
     FormLabel,
     FormField,
     Checkbox,
-    Badge,
+    EntityFieldCard,
 } from "@marzneshin/components";
 import {
     useInboundsQuery,
@@ -25,7 +25,7 @@ export const InboundCard = ({
     field,
 }: {
     inbound: InboundType;
-    field: ControllerRenderProps<FieldValues, "inbounds">;
+    field: ControllerRenderProps<FieldValues, "inbound_ids">;
 }) => {
     return (
         <div
@@ -47,17 +47,13 @@ export const InboundCard = ({
                 }}
             />
             <FormLabel className="flex flex-row justify-between items-center w-full">
-                {inbound.tag}
-                <div className="flex gap-2">
-                    <Badge className="py-1 px-2">
-                        {" "}
-                        <GlobeLock className="mr-1 w-4" /> {inbound.protocol}{" "}
-                    </Badge>
-                    <Badge className="py-1 px-2">
-                        {" "}
-                        <Box className="mr-1 w-4" /> {inbound.node.name}{" "}
-                    </Badge>
-                </div>
+                <EntityFieldCard
+                    FirstIcon={GlobeLock}
+                    SecondIcon={Box}
+                    firstAmount={inbound.protocol}
+                    secondAmount={inbound.node.name}
+                    name={inbound.tag}
+                />
             </FormLabel>
         </div>
     );
@@ -71,7 +67,7 @@ export const InboundsField = () => {
     return (
         <FormField
             control={form.control}
-            name="inbounds"
+            name="inbound_ids"
             render={() => (
                 <FormItem>
                     <FormLabel>{t("inbounds")}</FormLabel>
@@ -79,7 +75,7 @@ export const InboundsField = () => {
                         <FormField
                             key={inbound.id}
                             control={form.control}
-                            name="inbounds"
+                            name="inbound_ids"
                             render={({ field }) => (
                                 <FormItem key={inbound.id}>
                                     <FormControl>

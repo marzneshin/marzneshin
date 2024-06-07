@@ -19,6 +19,6 @@ export const UserSchema = z.object({
     status: z.string(),
     on_hold_expire_duration: z.number().nullable().optional(),
     on_hold_timeout: z.string().nullable().optional(),
-    services: z.array(z.number().or(z.string())).nonempty({ message: 'At least one service is required' })
+    service_ids: z.array(z.number().or(z.string())).nonempty({ message: 'At least one service is required' })
         .transform((v) => v.map(Number)),
 });

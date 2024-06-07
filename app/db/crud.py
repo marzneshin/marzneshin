@@ -309,7 +309,7 @@ def create_user(db: Session, user: UserCreate, admin: Admin = None):
         # proxies=proxies,
         key=user.key,
         services=db.query(Service)
-        .filter(Service.id.in_(user.services))
+        .filter(Service.id.in_(user.service_ids))
         .all(),  # user.services,
         status=user.status,
         data_limit=(user.data_limit or None),
@@ -383,9 +383,9 @@ def update_user(db: Session, dbuser: User, modify: UserModify):
     if modify.on_hold_expire_duration is not None:
         dbuser.on_hold_expire_duration = modify.on_hold_expire_duration
 
-    if modify.services is not None:
+    if modify.service_ids is not None:
         dbuser.services = (
-            db.query(Service).filter(Service.id.in_(modify.services)).all()
+            db.query(Service).filter(Service.id.in_(modify.service_ids)).all()
         )
     dbuser.edit_at = datetime.utcnow()
 
@@ -547,8 +547,8 @@ def get_admins(
 def create_service(db: Session, service: ServiceCreate) -> Service:
     dbservice = Service(
         name=service.name,
-        inbounds=db.query(Inbound).filter(Inbound.id.in_(service.inbounds)).all(),
-        users=db.query(User).filter(User.id.in_(service.users)).all(),
+        inbounds=db.query(Inbound).filter(Inbound.id.in_(service.inbound_ids)).all(),
+        users=[],
     )
     db.add(dbservice)
     db.commit()
@@ -568,9 +568,9 @@ def update_service(db: Session, db_service: Service, modification: ServiceModify
     if modification.name is not None:
         db_service.name = modification.name
 
-    if modification.inbounds is not None:
+    if modification.inbound_ids is not None:
         db_service.inbounds = (
-            db.query(Inbound).filter(Inbound.id.in_(modification.inbounds)).all()
+            db.query(Inbound).filter(Inbound.id.in_(modification.inbound_ids)).all()
         )
 
     db.commit()

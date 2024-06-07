@@ -2,6 +2,6 @@
 export interface ServiceType {
     id: number;
     name: string;
-    users: number[];
-    inbounds: number[];
+    user_ids: number[];
+    inbound_ids: number[];
 }
