@@ -2,6 +2,8 @@ from enum import Enum
 
 from pydantic import ConfigDict, BaseModel, Field, field_validator
 
+from app.models.node import Node
+
 
 class ProxyTypes(str, Enum):
     # proxy_type = protocol
@@ -93,6 +95,6 @@ class Inbound(BaseModel):
     tag: str
     protocol: ProxyTypes
     config: str
-    node_id: int
+    node: Node
     service_ids: list[int]
     model_config = ConfigDict(from_attributes=True)
