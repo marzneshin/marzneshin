@@ -1,7 +1,7 @@
 import secrets
 from datetime import datetime
 from enum import Enum
-from typing import List, Optional, Union, Annotated, Literal
+from typing import List, Union, Annotated, Literal
 
 from pydantic import (
     field_validator,
@@ -48,39 +48,31 @@ class UserDataLimitResetStrategy(str, Enum):
     year = "year"
 
 
-class UserBase(BaseModel):
-    id: Optional[int] = None
+class User(BaseModel):
+    id: int | None = None
     username: Annotated[str, StringConstraints(to_lower=True, pattern=USERNAME_REGEXP)]
     expire: Union[datetime, None, Literal[0]] = Field(None)
     key: str = Field(default_factory=lambda: secrets.token_hex(16))
-    data_limit: Optional[int] = Field(
+    data_limit: int | None = Field(
         ge=0, default=None, description="data_limit can be 0 or greater"
     )
     enabled: bool = Field(default=True)
     data_limit_reset_strategy: UserDataLimitResetStrategy = (
         UserDataLimitResetStrategy.no_reset
     )
-    note: Optional[Annotated[str, Field(max_length=500)]] = None
-    sub_updated_at: Optional[datetime] = Field(None)
-    sub_last_user_agent: Optional[str] = Field(None)
-    online_at: Optional[datetime] = Field(None)
-    on_hold_expire_duration: Optional[int] = Field(None)
-    on_hold_timeout: Optional[datetime] = Field(None)
+    note: Annotated[str, Field(max_length=500)] | None = None
+    sub_updated_at: datetime | None = Field(None)
+    sub_last_user_agent: str | None = Field(None)
+    online_at: datetime | None = Field(None)
+    on_hold_expire_duration: int | None = Field(None)
+    on_hold_timeout: datetime | None = Field(None)
 
     model_config = ConfigDict(from_attributes=True)
 
 
-from app.models.service import ServiceBase
-from app.models.proxy import InboundBase
-
-
-class User(UserBase):
-    pass
-
-
 class UserCreate(User):
     status: UserStatusCreate = Field(UserStatusCreate.active)
-    services: List[int] = Field([])
+    service_ids: list[int] = Field([])
     model_config = ConfigDict(
         json_schema_extra={
             "example": {
@@ -125,9 +117,9 @@ class UserCreate(User):
 
 
 class UserModify(User):
-    status: Optional[UserStatusModify] = Field(None)
-    services: List[int] = Field([])
-    data_limit_reset_strategy: Optional[UserDataLimitResetStrategy] = Field(None)
+    status: UserStatusModify | None = Field(None)
+    service_ids: list[int] | None = Field(None)
+    data_limit_reset_strategy: UserDataLimitResetStrategy | None = Field(None)
     model_config = ConfigDict(
         json_schema_extra={
             "example": {
@@ -170,17 +162,9 @@ class UserResponse(User):
     used_traffic: int
     lifetime_used_traffic: int = 0
     created_at: datetime
-    inbounds: List[InboundBase] = Field([])
-    services: List[ServiceBase] = Field([])
-    links: List[str] | None = []  # Field(None)
+    service_ids: list[int]
 
-    # subscription_url: str = ""
     model_config = ConfigDict(from_attributes=True)
-
-    @computed_field
-    @property
-    def service_ids(self) -> List[int]:
-        return [s.id for s in self.services]
 
     @computed_field
     @property
