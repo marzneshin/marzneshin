@@ -10,7 +10,7 @@ interface ServicesUsersTableProps {
 }
 
 export const ServicesUsersTable: FC<ServicesUsersTableProps> = ({ service }) => {
-    const { data } = useUsersServiceQuery(service);
+    const { data } = useUsersServiceQuery({ serviceId: service.id });
 
     return (
         <div>

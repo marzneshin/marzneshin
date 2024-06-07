@@ -1,19 +1,21 @@
 import { useQuery } from "@tanstack/react-query";
 import { fetch } from "@marzneshin/utils";
-import { UserType } from "@marzneshin/features/users";
+import { InboundType } from "@marzneshin/features/inbounds";
 
-interface FetchServiceUsersType {
+interface FetchServiceInboundsType {
     queryKey: [string, number, number, number]
 }
 
-interface UseServiceUsersQueryProps {
+interface UseServiceInboundsQueryProps {
     serviceId: number;
     page?: number;
     size?: number;
 }
 
-export async function fetchServiceUsers({ queryKey }: FetchServiceUsersType): Promise<UserType[]> {
-    return fetch(`/services/${queryKey[1]}/users`, {
+export async function fetchServiceInbounds({
+    queryKey
+}: FetchServiceInboundsType): Promise<InboundType[]> {
+    return fetch(`/services/${queryKey[1]}/inbounds`, {
         query: {
             page: queryKey[2],
             size: queryKey[3]
@@ -25,12 +27,12 @@ export async function fetchServiceUsers({ queryKey }: FetchServiceUsersType): Pr
 
 export const ServicesQueryFetchKey = "services";
 
-export const useUsersServiceQuery = ({
+export const useInboundsServiceQuery = ({
     serviceId, page = 1, size = 50
-}: UseServiceUsersQueryProps) => {
+}: UseServiceInboundsQueryProps) => {
     return useQuery({
         queryKey: [ServicesQueryFetchKey, serviceId, page, size],
-        queryFn: fetchServiceUsers,
+        queryFn: fetchServiceInbounds,
         initialData: []
     })
 }

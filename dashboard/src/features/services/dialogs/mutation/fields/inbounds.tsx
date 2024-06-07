@@ -5,7 +5,7 @@ import {
     FormLabel,
     FormField,
     Checkbox,
-    Badge,
+    EntityFieldCard,
 } from "@marzneshin/components";
 import {
     useInboundsQuery,
@@ -25,7 +25,7 @@ export const InboundCard = ({
     field,
 }: {
     inbound: InboundType;
-    field: ControllerRenderProps<FieldValues, "inbounds">;
+    field: ControllerRenderProps<FieldValues, "inbound_ids">;
 }) => {
     return (
         <div
@@ -67,7 +67,7 @@ export const InboundsField = () => {
     return (
         <FormField
             control={form.control}
-            name="inbounds"
+            name="inbound_ids"
             render={() => (
                 <FormItem>
                     <FormLabel>{t("inbounds")}</FormLabel>
@@ -75,7 +75,7 @@ export const InboundsField = () => {
                         <FormField
                             key={inbound.id}
                             control={form.control}
-                            name="inbounds"
+                            name="inbound_ids"
                             render={({ field }) => (
                                 <FormItem key={inbound.id}>
                                     <FormControl>

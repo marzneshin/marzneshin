@@ -19,11 +19,12 @@ import { NameField, InboundsField } from "./fields";
 
 export const ServiceSchema = z.object({
     id: z.number().optional(),
-    inbounds: z.array(z.number()).refine((value) => value.some((item) => item), {
+    inbound_ids: z.array(z.number()).refine((value) => value.some((item) => item), {
         message: "You have to select at least one inbound.",
     }),
     name: z.string().trim().min(1),
 });
+
 type ServiceCreateType = z.infer<typeof ServiceSchema>;
 
 interface MutationDialogProps {
@@ -34,7 +35,7 @@ interface MutationDialogProps {
 
 const getDefaultValues = (): ServiceCreateType => ({
     name: "",
-    inbounds: [],
+    inbound_ids: [],
 });
 
 export const MutationDialog: FC<MutationDialogProps> = ({

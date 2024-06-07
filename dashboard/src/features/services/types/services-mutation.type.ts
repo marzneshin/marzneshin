@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const ServiceCreateSchema = z.object({
-    inbounds: z.array(z.number()),
+    inbound_ids: z.array(z.number()),
     name: z.string().trim().min(1),
     id: z.number().optional()
 })
