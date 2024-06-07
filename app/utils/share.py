@@ -5,7 +5,7 @@ import secrets
 from collections import defaultdict
 from datetime import datetime as dt, timedelta
 from importlib import resources
-from typing import TYPE_CHECKING, Literal, Union, List
+from typing import Literal, Union, List
 from uuid import UUID
 
 from jdatetime import date as jd
@@ -16,6 +16,7 @@ from app.db import GetDB, crud
 from app.models.proxy import (
     InboundHostSecurity,
 )
+from app.models.user import UserResponse
 from app.models.user import UserStatus
 from app.utils.keygen import gen_uuid, gen_password
 from app.utils.system import get_public_ip, readable_size
@@ -24,9 +25,6 @@ from config import (
     SINGBOX_SUBSCRIPTION_TEMPLATE,
     CLASH_SUBSCRIPTION_TEMPLATE,
 )
-
-if TYPE_CHECKING:
-    from app.models.user import UserResponse
 
 SERVER_IP = get_public_ip()
 
@@ -65,7 +63,9 @@ def generate_subscription(
 
     inbounds = user.inbounds
     key = user.key
-    extra_data = user.model_dump(exclude={"subscription_url", "services", "inbounds"})
+    extra_data = UserResponse.model_validate(user).model_dump(
+        exclude={"subscription_url", "services", "inbounds"}
+    )
     format_variables = setup_format_variables(extra_data)
 
     if config_format not in subscription_handlers.keys():
