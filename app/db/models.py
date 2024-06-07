@@ -93,7 +93,6 @@ class User(Base):
         ".join(Inbound, Inbound.id == inbounds_services.c.inbound_id)",
         viewonly=True,
         distinct_target_key=True,
-        lazy="joined",
     )
     # proxies = relationship("Proxy", back_populates="user", cascade="all, delete-orphan")
     status = Column(Enum(UserStatus), nullable=False, default=UserStatus.active)
@@ -106,7 +105,6 @@ class User(Base):
         "NodeUserUsage",
         back_populates="user",
         cascade="all,delete,delete-orphan",
-        lazy="joined",
     )
     notification_reminders = relationship(
         "NotificationReminder",
