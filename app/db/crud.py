@@ -383,9 +383,9 @@ def update_user(db: Session, dbuser: User, modify: UserModify):
     if modify.on_hold_expire_duration is not None:
         dbuser.on_hold_expire_duration = modify.on_hold_expire_duration
 
-    if modify.services is not None:
+    if modify.service_ids is not None:
         dbuser.services = (
-            db.query(Service).filter(Service.id.in_(modify.services)).all()
+            db.query(Service).filter(Service.id.in_(modify.service_ids)).all()
         )
     dbuser.edit_at = datetime.utcnow()
 
@@ -568,9 +568,9 @@ def update_service(db: Session, db_service: Service, modification: ServiceModify
     if modification.name is not None:
         db_service.name = modification.name
 
-    if modification.inbounds is not None:
+    if modification.inbound_ids is not None:
         db_service.inbounds = (
-            db.query(Inbound).filter(Inbound.id.in_(modification.inbounds)).all()
+            db.query(Inbound).filter(Inbound.id.in_(modification.inbound_ids)).all()
         )
 
     db.commit()
