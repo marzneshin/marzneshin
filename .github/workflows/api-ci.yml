@@ -1,6 +1,13 @@
 name: Lint
-
-on: [ push, pull_request ]
+on:
+  push:
+    branches: [ "master" ]
+    paths:
+      - 'app/**'
+  pull_request:
+    branches: [ "master" ]
+    paths:
+      - 'app/**'
 
 jobs:
   lint:
@@ -27,4 +34,3 @@ jobs:
         with:
           options: "--check --verbose"
           src: "./app"
-          use_pyproject: true
