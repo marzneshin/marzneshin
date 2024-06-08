@@ -8,7 +8,7 @@ import {
     RouterServiceContext,
     fetchService,
 } from "@marzneshin/features/services";
-import { Suspense, useMemo } from "react";
+import { Suspense } from "react";
 import {
     AlertDialog,
     AlertDialogContent,
@@ -20,16 +20,13 @@ const ServiceProvider = () => {
     return (
         <Suspense fallback={<Loading />}>
             <Await promise={service}>
-                {(service) => {
-                    const value = useMemo(() => ({ service }), [service])
-                    return (
-                    <RouterServiceContext.Provider value={value}>
+                {(service) => (
+                    <RouterServiceContext.Provider value={{ service }}>
                         <Suspense>
                             <Outlet />
                         </Suspense>
                     </RouterServiceContext.Provider>
-                    )
-                }}
+                )}
             </Await>
         </Suspense>
     )

@@ -8,7 +8,7 @@ import {
     RouterHostContext,
     fetchHost,
 } from "@marzneshin/features/hosts";
-import { Suspense, useMemo } from "react";
+import { Suspense } from "react";
 import {
     AlertDialog,
     AlertDialogContent,
@@ -20,15 +20,13 @@ const HostProvider = () => {
     return (
         <Suspense fallback={<Loading />}>
             <Await promise={host}>
-                {(host) => {
-                    const value = useMemo(() => ({host}), [host])
-                    return (
-                        <RouterHostContext.Provider value={value}>
-                            <Suspense>
-                                <Outlet />
-                            </Suspense>
-                        </RouterHostContext.Provider>
-                    )}}
+                {(host) => (
+                    <RouterHostContext.Provider value={{ host }}>
+                        <Suspense>
+                            <Outlet />
+                        </Suspense>
+                    </RouterHostContext.Provider>
+                )}
             </Await>
         </Suspense>
     )
