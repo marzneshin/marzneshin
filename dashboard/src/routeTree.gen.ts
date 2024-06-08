@@ -17,6 +17,7 @@ import { Route as DashboardImport } from './routes/_dashboard'
 import { Route as AuthImport } from './routes/_auth'
 import { Route as AuthLoginImport } from './routes/_auth/login'
 import { Route as DashboardUsersCreateImport } from './routes/_dashboard/users/create'
+import { Route as DashboardUsersUserIdImport } from './routes/_dashboard/users/$userId'
 import { Route as DashboardServicesCreateImport } from './routes/_dashboard/services/create'
 import { Route as DashboardServicesServiceIdImport } from './routes/_dashboard/services/$serviceId'
 import { Route as DashboardNodesCreateImport } from './routes/_dashboard/nodes/create'
@@ -109,6 +110,11 @@ const DashboardUsersCreateRoute = DashboardUsersCreateImport.update({
   getParentRoute: () => DashboardUsersLazyRoute,
 } as any)
 
+const DashboardUsersUserIdRoute = DashboardUsersUserIdImport.update({
+  path: '/$userId',
+  getParentRoute: () => DashboardUsersLazyRoute,
+} as any)
+
 const DashboardServicesCreateRoute = DashboardServicesCreateImport.update({
   path: '/create',
   getParentRoute: () => DashboardServicesLazyRoute,
@@ -137,8 +143,8 @@ const DashboardHostsHostIdRoute = DashboardHostsHostIdImport.update({
 } as any)
 
 const DashboardUsersUserIdIndexRoute = DashboardUsersUserIdIndexImport.update({
-  path: '/$userId/',
-  getParentRoute: () => DashboardUsersLazyRoute,
+  path: '/',
+  getParentRoute: () => DashboardUsersUserIdRoute,
 } as any)
 
 const DashboardServicesServiceIdIndexRoute =
@@ -158,14 +164,14 @@ const DashboardHostsHostIdIndexRoute = DashboardHostsHostIdIndexImport.update({
 } as any)
 
 const DashboardUsersUserIdEditRoute = DashboardUsersUserIdEditImport.update({
-  path: '/$userId/edit',
-  getParentRoute: () => DashboardUsersLazyRoute,
+  path: '/edit',
+  getParentRoute: () => DashboardUsersUserIdRoute,
 } as any)
 
 const DashboardUsersUserIdDeleteRoute = DashboardUsersUserIdDeleteImport.update(
   {
-    path: '/$userId/delete',
-    getParentRoute: () => DashboardUsersLazyRoute,
+    path: '/delete',
+    getParentRoute: () => DashboardUsersUserIdRoute,
   } as any,
 )
 
@@ -313,6 +319,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardServicesCreateImport
       parentRoute: typeof DashboardServicesLazyImport
     }
+    '/_dashboard/users/$userId': {
+      id: '/_dashboard/users/$userId'
+      path: '/$userId'
+      fullPath: '/users/$userId'
+      preLoaderRoute: typeof DashboardUsersUserIdImport
+      parentRoute: typeof DashboardUsersLazyImport
+    }
     '/_dashboard/users/create': {
       id: '/_dashboard/users/create'
       path: '/create'
@@ -371,17 +384,17 @@ declare module '@tanstack/react-router' {
     }
     '/_dashboard/users/$userId/delete': {
       id: '/_dashboard/users/$userId/delete'
-      path: '/$userId/delete'
+      path: '/delete'
       fullPath: '/users/$userId/delete'
       preLoaderRoute: typeof DashboardUsersUserIdDeleteImport
-      parentRoute: typeof DashboardUsersLazyImport
+      parentRoute: typeof DashboardUsersUserIdImport
     }
     '/_dashboard/users/$userId/edit': {
       id: '/_dashboard/users/$userId/edit'
-      path: '/$userId/edit'
+      path: '/edit'
       fullPath: '/users/$userId/edit'
       preLoaderRoute: typeof DashboardUsersUserIdEditImport
-      parentRoute: typeof DashboardUsersLazyImport
+      parentRoute: typeof DashboardUsersUserIdImport
     }
     '/_dashboard/hosts/$hostId/': {
       id: '/_dashboard/hosts/$hostId/'
@@ -406,10 +419,10 @@ declare module '@tanstack/react-router' {
     }
     '/_dashboard/users/$userId/': {
       id: '/_dashboard/users/$userId/'
-      path: '/$userId'
-      fullPath: '/users/$userId'
+      path: '/'
+      fullPath: '/users/$userId/'
       preLoaderRoute: typeof DashboardUsersUserIdIndexImport
-      parentRoute: typeof DashboardUsersLazyImport
+      parentRoute: typeof DashboardUsersUserIdImport
     }
   }
 }
@@ -446,10 +459,12 @@ export const routeTree = rootRoute.addChildren({
     }),
     DashboardSettingsLazyRoute,
     DashboardUsersLazyRoute: DashboardUsersLazyRoute.addChildren({
+      DashboardUsersUserIdRoute: DashboardUsersUserIdRoute.addChildren({
+        DashboardUsersUserIdDeleteRoute,
+        DashboardUsersUserIdEditRoute,
+        DashboardUsersUserIdIndexRoute,
+      }),
       DashboardUsersCreateRoute,
-      DashboardUsersUserIdDeleteRoute,
-      DashboardUsersUserIdEditRoute,
-      DashboardUsersUserIdIndexRoute,
     }),
     DashboardIndexLazyRoute,
   }),
@@ -520,10 +535,8 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "_dashboard/users.lazy.tsx",
       "parent": "/_dashboard",
       "children": [
-        "/_dashboard/users/create",
-        "/_dashboard/users/$userId/delete",
-        "/_dashboard/users/$userId/edit",
-        "/_dashboard/users/$userId/"
+        "/_dashboard/users/$userId",
+        "/_dashboard/users/create"
       ]
     },
     "/_dashboard/": {
@@ -565,6 +578,15 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "_dashboard/services/create.tsx",
       "parent": "/_dashboard/services"
     },
+    "/_dashboard/users/$userId": {
+      "filePath": "_dashboard/users/$userId.tsx",
+      "parent": "/_dashboard/users",
+      "children": [
+        "/_dashboard/users/$userId/delete",
+        "/_dashboard/users/$userId/edit",
+        "/_dashboard/users/$userId/"
+      ]
+    },
     "/_dashboard/users/create": {
       "filePath": "_dashboard/users/create.tsx",
       "parent": "/_dashboard/users"
@@ -599,11 +621,11 @@ export const routeTree = rootRoute.addChildren({
     },
     "/_dashboard/users/$userId/delete": {
       "filePath": "_dashboard/users/$userId/delete.tsx",
-      "parent": "/_dashboard/users"
+      "parent": "/_dashboard/users/$userId"
     },
     "/_dashboard/users/$userId/edit": {
       "filePath": "_dashboard/users/$userId/edit.tsx",
-      "parent": "/_dashboard/users"
+      "parent": "/_dashboard/users/$userId"
     },
     "/_dashboard/hosts/$hostId/": {
       "filePath": "_dashboard/hosts/$hostId/index.tsx",
@@ -619,7 +641,7 @@ export const routeTree = rootRoute.addChildren({
     },
     "/_dashboard/users/$userId/": {
       "filePath": "_dashboard/users/$userId/index.tsx",
-      "parent": "/_dashboard/users"
+      "parent": "/_dashboard/users/$userId"
     }
   }
 }
