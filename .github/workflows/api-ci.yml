@@ -14,6 +14,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+
+      - name: black
+        uses: psf/black@stable
+        with:
+          options: "--check --verbose"
+          src: "./app"
+
       - name: Set up Python 3.11.2
         uses: actions/setup-python@v3
         with:
@@ -28,9 +35,3 @@ jobs:
       - name: Lint with pylint
         run: |
           pylint --exit-zero "$(git ls-files '*.py')"
-
-      - name: black
-        uses: psf/black@stable
-        with:
-          options: "--check --verbose"
-          src: "./app"
