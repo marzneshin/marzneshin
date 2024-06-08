@@ -1,32 +1,46 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import {
+    createFileRoute,
+    useNavigate,
+    defer,
+    Await
+} from "@tanstack/react-router";
 import {
     ServicesDeleteConfirmationDialog,
-    useServiceQuery,
+    fetchService,
 } from "@marzneshin/features/services";
-import { AlertDialog, AlertDialogContent } from "@marzneshin/components";
+import { Suspense } from "react";
+import { AlertDialog, AlertDialogContent, Loading } from "@marzneshin/components";
 import { useDialog } from "@marzneshin/hooks";
 
 const ServiceDelete = () => {
     const [deleteDialogOpen, setDeleteDialogOpen] = useDialog(true);
-    const { serviceId } = Route.useParams();
-    const { data: service } = useServiceQuery({ serviceId: Number.parseInt(serviceId) });
+    const { service } = Route.useLoaderData()
     const navigate = useNavigate();
 
-    return service ? (
-        <ServicesDeleteConfirmationDialog
-            open={deleteDialogOpen}
-            onOpenChange={setDeleteDialogOpen}
-            entity={service}
-            onClose={() => navigate({ to: "/services" })}
-        />
-    ) : (
-        <AlertDialog open={true}>
-            <AlertDialogContent>Service not found</AlertDialogContent>
-        </AlertDialog>
-    );
+    return (
+        <Suspense fallback={<Loading />}>
+            <Await promise={service}>
+                {(service) => (
+                    <ServicesDeleteConfirmationDialog
+                        open={deleteDialogOpen}
+                        onOpenChange={setDeleteDialogOpen}
+                        entity={service}
+                        onClose={() => navigate({ to: "/services" })}
+                    />
+                )}
+            </Await>
+        </Suspense>
+    )
 };
 
 export const Route = createFileRoute("/_dashboard/services/$serviceId/delete")({
+    loader: async ({ params }) => {
+        const servicePromise = fetchService({ queryKey: ["services", Number.parseInt(params.serviceId)] });
+
+        return {
+            service: defer(servicePromise)
+        }
+    },
     component: ServiceDelete,
     errorComponent: () => (
         <AlertDialog open={true}>
