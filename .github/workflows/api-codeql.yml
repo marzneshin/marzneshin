@@ -3,10 +3,12 @@ name: "API CodeQL"
 on:
   push:
     branches: [ "master" ]
+    paths-ignore:
+      - "dashboard/**"
   pull_request:
     branches: [ "master" ]
     paths-ignore:
-      - 'app/dashboard/**'
+      - 'dashboard/**'
   schedule:
     - cron: '40 13 * * 2'
 
