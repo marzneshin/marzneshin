@@ -13,12 +13,10 @@ export const ServicesUsersTable: FC<ServicesUsersTableProps> = ({ service }) => 
     const { data } = useUsersServiceQuery({ serviceId: service.id });
 
     return (
-        <div>
-            <DataTable
-                columns={columns}
-                data={data}
-                filteredColumn='username'
-            />
-        </div>
+        <DataTable
+            columns={columns}
+            data={data}
+            filteredColumn='username'
+        />
     )
 }
