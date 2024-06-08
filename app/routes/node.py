@@ -12,7 +12,13 @@ from starlette.websockets import WebSocketDisconnect
 from app import marznode
 from app.db import crud, get_tls_certificate
 from app.db.models import Node
-from app.dependencies import DBDep, SudoAdminDep, EndDateDep, StartDateDep, get_admin
+from app.dependencies import (
+    DBDep,
+    SudoAdminDep,
+    EndDateDep,
+    StartDateDep,
+    get_admin,
+)
 from app.models.node import (
     NodeCreate,
     NodeModify,
@@ -70,7 +76,10 @@ def get_node_settings(db: DBDep, admin: SudoAdminDep):
 
 @router.get("/usage", response_model=NodesUsageResponse)
 def get_usage(
-    db: DBDep, admin: SudoAdminDep, start_date: StartDateDep, end_date: EndDateDep
+    db: DBDep,
+    admin: SudoAdminDep,
+    start_date: StartDateDep,
+    end_date: EndDateDep,
 ):
     """
     Get nodes usage

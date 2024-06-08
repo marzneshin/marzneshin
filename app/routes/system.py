@@ -21,17 +21,25 @@ def get_admins_stats(db: DBDep, admin: SudoAdminDep):
 def get_nodes_stats(db: DBDep, admin: SudoAdminDep):
     return NodesStats(
         total=db.query(Node).count(),
-        healthy=db.query(Node).filter(Node.status == NodeStatus.healthy).count(),
-        unhealthy=db.query(Node).filter(Node.status == NodeStatus.unhealthy).count(),
+        healthy=db.query(Node)
+        .filter(Node.status == NodeStatus.healthy)
+        .count(),
+        unhealthy=db.query(Node)
+        .filter(Node.status == NodeStatus.unhealthy)
+        .count(),
     )
 
 
 @router.get("/stats/users", response_model=UsersStats)
 def get_users_stats(db: DBDep, admin: AdminDep):
     return UsersStats(
-        total=crud.get_users_count(db, admin=admin if not admin.is_sudo else None),
+        total=crud.get_users_count(
+            db, admin=admin if not admin.is_sudo else None
+        ),
         active=crud.get_users_count(
-            db, admin=admin if not admin.is_sudo else None, status=UserStatus.active
+            db,
+            admin=admin if not admin.is_sudo else None,
+            status=UserStatus.active,
         ),
         on_hold=crud.get_users_count(
             db,

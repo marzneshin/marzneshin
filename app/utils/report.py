@@ -23,7 +23,10 @@ from app.utils.notification import (
 
 
 async def status_change(
-    username: str, status: UserStatus, user: UserResponse, by: Optional[Admin] = None
+    username: str,
+    status: UserStatus,
+    user: UserResponse,
+    by: Optional[Admin] = None,
 ) -> None:
     try:
         await telegram.report_status_change(username, status)
@@ -32,13 +35,17 @@ async def status_change(
     if status == UserStatus.limited:
         await notify(
             UserLimited(
-                username=username, action=Notification.Type.user_limited, user=user
+                username=username,
+                action=Notification.Type.user_limited,
+                user=user,
             )
         )
     elif status == UserStatus.expired:
         await notify(
             UserExpired(
-                username=username, action=Notification.Type.user_expired, user=user
+                username=username,
+                action=Notification.Type.user_expired,
+                user=user,
             )
         )
     elif status == UserStatus.active:
@@ -100,7 +107,9 @@ async def user_deleted(username: str, by: Admin) -> None:
     except Exception:
         pass
     await notify(
-        UserDeleted(username=username, action=Notification.Type.user_deleted, by=by)
+        UserDeleted(
+            username=username, action=Notification.Type.user_deleted, by=by
+        )
     )
 
 
@@ -148,7 +157,9 @@ async def data_usage_percent_reached(
     expire: Optional[int] = None,
 ) -> None:
     await notify(
-        ReachedUsagePercent(username=user.username, user=user, used_percent=percent)
+        ReachedUsagePercent(
+            username=user.username, user=user, used_percent=percent
+        )
     )
     await create_notification_reminder(
         db,
@@ -161,7 +172,9 @@ async def data_usage_percent_reached(
 async def expire_days_reached(
     db: Session, days: int, user: UserResponse, user_id: int, expire: int
 ) -> None:
-    await notify(ReachedDaysLeft(username=user.username, user=user, days_left=days))
+    await notify(
+        ReachedDaysLeft(username=user.username, user=user, days_left=days)
+    )
     await create_notification_reminder(
         db,
         ReminderType.expiration_date,

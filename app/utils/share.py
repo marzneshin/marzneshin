@@ -9,7 +9,13 @@ from typing import Literal, Union, List
 from uuid import UUID
 
 from jdatetime import date as jd
-from v2share import V2Data, SingBoxConfig, ClashConfig, ClashMetaConfig, XrayConfig
+from v2share import (
+    V2Data,
+    SingBoxConfig,
+    ClashConfig,
+    ClashMetaConfig,
+    XrayConfig,
+)
 from v2share.links import LinksConfig
 
 from app.db import GetDB, crud
@@ -73,7 +79,9 @@ def generate_subscription(
 
     subscription_handler_class = subscription_handlers[config_format]
     if template_path := handlers_templates[subscription_handler_class]:
-        subscription_handler = subscription_handler_class(template_path=template_path)
+        subscription_handler = subscription_handler_class(
+            template_path=template_path
+        )
     else:
         subscription_handler = subscription_handler_class()
 
@@ -81,7 +89,9 @@ def generate_subscription(
         inbounds, key, format_variables, conf=subscription_handler
     )
 
-    return config if not as_base64 else base64.b64encode(config.encode()).decode()
+    return (
+        config if not as_base64 else base64.b64encode(config.encode()).decode()
+    )
 
 
 def format_time_left(seconds_left: int) -> str:
@@ -118,7 +128,9 @@ def setup_format_variables(extra_data: dict) -> dict:
             seconds_left = (expire_datetime - dt.utcnow()).total_seconds()
             expire_date = expire_datetime.date()
             jalali_expire_date = jd.fromgregorian(
-                year=expire_date.year, month=expire_date.month, day=expire_date.day
+                year=expire_date.year,
+                month=expire_date.month,
+                day=expire_date.day,
             ).strftime("%Y-%m-%d")
             days_left = (expire_datetime - dt.utcnow()).days + 1
             time_left = format_time_left(seconds_left)
@@ -128,7 +140,10 @@ def setup_format_variables(extra_data: dict) -> dict:
             expire_date = "∞"
             jalali_expire_date = "∞"
     else:
-        if on_hold_expire_duration is not None and on_hold_expire_duration >= 0:
+        if (
+            on_hold_expire_duration is not None
+            and on_hold_expire_duration >= 0
+        ):
             days_left = timedelta(seconds=on_hold_expire_duration).days
             time_left = format_time_left(on_hold_expire_duration)
             expire_date = "-"

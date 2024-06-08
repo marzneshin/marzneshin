@@ -11,17 +11,22 @@ from app.db.models import NodeUsage, NodeUserUsage, User
 from app.marznode import MarzNodeBase
 
 
-def record_user_usage_logs(params: list, node_id: int, consumption_factor: int = 1):
+def record_user_usage_logs(
+    params: list, node_id: int, consumption_factor: int = 1
+):
     if not params:
         return
 
-    created_at = datetime.fromisoformat(datetime.utcnow().strftime("%Y-%m-%dT%H:00:00"))
+    created_at = datetime.fromisoformat(
+        datetime.utcnow().strftime("%Y-%m-%dT%H:00:00")
+    )
 
     with GetDB() as db:
         # make user usage row if doesn't exist
         select_stmt = select(NodeUserUsage.user_id).where(
             and_(
-                NodeUserUsage.node_id == node_id, NodeUserUsage.created_at == created_at
+                NodeUserUsage.node_id == node_id,
+                NodeUserUsage.created_at == created_at,
             )
         )
         existings = [r[0] for r in db.execute(select_stmt).fetchall()]
@@ -67,13 +72,18 @@ def record_node_stats(node_id: int, usage: int):
     if not usage:
         return
 
-    created_at = datetime.fromisoformat(datetime.utcnow().strftime("%Y-%m-%dT%H:00:00"))
+    created_at = datetime.fromisoformat(
+        datetime.utcnow().strftime("%Y-%m-%dT%H:00:00")
+    )
 
     with GetDB() as db:
 
         # make node usage row if doesn't exist
         select_stmt = select(NodeUsage.node_id).where(
-            and_(NodeUsage.node_id == node_id, NodeUsage.created_at == created_at)
+            and_(
+                NodeUsage.node_id == node_id,
+                NodeUsage.created_at == created_at,
+            )
         )
         notfound = db.execute(select_stmt).first() is None
         if notfound:
@@ -89,7 +99,10 @@ def record_node_stats(node_id: int, usage: int):
                 downlink=NodeUsage.downlink + usage,
             )
             .where(
-                and_(NodeUsage.node_id == node_id, NodeUsage.created_at == created_at)
+                and_(
+                    NodeUsage.node_id == node_id,
+                    NodeUsage.created_at == created_at,
+                )
             )
         )
 
@@ -97,7 +110,9 @@ def record_node_stats(node_id: int, usage: int):
         db.commit()
 
 
-async def get_users_stats(node_id: int, node: MarzNodeBase) -> tuple[int, list[dict]]:
+async def get_users_stats(
+    node_id: int, node: MarzNodeBase
+) -> tuple[int, list[dict]]:
     try:
         params = list()
         for stat in await node.fetch_users_stats():
@@ -112,14 +127,19 @@ async def record_user_usages():
     # usage_coefficient = {None: 1}  # default usage coefficient for the main api instance
 
     results = await asyncio.gather(
-        *[get_users_stats(node_id, node) for node_id, node in marznode.nodes.items()]
+        *[
+            get_users_stats(node_id, node)
+            for node_id, node in marznode.nodes.items()
+        ]
     )
     api_params = {node_id: params for node_id, params in list(results)}
 
     users_usage = defaultdict(int)
     for node_id, params in api_params.items():
         coefficient = (
-            node.usage_coefficient if (node := marznode.nodes.get(node_id)) else 1
+            node.usage_coefficient
+            if (node := marznode.nodes.get(node_id))
+            else 1
         )
         node_usage = 0
         for param in params:
@@ -143,12 +163,18 @@ async def record_user_usages():
             online_at=datetime.utcnow(),
         )
 
-        db.execute(stmt, users_usage, execution_options={"synchronize_session": None})
+        db.execute(
+            stmt, users_usage, execution_options={"synchronize_session": None}
+        )
         db.commit()
 
     for node_id, params in api_params.items():
         record_user_usage_logs(
             params,
             node_id,
-            node.usage_coefficient if (node := marznode.nodes.get(node_id)) else 1,
+            (
+                node.usage_coefficient
+                if (node := marznode.nodes.get(node_id))
+                else 1
+            ),
         )

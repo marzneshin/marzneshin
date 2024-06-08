@@ -43,9 +43,13 @@ def user_subscription(
     user: UserResponse = UserResponse.model_validate(db_user)
 
     if "text/html" in accept_header:
-        links = generate_subscription(user=db_user, config_format="v2ray").split()
+        links = generate_subscription(
+            user=db_user, config_format="v2ray"
+        ).split()
         return HTMLResponse(
-            render_template(SUBSCRIPTION_PAGE_TEMPLATE, {"user": user, "links": links})
+            render_template(
+                SUBSCRIPTION_PAGE_TEMPLATE, {"user": user, "links": links}
+            )
         )
 
     response_headers = {
@@ -65,20 +69,28 @@ def user_subscription(
 
     if re.match("^([Cc]lash-verge|[Cc]lash-?[Mm]eta)", user_agent):
         conf = generate_subscription(user=db_user, config_format="clash-meta")
-        return Response(content=conf, media_type="text/yaml", headers=response_headers)
+        return Response(
+            content=conf, media_type="text/yaml", headers=response_headers
+        )
     elif re.match("^([Cc]lash|[Ss]tash)", user_agent):
         conf = generate_subscription(user=db_user, config_format="clash")
-        return Response(content=conf, media_type="text/yaml", headers=response_headers)
+        return Response(
+            content=conf, media_type="text/yaml", headers=response_headers
+        )
     elif re.match("^(SFA|SFI|SFM|SFT)", user_agent):
         conf = generate_subscription(user=db_user, config_format="sing-box")
         return Response(
-            content=conf, media_type="application/json", headers=response_headers
+            content=conf,
+            media_type="application/json",
+            headers=response_headers,
         )
     else:
         conf = generate_subscription(
             user=db_user, config_format="v2ray", as_base64=True
         )
-        return Response(content=conf, media_type="text/plain", headers=response_headers)
+        return Response(
+            content=conf, media_type="text/plain", headers=response_headers
+        )
 
 
 @router.get("/{username}/{key}/info", response_model=UserResponse)
@@ -88,7 +100,10 @@ def user_subscription_info(db_user: SubUserDep):
 
 @router.get("/{username}/{key}/usage")
 def user_get_usage(
-    db_user: SubUserDep, db: DBDep, start_date: StartDateDep, end_date: EndDateDep
+    db_user: SubUserDep,
+    db: DBDep,
+    start_date: StartDateDep,
+    end_date: EndDateDep,
 ):
     usages = crud.get_user_usages(db, db_user, start_date, end_date)
 
@@ -122,26 +137,36 @@ def user_subscription_with_client_type(
 
     if client_type == "clash-meta":
         conf = generate_subscription(user=db_user, config_format="clash-meta")
-        return Response(content=conf, media_type="text/yaml", headers=response_headers)
+        return Response(
+            content=conf, media_type="text/yaml", headers=response_headers
+        )
 
     elif client_type == "sing-box":
         conf = generate_subscription(user=db_user, config_format="sing-box")
         return Response(
-            content=conf, media_type="application/json", headers=response_headers
+            content=conf,
+            media_type="application/json",
+            headers=response_headers,
         )
     elif client_type == "clash":
         conf = generate_subscription(user=db_user, config_format="clash")
-        return Response(content=conf, media_type="text/yaml", headers=response_headers)
+        return Response(
+            content=conf, media_type="text/yaml", headers=response_headers
+        )
 
     elif client_type == "v2ray":
         conf = generate_subscription(
             user=db_user, config_format="v2ray", as_base64=True
         )
-        return Response(content=conf, media_type="text/plain", headers=response_headers)
+        return Response(
+            content=conf, media_type="text/plain", headers=response_headers
+        )
     elif client_type == "xray":
         return Response(
             content=generate_subscription(user=db_user, config_format="xray"),
             headers=response_headers,
         )
     else:
-        raise HTTPException(status_code=400, detail="Invalid subscription type")
+        raise HTTPException(
+            status_code=400, detail="Invalid subscription type"
+        )

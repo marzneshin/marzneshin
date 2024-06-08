@@ -21,7 +21,10 @@ async def report(message: str, parse_mode="html", keyboard=None):
             else:
                 for admin in TELEGRAM_ADMIN_ID:
                     await telegram.bot.send_message(
-                        admin, message, parse_mode=parse_mode, reply_markup=keyboard
+                        admin,
+                        message,
+                        parse_mode=parse_mode,
+                        reply_markup=keyboard,
                     )
         except ApiTelegramException as e:
             logger.error(e)
@@ -48,7 +51,9 @@ async def report_new_user(
         username=escape_html(username),
         data_limit=readable_size(data_limit) if data_limit else "Unlimited",
         expire_date=(
-            expire_date.strftime("%H:%M:%S %Y-%m-%d") if expire_date else "Never"
+            expire_date.strftime("%H:%M:%S %Y-%m-%d")
+            if expire_date
+            else "Never"
         ),
         services="" if not services else ", ".join([s.name for s in services]),
     )
@@ -57,7 +62,11 @@ async def report_new_user(
 
 
 async def report_user_modification(
-    username: str, expire_date: datetime, data_limit: int, services: list, by: str
+    username: str,
+    expire_date: datetime,
+    data_limit: int,
+    services: list,
+    by: str,
 ):
     text = """\
 ✏️ <b>#Modified</b>
@@ -73,7 +82,9 @@ async def report_user_modification(
         username=escape_html(username),
         data_limit=readable_size(data_limit) if data_limit else "Unlimited",
         expire_date=(
-            expire_date.strftime("%H:%M:%S %Y-%m-%d") if expire_date else "Never"
+            expire_date.strftime("%H:%M:%S %Y-%m-%d")
+            if expire_date
+            else "Never"
         ),
         services=", ".join([s.name for s in services]),
     )

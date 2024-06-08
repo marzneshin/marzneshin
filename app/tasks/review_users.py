@@ -15,8 +15,15 @@ from app.db import (
 )
 from app.models.user import ReminderType, UserResponse, UserStatus
 from app.utils import report
-from app.utils.helpers import calculate_expiration_days, calculate_usage_percent
-from config import NOTIFY_DAYS_LEFT, NOTIFY_REACHED_USAGE_PERCENT, WEBHOOK_ADDRESS
+from app.utils.helpers import (
+    calculate_expiration_days,
+    calculate_usage_percent,
+)
+from config import (
+    NOTIFY_DAYS_LEFT,
+    NOTIFY_REACHED_USAGE_PERCENT,
+    WEBHOOK_ADDRESS,
+)
 
 if TYPE_CHECKING:
     from app.db.models import User
@@ -29,7 +36,9 @@ def add_notification_reminders(
     db: Session, user: "User", now: datetime = datetime.utcnow()
 ) -> None:
     if user.data_limit:
-        usage_percent = calculate_usage_percent(user.used_traffic, user.data_limit)
+        usage_percent = calculate_usage_percent(
+            user.used_traffic, user.data_limit
+        )
         if (usage_percent >= NOTIFY_REACHED_USAGE_PERCENT) and (
             not get_notification_reminder(db, user.id, ReminderType.data_usage)
         ):
@@ -44,10 +53,16 @@ def add_notification_reminders(
     if user.expire and ((now - user.created_at).days >= NOTIFY_DAYS_LEFT):
         expire_days = calculate_expiration_days(user.expire)
         if (expire_days <= NOTIFY_DAYS_LEFT) and (
-            not get_notification_reminder(db, user.id, ReminderType.expiration_date)
+            not get_notification_reminder(
+                db, user.id, ReminderType.expiration_date
+            )
         ):
             report.expire_days_reached(
-                db, expire_days, UserResponse.model_validate(user), user.id, user.expire
+                db,
+                expire_days,
+                UserResponse.model_validate(user),
+                user.id,
+                user.expire,
             )
 
 
@@ -72,7 +87,9 @@ async def review_users():
 
             asyncio.create_task(
                 report.status_change(
-                    user.username, user.status, UserResponse.model_validate(user)
+                    user.username,
+                    user.status,
+                    UserResponse.model_validate(user),
                 )
             )
 
@@ -100,7 +117,9 @@ async def review_users():
             start_user_expire(db, user)
             asyncio.create_task(
                 report.status_change(
-                    user.username, user.status, UserResponse.model_validate(user)
+                    user.username,
+                    user.status,
+                    UserResponse.model_validate(user),
                 )
             )
             logger.info(f"on hold user `{user.username}` has been activated")

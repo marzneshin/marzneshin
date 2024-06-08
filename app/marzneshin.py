@@ -68,14 +68,22 @@ app.add_middleware(
 
 scheduler = AsyncIOScheduler(timezone="UTC")
 scheduler.add_job(record_user_usages, "interval", coalesce=True, seconds=30)
-scheduler.add_job(review_users, "interval", seconds=600, coalesce=True, max_instances=1)
+scheduler.add_job(
+    review_users, "interval", seconds=600, coalesce=True, max_instances=1
+)
 scheduler.add_job(reset_user_data_usage, "interval", coalesce=True, hours=1)
 scheduler.add_job(
-    record_realtime_bandwidth, "interval", seconds=1, coalesce=True, max_instances=1
+    record_realtime_bandwidth,
+    "interval",
+    seconds=1,
+    coalesce=True,
+    max_instances=1,
 )
 
 if config.WEBHOOK_ADDRESS:
-    scheduler.add_job(send_notifications, "interval", seconds=30, replace_existing=True)
+    scheduler.add_job(
+        send_notifications, "interval", seconds=30, replace_existing=True
+    )
     scheduler.add_job(
         delete_expired_reminders,
         "interval",
@@ -97,7 +105,9 @@ async def on_shutdown():
 
 
 @app.exception_handler(RequestValidationError)
-def validation_exception_handler(request: Request, exc: RequestValidationError):
+def validation_exception_handler(
+    request: Request, exc: RequestValidationError
+):
     details = {}
     for error in exc.errors():
         details[error["loc"][-1]] = error.get("msg")

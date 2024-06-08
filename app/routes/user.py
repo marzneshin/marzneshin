@@ -102,7 +102,9 @@ async def add_user(new_user: UserCreate, db: DBDep, admin: AdminDep):
 
     user = UserResponse.model_validate(db_user)
     await marznode.operations.update_user(user=db_user)
-    asyncio.create_task(report.user_created(user=user, user_id=db_user.id, by=admin))
+    asyncio.create_task(
+        report.user_created(user=user, user_id=db_user.id, by=admin)
+    )
     logger.info("New user `%s` added", db_user.username)
     return user
 
@@ -147,7 +149,9 @@ def delete_expired(passed_time: int, db: DBDep, admin: AdminDep):
     for db_user in expired_users:
         crud.remove_user(db, db_user)
 
-        asyncio.create_task(report.user_deleted(username=db_user.username, by=admin))
+        asyncio.create_task(
+            report.user_deleted(username=db_user.username, by=admin)
+        )
 
         logger.info("User `%s` removed", db_user.username)
 
@@ -221,7 +225,9 @@ async def remove_user(db_user: UserDep, db: DBDep, admin: AdminDep):
     crud.remove_user(db, db_user)
     db.flush()
 
-    asyncio.create_task(report.user_deleted(username=db_user.username, by=admin))
+    asyncio.create_task(
+        report.user_deleted(username=db_user.username, by=admin)
+    )
     logger.info("User %s deleted", db_user.username)
     return {}
 
@@ -236,7 +242,9 @@ def get_user_services(username: str, db: DBDep):
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
 
-    query = db.query(Service).join(Service.users).where(User.username == username)
+    query = (
+        db.query(Service).join(Service.users).where(User.username == username)
+    )
 
     return paginate(query)
 
@@ -249,7 +257,10 @@ async def reset_user_data_usage(db_user: UserDep, db: DBDep, admin: AdminDep):
     previous_status = db_user.status
     db_user = crud.reset_user_data_usage(db, db_user)
 
-    if db_user.status == UserStatus.active and previous_status == UserStatus.limited:
+    if (
+        db_user.status == UserStatus.active
+        and previous_status == UserStatus.limited
+    ):
         await marznode.operations.update_user(db_user)
 
     user = UserResponse.model_validate(db_user)
@@ -299,7 +310,9 @@ async def disable_user(db_user: UserDep, db: DBDep, admin: AdminDep):
 
 
 @router.post("/{username}/revoke_sub", response_model=UserResponse)
-async def revoke_user_subscription(db_user: UserDep, db: DBDep, admin: AdminDep):
+async def revoke_user_subscription(
+    db_user: UserDep, db: DBDep, admin: AdminDep
+):
     """
     Revoke users subscription (Subscription link and proxies)
     """
@@ -329,7 +342,9 @@ def get_user_usage(
 
 
 @router.put("/{username}/set-owner", response_model=UserResponse)
-def set_owner(username: str, admin_username: str, db: DBDep, admin: SudoAdminDep):
+def set_owner(
+    username: str, admin_username: str, db: DBDep, admin: SudoAdminDep
+):
     db_user = crud.get_user(db, username)
     if not db_user:
         raise HTTPException(status_code=404, detail="User not found")
@@ -341,6 +356,8 @@ def set_owner(username: str, admin_username: str, db: DBDep, admin: SudoAdminDep
     db_user = crud.set_owner(db, db_user, new_admin)
     user = UserResponse.model_validate(db_user)
 
-    logger.info("`%s`'s owner successfully set to `%s`", user.username, admin.username)
+    logger.info(
+        "`%s`'s owner successfully set to `%s`", user.username, admin.username
+    )
 
     return user

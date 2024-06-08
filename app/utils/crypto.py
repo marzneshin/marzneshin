@@ -26,7 +26,9 @@ def generate_certificate():
     cert.set_issuer(cert.get_subject())
     cert.set_pubkey(k)
     cert.sign(k, "sha512")
-    cert_pem = crypto.dump_certificate(crypto.FILETYPE_PEM, cert).decode("utf-8")
+    cert_pem = crypto.dump_certificate(crypto.FILETYPE_PEM, cert).decode(
+        "utf-8"
+    )
     key_pem = crypto.dump_privatekey(crypto.FILETYPE_PEM, k).decode("utf-8")
 
     return {"cert": cert_pem, "key": key_pem}

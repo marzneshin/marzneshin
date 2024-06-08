@@ -78,7 +78,9 @@ def get_inbound_hosts(id: int | None, db: DBDep):
     if not inbound:
         raise HTTPException(status_code=404, detail="Inbound not found")
 
-    return paginate(db, db.query(DBInboundHost).filter(DBInboundHost.inbound_id == id))
+    return paginate(
+        db, db.query(DBInboundHost).filter(DBInboundHost.inbound_id == id)
+    )
 
 
 @router.post("/{id}/hosts", response_model=InboundHostResponse)

@@ -22,7 +22,10 @@ def upgrade() -> None:
     op.add_column(
         "users",
         sa.Column(
-            "enabled", sa.Boolean(), server_default=sa.sql.true(), nullable=False
+            "enabled",
+            sa.Boolean(),
+            server_default=sa.sql.true(),
+            nullable=False,
         ),
     )
     # ### end Alembic commands ###

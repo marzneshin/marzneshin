@@ -16,13 +16,17 @@ from app.utils.jwt import create_admin_token
 router = APIRouter(tags=["Admin"], prefix="/admins")
 
 
-def authenticate_admin(db: Session, username: str, password: str) -> Optional[Admin]:
+def authenticate_admin(
+    db: Session, username: str, password: str
+) -> Optional[Admin]:
     dbadmin = crud.get_admin(db, username)
     if not dbadmin:
         return None
 
     return (
-        dbadmin if AdminInDB.model_validate(dbadmin).verify_password(password) else None
+        dbadmin
+        if AdminInDB.model_validate(dbadmin).verify_password(password)
+        else None
     )
 
 
@@ -51,10 +55,16 @@ def get_current_admin(admin: AdminDep):
 
 
 @router.post("/token", response_model=Token)
-def admin_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: DBDep):
-    if dbadmin := authenticate_admin(db, form_data.username, form_data.password):
+def admin_token(
+    form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: DBDep
+):
+    if dbadmin := authenticate_admin(
+        db, form_data.username, form_data.password
+    ):
         return Token(
-            access_token=create_admin_token(form_data.username, is_sudo=dbadmin.is_sudo)
+            access_token=create_admin_token(
+                form_data.username, is_sudo=dbadmin.is_sudo
+            )
         )
 
     raise HTTPException(
@@ -72,8 +82,12 @@ def modify_admin(
         raise HTTPException(status_code=403, detail="You're not allowed")
 
     # If a non-sudoer admin is making itself a sudoer
-    if (admin.username == username) and (modified_admin.is_sudo and not admin.is_sudo):
-        raise HTTPException(status_code=403, detail="You can't make yourself sudoer!")
+    if (admin.username == username) and (
+        modified_admin.is_sudo and not admin.is_sudo
+    ):
+        raise HTTPException(
+            status_code=403, detail="You can't make yourself sudoer!"
+        )
 
     dbadmin = crud.get_admin(db, username)
     if not dbadmin:

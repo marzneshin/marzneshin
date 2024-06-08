@@ -22,7 +22,12 @@ from app.db.models import (
     User,
 )
 from app.models.admin import AdminCreate, AdminModify, AdminPartialModify
-from app.models.node import NodeCreate, NodeModify, NodeStatus, NodeUsageResponse
+from app.models.node import (
+    NodeCreate,
+    NodeModify,
+    NodeStatus,
+    NodeUsageResponse,
+)
 from app.models.proxy import InboundHost as InboundHostModify
 from app.models.service import Service as ServiceModify, ServiceCreate
 from app.models.user import (
@@ -33,7 +38,10 @@ from app.models.user import (
     UserStatus,
     UserUsageResponse,
 )
-from app.utils.helpers import calculate_expiration_days, calculate_usage_percent
+from app.utils.helpers import (
+    calculate_expiration_days,
+    calculate_usage_percent,
+)
 from config import NOTIFY_DAYS_LEFT, NOTIFY_REACHED_USAGE_PERCENT
 
 
@@ -72,8 +80,13 @@ def assure_node_inbounds(db: Session, inbounds: List[Inbound], node_id: int):
         if inb.tag in current_tags:
             stmt = (
                 update(Inbound)
-                .where(and_(Inbound.node_id == node_id, Inbound.tag == inb.tag))
-                .values(protocol=json.loads(inb.config)["protocol"], config=inb.config)
+                .where(
+                    and_(Inbound.node_id == node_id, Inbound.tag == inb.tag)
+                )
+                .values(
+                    protocol=json.loads(inb.config)["protocol"],
+                    config=inb.config,
+                )
             )
             db.execute(stmt)
         else:
@@ -96,7 +109,9 @@ def assure_node_inbounds(db: Session, inbounds: List[Inbound], node_id: int):
 
 
 def get_node_users(
-    db: Session, node_id: Optional[int], statuses: Optional[List[UserStatus]] = None
+    db: Session,
+    node_id: Optional[int],
+    statuses: Optional[List[UserStatus]] = None,
 ):
     query = (
         db.query(User.id, User.username, User.key, Inbound)
@@ -124,7 +139,11 @@ def get_user_hosts(db: Session, user_id: int):
 
 
 def get_inbound_hosts(db: Session, inbound_id: int) -> List[InboundHost]:
-    return db.query(InboundHost).filter(InboundHost.inbound_id == inbound_id).all()
+    return (
+        db.query(InboundHost)
+        .filter(InboundHost.inbound_id == inbound_id)
+        .all()
+    )
 
 
 def get_all_inbounds(db: Session):
@@ -229,9 +248,13 @@ def get_users(
 
     if reset_strategy:
         if isinstance(reset_strategy, list):
-            query = query.filter(User.data_limit_reset_strategy.in_(reset_strategy))
+            query = query.filter(
+                User.data_limit_reset_strategy.in_(reset_strategy)
+            )
         else:
-            query = query.filter(User.data_limit_reset_strategy == reset_strategy)
+            query = query.filter(
+                User.data_limit_reset_strategy == reset_strategy
+            )
 
     if admin:
         query = query.filter(User.admin == admin)
@@ -338,16 +361,23 @@ def update_user(db: Session, dbuser: User, modify: UserModify):
 
     if modify.data_limit is not None:
         # in case there is modification to a user's data limit
-        dbuser.data_limit = modify.data_limit or None  # set it to the new limit
+        dbuser.data_limit = (
+            modify.data_limit or None
+        )  # set it to the new limit
         if dbuser.status is not UserStatus.expired:
             # in case the user isn't already disabled/expired
-            if not dbuser.data_limit or dbuser.used_traffic < dbuser.data_limit:
+            if (
+                not dbuser.data_limit
+                or dbuser.used_traffic < dbuser.data_limit
+            ):
                 # in case the user is unlimited or hasn't reached the limit already
                 if dbuser.status != UserStatus.on_hold:
                     dbuser.status = UserStatus.active
 
                 if not dbuser.data_limit or (
-                    calculate_usage_percent(dbuser.used_traffic, dbuser.data_limit)
+                    calculate_usage_percent(
+                        dbuser.used_traffic, dbuser.data_limit
+                    )
                     < NOTIFY_REACHED_USAGE_PERCENT
                 ):
                     delete_notification_reminder_by_type(
@@ -375,7 +405,9 @@ def update_user(db: Session, dbuser: User, modify: UserModify):
         dbuser.note = modify.note or None
 
     if modify.data_limit_reset_strategy is not None:
-        dbuser.data_limit_reset_strategy = modify.data_limit_reset_strategy.value
+        dbuser.data_limit_reset_strategy = (
+            modify.data_limit_reset_strategy.value
+        )
 
     if modify.on_hold_timeout is not None:
         dbuser.on_hold_timeout = modify.on_hold_timeout
@@ -460,7 +492,9 @@ def set_owner(db: Session, dbuser: User, admin: Admin):
 
 
 def start_user_expire(db: Session, dbuser: User):
-    expire = datetime.utcnow() + timedelta(seconds=dbuser.on_hold_expire_duration)
+    expire = datetime.utcnow() + timedelta(
+        seconds=dbuser.on_hold_expire_duration
+    )
     dbuser.expire = expire
     db.commit()
     db.refresh(dbuser)
@@ -547,7 +581,9 @@ def get_admins(
 def create_service(db: Session, service: ServiceCreate) -> Service:
     dbservice = Service(
         name=service.name,
-        inbounds=db.query(Inbound).filter(Inbound.id.in_(service.inbound_ids)).all(),
+        inbounds=db.query(Inbound)
+        .filter(Inbound.id.in_(service.inbound_ids))
+        .all(),
         users=[],
     )
     db.add(dbservice)
@@ -564,13 +600,17 @@ def get_services(db: Session) -> List[Service]:
     return db.query(Service).all()
 
 
-def update_service(db: Session, db_service: Service, modification: ServiceModify):
+def update_service(
+    db: Session, db_service: Service, modification: ServiceModify
+):
     if modification.name is not None:
         db_service.name = modification.name
 
     if modification.inbound_ids is not None:
         db_service.inbounds = (
-            db.query(Inbound).filter(Inbound.id.in_(modification.inbound_ids)).all()
+            db.query(Inbound)
+            .filter(Inbound.id.in_(modification.inbound_ids))
+            .all()
         )
 
     db.commit()
@@ -593,7 +633,9 @@ def get_node_by_id(db: Session, node_id: int):
 
 
 def get_nodes(
-    db: Session, status: Optional[Union[NodeStatus, list]] = None, enabled: bool = None
+    db: Session,
+    status: Optional[Union[NodeStatus, list]] = None,
+    enabled: bool = None,
 ):
     query = db.query(Node)
 
@@ -698,7 +740,10 @@ def update_node_status(
 
 
 def create_notification_reminder(
-    db: Session, reminder_type: ReminderType, expires_at: datetime, user_id: int
+    db: Session,
+    reminder_type: ReminderType,
+    expires_at: datetime,
+    user_id: int,
 ) -> NotificationReminder:
     reminder = NotificationReminder(
         type=reminder_type, expires_at=expires_at, user_id=user_id
@@ -742,7 +787,9 @@ def delete_notification_reminder_by_type(
     return
 
 
-def delete_notification_reminder(db: Session, dbreminder: NotificationReminder) -> None:
+def delete_notification_reminder(
+    db: Session, dbreminder: NotificationReminder
+) -> None:
     db.delete(dbreminder)
     db.commit()
     return

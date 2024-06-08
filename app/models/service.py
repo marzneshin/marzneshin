@@ -23,7 +23,11 @@ class ServiceModify(Service):
     inbound_ids: list[int] | None = Field(None)
     model_config = ConfigDict(
         json_schema_extra={
-            "example": {"id": 2, "name": "my service 2", "inbound_ids": [1, 2, 3]}
+            "example": {
+                "id": 2,
+                "name": "my service 2",
+                "inbound_ids": [1, 2, 3],
+            }
         }
     )
 

@@ -5,7 +5,9 @@ from passlib.context import CryptContext
 from pydantic import ConfigDict, BaseModel
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/admins/token")  # Admin view url
+oauth2_scheme = OAuth2PasswordBearer(
+    tokenUrl="/api/admins/token"
+)  # Admin view url
 
 
 class Token(BaseModel):
@@ -37,7 +39,9 @@ class AdminModify(BaseModel):
 
 
 class AdminPartialModify(AdminModify):
-    __annotations__ = {k: Optional[v] for k, v in AdminModify.__annotations__.items()}
+    __annotations__ = {
+        k: Optional[v] for k, v in AdminModify.__annotations__.items()
+    }
 
 
 class AdminInDB(Admin):

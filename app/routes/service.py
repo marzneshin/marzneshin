@@ -79,7 +79,11 @@ def get_service_inbounds(id: int, db: DBDep):
     if not service:
         raise HTTPException(status_code=404, detail="Service not found")
 
-    query = db.query(Inbound).join(Inbound.services).where(Service.id == service.id)
+    query = (
+        db.query(Inbound)
+        .join(Inbound.services)
+        .where(Service.id == service.id)
+    )
 
     return paginate(query)
 
@@ -101,10 +105,14 @@ async def modify_service(id: int, modification: ServiceModify, db: DBDep):
         response = crud.update_service(db, dbservice, modification)
     except sqlalchemy.exc.IntegrityError:
         db.rollback()
-        raise HTTPException(status_code=409, detail="problem updating the service")
+        raise HTTPException(
+            status_code=409, detail="problem updating the service"
+        )
     else:
         for user in response.users:
-            await marznode.operations.update_user(user, old_inbounds=old_inbounds)
+            await marznode.operations.update_user(
+                user, old_inbounds=old_inbounds
+            )
         return response
 
 
