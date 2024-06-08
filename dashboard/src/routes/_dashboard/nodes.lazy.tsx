@@ -7,12 +7,13 @@ import {
     CardFooter,
     CardHeader,
     CardTitle,
-    Page
+    Page,
+    Loading,
 } from '@marzneshin/components';
 import { NodesTable } from '@marzneshin/features/nodes';
-import { Link, createFileRoute } from '@tanstack/react-router'
+import { Link, createFileRoute, Outlet } from '@tanstack/react-router'
 import { Info } from 'lucide-react';
-import { FC } from 'react';
+import { type FC, Suspense } from 'react';
 import { useTranslation } from 'react-i18next';
 
 export const NodesPage: FC = () => {
@@ -27,6 +28,9 @@ export const NodesPage: FC = () => {
                 </CardHeader>
                 <CardContent>
                     <NodesTable />
+                    <Suspense fallback={<Loading />}>
+                        <Outlet />
+                    </Suspense>
                 </CardContent>
                 <CardFooter>
                     <Alert>

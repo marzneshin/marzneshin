@@ -1,4 +1,4 @@
-import { type FC, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { Button, DataTableViewOptions } from "@marzneshin/components";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
@@ -8,7 +8,6 @@ import { DataTablePagination } from "./table-pagination";
 import { TableFiltering } from "./table-filtering";
 import {
     type UseRowSelectionReturn,
-    type UseDialogProps,
     useFiltering,
     usePagination,
     type FetchEntityReturn,
@@ -19,56 +18,32 @@ import {
     type QueryKey,
     type EntityQueryKeyType,
 } from "./hooks";
-import { useDialog } from "@marzneshin/hooks";
 
 interface EntityTableProps<T> {
     fetchEntity: ({ queryKey }: EntityQueryKeyType) => FetchEntityReturn<T>;
-    MutationDialog: FC<UseDialogProps<T>>;
-    DeleteConfirmationDialog: FC<UseDialogProps<T>>;
-    SettingsDialog: FC<UseDialogProps<T | any>>;
     columnsFn: any;
     filteredColumn: string;
     entityKey: string;
     rowSelection?: UseRowSelectionReturn;
     manualSorting?: boolean;
+    onCreate: () => void;
+    onEdit: (entity: T) => void;
+    onOpen: (entity: T) => void;
+    onDelete: (entity: T) => void;
 }
 
 export function EntityTable<T>({
     fetchEntity,
-    MutationDialog,
-    DeleteConfirmationDialog,
-    SettingsDialog,
     columnsFn,
     filteredColumn,
     rowSelection,
     entityKey,
     manualSorting = false,
+    onCreate,
+    onEdit,
+    onOpen,
+    onDelete,
 }: EntityTableProps<T>) {
-    const [mutationDialogOpen, setMutationDialogOpen] = useDialog();
-    const [deleteDialogOpen, setDeleteDialogOpen] = useDialog();
-    const [settingsDialogOpen, setSettingsDialogOpen] = useDialog();
-    const [selectedEntity, selectEntity] = useState<T | null>(null);
-
-    const onEdit = (entity: T) => {
-        selectEntity(entity);
-        setMutationDialogOpen(true);
-    };
-
-    const onDelete = (entity: T) => {
-        selectEntity(entity);
-        setDeleteDialogOpen(true);
-    };
-
-    const onCreate = () => {
-        selectEntity(null);
-        setMutationDialogOpen(true);
-    };
-
-    const onOpen = (entity: T) => {
-        selectEntity(entity);
-        setSettingsDialogOpen(true);
-    };
-
     const { t } = useTranslation();
     const filtering = useFiltering({ column: filteredColumn });
     const sorting = useSorting();
@@ -107,29 +82,13 @@ export function EntityTable<T>({
         onPaginationChange,
     });
 
-    const contextValue = useMemo(() => (
-        { table, data: data.entity, filtering, isLoading }
-    ), [table, data.entity, filtering, isLoading])
+    const contextValue = useMemo(
+        () => ({ table, data: data.entity, filtering, isLoading }),
+        [table, data.entity, filtering, isLoading],
+    );
 
     return (
-        <EntityTableContext.Provider
-            value={contextValue}
-        >
-            <SettingsDialog
-                open={settingsDialogOpen}
-                onOpenChange={setSettingsDialogOpen}
-                entity={selectedEntity}
-            />
-            <DeleteConfirmationDialog
-                open={deleteDialogOpen}
-                onOpenChange={setDeleteDialogOpen}
-                entity={selectedEntity}
-            />
-            <MutationDialog
-                open={mutationDialogOpen}
-                onOpenChange={setMutationDialogOpen}
-                entity={selectedEntity}
-            />
+        <EntityTableContext.Provider value={contextValue}>
             <div className="flex flex-col">
                 <div className="flex items-center py-4">
                     <TableFiltering />

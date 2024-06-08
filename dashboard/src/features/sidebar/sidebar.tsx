@@ -23,6 +23,12 @@ export const DashboardSidebar: FC<DashboardSidebarProps> = ({
 }) => {
     const router = useRouterState();
     const currentActivePath = router.location.pathname;
+    const isActive = (path: string) => {
+        if (path === "/") {
+            return currentActivePath === path;
+        }
+        return currentActivePath.startsWith(path);
+    };
 
     return (
         <aside className="size-full py-4  px-4 ">
@@ -41,9 +47,7 @@ export const DashboardSidebar: FC<DashboardSidebarProps> = ({
                                     <Sidebar.Group>{key}</Sidebar.Group>
                                     {sidebarItems[key].map((item: SidebarItem) => (
                                         <Sidebar.Item
-                                            variant={
-                                                currentActivePath === item.to ? "active" : "default"
-                                            }
+                                            variant={isActive(item.to) ? "active" : "default"}
                                             className={cn("my-2 border-transparent", {
                                                 "w-10 h-10": collapsed,
                                             })}

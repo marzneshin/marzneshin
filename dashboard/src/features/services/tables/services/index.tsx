@@ -1,24 +1,39 @@
-import { FC } from "react";
+import type { FC } from "react";
 import {
-    MutationDialog,
-    ServicesDeleteConfirmationDialog,
-    ServicesQueryFetchKey,
-    fetchServices
-} from '@marzneshin/features/services';
+  ServicesQueryFetchKey,
+  fetchServices,
+} from "@marzneshin/features/services";
 import { columns } from "./columns";
-import { ServiceSettingsDialog } from "../../dialogs/settings.dialog";
 import { EntityTable } from "@marzneshin/components";
+import { useNavigate } from "@tanstack/react-router";
 
 export const ServicesTable: FC = () => {
-    return (
-        <EntityTable
-            fetchEntity={fetchServices}
-            DeleteConfirmationDialog={ServicesDeleteConfirmationDialog}
-            SettingsDialog={ServiceSettingsDialog}
-            MutationDialog={MutationDialog}
-            columnsFn={columns}
-            filteredColumn="name"
-            entityKey={ServicesQueryFetchKey}
-        />
-    )
-}
+  const navigate = useNavigate({ from: "/services" });
+  return (
+    <EntityTable
+      fetchEntity={fetchServices}
+      columnsFn={columns}
+      filteredColumn="name"
+      entityKey={ServicesQueryFetchKey}
+      onCreate={() => navigate({ to: "/services/create" })}
+      onOpen={(entity) =>
+        navigate({
+          to: "/services/$serviceId",
+          params: { serviceId: String(entity.id) },
+        })
+      }
+      onEdit={(entity) =>
+        navigate({
+          to: "/services/$serviceId/edit",
+          params: { serviceId: String(entity.id) },
+        })
+      }
+      onDelete={(entity) =>
+        navigate({
+          to: "/services/$serviceId/delete",
+          params: { serviceId: String(entity.id) },
+        })
+      }
+    />
+  );
+};

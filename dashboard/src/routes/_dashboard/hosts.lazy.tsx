@@ -1,7 +1,16 @@
-import { Card, CardContent, CardFooter, CardHeader, CardTitle, Page } from '@marzneshin/components'
+import {
+    Card,
+    CardContent,
+    CardFooter,
+    CardHeader,
+    CardTitle,
+    Page,
+    Loading,
+} from '@marzneshin/components'
 import { InboundHostsTable } from '@marzneshin/features/hosts'
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, Outlet } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
+import { Suspense } from 'react';
 
 export const HostsPage = () => {
     const { t } = useTranslation()
@@ -15,6 +24,9 @@ export const HostsPage = () => {
                 </CardHeader>
                 <CardContent>
                     <InboundHostsTable />
+                    <Suspense fallback={<Loading />}>
+                        <Outlet />
+                    </Suspense>
                 </CardContent>
                 <CardFooter>
                 </CardFooter>

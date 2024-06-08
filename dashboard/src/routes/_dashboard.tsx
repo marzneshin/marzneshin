@@ -6,13 +6,19 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
   Toaster,
+  Loading
 } from "@marzneshin/components";
 import { useAuth } from "@marzneshin/features/auth";
 import { DashboardSidebar, ToggleButton } from "@marzneshin/features/sidebar";
 import { usePanelToggle } from "@marzneshin/features/sidebar/use-panel-toggle";
 import { useScreenBreakpoint } from "@marzneshin/hooks/use-screen-breakpoint";
 import { cn } from "@marzneshin/utils";
-import { Outlet, createFileRoute, redirect } from "@tanstack/react-router";
+import { Suspense } from "react";
+import {
+  Outlet,
+  createFileRoute,
+  redirect
+} from "@tanstack/react-router";
 
 export const DashboardLayout = () => {
   const isDesktop = useScreenBreakpoint("md");
@@ -59,7 +65,9 @@ export const DashboardLayout = () => {
           <ResizableHandle withHandle className="w-[2px]" />
           <ResizablePanel>
             <main>
-              <Outlet />
+              <Suspense fallback={<Loading />}>
+                <Outlet />
+              </Suspense>
               <Toaster position="top-center" />
             </main>
           </ResizablePanel>
@@ -79,7 +87,9 @@ export const DashboardLayout = () => {
             </Drawer>
           </aside>
           <main className="sm:block">
-            <Outlet />
+            <Suspense fallback={<Loading />}>
+              <Outlet />
+            </Suspense>
             <Toaster position="top-center" />
           </main>
         </div>
@@ -90,7 +100,6 @@ export const DashboardLayout = () => {
 
 export const Route = createFileRoute("/_dashboard")({
   component: () => <DashboardLayout />,
-
   beforeLoad: async () => {
     const loggedIn = await useAuth.getState().isLoggedIn();
     if (!loggedIn) {

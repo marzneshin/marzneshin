@@ -1,15 +1,13 @@
 
 import {
     HostType,
-    HostsDeleteConfirmationDialog,
-    HostsMutationDialog,
     useHostsQuery
 } from '@marzneshin/features/hosts'
 import { InboundHostsDataTable } from './table'
+import { useNavigate } from "@tanstack/react-router"
 import { useState } from 'react'
 import { useInboundsQuery } from '@marzneshin/features/inbounds'
 import { columns } from './columns'
-import { HostSettingsDialog } from '../../dialogs/settings'
 import { useDialog } from '@marzneshin/hooks'
 import { InboundNotSelectedAlertDialog } from './inbound-not-selected-alert-dialog'
 
@@ -17,35 +15,24 @@ export const InboundHostsTable = () => {
     const { data: inbounds } = useInboundsQuery()
     const [selectedInbound, setSelectedInbound] = useState<string | undefined>(inbounds[0]?.id !== undefined ? String(inbounds[0].id) : undefined)
     const { data, isLoading } = useHostsQuery(Number(selectedInbound))
-
-    const [mutationDialogOpen, setMutationDialogOpen] = useDialog();
-    const [deleteDialogOpen, setDeleteDialogOpen] = useDialog();
-    const [settingsDialogOpen, setSettingsDialogOpen] = useDialog();
+    const navigate = useNavigate({ from: "/hosts" })
     const [inboundSelectionAlert, setInboundSelectionAlert] = useDialog();
-    const [selectedEntity, selectEntity] = useState<HostType | null>(null);
 
-    const onEdit = (entity: HostType) => {
-        selectEntity(entity);
-        setMutationDialogOpen(true);
-    };
-
-    const onDelete = (entity: HostType) => {
-        selectEntity(entity);
-        setDeleteDialogOpen(true);
-    };
+    const onEdit = (entity: HostType) => navigate({ to: "/hosts/$hostId/edit", params: { hostId: String(entity.id) } });
+    const onDelete = (entity: HostType) => navigate({ to: "/hosts/$hostId/delete", params: { hostId: String(entity.id) } });
+    const onOpen = (entity: HostType) => navigate({ to: "/hosts/$hostId", params: { hostId: String(entity.id) } });
 
     const onCreate = () => {
         if (selectedInbound) {
-            selectEntity(null);
-            setMutationDialogOpen(true);
+            navigate({
+                to: "/hosts/$inboundId/create",
+                params: {
+                    inboundId: selectedInbound,
+                }
+            })
         } else {
             setInboundSelectionAlert(true)
         }
-    };
-
-    const onOpen = (entity: HostType) => {
-        selectEntity(entity);
-        setSettingsDialogOpen(true);
     };
 
     return (
@@ -53,22 +40,6 @@ export const InboundHostsTable = () => {
             <InboundNotSelectedAlertDialog
                 open={inboundSelectionAlert}
                 onOpenChange={setInboundSelectionAlert}
-            />
-            <HostSettingsDialog
-                open={settingsDialogOpen}
-                onOpenChange={setSettingsDialogOpen}
-                entity={selectedEntity}
-            />
-            <HostsDeleteConfirmationDialog
-                open={deleteDialogOpen}
-                onOpenChange={setDeleteDialogOpen}
-                entity={selectedEntity}
-            />
-            <HostsMutationDialog
-                open={mutationDialogOpen}
-                onOpenChange={setMutationDialogOpen}
-                entity={selectedEntity}
-                inboundId={Number(selectedInbound)}
             />
             <InboundHostsDataTable
                 data={data}

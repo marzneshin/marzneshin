@@ -6,7 +6,7 @@ import {
     Form,
     Button,
 } from "@marzneshin/components";
-import type { FC } from "react";
+import { type FC, useEffect } from "react";
 import {
     type ServiceType,
     useServicesCreationMutation,
@@ -31,6 +31,7 @@ interface MutationDialogProps {
     entity: ServiceType | null;
     open: boolean;
     onOpenChange: (state: boolean) => void;
+    onClose: () => void;
 }
 
 const getDefaultValues = (): ServiceCreateType => ({
@@ -42,6 +43,7 @@ export const MutationDialog: FC<MutationDialogProps> = ({
     entity,
     open,
     onOpenChange,
+    onClose,
 }) => {
     const isEditing = entity !== null;
     const updateMutation = useServicesUpdateMutation();
@@ -55,6 +57,11 @@ export const MutationDialog: FC<MutationDialogProps> = ({
         onOpenChange,
     });
     const { t } = useTranslation();
+
+    useEffect(() => {
+        if (!open) onClose();
+    }, [open, onClose]);
+
     return (
         <Dialog open={open} onOpenChange={onOpenChange} defaultOpen={true}>
             <DialogContent>

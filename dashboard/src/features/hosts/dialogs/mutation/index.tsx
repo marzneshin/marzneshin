@@ -36,10 +36,11 @@ import {
 } from "./fields";
 
 interface MutationDialogProps {
-    entity: HostType | null;
+    entity?: HostType;
     open: boolean;
-    inboundId: number;
+    inboundId?: number;
     onOpenChange: (state: boolean) => void;
+    onClose: () => void;
 }
 
 const transformFormValue = (values: HostType) => {
@@ -54,6 +55,7 @@ export const HostsMutationDialog: FC<MutationDialogProps> = ({
     entity,
     open,
     onOpenChange,
+    onClose,
 }) => {
     const form = useForm({
         defaultValues: entity ? entity : getDefaultValues(),
@@ -67,11 +69,16 @@ export const HostsMutationDialog: FC<MutationDialogProps> = ({
         const host = transformFormValue(values);
         if (entity && entity.id !== undefined) {
             updateMutation.mutate({ hostId: entity.id, host });
-        } else {
+            onOpenChange(false);
+        } else if (inboundId !== undefined) {
             createMutation.mutate({ inboundId, host });
+            onOpenChange(false);
         }
-        onOpenChange(false);
     };
+
+    useEffect(() => {
+        if (!open) onClose();
+    }, [open, onClose]);
 
     useEffect(() => {
         if (entity) form.reset(entity);
