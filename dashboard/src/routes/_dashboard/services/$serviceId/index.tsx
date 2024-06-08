@@ -4,7 +4,7 @@ import {
 } from "@tanstack/react-router";
 import {
     useRouterServiceContext,
-    ServicesSettingsDialog,
+    ServiceSettingsDialog,
 } from "@marzneshin/features/services";
 import { useDialog } from "@marzneshin/hooks";
 
@@ -14,7 +14,7 @@ const ServiceOpen = () => {
     const navigate = useNavigate({ from: "/services/$serviceId" });
 
     return value && (
-        <ServicesSettingsDialog
+        <ServiceSettingsDialog
             open={settingsDialogOpen}
             onOpenChange={setSettingsDialogOpen}
             entity={value.service}
