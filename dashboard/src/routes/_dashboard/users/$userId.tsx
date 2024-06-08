@@ -8,7 +8,7 @@ import {
     RouterUserContext,
     fetchUser,
 } from "@marzneshin/features/users";
-import { Suspense } from "react";
+import { Suspense, useMemo } from "react";
 import {
     AlertDialog,
     AlertDialogContent,
@@ -20,13 +20,16 @@ const UserProvider = () => {
     return (
         <Suspense fallback={<Loading />}>
             <Await promise={user}>
-                {(user) => (
-                    <RouterUserContext.Provider value={{ user }}>
-                        <Suspense>
-                            <Outlet />
-                        </Suspense>
-                    </RouterUserContext.Provider>
-                )}
+                {(user) => {
+                    const value = useMemo(() => ({ user }), [user])
+                    return (
+                        <RouterUserContext.Provider value={value}>
+                            <Suspense>
+                                <Outlet />
+                            </Suspense>
+                        </RouterUserContext.Provider>
+                    )
+                }}
             </Await>
         </Suspense>
     )

@@ -8,7 +8,7 @@ import {
     fetchNode,
     RouterNodeContext
 } from "@marzneshin/features/nodes";
-import { Suspense } from "react";
+import { Suspense, useMemo } from "react";
 import {
     AlertDialog,
     AlertDialogContent,
@@ -21,13 +21,16 @@ const NodeProvider = () => {
     return (
         <Suspense fallback={<Loading />}>
             <Await promise={node}>
-                {(node) => (
-                    <RouterNodeContext.Provider value={{ node }}>
-                        <Suspense>
-                            <Outlet />
-                        </Suspense>
-                    </RouterNodeContext.Provider>
-                )}
+                {(node) => {
+                    const value = useMemo(() => ({ node }), [node])
+                    return (
+                        <RouterNodeContext.Provider value={value}>
+                            <Suspense>
+                                <Outlet />
+                            </Suspense>
+                        </RouterNodeContext.Provider>
+                    )
+                }}
             </Await>
         </Suspense>
     );
