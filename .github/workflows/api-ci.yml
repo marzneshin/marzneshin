@@ -23,7 +23,7 @@ jobs:
           pylint --exit-zero "$(git ls-files '*.py')"
 
       - name: black
-        uses: actions/psf/black@stable
+        uses: psf/black@stable
         with:
           options: "--check --verbose"
           src: "./app"
