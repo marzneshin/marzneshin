@@ -5,10 +5,7 @@ import type { UserType } from "../types";
 export async function fetchUser({
     queryKey,
 }: { queryKey: [string, string] }): Promise<UserType> {
-    return await fetch(`/users/${queryKey[1]}`).then((result) => {
-        result.services = result.service_ids;
-        return result;
-    });
+    return fetch(`/users/${queryKey[1]}`);
 }
 
 export const UserQueryFetchKey = "users";

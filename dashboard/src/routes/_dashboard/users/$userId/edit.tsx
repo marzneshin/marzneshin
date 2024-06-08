@@ -1,28 +1,48 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { UsersMutationDialog, useUserQuery } from "@marzneshin/features/users";
-import { AlertDialog, AlertDialogContent } from "@marzneshin/components";
+import {
+    createFileRoute,
+    useNavigate,
+    defer,
+    Await,
+} from "@tanstack/react-router";
+import { UsersMutationDialog, fetchUser } from "@marzneshin/features/users";
+import { AlertDialog, AlertDialogContent, Loading } from "@marzneshin/components";
+import { Suspense } from "react";
 import { useDialog } from "@marzneshin/hooks";
 
 const UserEdit = () => {
     const [editDialogOpen, setEditDialogOpen] = useDialog(true);
-    const { userId } = Route.useParams();
-    const { data: user } = useUserQuery({ username: userId });
+    const { user } = Route.useLoaderData()
     const navigate = useNavigate();
 
-    return user ? (
-        <UsersMutationDialog
-            open={editDialogOpen}
-            onOpenChange={setEditDialogOpen}
-            entity={user}
-            onClose={() => navigate({ to: "/users" })}
-        />
-    ) : (
-        <AlertDialog>
-            <AlertDialogContent>User not found</AlertDialogContent>
-        </AlertDialog>
+    return (
+        <Suspense fallback={<Loading />}>
+            <Await promise={user}>
+                {(user) => (
+                    <UsersMutationDialog
+                        open={editDialogOpen}
+                        onOpenChange={setEditDialogOpen}
+                        entity={user}
+                        onClose={() => navigate({ to: "/users" })}
+                    />
+                )}
+            </Await>
+        </Suspense>
     );
 };
 
 export const Route = createFileRoute("/_dashboard/users/$userId/edit")({
+    loader: async ({ params }) => {
+        const userPromise = fetchUser({ queryKey: ["users", params.userId] });
+
+        return {
+            user: defer(userPromise)
+        }
+    },
+    staleTime: 10_000,
     component: UserEdit,
+    errorComponent: () => (
+        <AlertDialog>
+            <AlertDialogContent>User not found</AlertDialogContent>
+        </AlertDialog>
+    )
 });
