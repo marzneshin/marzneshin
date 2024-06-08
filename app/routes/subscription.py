@@ -164,6 +164,7 @@ def user_subscription_with_client_type(
     elif client_type == "xray":
         return Response(
             content=generate_subscription(user=db_user, config_format="xray"),
+            media_type="application/json",
             headers=response_headers,
         )
     else:
