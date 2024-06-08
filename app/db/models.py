@@ -27,7 +27,11 @@ from app.models.proxy import (
     InboundHostSecurity,
     ProxyTypes,
 )
-from app.models.user import ReminderType, UserDataLimitResetStrategy, UserStatus
+from app.models.user import (
+    ReminderType,
+    UserDataLimitResetStrategy,
+    UserStatus,
+)
 
 
 class Admin(Base):
@@ -61,7 +65,9 @@ class Service(Base):
     __tablename__ = "services"
     id = Column(Integer, primary_key=True)
     name = Column(String(64))
-    users = relationship("User", secondary=users_services, back_populates="services")
+    users = relationship(
+        "User", secondary=users_services, back_populates="services"
+    )
     inbounds = relationship(
         "Inbound", secondary=inbounds_services, back_populates="services"
     )
@@ -82,10 +88,16 @@ class User(Base):
     username = Column(String(32), unique=True, index=True)
     key = Column(String(64), unique=True)
     enabled = Column(
-        Boolean, nullable=False, default=True, server_default=sqlalchemy.sql.true()
+        Boolean,
+        nullable=False,
+        default=True,
+        server_default=sqlalchemy.sql.true(),
     )
     services = relationship(
-        "Service", secondary=users_services, back_populates="users", lazy="joined"
+        "Service",
+        secondary=users_services,
+        back_populates="users",
+        lazy="joined",
     )
     inbounds = relationship(
         "Inbound",
@@ -95,7 +107,9 @@ class User(Base):
         distinct_target_key=True,
     )
     # proxies = relationship("Proxy", back_populates="user", cascade="all, delete-orphan")
-    status = Column(Enum(UserStatus), nullable=False, default=UserStatus.active)
+    status = Column(
+        Enum(UserStatus), nullable=False, default=UserStatus.active
+    )
     used_traffic = Column(BigInteger, default=0)
     lifetime_used_traffic = Column(
         BigInteger, default=0, server_default="0", nullable=False
@@ -150,7 +164,9 @@ class Inbound(Base):
         "Service", secondary=inbounds_services, back_populates="inbounds"
     )
     hosts = relationship(
-        "InboundHost", back_populates="inbound", cascade="all, delete, delete-orphan"
+        "InboundHost",
+        back_populates="inbound",
+        cascade="all, delete, delete-orphan",
     )
 
     @property
@@ -187,7 +203,10 @@ class InboundHost(Base):
     )
 
     mux = Column(
-        Boolean, default=False, nullable=False, server_default=sqlalchemy.sql.true()
+        Boolean,
+        default=False,
+        nullable=False,
+        server_default=sqlalchemy.sql.true(),
     )
     fragment = Column(JSON())
 
@@ -231,18 +250,26 @@ class Node(Base):
     address = Column(String(256))
     port = Column(Integer)
     xray_version = Column(String(32))
-    inbounds = relationship("Inbound", back_populates="node", cascade="all, delete")
-    status = Column(Enum(NodeStatus), nullable=False, default=NodeStatus.unhealthy)
+    inbounds = relationship(
+        "Inbound", back_populates="node", cascade="all, delete"
+    )
+    status = Column(
+        Enum(NodeStatus), nullable=False, default=NodeStatus.unhealthy
+    )
     last_status_change = Column(DateTime, default=datetime.utcnow)
     message = Column(String(1024))
     created_at = Column(DateTime, default=datetime.utcnow)
     uplink = Column(BigInteger, default=0)
     downlink = Column(BigInteger, default=0)
     user_usages = relationship(
-        "NodeUserUsage", back_populates="node", cascade="all, delete, delete-orphan"
+        "NodeUserUsage",
+        back_populates="node",
+        cascade="all, delete, delete-orphan",
     )
     usages = relationship(
-        "NodeUsage", back_populates="node", cascade="all, delete, delete-orphan"
+        "NodeUsage",
+        back_populates="node",
+        cascade="all, delete, delete-orphan",
     )
     usage_coefficient = Column(
         Float, nullable=False, server_default=text("1.0"), default=1

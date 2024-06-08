@@ -21,7 +21,9 @@ def create_admin_token(username: str, is_sudo=False) -> str:
         "iat": datetime.utcnow(),
     }
     if JWT_ACCESS_TOKEN_EXPIRE_MINUTES > 0:
-        expire = datetime.utcnow() + timedelta(minutes=JWT_ACCESS_TOKEN_EXPIRE_MINUTES)
+        expire = datetime.utcnow() + timedelta(
+            minutes=JWT_ACCESS_TOKEN_EXPIRE_MINUTES
+        )
         data["exp"] = expire
     encoded_jwt = jwt.encode(data, get_secret_key(), algorithm="HS256")
     return encoded_jwt

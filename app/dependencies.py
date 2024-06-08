@@ -76,7 +76,8 @@ def get_user(
 ):
     db_user = crud.get_user(db, username)
     if not (
-        admin.is_sudo or (db_user.admin and db_user.admin.username == admin.username)
+        admin.is_sudo
+        or (db_user.admin and db_user.admin.username == admin.username)
     ):
         raise HTTPException(status_code=403, detail="You're not allowed")
 
@@ -88,7 +89,9 @@ def get_user(
 
 def parse_start_date(start: str | None = None):
     if not start:
-        return datetime.fromtimestamp(datetime.utcnow().timestamp() - 30 * 24 * 3600)
+        return datetime.fromtimestamp(
+            datetime.utcnow().timestamp() - 30 * 24 * 3600
+        )
     else:
         return datetime.fromisoformat(start)
 

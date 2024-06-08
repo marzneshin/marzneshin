@@ -68,7 +68,9 @@ class MarzNodeGRPCIO(MarzNodeBase, MarzNodeDB):
                 if state != ChannelConnectivity.READY:
                     raise RpcError
                 await self._sync()
-                self._streaming_task = asyncio.create_task(self._stream_user_updates())
+                self._streaming_task = asyncio.create_task(
+                    self._stream_user_updates()
+                )
             except RpcError:
                 self.synced = False
                 self.set_status(NodeStatus.unhealthy)
@@ -90,8 +92,12 @@ class MarzNodeGRPCIO(MarzNodeBase, MarzNodeDB):
             try:
                 await stream.write(
                     UserData(
-                        user=User(id=user.id, username=user.username, key=user.key),
-                        inbounds=[Inbound(tag=t) for t in user_update["inbounds"]],
+                        user=User(
+                            id=user.id, username=user.username, key=user.key
+                        ),
+                        inbounds=[
+                            Inbound(tag=t) for t in user_update["inbounds"]
+                        ],
                     )
                 )
             except RpcError:

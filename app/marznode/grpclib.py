@@ -95,8 +95,14 @@ class MarzNodeGRPCLIB(MarzNodeBase, MarzNodeDB):
                     user = user_update["user"]
                     await stream.send_message(
                         UserData(
-                            user=User(id=user.id, username=user.username, key=user.key),
-                            inbounds=[Inbound(tag=t) for t in user_update["inbounds"]],
+                            user=User(
+                                id=user.id,
+                                username=user.username,
+                                key=user.key,
+                            ),
+                            inbounds=[
+                                Inbound(tag=t) for t in user_update["inbounds"]
+                            ],
                         )
                     )
         except (OSError, ConnectionError, GRPCError, StreamTerminatedError):
@@ -137,7 +143,9 @@ class MarzNodeGRPCLIB(MarzNodeBase, MarzNodeDB):
 
     async def get_logs(self, include_buffer=True):
         async with self._stub.StreamXrayLogs.open() as stm:
-            await stm.send_message(XrayLogsRequest(include_buffer=include_buffer))
+            await stm.send_message(
+                XrayLogsRequest(include_buffer=include_buffer)
+            )
             while True:
                 response = await stm.recv_message()
                 yield response.line

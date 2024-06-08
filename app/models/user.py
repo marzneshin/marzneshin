@@ -50,7 +50,9 @@ class UserDataLimitResetStrategy(str, Enum):
 
 class User(BaseModel):
     id: int | None = None
-    username: Annotated[str, StringConstraints(to_lower=True, pattern=USERNAME_REGEXP)]
+    username: Annotated[
+        str, StringConstraints(to_lower=True, pattern=USERNAME_REGEXP)
+    ]
     expire: Union[datetime, None, Literal[0]] = Field(None)
     key: str = Field(default_factory=lambda: secrets.token_hex(16))
     data_limit: int | None = Field(
@@ -97,11 +99,15 @@ class UserCreate(User):
                     "User cannot be on hold without a valid on_hold_expire_duration."
                 )
             if self.expire:
-                raise ValueError("User cannot be on hold with specified expire.")
+                raise ValueError(
+                    "User cannot be on hold with specified expire."
+                )
         elif self.status == UserStatusCreate.active and (
             self.on_hold_expire_duration or self.on_hold_timeout
         ):
-            raise ValueError("on hold parametrs set when user status isn't on_hold.")
+            raise ValueError(
+                "on hold parametrs set when user status isn't on_hold."
+            )
         return self
 
     @field_validator("expire")
@@ -112,7 +118,9 @@ class UserCreate(User):
                 "Expire date should be offset naive, and preferably in utc timezone."
             )
         if isinstance(v, datetime) and v < datetime.utcnow():
-            raise ValueError("Expire date should be in the future, not in the past.")
+            raise ValueError(
+                "Expire date should be in the future, not in the past."
+            )
         return v
 
 
@@ -152,7 +160,9 @@ class UserModify(User):
                 "Expire date should be offset naive, and preferably in utc timezone."
             )
         if isinstance(v, datetime) and v < datetime.utcnow():
-            raise ValueError("Expire date should be in the future, not in the past.")
+            raise ValueError(
+                "Expire date should be in the future, not in the past."
+            )
         return v
 
 
