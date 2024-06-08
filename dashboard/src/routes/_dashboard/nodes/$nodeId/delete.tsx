@@ -1,32 +1,48 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import {
+    createFileRoute,
+    useNavigate,
+    defer,
+    Await
+} from "@tanstack/react-router";
 import {
     NodesDeleteConfirmationDialog,
-    useNodeQuery,
+    fetchNode,
 } from "@marzneshin/features/nodes";
-import { AlertDialog, AlertDialogContent } from "@marzneshin/components";
+import { Suspense } from "react";
+import { AlertDialog, AlertDialogContent, Loading } from "@marzneshin/components";
 import { useDialog } from "@marzneshin/hooks";
 
 const NodeDelete = () => {
     const [deleteDialogOpen, setDeleteDialogOpen] = useDialog(true);
-    const { nodeId } = Route.useParams();
-    const { data: node } = useNodeQuery({ nodeId: Number(nodeId) });
-    const navigate = useNavigate();
+    const { node } = Route.useLoaderData()
+    const navigate = useNavigate({ from: "/nodes/$nodeId/delete" });
 
-    return node ? (
-        <NodesDeleteConfirmationDialog
-            open={deleteDialogOpen}
-            onOpenChange={setDeleteDialogOpen}
-            entity={node}
-            onClose={() => navigate({ to: "/nodes" })}
-        />
-    ) : (
-        <AlertDialog open={true}>
-            <AlertDialogContent>Node not found</AlertDialogContent>
-        </AlertDialog>
+    return (
+        <Suspense fallback={<Loading />}>
+            <Await promise={node}>
+                {(node) => (
+                    <NodesDeleteConfirmationDialog
+                        open={deleteDialogOpen}
+                        onOpenChange={setDeleteDialogOpen}
+                        entity={node}
+                        onClose={() => navigate({ to: "/nodes" })}
+                    />
+                )}
+            </Await>
+        </Suspense>
     );
 };
 
 export const Route = createFileRoute("/_dashboard/nodes/$nodeId/delete")({
+    loader: async ({ params }) => {
+        const nodePromise = fetchNode({
+            queryKey: ["nodes", Number.parseInt(params.nodeId)]
+        });
+
+        return {
+            node: defer(nodePromise)
+        }
+    },
     component: NodeDelete,
     errorComponent: () => (
         <AlertDialog open={true}>
