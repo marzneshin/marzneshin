@@ -29,11 +29,11 @@ class SubscriptionSettings(BaseModel):
 
 
 class TelegramSettings(BaseModel):
-    token: str | None
+    token: str
     admin_id: list[int]
     channel_id: int | None
 
 
 class Settings(BaseModel):
     subscription: SubscriptionSettings
-    telegram: TelegramSettings
+    telegram: TelegramSettings | None
