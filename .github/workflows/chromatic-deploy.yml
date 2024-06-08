@@ -3,7 +3,7 @@ name: Chromatic Deploy
 on:
   push:
     branches:
-      - main
+      - master
   pull_request:
 
 concurrency:
@@ -34,7 +34,7 @@ jobs:
             dashboard/**
   chromatic:
     name: Visual tests
-    needs: [changed-files]
+    needs: [ changed-files ]
     if: ${{ needs.changed-files.outputs.any_changed == 'true' }}
     uses: ./.github/workflows/chromatic.yml
     secrets: inherit
