@@ -23,7 +23,7 @@ export const ServiceInboundsTable: FC<ServiceInboundsTableProps> = ({
     useEffect(() => {
         setSelectedInbound((prevSelected) => {
             const updatedSelected: RowSelectionState = { ...prevSelected };
-            for (const inboundId of service.inbounds) {
+            for (const inboundId of service.inbound_ids) {
                 for (const [i, fetchedInbound] of data.entries()) {
                     if (fetchedInbound.id === inboundId) {
                         updatedSelected[i] = true;
@@ -32,13 +32,13 @@ export const ServiceInboundsTable: FC<ServiceInboundsTableProps> = ({
             }
             return updatedSelected;
         });
-    }, [data, service.inbounds]);
+    }, [data, service.inbound_ids]);
 
     const handleApply = useCallback(() => {
         const selectedInboundIds = Object.keys(selectedInbound)
             .filter((key) => selectedInbound[Number.parseInt(key)])
             .map((key) => data[Number.parseInt(key)].id);
-        updateService({ ...service, inbounds: selectedInboundIds });
+        updateService({ ...service, inbound_ids: selectedInboundIds });
     }, [data, selectedInbound, service, updateService]);
 
     const disabled = Object.keys(selectedInbound).length < 1;

@@ -43,7 +43,7 @@ def user_subscription(
     user: UserResponse = UserResponse.model_validate(db_user)
 
     if "text/html" in accept_header:
-        links = generate_subscription(user=user, config_format="v2ray").split()
+        links = generate_subscription(user=db_user, config_format="v2ray").split()
         return HTMLResponse(
             render_template(SUBSCRIPTION_PAGE_TEMPLATE, {"user": user, "links": links})
         )
@@ -64,18 +64,20 @@ def user_subscription(
     crud.update_user_sub(db, db_user, user_agent)
 
     if re.match("^([Cc]lash-verge|[Cc]lash-?[Mm]eta)", user_agent):
-        conf = generate_subscription(user=user, config_format="clash-meta")
+        conf = generate_subscription(user=db_user, config_format="clash-meta")
         return Response(content=conf, media_type="text/yaml", headers=response_headers)
     elif re.match("^([Cc]lash|[Ss]tash)", user_agent):
-        conf = generate_subscription(user=user, config_format="clash")
+        conf = generate_subscription(user=db_user, config_format="clash")
         return Response(content=conf, media_type="text/yaml", headers=response_headers)
     elif re.match("^(SFA|SFI|SFM|SFT)", user_agent):
-        conf = generate_subscription(user=user, config_format="sing-box")
+        conf = generate_subscription(user=db_user, config_format="sing-box")
         return Response(
             content=conf, media_type="application/json", headers=response_headers
         )
     else:
-        conf = generate_subscription(user=user, config_format="v2ray", as_base64=True)
+        conf = generate_subscription(
+            user=db_user, config_format="v2ray", as_base64=True
+        )
         return Response(content=conf, media_type="text/plain", headers=response_headers)
 
 
@@ -119,24 +121,26 @@ def user_subscription_with_client_type(
     }
 
     if client_type == "clash-meta":
-        conf = generate_subscription(user=user, config_format="clash-meta")
+        conf = generate_subscription(user=db_user, config_format="clash-meta")
         return Response(content=conf, media_type="text/yaml", headers=response_headers)
 
     elif client_type == "sing-box":
-        conf = generate_subscription(user=user, config_format="sing-box")
+        conf = generate_subscription(user=db_user, config_format="sing-box")
         return Response(
             content=conf, media_type="application/json", headers=response_headers
         )
     elif client_type == "clash":
-        conf = generate_subscription(user=user, config_format="clash")
+        conf = generate_subscription(user=db_user, config_format="clash")
         return Response(content=conf, media_type="text/yaml", headers=response_headers)
 
     elif client_type == "v2ray":
-        conf = generate_subscription(user=user, config_format="v2ray", as_base64=True)
+        conf = generate_subscription(
+            user=db_user, config_format="v2ray", as_base64=True
+        )
         return Response(content=conf, media_type="text/plain", headers=response_headers)
     elif client_type == "xray":
         return Response(
-            content=generate_subscription(user=user, config_format="xray"),
+            content=generate_subscription(user=db_user, config_format="xray"),
             headers=response_headers,
         )
     else:

@@ -26,7 +26,7 @@ export const UserServicesTable: FC<UserServicesTableProps> = ({ user }) => {
     useEffect(() => {
         setSelectedService((prevSelected) => {
             const updatedSelected: RowSelectionState = { ...prevSelected };
-            for (const serviceId of user.services) {
+            for (const serviceId of user.service_ids) {
                 for (const [i, fetchedService] of data.entity.entries()) {
                     if (fetchedService.id === serviceId) {
                         updatedSelected[i] = true;
@@ -35,13 +35,13 @@ export const UserServicesTable: FC<UserServicesTableProps> = ({ user }) => {
             }
             return updatedSelected;
         });
-    }, [data, user.services]);
+    }, [data, user.service_ids]);
 
     const handleApply = useCallback(() => {
         const selectedServiceIds = Object.keys(selectedService)
             .filter((key) => selectedService[Number.parseInt(key)])
             .map((key) => data.entity[Number.parseInt(key)].id);
-        updateUser({ ...user, services: selectedServiceIds });
+        updateUser({ ...user, service_ids: selectedServiceIds });
     }, [data, selectedService, user, updateUser]);
 
     const disabled = Object.keys(selectedService).length < 1;

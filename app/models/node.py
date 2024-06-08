@@ -1,5 +1,4 @@
 from enum import Enum
-from typing import List, Optional
 
 from pydantic import ConfigDict, BaseModel, Field
 
@@ -20,8 +19,8 @@ class NodeSettings(BaseModel):
     certificate: str
 
 
-class NodeBase(BaseModel):
-    id: Optional[int] = Field(None)
+class Node(BaseModel):
+    id: int | None = Field(None)
     name: str
     address: str
     port: int = 53042
@@ -32,20 +31,13 @@ class NodeBase(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
-from app.models.proxy import InboundBase
-
-
-class Node(NodeBase):
-    inbounds: Optional[List[InboundBase]] = None
-
-
 class NodeCreate(Node):
     model_config = ConfigDict(
         json_schema_extra={
             "example": {
                 "name": "DE node",
                 "address": "192.168.1.1",
-                "port": 62050,
+                "port": 53042,
                 "usage_coefficient": 1,
             }
         }
@@ -53,19 +45,18 @@ class NodeCreate(Node):
 
 
 class NodeModify(Node):
-    name: Optional[str] = Field(None)
-    address: Optional[str] = Field(None)
-    port: Optional[int] = Field(None)
-    connection_backend: Optional[NodeConnectionBackend] = Field(None)
-    status: Optional[NodeStatus] = Field(None)
-    usage_coefficient: Optional[float] = Field(None, ge=0)
+    name: str | None = Field(None)
+    address: str | None = Field(None)
+    port: int | None = Field(None)
+    connection_backend: NodeConnectionBackend | None = Field(None)
+    status: NodeStatus | None = Field(None)
+    usage_coefficient: float | None = Field(None, ge=0)
     model_config = ConfigDict(
         json_schema_extra={
             "example": {
                 "name": "DE node",
                 "address": "192.168.1.1",
-                "port": 62050,
-                "api_port": 62051,
+                "port": 53042,
                 "status": "disabled",
                 "usage_coefficient": 1.0,
             }
@@ -74,18 +65,19 @@ class NodeModify(Node):
 
 
 class NodeResponse(Node):
-    xray_version: Optional[str] = None
+    xray_version: str | None = None
     status: NodeStatus
-    message: Optional[str] = None
+    message: str | None = None
     model_config = ConfigDict(from_attributes=True)
+    inbound_ids: list[int] | None = None
 
 
 class NodeUsageResponse(BaseModel):
-    node_id: Optional[int] = None
+    node_id: int | None = None
     node_name: str
     uplink: int
     downlink: int
 
 
 class NodesUsageResponse(BaseModel):
-    usages: List[NodeUsageResponse]
+    usages: list[NodeUsageResponse]

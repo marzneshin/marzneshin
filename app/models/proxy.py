@@ -1,68 +1,16 @@
-import json
 from enum import Enum
-from typing import Optional, List
 
 from pydantic import ConfigDict, BaseModel, Field, field_validator
 
-
-class XTLSFlows(Enum):
-    NONE = ""
-    VISION = "xtls-rprx-vision"
-
-
-class ShadowsocksMethods(Enum):
-    AES_128_GCM = "aes-128-gcm"
-    AES_256_GCM = "aes-256-gcm"
-    CHACHA20_POLY1305 = "chacha20-ietf-poly1305"
+from app.models.node import Node
 
 
 class ProxyTypes(str, Enum):
     # proxy_type = protocol
-
     VMess = "vmess"
     VLESS = "vless"
     Trojan = "trojan"
     Shadowsocks = "shadowsocks"
-
-    @property
-    def settings_model(self):
-        if self == self.VMess:
-            return VMessSettings
-        if self == self.VLESS:
-            return VLESSSettings
-        if self == self.Trojan:
-            return TrojanSettings
-        if self == self.Shadowsocks:
-            return ShadowsocksSettings
-
-
-class ProxySettings(BaseModel):
-    @classmethod
-    def from_dict(cls, proxy_type: ProxyTypes, _dict: dict):
-        return ProxyTypes(proxy_type).settings_model.parse_obj(_dict)
-
-    def dict(self, *, no_obj=False, **kwargs):
-        if no_obj:
-            return json.loads(self.json())
-        return super().dict(**kwargs)
-
-
-class VMessSettings(ProxySettings):
-    id: str = Field(nullable=False)
-
-
-class VLESSSettings(ProxySettings):
-    id: str = Field(nullable=False)
-    flow: XTLSFlows = XTLSFlows.NONE
-
-
-class TrojanSettings(ProxySettings):
-    password: str = Field(nullable=False)
-
-
-class ShadowsocksSettings(ProxySettings):
-    password: str = Field(nullable=False)
-    method: ShadowsocksMethods = ShadowsocksMethods.CHACHA20_POLY1305
 
 
 class InboundHostSecurity(str, Enum):
@@ -114,17 +62,17 @@ class FragmentSettings(BaseModel):
 class InboundHost(BaseModel):
     remark: str
     address: str
-    port: Optional[int] = Field(None)
-    sni: Optional[str] = Field(None)
-    host: Optional[str] = Field(None)
-    path: Optional[str] = Field(None)
+    port: int | None = Field(None)
+    sni: str | None = Field(None)
+    host: str | None = Field(None)
+    path: str | None = Field(None)
     security: InboundHostSecurity = InboundHostSecurity.inbound_default
     alpn: InboundHostALPN = InboundHostALPN.none
     fingerprint: InboundHostFingerprint = InboundHostFingerprint.none
-    allowinsecure: Optional[bool] = None
-    is_disabled: Optional[bool] = None
+    allowinsecure: bool | None = None
+    is_disabled: bool | None = None
     mux: bool = Field(False)
-    fragment: Optional[FragmentSettings] = Field(None)
+    fragment: FragmentSettings | None = Field(None)
     model_config = ConfigDict(from_attributes=True)
 
     @field_validator("remark", "address", "path")
@@ -142,19 +90,11 @@ class InboundHostResponse(InboundHost):
     id: int
 
 
-class InboundBase(BaseModel):
-    id: Optional[int] = Field(None)
-    tag: str = Field()
-    protocol: ProxyTypes = Field()
+class Inbound(BaseModel):
+    id: int
+    tag: str
+    protocol: ProxyTypes
     config: str
-    node_id: Optional[int] = Field(None)
+    node: Node
+    service_ids: list[int]
     model_config = ConfigDict(from_attributes=True)
-
-
-from app.models.service import ServiceBase
-from app.models.node import NodeBase
-
-
-class Inbound(InboundBase):
-    services: Optional[List[ServiceBase]] = None
-    node: Optional[NodeBase] = None

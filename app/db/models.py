@@ -61,11 +61,18 @@ class Service(Base):
     __tablename__ = "services"
     id = Column(Integer, primary_key=True)
     name = Column(String(64))
-    # modifications = Column(String(1024))
     users = relationship("User", secondary=users_services, back_populates="services")
     inbounds = relationship(
         "Inbound", secondary=inbounds_services, back_populates="services"
     )
+
+    @property
+    def inbound_ids(self):
+        return [inbound.id for inbound in self.inbounds]
+
+    @property
+    def user_ids(self):
+        return [user.id for user in self.users]
 
 
 class User(Base):
@@ -86,7 +93,6 @@ class User(Base):
         ".join(Inbound, Inbound.id == inbounds_services.c.inbound_id)",
         viewonly=True,
         distinct_target_key=True,
-        lazy="joined",
     )
     # proxies = relationship("Proxy", back_populates="user", cascade="all, delete-orphan")
     status = Column(Enum(UserStatus), nullable=False, default=UserStatus.active)
@@ -99,7 +105,6 @@ class User(Base):
         "NodeUserUsage",
         back_populates="user",
         cascade="all,delete,delete-orphan",
-        lazy="joined",
     )
     notification_reminders = relationship(
         "NotificationReminder",
@@ -126,6 +131,10 @@ class User(Base):
     on_hold_timeout = Column(DateTime)
     edit_at = Column(DateTime)
 
+    @property
+    def service_ids(self):
+        return [service.id for service in self.services]
+
 
 class Inbound(Base):
     __tablename__ = "inbounds"
@@ -143,6 +152,10 @@ class Inbound(Base):
     hosts = relationship(
         "InboundHost", back_populates="inbound", cascade="all, delete, delete-orphan"
     )
+
+    @property
+    def service_ids(self):
+        return [service.id for service in self.services]
 
 
 class InboundHost(Base):
@@ -234,6 +247,10 @@ class Node(Base):
     usage_coefficient = Column(
         Float, nullable=False, server_default=text("1.0"), default=1
     )
+
+    @property
+    def inbound_ids(self):
+        return [inbound.id for inbound in self.inbounds]
 
 
 class NodeUserUsage(Base):

@@ -10,11 +10,6 @@ import {
 
 export type SortUserBy = "username" | "used_traffic" | "data_limit" | "expire" | "created_at"
 
-interface UserResponse extends UserType {
-    service_ids: number[]
-    services: any[]
-}
-
 export async function fetchUsers({ queryKey }: EntityQueryKeyType): FetchEntityReturn<UserType> {
     return fetch(`/users`, {
         query: {
@@ -25,13 +20,8 @@ export async function fetchUsers({ queryKey }: EntityQueryKeyType): FetchEntityR
             order_by: queryKey[4]
         }
     }).then((result) => {
-        const users: UserType[] = result.items.map((fetchedUser: UserResponse) => {
-            const user: UserType = fetchedUser;
-            user.services = fetchedUser.service_ids
-            return user
-        })
         return {
-            entity: users,
+            entity: result.items,
             pageCount: result.pages
         };
     });

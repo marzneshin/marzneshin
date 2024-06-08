@@ -1,57 +1,35 @@
-from typing import List, Optional
-
-from pydantic import ConfigDict, BaseModel, Field, computed_field
+from pydantic import ConfigDict, BaseModel, Field
 
 
-class ServiceBase(BaseModel):
-    id: Optional[int] = None
-    name: Optional[str] = Field(None)
+class Service(BaseModel):
+    id: int | None = None
+    name: str | None = Field(None)
     model_config = ConfigDict(from_attributes=True)
 
 
-from app.models.proxy import InboundBase
-from app.models.user import UserBase
-
-
-class Service(ServiceBase):
-    users: List[UserBase] = Field([])
-    inbounds: List[InboundBase] = Field([])
-
-
-class ServiceCreate(ServiceBase):
-    users: List[int] = Field([])
-    inbounds: List[int] = Field([])
+class ServiceCreate(Service):
+    inbound_ids: list[int] = Field([])
     model_config = ConfigDict(
         json_schema_extra={
             "example": {
                 "name": "my service 1",
-                "inbounds": [1, 5, 9],
-                "users": [1, 2, 3],
+                "inbound_ids": [1, 5, 9],
             }
         }
     )
 
 
-class ServiceModify(ServiceBase):
-    inbounds: Optional[List[int]] = Field(None)
+class ServiceModify(Service):
+    inbound_ids: list[int] | None = Field(None)
     model_config = ConfigDict(
         json_schema_extra={
-            "example": {"id": 2, "name": "my service 2", "inbounds": [1, 2, 3]}
+            "example": {"id": 2, "name": "my service 2", "inbound_ids": [1, 2, 3]}
         }
     )
 
 
 class ServiceResponse(Service):
-    id: int
-
-    @computed_field
-    @property
-    def user_ids(self) -> List[int]:
-        return [u.id for u in self.users]
-
-    @computed_field
-    @property
-    def inbound_ids(self) -> List[int]:
-        return [i.id for i in self.inbounds]
+    inbound_ids: list[int]
+    user_ids: list[int]
 
     model_config = ConfigDict(from_attributes=True)

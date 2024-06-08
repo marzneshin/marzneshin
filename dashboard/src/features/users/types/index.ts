@@ -30,14 +30,14 @@ export interface UserType {
     status: Status;
     links: string[];
     subscription_url: string;
-    services: number[];
+    service_ids: number[];
     note: string;
     online_at: string;
 }
 
 export type UserMutationType = Pick<
     UserType,
-    | 'services'
+    | 'service_ids'
     | 'expire'
     | 'data_limit'
     | 'data_limit_reset_strategy'
