@@ -43,7 +43,7 @@ STATUS_EMOJIS = {
 }
 
 subscription_handlers = {
-    "v2ray": LinksConfig,
+    "links": LinksConfig,
     "xray": XrayConfig,
     "clash-meta": ClashMetaConfig,
     "clash": ClashConfig,
@@ -63,7 +63,7 @@ handlers_templates = {
 
 def generate_subscription(
     user: "UserResponse",
-    config_format: Literal["v2ray", "xray", "clash-meta", "clash", "sing-box"],
+    config_format: Literal["links", "xray", "clash-meta", "clash", "sing-box"],
     as_base64: bool = False,
 ) -> str:
 

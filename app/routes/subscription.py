@@ -1,22 +1,37 @@
 import re
+from collections import defaultdict
 
 from fastapi import APIRouter
 from fastapi import Header, HTTPException, Path, Request, Response
 from fastapi.responses import HTMLResponse
 
 from app.db import crud
+from app.db.models import Settings
 from app.dependencies import DBDep, SubUserDep, StartDateDep, EndDateDep
+from app.models.settings import SubscriptionSettings
 from app.models.user import UserResponse
 from app.templates import render_template
 from app.utils.share import encode_title, generate_subscription
 from config import (
-    SUB_PROFILE_TITLE,
-    SUB_SUPPORT_URL,
-    SUB_UPDATE_INTERVAL,
     SUBSCRIPTION_PAGE_TEMPLATE,
 )
 
 router = APIRouter(prefix="/sub", tags=["Subscription"])
+
+
+config_mimetype = defaultdict(
+    lambda: "text/plain",
+    {
+        "links": "text/plain",
+        "base64-links": "text/plain",
+        "sing-box": "application/json",
+        "xray": "application/json",
+        "clash": "text/yaml",
+        "clash-meta": "text/yaml",
+        "template": "text/html",
+        "block": "text/plain",
+    },
+)
 
 
 def get_subscription_user_info(user: UserResponse) -> dict:
@@ -38,26 +53,21 @@ def user_subscription(
     """
     Subscription link, V2ray and Clash supported
     """
-    accept_header = request.headers.get("Accept", "")
 
     user: UserResponse = UserResponse.model_validate(db_user)
 
-    if "text/html" in accept_header:
-        links = generate_subscription(
-            user=db_user, config_format="v2ray"
-        ).split()
-        return HTMLResponse(
-            render_template(
-                SUBSCRIPTION_PAGE_TEMPLATE, {"user": user, "links": links}
-            )
-        )
+    crud.update_user_sub(db, db_user, user_agent)
+
+    subscription_settings = SubscriptionSettings.model_validate(
+        db.query(Settings.subscription).first()[0]
+    )
 
     response_headers = {
         "content-disposition": f'attachment; filename="{user.username}"',
         "profile-web-page-url": str(request.url),
-        "support-url": SUB_SUPPORT_URL,
-        "profile-title": encode_title(SUB_PROFILE_TITLE),
-        "profile-update-interval": SUB_UPDATE_INTERVAL,
+        "support-url": subscription_settings.support_link,
+        "profile-title": encode_title(subscription_settings.profile_title),
+        "profile-update-interval": str(subscription_settings.update_interval),
         "subscription-userinfo": "; ".join(
             f"{key}={val}"
             for key, val in get_subscription_user_info(user).items()
@@ -65,32 +75,37 @@ def user_subscription(
         ),
     }
 
-    crud.update_user_sub(db, db_user, user_agent)
+    for rule in subscription_settings.rules:
+        if re.match(rule.pattern, user_agent):
+            if rule.result.value == "template":
+                links = generate_subscription(
+                    user=db_user, config_format="links"
+                ).split()
+                return HTMLResponse(
+                    render_template(
+                        SUBSCRIPTION_PAGE_TEMPLATE,
+                        {"user": user, "links": links},
+                    )
+                )
+            elif rule.result.value == "block":
+                return HTT
+            elif rule.result.value == "base64-links":
+                b64 = True
+                config_format = "links"
+            else:
+                b64 = False
+                config_format = rule.result.value
 
-    if re.match("^([Cc]lash-verge|[Cc]lash-?[Mm]eta)", user_agent):
-        conf = generate_subscription(user=db_user, config_format="clash-meta")
-        return Response(
-            content=conf, media_type="text/yaml", headers=response_headers
-        )
-    elif re.match("^([Cc]lash|[Ss]tash)", user_agent):
-        conf = generate_subscription(user=db_user, config_format="clash")
-        return Response(
-            content=conf, media_type="text/yaml", headers=response_headers
-        )
-    elif re.match("^(SFA|SFI|SFM|SFT)", user_agent):
-        conf = generate_subscription(user=db_user, config_format="sing-box")
-        return Response(
-            content=conf,
-            media_type="application/json",
-            headers=response_headers,
-        )
-    else:
-        conf = generate_subscription(
-            user=db_user, config_format="v2ray", as_base64=True
-        )
-        return Response(
-            content=conf, media_type="text/plain", headers=response_headers
-        )
+            conf = generate_subscription(
+                user=db_user,
+                config_format=config_format,
+                as_base64=b64,
+            )
+            return Response(
+                content=conf,
+                media_type=config_mimetype[rule.result],
+                headers=response_headers,
+            )
 
 
 @router.get("/{username}/{key}/info", response_model=UserResponse)
@@ -112,6 +127,7 @@ def user_get_usage(
 
 @router.get("/{username}/{key}/{client_type}")
 def user_subscription_with_client_type(
+    db: DBDep,
     db_user: SubUserDep,
     request: Request,
     client_type: str = Path(regex="sing-box|clash-meta|clash|xray|v2ray"),
@@ -122,12 +138,16 @@ def user_subscription_with_client_type(
 
     user: UserResponse = UserResponse.model_validate(db_user)
 
+    subscription_settings = SubscriptionSettings.model_validate(
+        db.query(Settings.subscription).first()[0]
+    )
+
     response_headers = {
         "content-disposition": f'attachment; filename="{user.username}"',
         "profile-web-page-url": str(request.url),
-        "support-url": SUB_SUPPORT_URL,
-        "profile-title": encode_title(SUB_PROFILE_TITLE),
-        "profile-update-interval": SUB_UPDATE_INTERVAL,
+        "support-url": subscription_settings.support_link,
+        "profile-title": encode_title(subscription_settings.profile_title),
+        "profile-update-interval": subscription_settings.update_interval,
         "subscription-userinfo": "; ".join(
             f"{key}={val}"
             for key, val in get_subscription_user_info(user).items()
@@ -156,7 +176,7 @@ def user_subscription_with_client_type(
 
     elif client_type == "v2ray":
         conf = generate_subscription(
-            user=db_user, config_format="v2ray", as_base64=True
+            user=db_user, config_format="links", as_base64=True
         )
         return Response(
             content=conf, media_type="text/plain", headers=response_headers
