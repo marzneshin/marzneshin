@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { fetch } from "@marzneshin/utils";
 
 export async function fetchHost({ queryKey }: { queryKey: [string, number] }): Promise<HostType> {
-    return fetch(`/inbounds/hosts/${queryKey[1]}`).then((result) => result);
+    return fetch(`/inbounds/hosts/${queryKey[1]}`);
 }
 
 export const HostQueryFetchKey = "hosts";
