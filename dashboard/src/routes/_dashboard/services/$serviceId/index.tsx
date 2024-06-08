@@ -1,52 +1,28 @@
 import {
     createFileRoute,
     useNavigate,
-    defer,
-    Await
 } from "@tanstack/react-router";
 import {
-    ServiceSettingsDialog,
-    fetchService,
+    useRouterServiceContext,
+    ServicesSettingsDialog,
 } from "@marzneshin/features/services";
-import { Suspense } from "react";
-import { AlertDialog, AlertDialogContent, Loading } from "@marzneshin/components";
 import { useDialog } from "@marzneshin/hooks";
 
-
-const ServiceSetting = () => {
+const ServiceOpen = () => {
     const [settingsDialogOpen, setSettingsDialogOpen] = useDialog(true);
-    const { service } = Route.useLoaderData()
+    const value = useRouterServiceContext()
     const navigate = useNavigate({ from: "/services/$serviceId" });
 
-    return (
-        <Suspense fallback={<Loading />}>
-            <Await promise={service}>
-                {(service) => (
-                    <ServiceSettingsDialog
-                        open={settingsDialogOpen}
-                        onOpenChange={setSettingsDialogOpen}
-                        entity={service}
-                        onClose={() => navigate({ to: "/services" })}
-                    />
-                )}
-            </Await>
-        </Suspense>
+    return value && (
+        <ServicesSettingsDialog
+            open={settingsDialogOpen}
+            onOpenChange={setSettingsDialogOpen}
+            entity={value.service}
+            onClose={() => navigate({ to: "/services" })}
+        />
     );
-};
-
+}
 
 export const Route = createFileRoute('/_dashboard/services/$serviceId/')({
-    loader: async ({ params }) => {
-        const servicePromise = fetchService({ queryKey: ["services", Number.parseInt(params.serviceId)] });
-
-        return {
-            service: defer(servicePromise)
-        }
-    },
-    component: ServiceSetting,
-    errorComponent: () => (
-        <AlertDialog open={true}>
-            <AlertDialogContent>Service not found</AlertDialogContent>
-        </AlertDialog>
-    ),
+    component: ServiceOpen
 })
