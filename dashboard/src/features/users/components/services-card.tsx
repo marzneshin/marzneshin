@@ -11,15 +11,13 @@ interface ServiceCardProps {
 export const ServiceCard: FC<ServiceCardProps> = (
     { service }
 ) => {
-    if (service.user_ids && service.inbound_ids) {
-        return (
-            <EntityFieldCard
-                FirstIcon={UserIcon}
-                SecondIcon={ServerIcon}
-                firstAmount={service.user_ids.length}
-                secondAmount={service.inbound_ids.length}
-                name={service.name}
-            />
-        )
-    }
+    return (service.user_ids && service.inbound_ids) && (
+        <EntityFieldCard
+            FirstIcon={UserIcon}
+            SecondIcon={ServerIcon}
+            firstAmount={service.user_ids.length}
+            secondAmount={service.inbound_ids.length}
+            name={service.name}
+        />
+    )
 };
