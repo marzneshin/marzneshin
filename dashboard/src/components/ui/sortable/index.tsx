@@ -1,14 +1,11 @@
 import React from "react"
 import type {
     DndContextProps,
-    DropAnimation,
     UniqueIdentifier,
 } from "@dnd-kit/core";
 import {
     closestCenter,
-    defaultDropAnimationSideEffects,
     DndContext,
-    DragOverlay,
     KeyboardSensor,
     MouseSensor,
     TouchSensor,
@@ -27,6 +24,7 @@ import {
 } from "@dnd-kit/sortable";
 import { SortableDragHandle } from "./drag-handle";
 import { SortableItem } from "./item";
+import { SortableOverlay } from "./overlay";
 
 interface SortableProps<TData extends { id: UniqueIdentifier }>
     extends DndContextProps {
@@ -141,39 +139,6 @@ function Sortable<TData extends { id: UniqueIdentifier }>({
         </DndContext>
     )
 }
-
-const dropAnimationOpts: DropAnimation = {
-    sideEffects: defaultDropAnimationSideEffects({
-        styles: {
-            active: {
-                opacity: "0.4",
-            },
-        },
-    }),
-}
-
-interface SortableOverlayProps
-    extends React.ComponentPropsWithRef<typeof DragOverlay> {
-    activeId?: UniqueIdentifier | null
-}
-
-function SortableOverlay({
-    activeId,
-    dropAnimation = dropAnimationOpts,
-    children,
-    ...props
-}: SortableOverlayProps) {
-    return (
-        <DragOverlay dropAnimation={dropAnimation} {...props}>
-            {activeId ? (
-                <SortableItem value={activeId} asChild>
-                    {children}
-                </SortableItem>
-            ) : null}
-        </DragOverlay>
-    )
-}
-
 
 
 export { Sortable, SortableDragHandle, SortableItem, SortableOverlay }

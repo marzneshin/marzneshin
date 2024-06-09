@@ -33,3 +33,5 @@ export * from "./textarea";
 export * from "./radio-group";
 export * from "./accordion";
 export * from "./command";
+export * from "./sortable";
+export * from "./skeleton";
