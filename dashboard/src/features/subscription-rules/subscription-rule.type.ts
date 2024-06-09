@@ -4,3 +4,11 @@ export type SubscriptionRuleType = {
     pattern: string,
     result: SubscriptionRuleResultType
 }
+
+export type SubscriptionSettingsType = {
+    url_prefix: string;
+    profile_title: string;
+    support_link: string;
+    update_interval: number;
+    rules: SubscriptionRuleType[];
+}
