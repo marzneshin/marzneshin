@@ -51,6 +51,8 @@
   "advanced-options": "Advanced Options",
   "language": "Language",
   "theme": "Theme",
+  "pattern": "Pattern",
+  "result": "Result",
   "support-us": {
     "title": "Support Us",
     "desc": "Marzneshin is free and open-source software (FOSS), join us and show your support by donating.",
@@ -58,6 +60,15 @@
   },
   "page": {
     "settings": {
+      "subscription-rules": {
+        "add-rule": "Add Rule",
+        "title": "Subscription Rules",
+        "desc": "Add your subscription rules in order of priority.",
+        "alert": {
+          "title": "No rules",
+          "desc": "No rules have been defined for subscription"
+        }
+      },
       "certificate": {
         "copy": "Copy Certificate",
         "error": "Certificate Unavailable",
