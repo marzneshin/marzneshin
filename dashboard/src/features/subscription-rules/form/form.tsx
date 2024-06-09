@@ -23,33 +23,21 @@ import {
 } from "./fields";
 import {
     useSubscriptionSettingsQuery,
-    useSubscriptionSettingsMutation
+    useSubscriptionSettingsMutation,
 } from "@marzneshin/features/subscription-rules"
 import {
     DevTool
 } from "@hookform/devtools"
 import { useEffect } from "react";
 
-
-const transformValue = (value) => {
-    return {
-        ...value,
-        url_prefix: value.url_prefix || "",
-        support_link: value.support_link || "",
-        profile_title: value.profile_title || "",
-        update_interval: Number.parseInt(value)
-    }
-}
-
 export function SubscriptionRulesForm() {
     const { t } = useTranslation()
     const { data } = useSubscriptionSettingsQuery()
-    const mutate = useSubscriptionSettingsMutation()
+    const subscriptionSettings = useSubscriptionSettingsMutation()
     const form = useForm<Schema>({
         resolver: zodResolver(schema),
-        defaultValues: transformValue(data),
+        defaultValues: data,
     })
-
 
     useEffect(() => {
         if (data) {
@@ -60,7 +48,7 @@ export function SubscriptionRulesForm() {
     }, [data, form.reset])
 
     const onSubmit = (data: Schema) => {
-        mutate.mutate(transformValue(data))
+        subscriptionSettings.mutate(data)
     }
 
     const { fields, append, move, remove } = useFieldArray({

@@ -71,6 +71,9 @@ export const RuleItem = ({ index, field, onRemove: remove }: RuleItemProps) => {
                                     <SelectItem value="clash">clash</SelectItem>
                                     <SelectItem value="clash-meta">clash-meta</SelectItem>
                                     <SelectItem value="block">block</SelectItem>
+                                    <SelectItem value="template">template</SelectItem>
+                                    <SelectItem value="base64-links">base64-links</SelectItem>
+                                    <SelectItem value="links">links</SelectItem>
                                 </SelectContent>
                             </Select>
                         </FormItem>
