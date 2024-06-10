@@ -60,6 +60,12 @@
   },
   "page": {
     "settings": {
+      "subscription-settings": {
+        "url-prefix": "URL Prefix",
+        "profile-title": "Profile Title",
+        "support-link": "Support Link",
+        "update-interval": "Update Interval"
+      },
       "subscription-rules": {
         "add-rule": "Add Rule",
         "title": "Subscription Rules",

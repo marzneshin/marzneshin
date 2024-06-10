@@ -17,7 +17,7 @@ export const UpdateIntervalField = () => {
             name="update_interval"
             render={({ field }) => (
                 <FormItem>
-                    <FormLabel>{t("page.settings.subscription-settings.update_interval")}</FormLabel>
+                    <FormLabel>{t("page.settings.subscription-settings.update-interval")}</FormLabel>
                     <FormControl>
                         <Input
                             className="h-8"
