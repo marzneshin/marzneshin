@@ -8,7 +8,7 @@ import {
 } from '@marzneshin/components';
 import type { FC, PropsWithChildren } from 'react';
 
-export interface MiniWidgetProps extends PropsWithChildren {
+export interface SectionWidgetProps extends PropsWithChildren {
     title: JSX.Element | string;
     content?: JSX.Element | string;
     footer?: JSX.Element | string;
