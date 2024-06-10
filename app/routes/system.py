@@ -1,15 +1,45 @@
 from fastapi import APIRouter
 
-from app import __version__
 from app.db import crud
-from app.db.models import Admin as DBAdmin, User
+from app.db.models import Admin as DBAdmin, User, Settings
 from app.db.models import Node
 from app.dependencies import DBDep, AdminDep, SudoAdminDep
 from app.models.node import NodeStatus
-from app.models.system import SystemStats, UsersStats, NodesStats, AdminsStats
+from app.models.settings import SubscriptionSettings, TelegramSettings
+from app.models.system import UsersStats, NodesStats, AdminsStats
 from app.models.user import UserStatus
 
 router = APIRouter(tags=["System"], prefix="/system")
+
+
+@router.get("/settings/subscription", response_model=SubscriptionSettings)
+def get_subscription_settings(db: DBDep, admin: SudoAdminDep):
+    return db.query(Settings.subscription).first()[0]
+
+
+@router.put("/settings/subscription", response_model=SubscriptionSettings)
+def update_subscription_settings(
+    db: DBDep, modifications: SubscriptionSettings, admin: SudoAdminDep
+):
+    settings = db.query(Settings).first()
+    settings.subscription = modifications.model_dump(mode="json")
+    db.commit()
+    return settings.subscription
+
+
+@router.get("/settings/telegram", response_model=TelegramSettings | None)
+def get_telegram_settings(db: DBDep, admin: SudoAdminDep):
+    return db.query(Settings.telegram).first().telegram
+
+
+@router.put("/settings/telegram", response_model=TelegramSettings | None)
+def update_telegram_settings(
+    db: DBDep, new_telegram: TelegramSettings | None, admin: SudoAdminDep
+):
+    settings = db.query(Settings.telegram).first()
+    settings.telegram = new_telegram
+    db.commit()
+    return settings.telegram
 
 
 @router.get("/stats/admins", response_model=AdminsStats)

@@ -314,3 +314,11 @@ class NotificationReminder(Base):
     type = Column(Enum(ReminderType), nullable=False)
     expires_at = Column(DateTime)
     created_at = Column(DateTime, default=datetime.utcnow)
+
+
+class Settings(Base):
+    __tablename__ = "settings"
+
+    id = Column(Integer, primary_key=True, server_default=text("0"))
+    subscription = Column(JSON, nullable=False)
+    telegram = Column(JSON)
