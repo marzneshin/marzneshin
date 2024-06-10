@@ -3,7 +3,6 @@ import {
     FormControl,
     FormField,
     FormItem,
-    FormLabel,
     Input,
     SortableDragHandle,
     SortableItem,
@@ -22,7 +21,6 @@ import {
     UseFieldArrayRemove
 } from "react-hook-form";
 import { DragHandleDots2Icon, TrashIcon } from "@radix-ui/react-icons"
-import { useTranslation } from "react-i18next";
 
 interface RuleItemProps {
     index: number;
@@ -32,10 +30,9 @@ interface RuleItemProps {
 
 export const RuleItem = ({ index, field, onRemove: remove }: RuleItemProps) => {
     const form = useFormContext();
-    const { t } = useTranslation()
     return (
         <SortableItem key={field.id} value={field.id} asChild>
-            <div className="grid grid-cols-[0.67fr,0.3fr,auto,auto] px-1 items-end justify-start gap-2 my-2 mr-4">
+            <div className="grid grid-cols-[0.67fr,0.3fr,auto,auto] items-center justify-start gap-2 my-2">
                 <FormField
                     control={form.control}
                     name={`rules.${index}.pattern`}

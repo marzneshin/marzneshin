@@ -25,7 +25,7 @@ import {
 import {
     DevTool
 } from "@hookform/devtools"
-import { useEffect } from "react";
+import { useEffect, useCallback } from "react";
 
 export function SubscriptionRulesForm() {
     const { t } = useTranslation()
@@ -36,13 +36,21 @@ export function SubscriptionRulesForm() {
         defaultValues: data,
     })
 
-    useEffect(() => {
-        if (data) {
+    const handleSubscriptionRulesDataUpdate = useCallback(
+        () => {
             form.reset(data, {
                 keepDirtyValues: true
             })
+        },
+        [form,data],
+    )
+
+
+    useEffect(() => {
+        if (data) {
+            handleSubscriptionRulesDataUpdate()
         }
-    }, [data, form.reset])
+    }, [data, handleSubscriptionRulesDataUpdate])
 
     const onSubmit = (data: Schema) => {
         subscriptionSettings.mutate(data)
