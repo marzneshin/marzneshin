@@ -24,7 +24,7 @@ import {
 import {
     useSubscriptionSettingsQuery,
     useSubscriptionSettingsMutation,
-} from "@marzneshin/features/subscription-rules"
+} from "@marzneshin/features/subscription-settings";
 import {
     DevTool
 } from "@hookform/devtools"

@@ -1,4 +1,4 @@
-import { SubscriptionSettingsType } from "@marzneshin/features/subscription-rules";
+import { SubscriptionSettingsType } from "@marzneshin/features/subscription-settings";
 import { useQuery } from "@tanstack/react-query";
 import { fetch } from "@marzneshin/utils";
 

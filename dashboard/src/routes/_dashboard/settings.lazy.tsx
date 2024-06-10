@@ -1,8 +1,8 @@
 
 import { Card, CardContent, CardHeader, CardTitle, Page, VStack } from '@marzneshin/components'
 import { CertificateWidget, ConfigurationWidget } from '@marzneshin/features/settings';
-import { SubscriptionRulesWidget } from '@marzneshin/features/subscription-rules'
-import { createFileRoute } from '@tanstack/react-router'
+import { SubscriptionRulesWidget } from '@marzneshin/features/subscription-settings';
+import { createFileRoute } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next'
 
 export const Settings = () => {

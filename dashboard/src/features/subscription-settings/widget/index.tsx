@@ -1,7 +1,7 @@
 import {
     MiniWidget
 } from "@marzneshin/components";
-import { SubscriptionRulesForm } from "@marzneshin/features/subscription-rules";
+import { SubscriptionRulesForm } from "@marzneshin/features/subscription-settings";
 import  {useTranslation } from "react-i18next";
 
 export const SubscriptionRulesWidget = () => {
