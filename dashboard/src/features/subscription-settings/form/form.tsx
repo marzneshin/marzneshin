@@ -8,12 +8,8 @@ import {
     Button,
     Form,
     Sortable,
-    Alert,
-    AlertDescription,
-    AlertTitle,
     ScrollArea,
 } from "@marzneshin/components";
-import { Info } from 'lucide-react';
 import { Schema } from "./schema"
 import {
     UrlPrefixField,
@@ -21,6 +17,7 @@ import {
     SupportLinkField,
     UpdateIntervalField
 } from "./fields";
+import { NoRulesAlert } from "./no-rules-alert";
 import {
     useSubscriptionSettingsQuery,
     useSubscriptionSettingsMutation,
@@ -62,19 +59,11 @@ export function SubscriptionRulesForm() {
                 onSubmit={form.handleSubmit(onSubmit)}
                 className="flex w-full max-w-4xl flex-col gap-2"
             >
-                {fields.length === 0 && (
-                    <Alert>
-                        <Info className="mr-2" />
-                        <AlertTitle className="font-semibold text-primary">{t('page.settings.subscription-rules.alert.title')}</AlertTitle>
-                        <AlertDescription>
-                            {t('page.settings.subscription-rules.alert.desc')}
-                        </AlertDescription>
-                    </Alert>
-                )}
                 <UrlPrefixField />
                 <ProfileTitleField />
                 <SupportLinkField />
                 <UpdateIntervalField />
+                {fields.length === 0 && <NoRulesAlert />}
                 <div className="space-y-1">
                     <Sortable
                         value={fields}
