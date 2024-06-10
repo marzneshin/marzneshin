@@ -9,6 +9,7 @@ import {
     Form,
     Sortable,
     ScrollArea,
+    FormLabel,
 } from "@marzneshin/components";
 import { Schema } from "./schema"
 import {
@@ -22,9 +23,6 @@ import {
     useSubscriptionSettingsQuery,
     useSubscriptionSettingsMutation,
 } from "@marzneshin/features/subscription-settings";
-import {
-    DevTool
-} from "@hookform/devtools"
 import { useEffect, useCallback } from "react";
 
 export function SubscriptionRulesForm() {
@@ -44,7 +42,6 @@ export function SubscriptionRulesForm() {
         },
         [form,data],
     )
-
 
     useEffect(() => {
         if (data) {
@@ -88,6 +85,14 @@ export function SubscriptionRulesForm() {
                         }
                     >
                         <ScrollArea className="flex flex-col w-full max-h-[400px] gap-2" type="always">
+            <div className="grid grid-cols-[2fr,1.3fr,0.25fr,0.25fr] items-center justify-start gap-2 my-2">
+                            <FormLabel>
+                                {t("pattern")}
+                            </FormLabel>
+                            <FormLabel>
+                                {t("result")}
+                            </FormLabel>
+                            </div>
                             {fields.map((field, index) => (
                                 <RuleItem
                                     field={field}
@@ -116,7 +121,6 @@ export function SubscriptionRulesForm() {
                     </Button>
                 </HStack>
             </form>
-            <DevTool control={form.control} />
         </Form>
     )
 }

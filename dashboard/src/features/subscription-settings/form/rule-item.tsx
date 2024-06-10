@@ -32,7 +32,7 @@ export const RuleItem = ({ index, field, onRemove: remove }: RuleItemProps) => {
     const form = useFormContext();
     return (
         <SortableItem key={field.id} value={field.id} asChild>
-            <div className="grid grid-cols-[0.67fr,0.3fr,auto,auto] items-center justify-start gap-2 my-2">
+            <div className="grid grid-cols-[2fr,1.3fr,0.25fr,0.25fr] items-center justify-start gap-2 my-2">
                 <FormField
                     control={form.control}
                     name={`rules.${index}.pattern`}
