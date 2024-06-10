@@ -1,25 +1,22 @@
 import {
-    MiniWidget
+    SectionWidget
 } from "@marzneshin/components";
 import { SubscriptionRulesForm } from "@marzneshin/features/subscription-settings";
-import  {useTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 
-export const SubscriptionRulesWidget = () => {
+export const SubscriptionSettingsWidget = () => {
     const { t } = useTranslation()
     return (
-        <MiniWidget
+        <SectionWidget
             title={
                 <div className="space-y-1">
                     <h4>
-                       {t("page.settings.subscription-rules.title")}
+                        {t("page.settings.subscription-settings.title")}
                     </h4>
-                    <p className="text-sm text-muted-foreground">
-                       {t("page.settings.subscription-rules.desc")} 
-                    </p>
                 </div>
             }
         >
             <SubscriptionRulesForm />
-        </MiniWidget>
+        </SectionWidget>
     )
 }

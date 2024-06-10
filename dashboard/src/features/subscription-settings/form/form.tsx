@@ -59,10 +59,18 @@ export function SubscriptionRulesForm() {
                 onSubmit={form.handleSubmit(onSubmit)}
                 className="flex w-full max-w-4xl flex-col gap-2"
             >
-                <UrlPrefixField />
-                <ProfileTitleField />
-                <SupportLinkField />
-                <UpdateIntervalField />
+                <div className="md:grid grid-cols-2 gap-2 flex flex-col">
+                    <UrlPrefixField />
+                    <ProfileTitleField />
+                    <SupportLinkField />
+                    <UpdateIntervalField />
+                </div>
+                <h4 className="text-lg mt-2">
+                    {t("page.settings.subscription-settings.subscription-title")}
+                </h4>
+                <p className="text-sm text-muted-foreground">
+                    {t("page.settings.subscription-settings.subscription-desc")}
+                </p>
                 {fields.length === 0 && <NoRulesAlert />}
                 <div className="space-y-1">
                     <Sortable

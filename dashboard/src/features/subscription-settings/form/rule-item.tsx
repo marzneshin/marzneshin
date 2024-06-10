@@ -43,7 +43,6 @@ export const RuleItem = ({ index, field, onRemove: remove }: RuleItemProps) => {
                         <FormItem>
                             <FormControl>
                                 <div>
-                                    {index === 0 && <FormLabel>{t("pattern")}</FormLabel>}
                                     <Input className="h-8" {...field} />
                                 </div>
                             </FormControl>
@@ -58,7 +57,6 @@ export const RuleItem = ({ index, field, onRemove: remove }: RuleItemProps) => {
                             <Select onValueChange={field.onChange} defaultValue={field.value}>
                                 <FormControl>
                                     <div>
-                                        {index === 0 && <FormLabel>{t("result")}</FormLabel>}
                                         <SelectTrigger className="h-8 p-2">
                                             <SelectValue />
                                         </SelectTrigger>
