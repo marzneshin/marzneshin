@@ -64,12 +64,11 @@
         "url-prefix": "URL Prefix",
         "profile-title": "Profile Title",
         "support-link": "Support Link",
-        "update-interval": "Update Interval"
-      },
-      "subscription-rules": {
+        "update-interval": "Update Interval",
         "add-rule": "Add Rule",
-        "title": "Subscription Rules",
-        "desc": "Add your subscription rules in order of priority.",
+        "title": "Subscription Settings",
+        "subscription-title": "Subscription Rules",
+        "subscription-desc": "Add your subscription rules in order of priority.",
         "alert": {
           "title": "No rules",
           "desc": "No rules have been defined for subscription"

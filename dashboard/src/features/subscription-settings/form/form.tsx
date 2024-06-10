@@ -93,7 +93,7 @@ export function SubscriptionRulesForm() {
                             })
                         }
                     >
-                        {t("page.settings.subscription-rules.add-rule")}
+                        {t("page.settings.subscription-settings.add-rule")}
                     </Button>
                     <Button type="submit" className="w-fit">
                         {t("submit")}
