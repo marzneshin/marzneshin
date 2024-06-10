@@ -22,8 +22,10 @@ const handleError = () => {
 
 const handleSuccess = () => {
     toast.success(
-        i18n.t('events.update.success.title')
-    )
+        i18n.t('events.update.success.title', { name: "Subscription Settings" }),
+        {
+            description: i18n.t('events.update.success.desc')
+        })
     queryClient.invalidateQueries({ queryKey: [subscriptionSettingsQueryKey] })
 }
 

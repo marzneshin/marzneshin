@@ -1,2 +1,2 @@
-export * from "./subscription-rule.query"
-export * from "./subscription-rule.mutate"
+export * from "./subscription-settings.query"
+export * from "./subscription-settings.mutate"
