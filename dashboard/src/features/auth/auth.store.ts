@@ -5,15 +5,14 @@ import { subscribeWithSelector } from 'zustand/middleware';
 type AdminStateType = {
     isLoggedIn: () => Promise<boolean>,
     getAuthToken: () => string | null;
+    isSudo: () => boolean;
     setAuthToken: (token: string) => void;
     removeAuthToken: () => void;
     setSudo: (isSudo: boolean) => void;
-    isSudo: boolean;
 }
 
 export const useAuth = create(
-    subscribeWithSelector<AdminStateType>((set) => ({
-        isSudo: false,
+    subscribeWithSelector<AdminStateType>(() => ({
         isLoggedIn: async () => {
             try {
                 await fetch('/admins/current');
@@ -23,11 +22,14 @@ export const useAuth = create(
             }
         },
         getAuthToken: () => {
-            const token = localStorage.getItem('token');
-            return token;
+            return localStorage.getItem('token');
+        },
+        isSudo: () => {
+            const isSudo = localStorage.getItem('is-sudo')
+            return isSudo === "true";
         },
         setSudo: (isSudo) => {
-            set(() => ({ isSudo: isSudo }));
+            localStorage.setItem('is-sudo', String(isSudo));
         },
         setAuthToken: (token: string) => {
             localStorage.setItem('token', token);
@@ -36,4 +38,4 @@ export const useAuth = create(
             localStorage.removeItem('token');
         },
     }))
-);
+)

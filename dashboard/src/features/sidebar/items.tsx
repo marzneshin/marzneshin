@@ -45,3 +45,22 @@ export const sidebarItems: SidebarObject = {
         },
     ]
 };
+
+export const sidebarItemsNonSudoAdmin: SidebarObject = {
+    Dashboard: [
+        {
+            title: 'Home',
+            to: '/',
+            icon: <Home />,
+            isParent: false,
+        },
+    ],
+    Management: [
+        {
+            title: 'Users',
+            to: '/users',
+            icon: <UsersIcon />,
+            isParent: false,
+        },
+    ],
+};

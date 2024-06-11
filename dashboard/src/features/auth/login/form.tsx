@@ -18,21 +18,9 @@ export const LoginForm = () => {
             password: '',
         }
     })
-    const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const navigate = useNavigate({ from: '/login' });
     const [error, setError] = useState<string>('');
     const { t } = useTranslation();
-
-    useEffect(() => {
-        if (isSubmitting) {
-            isLoggedIn().then(loggedIn => {
-                if (loggedIn) {
-                    navigate({ to: '/' });
-                }
-                setIsSubmitting(false);
-            });
-        }
-    }, [isSubmitting, isLoggedIn, navigate]);
 
     const submit = async (values: FieldValues) => {
         setError('');
@@ -43,11 +31,9 @@ export const LoginForm = () => {
 
         try {
             const { access_token, is_sudo } = await fetch('/admins/token', { method: 'post', body: formData });
-            console.log('access_token:', access_token);
-            console.log('is_sudo:', is_sudo);
             setAuthToken(access_token);
             setSudo(is_sudo);
-            setIsSubmitting(true);
+            navigate({ to: '/' });
         } catch (err: any) {
             setError(err.response._data?.detail || 'An error occurred');
         }
