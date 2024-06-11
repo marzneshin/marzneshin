@@ -1,5 +1,5 @@
 import sqlalchemy
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Query
 from fastapi import HTTPException
 from fastapi_pagination.ext.sqlalchemy import paginate
 from fastapi_pagination.links import Page
@@ -7,18 +7,16 @@ from fastapi_pagination.links import Page
 from app import marznode
 from app.db import crud
 from app.db.models import Service, User
-from app.dependencies import DBDep, sudo_admin
+from app.dependencies import DBDep, AdminDep, SudoAdminDep
 from app.models.proxy import Inbound
 from app.models.service import ServiceCreate, ServiceModify, ServiceResponse
 from app.models.user import UserResponse
 
-router = APIRouter(
-    prefix="/services", dependencies=[Depends(sudo_admin)], tags=["Service"]
-)
+router = APIRouter(prefix="/services", tags=["Service"])
 
 
 @router.get("", response_model=Page[ServiceResponse])
-def get_services(db: DBDep, name: str = Query(None)):
+def get_services(db: DBDep, admin: AdminDep, name: str = Query(None)):
     query = db.query(Service)
     if name:
         query = query.filter(Service.name.ilike(f"%{name}%"))
@@ -26,7 +24,7 @@ def get_services(db: DBDep, name: str = Query(None)):
 
 
 @router.post("", response_model=ServiceResponse)
-def add_service(new_service: ServiceCreate, db: DBDep):
+def add_service(new_service: ServiceCreate, db: DBDep, admin: SudoAdminDep):
     """
     Add a new service
 
@@ -43,7 +41,7 @@ def add_service(new_service: ServiceCreate, db: DBDep):
 
 
 @router.get("/{id}", response_model=ServiceResponse)
-def get_service(id: int, db: DBDep):
+def get_service(id: int, db: DBDep, admin: AdminDep):
     """
     Get Service information with id
     """
@@ -55,7 +53,7 @@ def get_service(id: int, db: DBDep):
 
 
 @router.get("/{id}/users", response_model=Page[UserResponse])
-def get_service_users(id: int, db: DBDep):
+def get_service_users(id: int, db: DBDep, admin: SudoAdminDep):
     """
     Get service users
     """
@@ -70,7 +68,7 @@ def get_service_users(id: int, db: DBDep):
 
 
 @router.get("/{id}/inbounds", response_model=Page[Inbound])
-def get_service_inbounds(id: int, db: DBDep):
+def get_service_inbounds(id: int, db: DBDep, admin: SudoAdminDep):
     """
     Get service inbounds
     """
@@ -89,7 +87,9 @@ def get_service_inbounds(id: int, db: DBDep):
 
 
 @router.put("/{id}", response_model=ServiceResponse)
-async def modify_service(id: int, modification: ServiceModify, db: DBDep):
+async def modify_service(
+    id: int, modification: ServiceModify, db: DBDep, admin: SudoAdminDep
+):
     """
     Modify Service
 
@@ -117,7 +117,7 @@ async def modify_service(id: int, modification: ServiceModify, db: DBDep):
 
 
 @router.delete("/{id}")
-def remove_service(id: int, db: DBDep):
+def remove_service(id: int, db: DBDep, admin: SudoAdminDep):
     dbservice = crud.get_service(db, id)
     if not dbservice:
         raise HTTPException(status_code=404, detail="Service not found")
