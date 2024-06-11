@@ -12,6 +12,7 @@ oauth2_scheme = OAuth2PasswordBearer(
 
 class Token(BaseModel):
     access_token: str
+    is_sudo: bool
     token_type: str = "bearer"
 
 
