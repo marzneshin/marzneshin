@@ -314,7 +314,7 @@ def get_users_count(
 ):
     query = db.query(User.id)
     if admin:
-        query = query.filter(User.admin == admin)
+        query = query.filter(User.admin_id == admin.id)
     if status:
         query = query.filter(User.status == status)
     if enabled:
