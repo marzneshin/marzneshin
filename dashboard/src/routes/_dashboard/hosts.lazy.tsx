@@ -8,6 +8,7 @@ import {
     Loading,
 } from '@marzneshin/components'
 import { InboundHostsTable } from '@marzneshin/features/hosts'
+import { SudoRoute } from '@marzneshin/features/sudo-routes'
 import { createFileRoute, Outlet } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import { Suspense } from 'react';
@@ -36,5 +37,5 @@ export const HostsPage = () => {
 }
 
 export const Route = createFileRoute('/_dashboard/hosts')({
-    component: () => <HostsPage />
+    component: () => <SudoRoute><HostsPage /></SudoRoute>
 })

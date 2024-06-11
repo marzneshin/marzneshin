@@ -62,9 +62,10 @@ def admin_token(
         db, form_data.username, form_data.password
     ):
         return Token(
+            is_sudo=dbadmin.is_sudo,
             access_token=create_admin_token(
                 form_data.username, is_sudo=dbadmin.is_sudo
-            )
+            ),
         )
 
     raise HTTPException(

@@ -5,8 +5,9 @@ import {
 } from "@marzneshin/components";
 import { useRouterState } from "@tanstack/react-router";
 import type { FC } from "react";
-import { sidebarItems } from ".";
+import { sidebarItems as sidebarItemsSudoAdmin, sidebarItemsNonSudoAdmin } from ".";
 import { cn } from "@marzneshin/utils";
+import { useAuth } from "@marzneshin/features/auth";
 
 interface DashboardSidebarProps {
     collapsed: boolean;
@@ -22,6 +23,7 @@ export const DashboardSidebar: FC<DashboardSidebarProps> = ({
     open,
 }) => {
     const router = useRouterState();
+    const { isSudo } = useAuth();
     const currentActivePath = router.location.pathname;
     const isActive = (path: string) => {
         if (path === "/") {
@@ -29,7 +31,7 @@ export const DashboardSidebar: FC<DashboardSidebarProps> = ({
         }
         return currentActivePath.startsWith(path);
     };
-
+    const sidebarItems = isSudo() ? sidebarItemsSudoAdmin : sidebarItemsNonSudoAdmin
     return (
         <aside className="size-full py-4  px-4 ">
             <nav className="size-full">

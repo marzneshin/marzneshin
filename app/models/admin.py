@@ -12,10 +12,12 @@ oauth2_scheme = OAuth2PasswordBearer(
 
 class Token(BaseModel):
     access_token: str
+    is_sudo: bool
     token_type: str = "bearer"
 
 
 class Admin(BaseModel):
+    id: int | None = None
     username: str
     is_sudo: bool
     model_config = ConfigDict(from_attributes=True)

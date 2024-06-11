@@ -10,7 +10,7 @@ import { useTranslation } from "react-i18next";
 import { FormError } from "./form-error";
 
 export const LoginForm = () => {
-    const { setAuthToken } = useAuth();
+    const { setAuthToken, setSudo } = useAuth();
     const form = useForm({
         resolver: zodResolver(LoginSchema),
         defaultValues: {
@@ -22,20 +22,21 @@ export const LoginForm = () => {
     const [error, setError] = useState<string>('');
     const { t } = useTranslation();
 
-    const submit = (values: FieldValues) => {
+    const submit = async (values: FieldValues) => {
         setError('');
         const formData = new FormData();
         formData.append('username', values.username);
         formData.append('password', values.password);
         formData.append('grant_type', 'password');
-        fetch('/admins/token', { method: 'post', body: formData })
-            .then(({ access_token: token }) => {
-                setAuthToken(token);
-                navigate({ to: '/' });
-            })
-            .catch((err) => {
-                setError(err.response._data?.detail);
-            });
+
+        try {
+            const { access_token, is_sudo } = await fetch('/admins/token', { method: 'post', body: formData });
+            setAuthToken(access_token);
+            setSudo(is_sudo);
+            navigate({ to: '/' });
+        } catch (err: any) {
+            setError(err.response._data?.detail || 'An error occurred');
+        }
     };
 
     return (
