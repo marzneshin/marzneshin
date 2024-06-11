@@ -2,7 +2,7 @@
 import { fetch } from "@marzneshin/utils"
 import { LoginSchema, useAuth } from "@marzneshin/features/auth";
 import { useNavigate } from "@tanstack/react-router";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, Form, FormControl, FormField, FormItem, FormLabel, FormMessage, Input } from "@marzneshin/components";
@@ -10,7 +10,7 @@ import { useTranslation } from "react-i18next";
 import { FormError } from "./form-error";
 
 export const LoginForm = () => {
-    const { setAuthToken, setSudo, isLoggedIn } = useAuth();
+    const { setAuthToken, setSudo } = useAuth();
     const form = useForm({
         resolver: zodResolver(LoginSchema),
         defaultValues: {
