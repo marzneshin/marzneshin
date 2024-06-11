@@ -2,7 +2,7 @@
 import { fetch } from "@marzneshin/utils"
 import { LoginSchema, useAuth } from "@marzneshin/features/auth";
 import { useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, Form, FormControl, FormField, FormItem, FormLabel, FormMessage, Input } from "@marzneshin/components";
@@ -10,7 +10,7 @@ import { useTranslation } from "react-i18next";
 import { FormError } from "./form-error";
 
 export const LoginForm = () => {
-    const { setAuthToken } = useAuth();
+    const { setAuthToken, setSudo, isLoggedIn } = useAuth();
     const form = useForm({
         resolver: zodResolver(LoginSchema),
         defaultValues: {
@@ -18,24 +18,39 @@ export const LoginForm = () => {
             password: '',
         }
     })
+    const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const navigate = useNavigate({ from: '/login' });
     const [error, setError] = useState<string>('');
     const { t } = useTranslation();
 
-    const submit = (values: FieldValues) => {
+    useEffect(() => {
+        if (isSubmitting) {
+            isLoggedIn().then(loggedIn => {
+                if (loggedIn) {
+                    navigate({ to: '/' });
+                }
+                setIsSubmitting(false);
+            });
+        }
+    }, [isSubmitting, isLoggedIn, navigate]);
+
+    const submit = async (values: FieldValues) => {
         setError('');
         const formData = new FormData();
         formData.append('username', values.username);
         formData.append('password', values.password);
         formData.append('grant_type', 'password');
-        fetch('/admins/token', { method: 'post', body: formData })
-            .then(({ access_token: token }) => {
-                setAuthToken(token);
-                navigate({ to: '/' });
-            })
-            .catch((err) => {
-                setError(err.response._data?.detail);
-            });
+
+        try {
+            const { access_token, is_sudo } = await fetch('/admins/token', { method: 'post', body: formData });
+            console.log('access_token:', access_token);
+            console.log('is_sudo:', is_sudo);
+            setAuthToken(access_token);
+            setSudo(is_sudo);
+            setIsSubmitting(true);
+        } catch (err: any) {
+            setError(err.response._data?.detail || 'An error occurred');
+        }
     };
 
     return (
