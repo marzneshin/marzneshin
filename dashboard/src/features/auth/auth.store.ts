@@ -7,20 +7,27 @@ type AdminStateType = {
     getAuthToken: () => string | null;
     setAuthToken: (token: string) => void;
     removeAuthToken: () => void;
+    setSudo: (isSudo: boolean) => void;
+    isSudo: boolean;
 }
 
 export const useAuth = create(
-    subscribeWithSelector<AdminStateType>(() => ({
+    subscribeWithSelector<AdminStateType>((set) => ({
+        isSudo: false,
         isLoggedIn: async () => {
             try {
-                await fetch('/admins');
+                await fetch('/admins/current');
                 return true;
             } catch (error) {
                 return false;
             }
         },
         getAuthToken: () => {
-            return localStorage.getItem('token');
+            const token = localStorage.getItem('token');
+            return token;
+        },
+        setSudo: (isSudo) => {
+            set(() => ({ isSudo: isSudo }));
         },
         setAuthToken: (token: string) => {
             localStorage.setItem('token', token);
@@ -29,4 +36,4 @@ export const useAuth = create(
             localStorage.removeItem('token');
         },
     }))
-)
+);
