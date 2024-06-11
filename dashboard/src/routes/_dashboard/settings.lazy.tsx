@@ -4,6 +4,7 @@ import { CertificateWidget, ConfigurationWidget } from '@marzneshin/features/set
 import { SubscriptionSettingsWidget } from '@marzneshin/features/subscription-settings';
 import { createFileRoute } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next'
+import { SudoRoute } from "@marzneshin/features/sudo-routes";
 
 export const Settings = () => {
     const { t } = useTranslation()
@@ -28,5 +29,5 @@ export const Settings = () => {
 }
 
 export const Route = createFileRoute('/_dashboard/settings')({
-    component: () => <Settings />
+    component: () => <SudoRoute> <Settings /> </SudoRoute>
 })

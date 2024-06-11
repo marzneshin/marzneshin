@@ -15,6 +15,7 @@ import { Link, createFileRoute, Outlet } from '@tanstack/react-router'
 import { Info } from 'lucide-react';
 import { type FC, Suspense } from 'react';
 import { useTranslation } from 'react-i18next';
+import { SudoRoute } from "@marzneshin/features/sudo-routes";
 
 export const NodesPage: FC = () => {
     const { t } = useTranslation();
@@ -48,5 +49,5 @@ export const NodesPage: FC = () => {
 };
 
 export const Route = createFileRoute('/_dashboard/nodes')({
-    component: () => <NodesPage />
+    component: () => <SudoRoute> <NodesPage /> </SudoRoute>
 })

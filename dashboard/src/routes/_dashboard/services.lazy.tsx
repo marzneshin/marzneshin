@@ -10,6 +10,7 @@ import { ServicesTable } from "@marzneshin/features/services";
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { type FC, Suspense } from "react";
 import { useTranslation } from "react-i18next";
+import { SudoRoute } from "@marzneshin/features/sudo-routes";
 
 export const ServicesPage: FC = () => {
     const { t } = useTranslation();
@@ -31,5 +32,5 @@ export const ServicesPage: FC = () => {
 };
 
 export const Route = createFileRoute("/_dashboard/services")({
-    component: () => <ServicesPage />,
+    component: () => <SudoRoute> <ServicesPage /> </SudoRoute>
 });
