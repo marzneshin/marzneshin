@@ -14,3 +14,4 @@ export * from "./charts";
 export * from "./support-us";
 export * from "./loading";
 export * from "./entity-field-card";
+export * from "./logo";
