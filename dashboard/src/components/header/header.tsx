@@ -2,9 +2,9 @@ import type { FC } from "react";
 
 
 interface HeaderProps {
-    start: JSX.Element;
-    center: JSX.Element;
-    end: JSX.Element;
+    start?: React.ReactNode;
+    center?: React.ReactNode;
+    end?: React.ReactNode;
 }
 
 export const Header: FC<HeaderProps> = ({ start, center, end }) => (

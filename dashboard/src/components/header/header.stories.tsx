@@ -1,14 +1,16 @@
 import { HeaderMenu, Header } from ".";
 import { CommandBox } from "@marzneshin/features/search-command";
 import { HeaderLogo } from "@marzneshin/components";
+import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 
+const HeaderMenuComponent = HeaderMenu as React.FC<unknown>
 
 const meta: Meta<typeof Header> = {
     title: "Components/Header",
     component: Header,
     tags: ["autodocs"],
-    subcomponents: { HeaderMenu }
+    subcomponents: { HeaderMenuComponent }
 };
 
 export default meta;
