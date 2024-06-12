@@ -24,6 +24,8 @@ import {
 } from "@tanstack/react-router";
 import { GithubRepo } from "@marzneshin/features/github-repo";
 import { CommandBox } from "@marzneshin/features/search-command";
+import { DashboardFooter } from "@marzneshin/features/footer";
+
 
 export const DashboardLayout = () => {
     const isDesktop = useScreenBreakpoint("md");
@@ -83,9 +85,10 @@ export const DashboardLayout = () => {
                     </ResizablePanel>
                     <ResizableHandle withHandle className="w-[2px]" />
                     <ResizablePanel>
-                        <main>
+                        <main className="flex flex-col items-center justify-center">
                             <Suspense fallback={<Loading />}>
                                 <Outlet />
+                                <DashboardFooter />
                             </Suspense>
                             <Toaster position="top-center" />
                         </main>
