@@ -81,7 +81,7 @@ jobs:
 
       - name: Set Git version for PRs
         if: github.event_name == 'pull_request'
-        id: get_version
+        id: get_version_pr
         run: |
           LATEST_TAG=${{ github.ref_name }}
           LATEST_COMMIT=${{ github.sha }}
@@ -89,7 +89,7 @@ jobs:
 
       - name: Set Git version for main branch
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        id: get_version
+        id: get_version_main
         run: |
           LATEST_TAG=${{ github.ref_name }}
           echo "VITE_LATEST_APP_VERSION=${LATEST_TAG}" >> $GITHUB_ENV
