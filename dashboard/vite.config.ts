@@ -8,10 +8,18 @@ import { execSync } from 'child_process';
 export default defineConfig(({ mode }) => {
     const dev = mode === "development";
 
-    process.env.VITE_LATEST_APP_VERSION =
-        dev ?
-            execSync("git describe --tag").toString().trimEnd()
-            : execSync("git describe --tag --abbrev=0").toString().trimEnd()
+    let latestVersion = process.env.VITE_LATEST_APP_VERSION;
+
+    if (!latestVersion) {
+        try {
+            latestVersion = dev ?
+                execSync("git describe --tags").toString().trimEnd() :
+                execSync("git describe --tags --abbrev=0").toString().trimEnd();
+        } catch (e) {
+            console.error("Git versioning failed:", e);
+            latestVersion = "unknown";
+        }
+    }
 
     return {
         plugins: [
