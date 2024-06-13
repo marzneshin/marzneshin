@@ -13,8 +13,8 @@ export default defineConfig(({ mode }) => {
     if (!latestVersion) {
         try {
             latestVersion = dev ?
-                execSync("git describe --tags").toString().trimEnd() :
-                execSync("git describe --tags --abbrev=0").toString().trimEnd();
+                execSync("/usr/bin/git describe --tags").toString().trimEnd() :
+                execSync("/usr/bin/git describe --tags --abbrev=0").toString().trimEnd();
         } catch (e) {
             console.error("Git versioning failed:", e);
             latestVersion = "unknown";
