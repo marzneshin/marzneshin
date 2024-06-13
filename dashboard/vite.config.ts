@@ -5,6 +5,15 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 import path from 'path';
 import { execSync } from 'child_process';
 
+function checkTagIsHead(): boolean {
+    try {
+        execSync('/usr/bin/git describe --tags --exact-match HEAD');
+        return true;
+    } catch (e) {
+        return false
+    }
+}
+
 export default defineConfig(({ mode }) => {
     const dev = mode === "development";
 
@@ -12,7 +21,8 @@ export default defineConfig(({ mode }) => {
 
     if (!latestVersion) {
         try {
-            latestVersion = dev ?
+            const isHead = checkTagIsHead()
+            latestVersion = dev || !isHead ?
                 execSync("/usr/bin/git describe --tags").toString().trimEnd() :
                 execSync("/usr/bin/git describe --tags --abbrev=0").toString().trimEnd();
         } catch (e) {
