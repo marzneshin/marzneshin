@@ -19,6 +19,7 @@ export default defineConfig(({ mode }) => {
             console.error("Git versioning failed:", e);
             latestVersion = "unknown";
         }
+        process.env.VITE_LATEST_APP_VERSION = latestVersion;
     }
 
     return {
