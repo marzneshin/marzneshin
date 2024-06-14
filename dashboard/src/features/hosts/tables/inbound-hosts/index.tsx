@@ -1,20 +1,26 @@
-
 import {
     HostType,
-    useHostsQuery
-} from '@marzneshin/features/hosts'
-import { InboundHostsDataTable } from './table'
-import { useNavigate } from "@tanstack/react-router"
-import { useState } from 'react'
-import { useInboundsQuery } from '@marzneshin/features/inbounds'
-import { columns } from './columns'
-import { useDialog } from '@marzneshin/hooks'
-import { InboundNotSelectedAlertDialog } from './inbound-not-selected-alert-dialog'
+    fetchHosts
+} from '@marzneshin/features/hosts';
+import { useNavigate } from "@tanstack/react-router";
+import { useState } from 'react';
+import {
+    useInboundsQuery,
+} from '@marzneshin/features/inbounds';
+import { SidebarEntityTable } from '@marzneshin/features/entity-table';
+import { columns } from './columns';
+import { useDialog } from '@marzneshin/hooks';
+import {
+    InboundNotSelectedAlertDialog
+} from './inbound-not-selected-alert-dialog';
+import {
+    InboundCardHeader,
+    InboundCardContent,
+} from "./inbound-sidebar-card";
 
 export const InboundHostsTable = () => {
     const { data: inbounds } = useInboundsQuery()
     const [selectedInbound, setSelectedInbound] = useState<string | undefined>(inbounds[0]?.id !== undefined ? String(inbounds[0].id) : undefined)
-    const { data, isLoading } = useHostsQuery(Number(selectedInbound))
     const navigate = useNavigate({ from: "/hosts" })
     const [inboundSelectionAlert, setInboundSelectionAlert] = useDialog();
 
@@ -41,16 +47,23 @@ export const InboundHostsTable = () => {
                 open={inboundSelectionAlert}
                 onOpenChange={setInboundSelectionAlert}
             />
-            <InboundHostsDataTable
-                data={data}
-                inbounds={inbounds}
-                selectedInbound={selectedInbound}
-                columns={columns({ onDelete, onOpen, onEdit })}
+            <SidebarEntityTable
+                fetchEntity={fetchHosts}
+                entityKey="inbounds"
+                secondaryEntityKey="hosts"
+                sidebarEntities={inbounds}
+                sidebarEntityId={selectedInbound}
+                columnsFn={columns}
                 filteredColumn='remark'
-                setSelectedInbound={setSelectedInbound}
+                setSidebarEntityId={setSelectedInbound}
                 onCreate={onCreate}
                 onOpen={onOpen}
-                isLoading={isLoading}
+                onEdit={onEdit}
+                onDelete={onDelete}
+                sidebarCardProps={{
+                    header: InboundCardHeader,
+                    content: InboundCardContent
+                }}
             />
         </div>
     )
