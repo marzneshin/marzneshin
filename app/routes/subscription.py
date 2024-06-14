@@ -5,6 +5,9 @@ from fastapi import APIRouter
 from fastapi import Header, HTTPException, Path, Request, Response
 from fastapi.responses import HTMLResponse
 
+from app.config.env import (
+    SUBSCRIPTION_PAGE_TEMPLATE,
+)
 from app.db import crud
 from app.db.models import Settings
 from app.dependencies import DBDep, SubUserDep, StartDateDep, EndDateDep
@@ -12,9 +15,6 @@ from app.models.settings import SubscriptionSettings
 from app.models.user import UserResponse
 from app.templates import render_template
 from app.utils.share import encode_title, generate_subscription
-from config import (
-    SUBSCRIPTION_PAGE_TEMPLATE,
-)
 
 router = APIRouter(prefix="/sub", tags=["Subscription"])
 

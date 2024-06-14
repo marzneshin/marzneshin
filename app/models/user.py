@@ -13,7 +13,7 @@ from pydantic import (
     model_validator,
 )
 
-from config import SUBSCRIPTION_URL_PREFIX
+from app.config.env import SUBSCRIPTION_URL_PREFIX
 
 USERNAME_REGEXP = r"^\w{3,32}$"
 

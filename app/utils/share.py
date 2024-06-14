@@ -18,6 +18,11 @@ from v2share import (
 )
 from v2share.links import LinksConfig
 
+from app.config.env import (
+    XRAY_SUBSCRIPTION_TEMPLATE,
+    SINGBOX_SUBSCRIPTION_TEMPLATE,
+    CLASH_SUBSCRIPTION_TEMPLATE,
+)
 from app.db import GetDB, crud
 from app.models.proxy import (
     InboundHostSecurity,
@@ -26,11 +31,6 @@ from app.models.user import UserResponse
 from app.models.user import UserStatus
 from app.utils.keygen import gen_uuid, gen_password
 from app.utils.system import get_public_ip, readable_size
-from config import (
-    XRAY_SUBSCRIPTION_TEMPLATE,
-    SINGBOX_SUBSCRIPTION_TEMPLATE,
-    CLASH_SUBSCRIPTION_TEMPLATE,
-)
 
 SERVER_IP = get_public_ip()
 

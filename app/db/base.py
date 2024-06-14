@@ -1,7 +1,8 @@
-from config import SQLALCHEMY_DATABASE_URL
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import sessionmaker
+
+from app.config.env import SQLALCHEMY_DATABASE_URL
 
 IS_SQLITE = SQLALCHEMY_DATABASE_URL.startswith("sqlite")
 

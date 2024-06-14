@@ -5,8 +5,8 @@ from telebot.apihelper import ApiTelegramException
 from telebot.formatting import escape_html
 
 from app import telegram
+from app.config.env import TELEGRAM_ADMIN_ID, TELEGRAM_LOGGER_CHANNEL_ID
 from app.utils.system import readable_size
-from config import TELEGRAM_ADMIN_ID, TELEGRAM_LOGGER_CHANNEL_ID
 
 logger = logging.getLogger(__name__)
 
