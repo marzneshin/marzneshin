@@ -1,17 +1,10 @@
 from datetime import datetime, timedelta
-from functools import lru_cache
 from typing import Union
 
 from jose import JWTError, jwt
 
+from app.config import get_secret_key
 from app.config.env import JWT_ACCESS_TOKEN_EXPIRE_MINUTES
-from app.db import GetDB, get_jwt_secret_key
-
-
-@lru_cache(maxsize=None)
-def get_secret_key():
-    with GetDB() as db:
-        return get_jwt_secret_key(db)
 
 
 def create_admin_token(username: str, is_sudo=False) -> str:
