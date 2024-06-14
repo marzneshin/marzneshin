@@ -1,26 +1,45 @@
 import { useMemo } from "react";
-import { Button, DataTableViewOptions } from "@marzneshin/components";
+import {
+    Button, DataTableViewOptions,
+    ResizableHandle, ResizablePanel, ResizablePanelGroup,
+    HStack
+} from "@marzneshin/components";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
-import { EntityTableContext } from "./contexts";
-import { EntityDataTable } from "./table";
-import { DataTablePagination } from "./table-pagination";
-import { TableFiltering } from "./table-filtering";
 import {
-    type UseRowSelectionReturn,
+    SidebarEntityTableContext,
+    EntityTableContext
+} from "./contexts";
+import {
+    TableFiltering,
+    DataTablePagination,
+    EntityDataTable,
+    type SidebarEntityCardSectionsProps,
+    SidebarEntityTablePopover,
+    SidebarEntitySelection
+} from "./components";
+import {
     useFiltering,
     usePagination,
-    type FetchEntityReturn,
     useEntityTable,
     useVisibility,
     useSorting,
-    type SortableQueryKey,
-    type QueryKey,
-    type EntityQueryKeyType,
+    type SortableSidebarQueryKey,
+    type EntitySidebarQueryKeyType,
+    type FetchEntityReturn,
+    type SidebarQueryKey,
+    type UseRowSelectionReturn,
 } from "./hooks";
+import { useScreenBreakpoint } from "@marzneshin/hooks";
+import { Server } from "lucide-react";
 
-interface EntityTableProps<T> {
-    fetchEntity: ({ queryKey }: EntityQueryKeyType) => FetchEntityReturn<T>;
+interface SidebarEntityTableProps<T, S> {
+    fetchEntity: ({ queryKey }: EntitySidebarQueryKeyType) => FetchEntityReturn<T>;
+    sidebarEntities: S[];
+    setSidebarEntityId: (entity: string | undefined) => void;
+    sidebarEntityId?: string;
+    sidebarCardProps: SidebarEntityCardSectionsProps<S>
+    secondaryEntityKey: string;
     columnsFn: any;
     filteredColumn: string;
     entityKey: string;
@@ -32,7 +51,7 @@ interface EntityTableProps<T> {
     onDelete: (entity: T) => void;
 }
 
-export function EntityTable<T>({
+export function SidebarEntityTable<T, S>({
     fetchEntity,
     columnsFn,
     filteredColumn,
@@ -43,28 +62,40 @@ export function EntityTable<T>({
     onEdit,
     onOpen,
     onDelete,
-}: EntityTableProps<T>) {
+    sidebarEntityId,
+    setSidebarEntityId,
+    sidebarEntities,
+    sidebarCardProps,
+    secondaryEntityKey,
+}: SidebarEntityTableProps<T, S>) {
     const { t } = useTranslation();
     const filtering = useFiltering({ column: filteredColumn });
     const sorting = useSorting();
     const visibility = useVisibility();
+    const desktop = useScreenBreakpoint("md");
     const { onPaginationChange, pageIndex, pageSize } = usePagination();
-    const sortedQuery: SortableQueryKey = [
+
+    const sortedQuery: SortableSidebarQueryKey = [
         entityKey,
+        sidebarEntityId,
+        secondaryEntityKey,
         pageIndex,
         pageSize,
         filtering.columnFilters,
         sorting.sorting[0]?.id ? sorting.sorting[0].id : "created_at",
         sorting.sorting[0]?.desc,
     ];
-    const query: QueryKey = [
+
+    const query: SidebarQueryKey = [
         entityKey,
+        sidebarEntityId,
+        secondaryEntityKey,
         pageIndex,
         pageSize,
         filtering.columnFilters,
     ];
 
-    const { data, isLoading } = useQuery({
+    const { data, isPending } = useQuery({
         queryFn: fetchEntity,
         queryKey: manualSorting ? sortedQuery : query,
         initialData: { entity: [], pageCount: 1 },
@@ -82,30 +113,66 @@ export function EntityTable<T>({
         onPaginationChange,
     });
 
-    const contextValue = useMemo(
-        () => ({ table, data: data.entity, filtering, isLoading }),
-        [table, data.entity, filtering, isLoading],
+    const entityTableContextValue = useMemo(
+        () => ({
+            table,
+            data: data.entity,
+            filtering,
+            isLoading: isPending,
+        }),
+        [table, data.entity, filtering, isPending],
+    );
+
+    const sidebarEntityTableContextValue = useMemo(
+        () => ({
+            sidebarEntities,
+            setSidebarEntityId,
+            sidebarEntityId,
+            sidebarCardProps
+        }),
+        [sidebarEntities, setSidebarEntityId, sidebarEntityId, sidebarCardProps],
     );
 
     return (
-        <EntityTableContext.Provider value={contextValue}>
-            <div className="flex flex-col">
-                <div className="flex items-center py-4">
-                    <TableFiltering />
-                    <DataTableViewOptions table={table} />
-                    {onCreate && (
-                        <Button aria-label={`create-${entityKey}`} onClick={onCreate}>
-                            {t("create")}
-                        </Button>
-                    )}
+        <EntityTableContext.Provider value={entityTableContextValue}>
+            <SidebarEntityTableContext.Provider value={sidebarEntityTableContextValue}>
+                <div className="flex flex-col">
+                    <div className="flex items-center justify-between py-4">
+                        <TableFiltering />
+                        <HStack className="gap-0 items-center">
+                            {!desktop && (
+                                <SidebarEntityTablePopover
+                                    buttonChild={
+                                        <HStack className="items-center p-1">
+                                            <Server className="size-4" /> {t("inbounds")}
+                                        </HStack>
+                                    }
+                                />
+                            )}
+                            <DataTableViewOptions table={table} />
+                            {onCreate && (
+                                <Button aria-label={`create-${entityKey}`} onClick={onCreate}>
+                                    {t("create")}
+                                </Button>
+                            )}
+                        </HStack>
+                    </div>
+                    <div className="w-full rounded-md border">
+                        <ResizablePanelGroup direction="horizontal">
+                            <ResizablePanel minSize={20} maxSize={desktop ? 40 : 0}>
+                                <SidebarEntitySelection />
+                            </ResizablePanel>
+                            <ResizableHandle withHandle={desktop} />
+                            <ResizablePanel >
+                                <div className="flex flex-col justify-between size-full">
+                                    <EntityDataTable columns={columns} onRowClick={onOpen} />
+                                    <DataTablePagination />
+                                </div>
+                            </ResizablePanel>
+                        </ResizablePanelGroup>
+                    </div>
                 </div>
-                <div className="w-full rounded-md border">
-                    <EntityDataTable columns={columns} onRowClick={onOpen} />
-                    <DataTablePagination />
-                </div>
-            </div>
-        </EntityTableContext.Provider>
+            </SidebarEntityTableContext.Provider>
+        </EntityTableContext.Provider >
     );
 }
-
-export * from "./hooks";
