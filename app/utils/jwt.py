@@ -4,8 +4,8 @@ from typing import Union
 
 from jose import JWTError, jwt
 
+from app.config.env import JWT_ACCESS_TOKEN_EXPIRE_MINUTES
 from app.db import GetDB, get_jwt_secret_key
-from config import JWT_ACCESS_TOKEN_EXPIRE_MINUTES
 
 
 @lru_cache(maxsize=None)

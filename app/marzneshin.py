@@ -13,9 +13,7 @@ from fastapi_pagination import add_pagination
 from starlette.staticfiles import StaticFiles
 from uvicorn import Config, Server
 
-import config
-from app.templates import render_template
-from config import (
+from app.config.env import (
     DEBUG,
     DOCS,
     HOME_PAGE_TEMPLATE,
@@ -25,8 +23,9 @@ from config import (
     UVICORN_SSL_KEYFILE,
     UVICORN_UDS,
     DASHBOARD_PATH,
+    WEBHOOK_ADDRESS,
 )
-
+from app.templates import render_template
 from . import __version__, telegram
 from .routes import api_router
 from .tasks import (
@@ -80,7 +79,7 @@ scheduler.add_job(
     max_instances=1,
 )
 
-if config.WEBHOOK_ADDRESS:
+if WEBHOOK_ADDRESS:
     scheduler.add_job(
         send_notifications, "interval", seconds=30, replace_existing=True
     )

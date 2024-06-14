@@ -1,7 +1,7 @@
 from telebot import asyncio_helper
 from telebot.async_telebot import AsyncTeleBot
 
-from config import TELEGRAM_API_TOKEN, TELEGRAM_PROXY_URL
+from app.config.env import TELEGRAM_API_TOKEN, TELEGRAM_PROXY_URL
 from app.telegram.report import (
     report,
     report_new_user,

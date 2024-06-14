@@ -7,10 +7,10 @@ import aiohttp
 from fastapi.encoders import jsonable_encoder
 from requests import Session
 
-import config
+from app import config
+from app.db import GetDB
 from app.db.models import NotificationReminder
 from app.utils.notification import queue
-from app.db import GetDB
 
 logger = logging.getLogger(__name__)
 

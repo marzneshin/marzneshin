@@ -6,6 +6,11 @@ from typing import TYPE_CHECKING
 from sqlalchemy.orm import Session
 
 from app import marznode
+from app.config.env import (
+    NOTIFY_DAYS_LEFT,
+    NOTIFY_REACHED_USAGE_PERCENT,
+    WEBHOOK_ADDRESS,
+)
 from app.db import (
     GetDB,
     get_notification_reminder,
@@ -18,11 +23,6 @@ from app.utils import report
 from app.utils.helpers import (
     calculate_expiration_days,
     calculate_usage_percent,
-)
-from config import (
-    NOTIFY_DAYS_LEFT,
-    NOTIFY_REACHED_USAGE_PERCENT,
-    WEBHOOK_ADDRESS,
 )
 
 if TYPE_CHECKING:

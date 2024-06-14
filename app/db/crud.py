@@ -7,6 +7,7 @@ from typing import List, Optional, Tuple, Union
 from sqlalchemy import and_, delete, update, select
 from sqlalchemy.orm import Session
 
+from app.config.env import NOTIFY_DAYS_LEFT, NOTIFY_REACHED_USAGE_PERCENT
 from app.db.models import (
     JWT,
     TLS,
@@ -42,7 +43,6 @@ from app.utils.helpers import (
     calculate_expiration_days,
     calculate_usage_percent,
 )
-from config import NOTIFY_DAYS_LEFT, NOTIFY_REACHED_USAGE_PERCENT
 
 
 def add_default_hosts(db: Session, inbounds: List[Inbound]):
