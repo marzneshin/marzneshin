@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { Button, DataTableViewOptions } from "@marzneshin/components";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
-import { EntityTableContext } from "./entity-table-provider";
+import { EntityTableContext } from "./contexts";
 import { EntityDataTable } from "./table";
 import { DataTablePagination } from "./table-pagination";
 import { TableFiltering } from "./table-filtering";

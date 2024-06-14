@@ -1,8 +1,8 @@
 
-import { FC } from 'react'
-import { Input } from '@marzneshin/components';
-import { useEntityTableContext } from './entity-table-provider';
-import { useTranslation } from 'react-i18next';
+import { type FC } from "react";
+import { Input } from "@marzneshin/components";
+import { useEntityTableContext } from "./contexts";
+import { useTranslation } from "react-i18next";
 
 interface TableFilteringProps { }
 

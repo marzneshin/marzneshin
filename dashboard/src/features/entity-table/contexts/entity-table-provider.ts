@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import { UseFilteringReturn } from "./hooks";
+import { UseFilteringReturn } from "../hooks";
 import { Table } from "@tanstack/react-table";
 
 interface EntityTableContextProps<TData> {
