@@ -13,14 +13,21 @@ export interface SortableEntitySortQueryProps {
 
 export type UseEntityQueryProps = z.infer<typeof UseEntityQueryPropsSchema & SortableEntitySortQueryProps>
 
-export type QueryKey = [string, number, number, string]
-export type SortableQueryKey = [string, number, number, string, string, boolean]
+export type QueryKey =
+    [string, number, number, string]
+export type SortableQueryKey =
+    [string, number, number, string, string, boolean]
+export type SidebarQueryKey =
+    [string, number | string | undefined, string, number, number, string]
+export type SortableSidebarQueryKey =
+    [string, number | string | undefined, string, number, number, string, string, boolean]
 
 export interface QueryKeyType<QT> {
     queryKey: QT
 }
 
 export type EntityQueryKeyType = QueryKeyType<SortableQueryKey | QueryKey>
+export type EntitySidebarQueryKeyType = QueryKeyType<SortableSidebarQueryKey | SidebarQueryKey>
 
 interface FetchEntityResult<T> {
     pageCount: number
