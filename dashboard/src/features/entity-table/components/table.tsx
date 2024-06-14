@@ -12,7 +12,9 @@ import {
 } from "@marzneshin/components"
 
 import { useTranslation } from "react-i18next"
-import { useEntityTableContext } from "./contexts"
+import {
+    useEntityTableContext
+} from "@marzneshin/features/entity-table/contexts";
 import { LoaderIcon } from "lucide-react"
 
 interface DataTableProps<TData, TValue> {
