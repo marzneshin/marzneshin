@@ -32,7 +32,7 @@ def upgrade() -> None:
             {
                 "telegram": None,
                 "subscription": {
-                    "url_prefix": "",
+                    "template_on_acceptance": True,
                     "profile_title": "Support",
                     "support_link": "t.me/support",
                     "update_interval": 12,
