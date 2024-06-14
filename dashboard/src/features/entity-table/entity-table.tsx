@@ -3,9 +3,7 @@ import { Button, DataTableViewOptions } from "@marzneshin/components";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
 import { EntityTableContext } from "./contexts";
-import { EntityDataTable } from "./table";
-import { DataTablePagination } from "./table-pagination";
-import { TableFiltering } from "./table-filtering";
+import { TableFiltering, DataTablePagination, EntityDataTable } from "./components";
 import {
     type UseRowSelectionReturn,
     useFiltering,
@@ -19,7 +17,7 @@ import {
     type EntityQueryKeyType,
 } from "./hooks";
 
-interface EntityTableProps<T> {
+export interface EntityTableProps<T> {
     fetchEntity: ({ queryKey }: EntityQueryKeyType) => FetchEntityReturn<T>;
     columnsFn: any;
     filteredColumn: string;
