@@ -88,7 +88,7 @@ def user_subscription(
                     )
                 )
             elif rule.result.value == "block":
-                return HTT
+                raise HTTPException(404)
             elif rule.result.value == "base64-links":
                 b64 = True
                 config_format = "links"
