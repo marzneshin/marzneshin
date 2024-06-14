@@ -6,7 +6,7 @@ import {
     UseEntityQueryProps,
     SortableEntitySortQueryProps,
     EntityQueryKeyType
-} from "@marzneshin/components";
+} from "@marzneshin/features/entity-table/hooks";
 
 export type SortUserBy = "username" | "used_traffic" | "data_limit" | "expire" | "created_at"
 

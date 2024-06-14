@@ -3,7 +3,7 @@ import {
     columns,
     fetchNodes,
 } from '@marzneshin/features/nodes';
-import { EntityTable } from "@marzneshin/components";
+import { EntityTable } from "@marzneshin/features/entity-table";
 import { useNavigate } from "@tanstack/react-router";
 
 export const NodesTable: FC = () => {

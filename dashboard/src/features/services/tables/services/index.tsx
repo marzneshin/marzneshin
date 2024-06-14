@@ -4,7 +4,7 @@ import {
   fetchServices,
 } from "@marzneshin/features/services";
 import { columns } from "./columns";
-import { EntityTable } from "@marzneshin/components";
+import { EntityTable } from "@marzneshin/features/entity-table";
 import { useNavigate } from "@tanstack/react-router";
 
 export const ServicesTable: FC = () => {
