@@ -41,7 +41,7 @@ export const SidebarEntitySelection = () => {
                 <ScrollArea className="w-full h-full p-2">
                     <ToggleGroup
                         type="single"
-                        onValueChange={setSidebarEntityId}
+                        onValueChange={(value) => setSidebarEntityId(value ==="" ? undefined : value)}
                         defaultValue={String(sidebarEntityId)}
                     >
                         <div className="flex flex-col w-full gap-2">
