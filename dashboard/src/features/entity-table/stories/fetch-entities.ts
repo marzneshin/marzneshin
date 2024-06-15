@@ -69,7 +69,7 @@ export const fetchEntity = async ({ queryKey }: { queryKey: any }) => {
     };
 }
 
-export const fetchEntityLoading = async ({ }: { queryKey: any }): FetchEntityReturn<Entity> => {
+export const fetchEntityLoading = async (): FetchEntityReturn<Entity> => {
     return new Promise((resolve) => {
         setTimeout(() => {
             resolve({
