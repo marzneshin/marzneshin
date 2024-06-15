@@ -105,5 +105,3 @@ export function EntityTable<T>({
         </EntityTableContext.Provider>
     );
 }
-
-export * from "./hooks";

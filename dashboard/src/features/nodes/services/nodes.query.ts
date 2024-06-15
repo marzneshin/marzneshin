@@ -4,7 +4,7 @@ import { fetch } from "@marzneshin/utils";
 import {
     EntityQueryKeyType,
     UseEntityQueryProps
-} from "@marzneshin/components";
+} from "@marzneshin/features/entity-table";
 
 export async function fetchNodes({ queryKey }: EntityQueryKeyType): Promise<{ entity: NodeType[], pageCount: number }> {
     return fetch(`/nodes?page=${queryKey[1]}&size=${queryKey[2]}&name=${queryKey[3]}`).then((result) => {
