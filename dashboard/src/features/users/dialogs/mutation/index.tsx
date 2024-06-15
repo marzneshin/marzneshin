@@ -71,7 +71,7 @@ export const UsersMutationDialog: FC<UsersMutationDialogProps> = ({
     return (
         <Dialog open={open} onOpenChange={onOpenChange} defaultOpen={true}>
             <DialogContent className="min-w-full h-full md:h-auto md:min-w-[42rem]">
-                <ScrollArea className="flex flex-col justify-between h-full p-0">
+                <ScrollArea className="flex flex-col justify-between h-full">
                     <DialogHeader>
                         <DialogTitle className="text-primary">
                             {entity
@@ -80,7 +80,7 @@ export const UsersMutationDialog: FC<UsersMutationDialogProps> = ({
                         </DialogTitle>
                     </DialogHeader>
                     <Form {...form}>
-                        <form onSubmit={handleSubmit} className="">
+                        <form onSubmit={handleSubmit} className=" m-2">
                             <div className="flex-col grid-cols-2 gap-2 sm:flex md:grid h-full">
                                 <div>
                                     <UsernameField disabled={!!entity?.username} />
