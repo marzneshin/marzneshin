@@ -9,7 +9,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 
 import { columnsFnBasicEntityTable } from "./columns-fns";
-import { fetchEntity } from "./fetch-entities";
+import { fetchEntity, fetchEntityLoading } from "./fetch-entities";
 
 const TableFilteringComponent = TableFiltering as React.FC<unknown>;
 const DataTablePaginationComponent = DataTablePagination as React.FC<unknown>;
@@ -41,6 +41,19 @@ type Story = StoryObj<typeof EntityTable>;
 export const BasicEntityTable: Story = {
     args: {
         fetchEntity: fetchEntity,
+        columnsFn: columnsFnBasicEntityTable,
+        filteredColumn: "name",
+        entityKey: "entities",
+        onCreate: () => alert("Create entity"),
+        onEdit: (entity: any) => alert(`Edit entity: ${JSON.stringify(entity)}`),
+        onOpen: (entity: any) => alert(`Open entity: ${JSON.stringify(entity)}`),
+        onDelete: (entity: any) => alert(`Delete entity: ${JSON.stringify(entity)}`),
+    }
+};
+
+export const LoadingEntityTable: Story = {
+    args: {
+        fetchEntity: fetchEntityLoading,
         columnsFn: columnsFnBasicEntityTable,
         filteredColumn: "name",
         entityKey: "entities",

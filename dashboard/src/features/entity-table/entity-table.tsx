@@ -62,7 +62,7 @@ export function EntityTable<T>({
         filtering.columnFilters,
     ];
 
-    const { data, isLoading } = useQuery({
+    const { data, isFetching } = useQuery({
         queryFn: fetchEntity,
         queryKey: manualSorting ? sortedQuery : query,
         initialData: { entity: [], pageCount: 1 },
@@ -81,8 +81,8 @@ export function EntityTable<T>({
     });
 
     const contextValue = useMemo(
-        () => ({ table, data: data.entity, filtering, isLoading }),
-        [table, data.entity, filtering, isLoading],
+        () => ({ table, data: data.entity, filtering, isLoading: isFetching }),
+        [table, data.entity, filtering, isFetching],
     );
 
     return (

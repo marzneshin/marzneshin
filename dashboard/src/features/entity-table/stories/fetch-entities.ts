@@ -1,3 +1,11 @@
+import { FetchEntityReturn } from "../hooks";
+
+interface Entity {
+    id: number;
+    name: string;
+    createdAt: string;
+}
+
 const massDataEntities = [
     { id: 1, name: "Azad Ahmed", createdAt: "2023-01-01" },
     { id: 2, name: "Bahman Karim", createdAt: "2024-02-05" },
@@ -59,4 +67,16 @@ export const fetchEntity = async ({ queryKey }: { queryKey: any }) => {
         entity: paginatedEntities,
         pageCount: Math.ceil(filteredEntities.length / pageSize),
     };
+}
+
+export const fetchEntityLoading = async ({ queryKey }: { queryKey: any }): FetchEntityReturn<Entity> => {
+    queryKey;
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve({
+                entity: [{ id: 40, name: "Diyar Latif", createdAt: "2026-04-13" }],
+                pageCount: 1,
+            });
+        }, 24 * 60 * 60 * 1000);
+    });
 }
