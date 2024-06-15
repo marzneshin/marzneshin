@@ -49,6 +49,7 @@ export const SidebarEntitySelection = () => {
                                 <ToggleGroupItem
                                     className="px-0 w-full h-full"
                                     value={String(entity.id)}
+                                    key={String(entity.id)}
                                     id={String(entity.id)}>
                                     <SidebarEntityCard
                                         {...sidebarCardProps}
