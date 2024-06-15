@@ -60,6 +60,7 @@
   },
   "page": {
     "settings": {
+      "template-on-acceptance": "Template on Acceptance",
       "subscription-settings": {
         "url-prefix": "URL Prefix",
         "profile-title": "Profile Title",

@@ -26,7 +26,7 @@ export const TemplateOnAcceptanceField = () => {
                     </FormControl>
                     <div className="space-y-1 leading-none">
                         <FormLabel>
-                            Template on Acceptance
+                            {t("page.settings.template-on-acceptance")}
                         </FormLabel>
                     </div>
                 </FormItem>
