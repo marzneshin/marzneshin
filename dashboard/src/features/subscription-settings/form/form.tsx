@@ -13,7 +13,7 @@ import {
 } from "@marzneshin/components";
 import { Schema } from "./schema"
 import {
-    UrlPrefixField,
+    TemplateOnAcceptanceField,
     ProfileTitleField,
     SupportLinkField,
     UpdateIntervalField
@@ -40,7 +40,7 @@ export function SubscriptionRulesForm() {
                 keepDirtyValues: true
             })
         },
-        [form,data],
+        [form, data],
     )
 
     useEffect(() => {
@@ -64,12 +64,12 @@ export function SubscriptionRulesForm() {
                 onSubmit={form.handleSubmit(onSubmit)}
                 className="flex w-full max-w-4xl flex-col gap-2"
             >
+                <ProfileTitleField />
                 <div className="md:grid grid-cols-2 gap-2 flex flex-col">
-                    <UrlPrefixField />
-                    <ProfileTitleField />
-                    <SupportLinkField />
                     <UpdateIntervalField />
+                    <SupportLinkField />
                 </div>
+                <TemplateOnAcceptanceField />
                 <h4 className="text-lg mt-2">
                     {t("page.settings.subscription-settings.subscription-title")}
                 </h4>
@@ -85,13 +85,13 @@ export function SubscriptionRulesForm() {
                         }
                     >
                         <ScrollArea className="flex flex-col w-full max-h-[400px] gap-2" type="always">
-            <div className="grid grid-cols-[2fr,1.3fr,0.25fr,0.25fr] items-center justify-start gap-2 my-2">
-                            <FormLabel>
-                                {t("pattern")}
-                            </FormLabel>
-                            <FormLabel>
-                                {t("result")}
-                            </FormLabel>
+                            <div className="grid grid-cols-[2fr,1.3fr,0.25fr,0.25fr] items-center justify-start gap-2 my-2">
+                                <FormLabel>
+                                    {t("pattern")}
+                                </FormLabel>
+                                <FormLabel>
+                                    {t("result")}
+                                </FormLabel>
                             </div>
                             {fields.map((field, index) => (
                                 <RuleItem
