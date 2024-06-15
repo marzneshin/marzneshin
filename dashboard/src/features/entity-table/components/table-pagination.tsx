@@ -49,7 +49,6 @@ export function DataTablePagination() {
                     >
                         <SelectTrigger
                             className="h-8 w-[70px]"
-                            aria-haspopup="listbox"
                             aria-controls="rows-per-page-listbox"
                             aria-labelledby="rows-per-page-label"
                         >
@@ -58,14 +57,12 @@ export function DataTablePagination() {
                         <SelectContent
                             id="rows-per-page-listbox"
                             side="top"
-                            role="listbox"
                             aria-labelledby="rows-per-page-label"
                         >
                             {[10, 20, 50, 100].map((pageSize) => (
                                 <SelectItem
                                     key={pageSize}
                                     value={`${pageSize}`}
-                                    role="option"
                                     aria-selected={table.getState().pagination.pageSize === pageSize}
                                 >
                                     {pageSize}
