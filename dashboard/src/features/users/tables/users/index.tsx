@@ -1,7 +1,7 @@
 import type { FC } from "react";
 import { fetchUsers, UsersQueryFetchKey } from "@marzneshin/features/users";
 import { columns } from "./columns";
-import { EntityTable } from "@marzneshin/components";
+import { EntityTable } from "@marzneshin/features/entity-table";
 import { useNavigate } from "@tanstack/react-router";
 
 export const UsersTable: FC = () => {

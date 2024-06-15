@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
-import { SupportUs } from '.';
+import { SupportUs } from "@marzneshin/features/support-us";
 import { useSupportUs as originalUseSupportUs } from './use-support-us';
 import '@testing-library/jest-dom';
 

@@ -13,7 +13,9 @@ import {
     SelectValue,
 } from "@marzneshin/components";
 import { useTranslation } from "react-i18next";
-import { useEntityTableContext } from "./entity-table-provider";
+import {
+    useEntityTableContext
+} from "@marzneshin/features/entity-table/contexts";
 import { useEffect } from "react";
 
 export function DataTablePagination() {
@@ -34,20 +36,35 @@ export function DataTablePagination() {
             )}
             <div className="flex justify-between items-center space-x-6 w-full lg:space-x-8">
                 <div className="flex items-center space-x-2">
-                    <p className="text-sm font-medium">{t("table.row-per-page")}</p>
+                    <label id="rows-per-page-label" htmlFor="rows-per-page-select" className="text-sm font-medium">
+                        {t("table.row-per-page")}
+                    </label>
                     <Select
                         value={`${table.getState().pagination.pageSize}`}
                         onValueChange={(value) => {
                             table.setPageSize(Number(value));
                             table.setPageIndex(1);
                         }}
+                        aria-labelledby="rows-per-page-label"
                     >
-                        <SelectTrigger className="h-8 w-[70px]">
+                        <SelectTrigger
+                            className="h-8 w-[70px]"
+                            aria-controls="rows-per-page-listbox"
+                            aria-labelledby="rows-per-page-label"
+                        >
                             <SelectValue placeholder={table.getState().pagination.pageSize} />
                         </SelectTrigger>
-                        <SelectContent side="top">
+                        <SelectContent
+                            id="rows-per-page-listbox"
+                            side="top"
+                            aria-labelledby="rows-per-page-label"
+                        >
                             {[10, 20, 50, 100].map((pageSize) => (
-                                <SelectItem key={pageSize} value={`${pageSize}`}>
+                                <SelectItem
+                                    key={pageSize}
+                                    value={`${pageSize}`}
+                                    aria-selected={table.getState().pagination.pageSize === pageSize}
+                                >
                                     {pageSize}
                                 </SelectItem>
                             ))}

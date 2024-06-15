@@ -4,7 +4,7 @@ import {
     EntityQueryKeyType,
     FetchEntityReturn,
     UseEntityQueryProps
-} from "@marzneshin/components";
+} from "@marzneshin/features/entity-table";
 import { useQuery } from "@tanstack/react-query";
 
 export async function fetchServices({ queryKey }: EntityQueryKeyType): FetchEntityReturn<ServiceType> {
@@ -24,7 +24,7 @@ export async function fetchServices({ queryKey }: EntityQueryKeyType): FetchEnti
 
 export const ServicesQueryFetchKey = "services";
 
-export const useServicesQuery = ({ page, size, search = ""}: UseEntityQueryProps) => {
+export const useServicesQuery = ({ page, size, search = "" }: UseEntityQueryProps) => {
     return useQuery({
         queryKey: [ServicesQueryFetchKey, page, size, search],
         queryFn: fetchServices,

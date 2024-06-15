@@ -2,10 +2,8 @@ import { useMemo } from "react";
 import { Button, DataTableViewOptions } from "@marzneshin/components";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
-import { EntityTableContext } from "./entity-table-provider";
-import { EntityDataTable } from "./table";
-import { DataTablePagination } from "./table-pagination";
-import { TableFiltering } from "./table-filtering";
+import { EntityTableContext } from "./contexts";
+import { TableFiltering, DataTablePagination, EntityDataTable } from "./components";
 import {
     type UseRowSelectionReturn,
     useFiltering,
@@ -19,7 +17,7 @@ import {
     type EntityQueryKeyType,
 } from "./hooks";
 
-interface EntityTableProps<T> {
+export interface EntityTableProps<T> {
     fetchEntity: ({ queryKey }: EntityQueryKeyType) => FetchEntityReturn<T>;
     columnsFn: any;
     filteredColumn: string;
@@ -64,7 +62,7 @@ export function EntityTable<T>({
         filtering.columnFilters,
     ];
 
-    const { data, isLoading } = useQuery({
+    const { data, isFetching } = useQuery({
         queryFn: fetchEntity,
         queryKey: manualSorting ? sortedQuery : query,
         initialData: { entity: [], pageCount: 1 },
@@ -83,8 +81,8 @@ export function EntityTable<T>({
     });
 
     const contextValue = useMemo(
-        () => ({ table, data: data.entity, filtering, isLoading }),
-        [table, data.entity, filtering, isLoading],
+        () => ({ table, data: data.entity, filtering, isLoading: isFetching }),
+        [table, data.entity, filtering, isFetching],
     );
 
     return (
@@ -107,5 +105,3 @@ export function EntityTable<T>({
         </EntityTableContext.Provider>
     );
 }
-
-export * from "./hooks";

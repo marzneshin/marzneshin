@@ -1,4 +1,4 @@
-import { SupportUs } from './index'
+import { SupportUs } from "@marzneshin/features/support-us";
 import type { Meta, StoryObj } from "@storybook/react";
 import { within, userEvent, expect } from '@storybook/test';
 

@@ -1,13 +1,15 @@
 import {
     Sidebar,
     type SidebarItem,
-    SupportUs,
 } from "@marzneshin/components";
 import { useRouterState } from "@tanstack/react-router";
 import type { FC } from "react";
 import { sidebarItems as sidebarItemsSudoAdmin, sidebarItemsNonSudoAdmin } from ".";
 import { cn } from "@marzneshin/utils";
 import { useAuth } from "@marzneshin/features/auth";
+import {
+    SupportUs,
+} from "@marzneshin/features/support-us";
 
 interface DashboardSidebarProps {
     collapsed: boolean;

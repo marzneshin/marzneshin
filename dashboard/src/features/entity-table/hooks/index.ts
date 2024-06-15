@@ -6,3 +6,4 @@ export * from './use-entity-query'
 export * from './use-entity-table'
 export * from './use-visibility'
 export * from './use-sorting'
+export * from "./use-sidebar-entity-table"
