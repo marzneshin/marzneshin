@@ -9,10 +9,10 @@ import { useTranslation } from 'react-i18next';
 import {
     DataLimitField,
     DataLimitResetStrategyField,
-} from "../fields";
+} from "../../fields";
 import { TabsList } from "@radix-ui/react-tabs";
 import { useFormContext } from "react-hook-form";
-import {useDataLimitTabs} from "./use-data-limit-tabs";
+import { useDataLimitTabs } from "./use-data-limit-tabs";
 
 export const DataLimitFields: FC = () => {
     const { t } = useTranslation();

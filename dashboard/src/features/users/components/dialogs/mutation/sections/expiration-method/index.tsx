@@ -12,7 +12,7 @@ import {
     ExpireDateField,
     OnHoldTimeoutField,
     OnHoldExpireDurationField,
-} from "../fields";
+} from "../../fields";
 import { TabsList } from "@radix-ui/react-tabs";
 import { useTranslation } from "react-i18next";
 import { useExpirationMethodTabs } from "./use-expiration-method-tabs";
@@ -34,9 +34,9 @@ export const ExpirationMethodFields: FC<ExpirationMethodProps> = ({ entity }) =>
             <FormLabel>
                 {t('page.users.expire_method')}
             </FormLabel>
-            <Tabs 
-                defaultValue={defaultExpirationMethodTab} 
-                onValueChange={setSelectedExpirationMethodTab} 
+            <Tabs
+                defaultValue={defaultExpirationMethodTab}
+                onValueChange={setSelectedExpirationMethodTab}
                 className="mt-2 w-full"
             >
                 <TabsList className="flex flex-row items-center p-1 w-full rounded-md bg-accent">
