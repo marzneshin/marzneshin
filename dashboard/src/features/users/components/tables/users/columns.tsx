@@ -71,10 +71,21 @@ export const columns = (actions: ColumnAction): ColumnDef<UserType>[] => [
     {
         id: "actions",
         cell: ({ row }) => {
+            const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    actions.onOpen(row.original);
+                }
+            };
+
             return (
                 <div
                     className="flex flex-row gap-2 items-center"
                     onClick={(e) => e.stopPropagation()}
+                    onKeyDown={handleKeyDown}
+                    tabIndex={0}
+                    role="button"
                 >
                     <CopyToClipboardButton
                         text={getSubscriptionLink(row.original.subscription_url)}
@@ -92,5 +103,5 @@ export const columns = (actions: ColumnAction): ColumnDef<UserType>[] => [
                 </div>
             );
         },
-    },
+    }
 ];
