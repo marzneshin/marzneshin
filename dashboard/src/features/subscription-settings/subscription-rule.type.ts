@@ -7,7 +7,8 @@ export type SubscriptionRuleType = {
 }
 
 export type SubscriptionSettingsType = {
-    url_prefix: string;
+    // url_prefix: string;
+    template_on_acceptance: boolean;
     profile_title: string;
     support_link: string;
     update_interval: number;
