@@ -35,7 +35,7 @@ export const useExpirationMethodTabs = ({ entity }: { entity: UserMutationType |
         form.clearErrors("on_hold_timeout");
 
         // eslint-disable-next-line
-    }, [selectedExpirationMethodTab, form]);
+    }, [selectedExpirationMethodTab]);
 
     return {
         selectedExpirationMethodTab,
