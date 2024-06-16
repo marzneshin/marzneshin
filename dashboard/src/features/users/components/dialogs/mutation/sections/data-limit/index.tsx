@@ -18,7 +18,7 @@ export const DataLimitFields: FC = () => {
         <div className="my-2">
             <FormLabel className="hstack justify-between items-center text-md my-2" >
                 {t('page.users.data_limit_method')}
-                <Switch size="sm" checked={isDataLimitEnabled} onCheckedChange={handleToggleChange} />
+                <Switch checked={isDataLimitEnabled} onCheckedChange={handleToggleChange} />
             </FormLabel>
             <div className="flex gap-2 items-center w-full sm:flex-row md:flex-col">
                 {isDataLimitEnabled && (
