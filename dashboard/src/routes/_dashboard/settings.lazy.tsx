@@ -17,7 +17,7 @@ export const Settings = () => {
                     </CardTitle>
                 </CardHeader>
                 <CardContent className="sm:flex flex-col lg:grid grid-cols-2 gap-3 h-full">
-                    <ConfigurationWidget />
+                    {/* <ConfigurationWidget /> */}
                     <VStack className="gap-3">
                         <SubscriptionSettingsWidget />
                         <CertificateWidget />
