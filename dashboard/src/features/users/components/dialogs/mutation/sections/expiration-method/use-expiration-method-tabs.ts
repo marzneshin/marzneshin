@@ -2,7 +2,7 @@ import { UserMutationType } from "@marzneshin/features/users";
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 
-type ExpirationMethodStrategy = "onhold" | "determined" | "unlimited";
+export type ExpirationMethodStrategy = "onhold" | "determined" | "unlimited";
 
 const getUserExpirationMethod = (entity: UserMutationType): ExpirationMethodStrategy => {
     if (entity.status === "on_hold") return 'onhold';
