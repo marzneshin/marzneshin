@@ -1,6 +1,6 @@
 
 import { Card, CardContent, CardHeader, CardTitle, Page, VStack } from '@marzneshin/components'
-import { CertificateWidget, ConfigurationWidget } from '@marzneshin/features/settings';
+import { CertificateWidget } from '@marzneshin/features/settings';
 import { SubscriptionSettingsWidget } from '@marzneshin/features/subscription-settings';
 import { createFileRoute } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next'
