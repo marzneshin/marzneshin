@@ -1,5 +1,6 @@
 import { type FC, useEffect, useCallback } from "react";
 import {
+    Separator,
     DialogTitle,
     DialogContent,
     Dialog,
@@ -84,8 +85,11 @@ export const UsersMutationDialog: FC<UsersMutationDialogProps> = ({
                             <div className="flex-col grid-cols-2 gap-2 sm:flex md:grid h-full">
                                 <div>
                                     <UsernameField disabled={!!entity?.username} />
+                                    <Separator className="my-3"/>
                                     <DataLimitFields />
+                                    <Separator className="my-3"/>
                                     <ExpirationMethodFields entity={entity} />
+                                    <Separator className="my-3"/>
                                     <NoteField />
                                 </div>
                                 <VStack>

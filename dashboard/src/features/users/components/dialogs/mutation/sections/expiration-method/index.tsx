@@ -37,7 +37,7 @@ export const ExpirationMethodFields: FC<ExpirationMethodProps> = ({ entity }) =>
 
     return (
         <>
-            <FormLabel>
+            <FormLabel className="text-md">
                 {t('page.users.expire_method')}
             </FormLabel>
             <Tabs
