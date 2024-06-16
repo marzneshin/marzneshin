@@ -12,31 +12,37 @@ import {
     ExpireDateField,
     OnHoldTimeoutField,
     OnHoldExpireDurationField,
-} from "../fields";
+} from "@marzneshin/features/users/components/dialogs/mutation/fields";
 import { TabsList } from "@radix-ui/react-tabs";
 import { useTranslation } from "react-i18next";
-import { useExpirationMethodTabs } from "./use-expiration-method-tabs";
+import {
+    useExpirationMethodTabs,
+    type ExpirationMethodStrategy
+} from "./use-expiration-method-tabs";
 
 interface ExpirationMethodProps {
     entity: UserMutationType | null
 }
 
-
 export const ExpirationMethodFields: FC<ExpirationMethodProps> = ({ entity }) => {
-    const { t } = useTranslation()
+    const { t } = useTranslation();
     const {
         setSelectedExpirationMethodTab,
         defaultExpirationMethodTab
-    } = useExpirationMethodTabs({ entity })
+    } = useExpirationMethodTabs({ entity });
+
+    const handleTabChange = (value: string) => {
+        setSelectedExpirationMethodTab(value as ExpirationMethodStrategy);
+    };
 
     return (
         <>
-            <FormLabel>
+            <FormLabel className="text-md">
                 {t('page.users.expire_method')}
             </FormLabel>
-            <Tabs 
-                defaultValue={defaultExpirationMethodTab} 
-                onValueChange={setSelectedExpirationMethodTab} 
+            <Tabs
+                defaultValue={defaultExpirationMethodTab}
+                onValueChange={handleTabChange}
                 className="mt-2 w-full"
             >
                 <TabsList className="flex flex-row items-center p-1 w-full rounded-md bg-accent">
@@ -65,5 +71,5 @@ export const ExpirationMethodFields: FC<ExpirationMethodProps> = ({ entity }) =>
                 </TabsContent>
             </Tabs>
         </>
-    )
-}
+    );
+};

@@ -21,7 +21,7 @@ export const DataLimitField: FC<DataLimitFieldProps> = () => {
             name="data_limit"
             render={({ field }) => (
                 <FormItem className="w-full">
-                    <FormLabel>{t('page.users.data_limit')}</FormLabel>
+                    <FormLabel>{t('page.users.traffic')}</FormLabel>
                     <FormControl>
                         <Input
                             type="number"
