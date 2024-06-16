@@ -5,15 +5,11 @@ export const UserSchema = z.object({
     username: z.string().min(1, { message: 'Username is required' }),
     note: z.string().nullable(),
     data_limit: z
-        .string()
-        .min(0, 'The minimum number is 0')
-        .or(z.number())
+        .union([z.string().transform((str) => Number(str) * DATA_LIMIT_METRIC), z.number()])
+        .refine(val => val >= 0, { message: 'The minimum number is 0' })
         .nullable()
         .optional()
-        .transform((str) => {
-            if (str) return Number((parseFloat(String(str)) * DATA_LIMIT_METRIC).toFixed(5));
-            return 0;
-        }),
+        .transform((val) => val ?? 0),
     expire: z.string().or(z.number()).nullable().optional(),
     data_limit_reset_strategy: z.string().nullable().optional(),
     status: z.string(),
