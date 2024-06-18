@@ -109,7 +109,7 @@ export function SubscriptionRulesForm() {
                         className="w-fit"
                         onClick={() =>
                             append({
-                                pattern: "//",
+                                pattern: "",
                                 result: "block",
                             })
                         }
