@@ -76,15 +76,14 @@ export function SubscriptionRulesForm() {
                 <p className="text-sm text-muted-foreground">
                     {t("page.settings.subscription-settings.subscription-desc")}
                 </p>
-                {fields.length === 0 && <NoRulesAlert />}
-                <div className="space-y-1">
-                    <Sortable
-                        value={fields}
-                        onMove={({ activeIndex, overIndex }) =>
-                            move(activeIndex, overIndex)
-                        }
-                    >
-                        <ScrollArea className="flex flex-col w-full max-h-[400px] gap-2" type="always">
+                {fields.length === 0 ? <NoRulesAlert /> : (
+                    <div className="space-y-1">
+                        <Sortable
+                            value={fields}
+                            onMove={({ activeIndex, overIndex }) =>
+                                move(activeIndex, overIndex)
+                            }
+                        >
                             <div className="grid grid-cols-[2fr,1.3fr,0.25fr,0.25fr] items-center justify-start gap-2 my-2">
                                 <FormLabel>
                                     {t("pattern")}
@@ -93,15 +92,17 @@ export function SubscriptionRulesForm() {
                                     {t("result")}
                                 </FormLabel>
                             </div>
-                            {fields.map((field, index) => (
-                                <RuleItem
-                                    field={field}
-                                    index={index}
-                                    onRemove={remove} />
-                            ))}
-                        </ScrollArea>
-                    </Sortable>
-                </div>
+                            <ScrollArea className="flex flex-col w-full max-h-[400px] gap-2" type="always">
+                                {fields.map((field, index) => (
+                                    <RuleItem
+                                        field={field}
+                                        index={index}
+                                        onRemove={remove} />
+                                ))}
+                            </ScrollArea>
+                        </Sortable>
+                    </div>
+                )}
                 <HStack className="w-full flex-end">
                     <Button
                         type="button"
