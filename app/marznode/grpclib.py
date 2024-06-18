@@ -151,8 +151,15 @@ class MarzNodeGRPCLIB(MarzNodeBase, MarzNodeDB):
                 yield response.line
 
     async def restart_xray(self, config: str):
-        await self._stub.RestartXray(XrayConfig(configuration=config))
-        await self._sync()
+        try:
+            await self._stub.RestartXray(XrayConfig(configuration=config))
+            await self._sync()
+        except:
+            self.synced = False
+            self.set_status(NodeStatus.unhealthy)
+            raise
+        else:
+            self.set_status(NodeStatus.healthy)
 
     async def get_xray_config(self):
         response = await self._stub.FetchXrayConfig(Empty())
