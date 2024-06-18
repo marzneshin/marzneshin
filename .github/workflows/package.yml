@@ -51,8 +51,7 @@ jobs:
           node-version: '20.x'
 
       - name: Install dependencies
-        run: pnpm install
-        working-directory: ./dashboard/
+        run: pnpm install --prefix ./dashboard
 
       - name: Build Dashboard
         run: npm run build -- --outDir dist --base '/dashboard/'
