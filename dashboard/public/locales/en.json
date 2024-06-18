@@ -67,6 +67,7 @@
         "support-link": "Support Link",
         "update-interval": "Update Interval",
         "add-rule": "Add Rule",
+        "reset-local-changes": "Reset Changes",
         "title": "Subscription Settings",
         "subscription-title": "Subscription Rules",
         "subscription-desc": "Add your subscription rules in order of priority.",

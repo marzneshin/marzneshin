@@ -11,8 +11,10 @@ import {
     ScrollArea,
     FormLabel,
     Separator,
+    Awaiting,
 } from "@marzneshin/components";
 import { Schema } from "./schema"
+import { Overlay } from "./overlay"
 import {
     TemplateOnAcceptanceField,
     ProfileTitleField,
@@ -28,12 +30,19 @@ import { useEffect, useCallback } from "react";
 
 export function SubscriptionRulesForm() {
     const { t } = useTranslation()
-    const { data } = useSubscriptionSettingsQuery()
+    const { data, isFetching } = useSubscriptionSettingsQuery()
     const subscriptionSettings = useSubscriptionSettingsMutation()
     const form = useForm<Schema>({
         resolver: zodResolver(schema),
         defaultValues: data,
     })
+
+    const handleResetLocalChanges = useCallback(
+        () => {
+            form.reset(data)
+        },
+        [form, data],
+    )
 
     const handleSubscriptionRulesDataUpdate = useCallback(
         () => {
@@ -78,34 +87,55 @@ export function SubscriptionRulesForm() {
                 <p className="text-sm text-muted-foreground">
                     {t("page.settings.subscription-settings.subscription-desc")}
                 </p>
-                {fields.length === 0 ? <NoRulesAlert /> : (
-                    <div className="space-y-1">
-                        <Sortable
-                            value={fields}
-                            onMove={({ activeIndex, overIndex }) =>
-                                move(activeIndex, overIndex)
-                            }
-                        >
-                            <div className="grid grid-cols-[2fr,1.3fr,0.25fr,0.25fr] items-center justify-start gap-2 my-2">
-                                <FormLabel>
-                                    {t("pattern")}
-                                </FormLabel>
-                                <FormLabel>
-                                    {t("result")}
-                                </FormLabel>
-                            </div>
-                            <ScrollArea className="flex flex-col w-full max-h-[400px] gap-2" type="always">
-                                {fields.map((field, index) => (
-                                    <RuleItem
-                                        field={field}
-                                        index={index}
-                                        onRemove={remove} />
-                                ))}
-                            </ScrollArea>
-                        </Sortable>
-                    </div>
-                )}
+                <Awaiting
+                    isFetching={isFetching}
+                    Skeleton={
+                        <>
+                            <Overlay />
+                            <Overlay />
+                            <Overlay />
+                            <Overlay />
+                        </>
+                    }
+                    isNotFound={fields.length === 0}
+                    NotFound={<NoRulesAlert />}
+                    Component={
+                        <div className="space-y-1">
+                            <Sortable
+                                value={fields}
+                                onMove={({ activeIndex, overIndex }) =>
+                                    move(activeIndex, overIndex)
+                                }
+                            >
+                                <div className="grid grid-cols-[2fr,1.3fr,0.25fr,0.25fr] items-center justify-start gap-2 my-2">
+                                    <FormLabel>
+                                        {t("pattern")}
+                                    </FormLabel>
+                                    <FormLabel>
+                                        {t("result")}
+                                    </FormLabel>
+                                </div>
+                                <ScrollArea className="flex flex-col w-full max-h-[400px] gap-2" type="always">
+                                    {fields.map((field, index) => (
+                                        <RuleItem
+                                            field={field}
+                                            index={index}
+                                            onRemove={remove} />
+                                    ))}
+                                </ScrollArea>
+                            </Sortable>
+                        </div>
+                    }
+                />
                 <HStack className="w-full flex-end">
+                    <Button
+                        type="button"
+                        variant="destructive"
+                        className="w-fit"
+                        onMouseDown={handleResetLocalChanges}
+                    >
+                        {t("page.settings.subscription-settings.reset-local-changes")}
+                    </Button>
                     <Button
                         type="button"
                         variant="outline"
