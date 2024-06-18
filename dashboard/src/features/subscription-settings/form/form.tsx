@@ -10,6 +10,7 @@ import {
     Sortable,
     ScrollArea,
     FormLabel,
+    Separator,
 } from "@marzneshin/components";
 import { Schema } from "./schema"
 import {
@@ -70,6 +71,7 @@ export function SubscriptionRulesForm() {
                     <SupportLinkField />
                 </div>
                 <TemplateOnAcceptanceField />
+                <Separator className="my-3" />
                 <h4 className="text-lg mt-2">
                     {t("page.settings.subscription-settings.subscription-title")}
                 </h4>
