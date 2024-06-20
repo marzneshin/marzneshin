@@ -109,8 +109,7 @@ class MarzNodeGRPCIO(MarzNodeBase, MarzNodeDB):
         if inbounds is None:
             inbounds = set()
 
-        if self.synced:
-            await self._updates_queue.put({"user": user, "inbounds": inbounds})
+        await self._updates_queue.put({"user": user, "inbounds": inbounds})
 
     async def _repopulate_users(self, users_data: list[dict]) -> None:
         updates = [

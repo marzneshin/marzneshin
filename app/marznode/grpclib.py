@@ -77,21 +77,25 @@ class MarzNodeGRPCLIB(MarzNodeBase, MarzNodeDB):
                     self._streaming_task.cancel()
             else:
                 if not self.synced:
-                    await self._sync()
-                    self._streaming_task = asyncio.create_task(
-                        self._stream_user_updates()
-                    )
-                    self.set_status(NodeStatus.healthy)
-                    logger.info("Connected to node %i", self.id)
+                    try:
+                        await self._sync()
+                    except:
+                        pass
+                    else:
+                        self._streaming_task = asyncio.create_task(
+                            self._stream_user_updates()
+                        )
+                        self.set_status(NodeStatus.healthy)
+                        logger.info("Connected to node %i", self.id)
             await asyncio.sleep(10)
 
     async def _stream_user_updates(self):
         try:
             async with self._stub.SyncUsers.open() as stream:
-                logger.info("opened the stream")
+                logger.debug("opened the stream")
                 while True:
                     user_update = await self._updates_queue.get()
-                    logger.info("got something from queue")
+                    logger.debug("got something from queue")
                     user = user_update["user"]
                     await stream.send_message(
                         UserData(
@@ -113,8 +117,7 @@ class MarzNodeGRPCLIB(MarzNodeBase, MarzNodeDB):
         if inbounds is None:
             inbounds = set()
 
-        if self.synced:
-            await self._updates_queue.put({"user": user, "inbounds": inbounds})
+        await self._updates_queue.put({"user": user, "inbounds": inbounds})
 
     async def _repopulate_users(self, users_data: list[dict]) -> None:
         updates = [
