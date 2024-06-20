@@ -13,7 +13,8 @@ export const useSubscriptionSettingsQuery = () => {
         queryKey: subscriptionSettingsQueryKey,
         queryFn: fetchSubscriptionSettings,
         initialData: {
-            url_prefix: "",
+            // url_prefix: "",
+            template_on_acceptance: false,
             profile_title: "",
             support_link: "",
             update_interval: 0,

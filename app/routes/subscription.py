@@ -51,7 +51,7 @@ def user_subscription(
     user_agent: str = Header(default=""),
 ):
     """
-    Subscription link, V2ray and Clash supported
+    Subscription link, result format depends on subscription settings
     """
 
     user: UserResponse = UserResponse.model_validate(db_user)
@@ -61,6 +61,20 @@ def user_subscription(
     subscription_settings = SubscriptionSettings.model_validate(
         db.query(Settings.subscription).first()[0]
     )
+
+    if (
+        subscription_settings.template_on_acceptance
+        and "text/html" in request.headers.get("Accept", [])
+    ):
+        links = generate_subscription(
+            user=db_user, config_format="links"
+        ).split()
+        return HTMLResponse(
+            render_template(
+                SUBSCRIPTION_PAGE_TEMPLATE,
+                {"user": user, "links": links},
+            )
+        )
 
     response_headers = {
         "content-disposition": f'attachment; filename="{user.username}"',
@@ -88,7 +102,7 @@ def user_subscription(
                     )
                 )
             elif rule.result.value == "block":
-                return HTT
+                raise HTTPException(404)
             elif rule.result.value == "base64-links":
                 b64 = True
                 config_format = "links"

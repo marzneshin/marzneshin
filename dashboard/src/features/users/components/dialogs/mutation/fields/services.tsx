@@ -10,6 +10,7 @@ import {
     FormMessage,
     ScrollArea,
     Skeleton,
+    Awaiting
 } from "@marzneshin/components";
 import { Link } from "@tanstack/react-router";
 import { ExclamationTriangleIcon } from '@radix-ui/react-icons';
@@ -119,13 +120,13 @@ export const ServicesField: FC = () => {
             render={() => (
                 <FormItem>
                     <FormLabel>{t("services")}</FormLabel>
-                    {isFetching ? (
-                        <ServiceSkeletons />
-                    ) : data.entity.length !== 0 ? (
-                        <ServicesList services={data.entity} />
-                    ) : (
-                        <ServicesAlert />
-                    )}
+                    <Awaiting
+                        isFetching={isFetching}
+                        Skeleton={<ServiceSkeletons />}
+                        isNotFound={data.entity.length === 0}
+                        NotFound={<ServicesAlert />}
+                        Component={<ServicesList services={data.entity} />}
+                    />
                 </FormItem>
             )}
         />

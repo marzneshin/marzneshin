@@ -26,7 +26,7 @@ const handleSuccess = () => {
         {
             description: i18n.t('events.update.success.desc')
         })
-    queryClient.invalidateQueries({ queryKey: [subscriptionSettingsQueryKey] })
+    queryClient.invalidateQueries({ queryKey: subscriptionSettingsQueryKey })
 }
 
 export const useSubscriptionSettingsMutation = () => {

@@ -21,7 +21,7 @@ class SubscriptionRule(BaseModel):
 
 
 class SubscriptionSettings(BaseModel):
-    url_prefix: str
+    template_on_acceptance: bool
     profile_title: str
     support_link: str
     update_interval: int
