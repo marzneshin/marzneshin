@@ -193,6 +193,8 @@ async def modify_user(
         and user.status in {UserStatus.active, UserStatus.on_hold}
     ):
         await marznode.operations.update_user(new_user, old_inbounds)
+    elif status_change:
+        await marznode.operations.update_user(new_user)
 
     asyncio.create_task(report.user_updated(user=user, by=admin))
 
