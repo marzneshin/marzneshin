@@ -159,35 +159,35 @@
         "delete": {
             "error": "Failed to delete {{name}}",
             "success": {
-                "title": "{{name}} is successfuly deleted",
+                "title": "{{name}} is successfully deleted",
                 "desc": ""
             }
         },
         "create": {
             "error": "Failed to create {{name}}",
             "success": {
-                "title": "{{name}} is successfuly created",
+                "title": "{{name}} is successfully created",
                 "desc": ""
             }
         },
         "update": {
             "error": "Failed to update {{name}}",
             "success": {
-                "title": "{{name}} is successfuly updated",
+                "title": "{{name}} is successfully updated",
                 "desc": ""
             }
         },
         "user_revoke": {
             "error": "Failed to revoke {{name}} subscription",
             "success": {
-                "title": "{{name}} is successfuly created",
+                "title": "{{name}} is successfully created",
                 "desc": ""
             }
         },
         "user_reset": {
             "error": "Failed to reset {{name}} data usage",
             "success": {
-                "title": "{{name}} data usage is successfuly reseted",
+                "title": "{{name}} data usage is successfully reset",
                 "desc": ""
             }
         }

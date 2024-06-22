@@ -13,8 +13,8 @@ export const UserUsedTraffic: FC<UserUsedTrafficProps> = (
     { user }
 ) => {
     const { t } = useTranslation()
-    const formatedUsedTraffic = format(user.used_traffic)
-    const formatedDatalimit = (user.data_limit != null) ? format(user.data_limit) : []
+    const formattedUsedTraffic = format(user.used_traffic)
+    const formattedDatalimit = (user.data_limit != null) ? format(user.data_limit) : []
     return (
         <div className="flex gap-x-5 justify-start items-center">
             <CircularProgress
@@ -24,10 +24,10 @@ export const UserUsedTraffic: FC<UserUsedTrafficProps> = (
             />
             <div>
                 <p className="text-sm font-medium text-gray-900 dark:text-gray-50">
-                    {formatedUsedTraffic[0]} {formatedUsedTraffic[1]}
+                    {formattedUsedTraffic[0]} {formattedUsedTraffic[1]}
                 </p>
                 <p className="text-sm text-gray-500 dark:text-gray-500">
-                    {user.data_limit ? `${formatedDatalimit[0]} ${formatedDatalimit[1]}` : t('page.users.unlimited')}
+                    {user.data_limit ? `${formattedDatalimit[0]} ${formattedDatalimit[1]}` : t('page.users.unlimited')}
                 </p>
             </div>
         </div>

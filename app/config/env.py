@@ -71,12 +71,12 @@ WEBHOOK_SECRET = config("WEBHOOK_SECRET", default=None)
 RECURRENT_NOTIFICATIONS_TIMEOUT = config(
     "RECURRENT_NOTIFICATIONS_TIMEOUT", default=180, cast=int
 )
-# how many times to try after ok response not recevied after sending a notifications
+# how many times to try after ok response not received after sending a notifications
 NUMBER_OF_RECURRENT_NOTIFICATIONS = config(
     "NUMBER_OF_RECURRENT_NOTIFICATIONS", default=3, cast=int
 )
 
-# sends a notification when the user uses this much of thier data
+# sends a notification when the user uses this much of their data
 NOTIFY_REACHED_USAGE_PERCENT = config(
     "NOTIFY_REACHED_USAGE_PERCENT", default=80, cast=int
 )
