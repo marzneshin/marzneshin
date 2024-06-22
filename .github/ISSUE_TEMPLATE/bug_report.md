@@ -1,33 +1,75 @@
 ---
-name: Bug report
-about: Create a report to help us improve
-title: Bug title
-labels: bug
-assignees: ''
+name: 🐞Bug Report
+description: Create a report to help us improve Marzneshin by reproducing and fixing bugs
+title: "[BUG] "
+labels:
+  - "bug"
 
----
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Thanks :heart: for taking the time to fill out this bug report!**
+        We kindly ask that you search to see if an issue [already exists](https://github.com/khodedawsh/marzneshin/issues?q=is%3Aissue+sort%3Acreated-desc+) for the bug you encountered.
 
-**Describe the bug**
-A clear and concise description of what the bug is.
+  - type: textarea
+    attributes:
+      label: Current Behavior
+      description: |
+        A clear and concise description of the issue you're experiencing.
+    validations:
+      required: false
 
-**To Reproduce**
-Steps to reproduce the behavior:
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
+  - type: textarea
+    attributes:
+      label: Expected Behavior
+      description: |
+        A clear and concise description of what you expected to happen.
+    validations:
+      required: false
 
-**Expected behavior**
-A clear and concise description of what you expected to happen.
+  - type: textarea
+    attributes:
+      label: Steps To Reproduce
+      description: Steps to reproduce the behavior.
+      placeholder: |
+        1. Go to '...'
+        2. Click on '....'
+        3. Scroll down to '....'
+        4. See error
+    validations:
+      required: false
 
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
+  - type: textarea
+    attributes:
+      label: Screenshots
+      description: |
+        If applicable, add screenshots to help explain your problem.
 
-**Machine details (please complete the following information):**
- - OS: [e.g. ubuntu 20]
-- Python version: [e.g 3.8]
-- Nodejs version: [e.g 16.17]
-- Browser [e.g. chrome, safari]
+        Tip: You can attach images or log files by clicking this area to highlight it and then dragging files in.
+    validations:
+      required: false
 
-**Additional context**
-Add any other context about the problem here.
+  - type: textarea
+    attributes:
+      label: Environment
+      description: |
+        Information about your environment where you see the bug.
+
+      value: |
+        OS:
+
+        Browsers:
+
+        Version:
+
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Additional Context
+      description: |
+        Add any other context about the problem here.
+    validations:
+      required: false
