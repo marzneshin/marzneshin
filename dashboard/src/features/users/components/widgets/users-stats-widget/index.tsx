@@ -13,10 +13,11 @@ interface UsersStatsWidgetProps {
     expired: number;
     on_hold: number;
     limited: number;
+    total: number;
 }
 
 export const UsersStatsWidget: FC<UsersStatsWidgetProps> = ({
-    active, online, expired, on_hold, limited
+    active, online, expired, on_hold, limited, total,
 }) => {
     const { t } = useTranslation();
 
@@ -27,8 +28,6 @@ export const UsersStatsWidget: FC<UsersStatsWidgetProps> = ({
         { symbol: "On Hold", amount: on_hold, color: "fill-purple-500" },
         { symbol: "Limited", amount: limited, color: "fill-red-500" },
     ];
-
-    const total = active + online + expired + on_hold + limited
 
     return (
         <MiniWidget

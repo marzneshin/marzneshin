@@ -22,5 +22,6 @@ export const UsersChart: WidgetStory = {
         expired: 10,
         on_hold: 5,
         limited: 5,
+        total: 70,
     }
 }
