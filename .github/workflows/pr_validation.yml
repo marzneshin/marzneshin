@@ -7,7 +7,6 @@ on:
 jobs:
   conventional_commit:
     name: Conventional Commit Title
-    if: ${{ inputs.conventional_title }}
     runs-on: ubuntu-latest
     steps:
       - uses: amannn/action-semantic-pull-request@v5
