@@ -23,6 +23,7 @@ import {
 import { GithubRepo } from "@marzneshin/features/github-repo";
 import { CommandBox } from "@marzneshin/features/search-command";
 import { DashboardBottomMenu } from "@marzneshin/features/bottom-menu";
+import { VersionIndicator } from "@marzneshin/features/version-indicator";
 
 export const DashboardLayout = () => {
     const isDesktop = useScreenBreakpoint("md");
@@ -77,12 +78,15 @@ export const DashboardLayout = () => {
                             />
                         </ResizablePanel>
                         <ResizableHandle withHandle className="w-[2px]" />
-                        <ResizablePanel>
+                        <ResizablePanel className="flex-col flex justify-between">
                             <main className="flex flex-col h-full">
                                 <Suspense fallback={<Loading />}>
                                     <Outlet />
                                 </Suspense>
                             </main>
+                            <footer className="h-30 py-2">
+                                <VersionIndicator />
+                            </footer>
                         </ResizablePanel>
                     </ResizablePanelGroup>
                 ) : (
