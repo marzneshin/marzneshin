@@ -7,7 +7,6 @@ from typing import List, Optional, Tuple, Union
 from sqlalchemy import and_, delete, update, select
 from sqlalchemy.orm import Session
 
-from app.config.env import NOTIFY_DAYS_LEFT, NOTIFY_REACHED_USAGE_PERCENT
 from app.db.models import (
     JWT,
     TLS,
@@ -39,10 +38,6 @@ from app.models.user import (
     UserStatus,
     UserUsageResponse,
     UserExpireStrategy,
-)
-from app.utils.helpers import (
-    calculate_expiration_days,
-    calculate_usage_percent,
 )
 
 
@@ -313,6 +308,7 @@ def get_users_count(
     admin: Admin | None = None,
     enabled: bool | None = None,
     online: bool | None = None,
+    expire_strategy: UserExpireStrategy | None = None,
 ):
     query = db.query(User.id)
     if admin:
@@ -321,29 +317,35 @@ def get_users_count(
         query = query.filter(User.status == status)
     if enabled:
         query = query.filter(User.enabled == enabled)
-    if online:
+    if online is True:
         query = query.filter(
             User.online_at > (datetime.utcnow() - timedelta(seconds=30))
         )
+    elif online is False:
+        query = query.filter(
+            User.online_at < (datetime.utcnow() - timedelta(seconds=30))
+        )
+    if expire_strategy:
+        query = query.filter(User.expire_strategy == expire_strategy)
+
     return query.count()
 
 
 def create_user(db: Session, user: UserCreate, admin: Admin = None):
     dbuser = User(
         username=user.username,
-        # proxies=proxies,
         key=user.key,
+        expire_strategy=user.expire_strategy,
+        expire_date=user.expire_date,
+        usage_duration=user.usage_duration,
+        activation_deadline=user.activation_deadline,
         services=db.query(Service)
         .filter(Service.id.in_(user.service_ids))
         .all(),  # user.services,
-        status=user.status,
         data_limit=(user.data_limit or None),
-        expire=(user.expire or None),
         admin=admin,
         data_limit_reset_strategy=user.data_limit_reset_strategy,
         note=user.note,
-        on_hold_expire_duration=(user.on_hold_expire_duration or None),
-        on_hold_timeout=(user.on_hold_timeout or None),
     )
     db.add(dbuser)
     db.commit()
@@ -358,64 +360,26 @@ def remove_user(db: Session, dbuser: User):
 
 
 def update_user(db: Session, dbuser: User, modify: UserModify):
-    if modify.status is not None:
-        dbuser.status = modify.status
-
     if modify.data_limit is not None:
         # in case there is modification to a user's data limit
         dbuser.data_limit = (
             modify.data_limit or None
         )  # set it to the new limit
-        if dbuser.status is not UserStatus.expired:
-            # in case the user isn't already disabled/expired
-            if (
-                not dbuser.data_limit
-                or dbuser.used_traffic < dbuser.data_limit
-            ):
-                # in case the user is unlimited or hasn't reached the limit already
-                if dbuser.status != UserStatus.on_hold:
-                    dbuser.status = UserStatus.active
-
-                if not dbuser.data_limit or (
-                    calculate_usage_percent(
-                        dbuser.used_traffic, dbuser.data_limit
-                    )
-                    < NOTIFY_REACHED_USAGE_PERCENT
-                ):
-                    delete_notification_reminder_by_type(
-                        db, dbuser.id, ReminderType.data_usage
-                    )
-            else:
-                # the user has reached the new data limit
-                dbuser.status = UserStatus.limited
 
     if modify.expire is not None:
         dbuser.expire = modify.expire or None
-        if dbuser.status in (UserStatus.active, UserStatus.expired):
-            if not dbuser.expire or dbuser.expire > datetime.utcnow():
-                dbuser.status = UserStatus.active
-                if not dbuser.expire or (
-                    calculate_expiration_days(dbuser.expire) > NOTIFY_DAYS_LEFT
-                ):
-                    delete_notification_reminder_by_type(
-                        db, dbuser.id, ReminderType.expiration_date
-                    )
-            else:
-                dbuser.status = UserStatus.expired
 
     if modify.note is not None:
         dbuser.note = modify.note or None
 
     if modify.data_limit_reset_strategy is not None:
-        dbuser.data_limit_reset_strategy = (
-            modify.data_limit_reset_strategy.value
-        )
+        dbuser.data_limit_reset_strategy = modify.data_limit_reset_strategy
 
-    if modify.on_hold_timeout is not None:
-        dbuser.on_hold_timeout = modify.on_hold_timeout
+    if modify.activation_deadline is not None:
+        dbuser.activation_deadline = modify.activation_deadline
 
-    if modify.on_hold_expire_duration is not None:
-        dbuser.on_hold_expire_duration = modify.on_hold_expire_duration
+    if modify.usage_duration is not None:
+        dbuser.usage_duration = modify.usage_duration
 
     if modify.service_ids is not None:
         dbuser.services = (
@@ -468,7 +432,6 @@ def reset_all_users_data_usage(db: Session, admin: Optional[Admin] = None):
     for dbuser in query.all():
         dbuser.used_traffic = 0
         if dbuser.status not in [
-            UserStatus.on_hold,
             UserStatus.expired,
         ]:
             dbuser.status = UserStatus.active
