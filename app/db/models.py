@@ -31,6 +31,7 @@ from app.models.user import (
     ReminderType,
     UserDataUsageResetStrategy,
     UserStatus,
+    UserExpireStrategy,
 )
 
 
@@ -106,7 +107,6 @@ class User(Base):
         viewonly=True,
         distinct_target_key=True,
     )
-    # proxies = relationship("Proxy", back_populates="user", cascade="all, delete-orphan")
     status = Column(
         Enum(UserStatus), nullable=False, default=UserStatus.active
     )
@@ -133,7 +133,14 @@ class User(Base):
     )
     ip_limit = Column(Integer, nullable=False, default=-1)
     settings = Column(String(1024))
-    expire = Column(DateTime)
+    expire_strategy = Column(
+        Enum(UserExpireStrategy),
+        nullable=False,
+        default=UserExpireStrategy.NEVER,
+    )
+    expire_date = Column(DateTime)
+    usage_duration = Column(BigInteger)
+    activation_deadline = Column(DateTime)
     admin_id = Column(Integer, ForeignKey("admins.id"))
     admin = relationship("Admin", back_populates="users")
     sub_updated_at = Column(DateTime)
@@ -141,8 +148,6 @@ class User(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
     note = Column(String(500))
     online_at = Column(DateTime)
-    on_hold_expire_duration = Column(BigInteger)
-    on_hold_timeout = Column(DateTime)
     edit_at = Column(DateTime)
 
     @property
