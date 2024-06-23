@@ -2,7 +2,7 @@ import {
     Sidebar,
     type SidebarItem,
 } from "@marzneshin/components";
-import { useRouterState } from "@tanstack/react-router";
+import { useIsCurrentRoute } from "@marzneshin/hooks";
 import type { FC } from "react";
 import { sidebarItems as sidebarItemsSudoAdmin, sidebarItemsNonSudoAdmin } from ".";
 import { cn } from "@marzneshin/utils";
@@ -25,15 +25,8 @@ export const DashboardSidebar: FC<DashboardSidebarProps> = ({
     setOpen,
     open,
 }) => {
-    const router = useRouterState();
     const { isSudo } = useAuth();
-    const currentActivePath = router.location.pathname;
-    const isActive = (path: string) => {
-        if (path === "/") {
-            return currentActivePath === path;
-        }
-        return currentActivePath.startsWith(path);
-    };
+    const { isCurrentRouteActive } = useIsCurrentRoute()
     const sidebarItems = isSudo() ? sidebarItemsSudoAdmin : sidebarItemsNonSudoAdmin
     return (
         <aside className="size-full py-4  px-4 ">
@@ -52,7 +45,7 @@ export const DashboardSidebar: FC<DashboardSidebarProps> = ({
                                     <Sidebar.Group>{key}</Sidebar.Group>
                                     {sidebarItems[key].map((item: SidebarItem) => (
                                         <Sidebar.Item
-                                            variant={isActive(item.to) ? "active" : "default"}
+                                            variant={isCurrentRouteActive(item.to) ? "active" : "default"}
                                             className={cn("my-2 border-transparent", {
                                                 "w-10 h-10": collapsed,
                                             })}
