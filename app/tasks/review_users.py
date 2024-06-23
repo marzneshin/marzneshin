@@ -1,6 +1,6 @@
 import asyncio
 import logging
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import TYPE_CHECKING
 
 from sqlalchemy.orm import Session
@@ -15,10 +15,14 @@ from app.db import (
     GetDB,
     get_notification_reminder,
     get_users,
-    start_user_expire,
     update_user_status,
 )
-from app.models.user import ReminderType, UserResponse, UserStatus
+from app.models.user import (
+    ReminderType,
+    UserResponse,
+    UserStatus,
+    UserExpireStrategy,
+)
 from app.utils import report
 from app.utils.helpers import (
     calculate_expiration_days,
@@ -47,11 +51,11 @@ def add_notification_reminders(
                 usage_percent,
                 UserResponse.model_validate(user),
                 user.id,
-                user.expire,
+                user.expire_date,
             )
 
-    if user.expire and ((now - user.created_at).days >= NOTIFY_DAYS_LEFT):
-        expire_days = calculate_expiration_days(user.expire)
+    if user.expire_date and ((now - user.created_at).days >= NOTIFY_DAYS_LEFT):
+        expire_days = calculate_expiration_days(user.expire_date)
         if (expire_days <= NOTIFY_DAYS_LEFT) and (
             not get_notification_reminder(
                 db, user.id, ReminderType.expiration_date
@@ -62,7 +66,7 @@ def add_notification_reminders(
                 expire_days,
                 UserResponse.model_validate(user),
                 user.id,
-                user.expire,
+                user.expire_date,
             )
 
 
@@ -70,9 +74,9 @@ async def review_users():
     now = datetime.utcnow()
     with GetDB() as db:
         for user in get_users(db, status=UserStatus.active):
-
+            """looking for to be expired/limited users"""
             limited = user.data_limit and user.used_traffic >= user.data_limit
-            expired = user.expire and user.expire <= now
+            expired = user.expire_date and user.expire_date <= now
             if limited:
                 status = UserStatus.limited
             elif expired:
@@ -93,28 +97,33 @@ async def review_users():
                 )
             )
 
-            logger.info(f'User "{user.username}" status changed to {status}')
+            logger.info(
+                f"User `%s` status changed to `%s`",
+                user.username,
+                status.value,
+            )
 
-        for user in get_users(db, status=UserStatus.on_hold):
+        for user in get_users(
+            db, expire_strategy=UserExpireStrategy.START_ON_FIRST_USE
+        ):
+            """looking for to be activated users"""
+            base_time = user.edit_at or user.created_at
 
-            if user.edit_at:
-                base_time = user.edit_at
-            else:
-                base_time = user.created_at
-
-            # Check if the user is online After or at 'base_time'
-            if user.online_at and base_time <= user.online_at:
-                status = UserStatus.active
-
-            elif user.on_hold_timeout and (user.on_hold_timeout <= now):
-                # If the user didn't connect within the timeout period, change status to "Active"
-                status = UserStatus.active
-
+            # Check if the user is online After or at 'base_time' or...
+            # If the user didn't connect within the timeout period, change status to "Active"
+            if (user.online_at and base_time <= user.online_at) or (
+                user.activation_deadline and (user.activation_deadline <= now)
+            ):
+                pass
             else:
                 continue
 
-            update_user_status(db, user, status)
-            start_user_expire(db, user)
+            user.expire_date = datetime.utcnow() + timedelta(
+                seconds=user.usage_duration
+            )
+            user.expire_strategy = UserExpireStrategy.FIXED_DATE
+            db.commit()
+            db.refresh(user)
             asyncio.create_task(
                 report.status_change(
                     user.username,
@@ -122,4 +131,4 @@ async def review_users():
                     UserResponse.model_validate(user),
                 )
             )
-            logger.info(f"on hold user `{user.username}` has been activated")
+            logger.info("on hold user `%s` has been activated", user.username)

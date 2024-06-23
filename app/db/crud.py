@@ -38,6 +38,7 @@ from app.models.user import (
     UserModify,
     UserStatus,
     UserUsageResponse,
+    UserExpireStrategy,
 )
 from app.utils.helpers import (
     calculate_expiration_days,
@@ -230,7 +231,9 @@ def get_users(
     sort: Optional[List[UsersSortingOptions]] = None,
     admin: Optional[Admin] = None,
     reset_strategy: Optional[Union[UserDataUsageResetStrategy, list]] = None,
-    return_with_count: bool = False,
+    expire_strategy: (
+        UserExpireStrategy | list[UserExpireStrategy] | None
+    ) = None,
 ) -> Union[List[User], Tuple[List[User], int]]:
     query = db.query(User)
 
@@ -256,12 +259,14 @@ def get_users(
                 User.data_limit_reset_strategy == reset_strategy
             )
 
+    if expire_strategy:
+        if isinstance(expire_strategy, list):
+            query = query.filter(User.expire_strategy.in_(expire_strategy))
+        else:
+            query = query.filter(User.expire_strategy == expire_strategy)
+
     if admin:
         query = query.filter(User.admin == admin)
-
-    # count it before applying limit and offset
-    if return_with_count:
-        count = query.count()
 
     if sort:
         query = query.order_by(*(opt.value for opt in sort))
@@ -270,9 +275,6 @@ def get_users(
         query = query.offset(offset)
     if limit:
         query = query.limit(limit)
-
-    if return_with_count:
-        return query.all(), count
 
     return query.all()
 
@@ -486,16 +488,6 @@ def update_user_status(db: Session, dbuser: User, status: UserStatus):
 
 def set_owner(db: Session, dbuser: User, admin: Admin):
     dbuser.admin = admin
-    db.commit()
-    db.refresh(dbuser)
-    return dbuser
-
-
-def start_user_expire(db: Session, dbuser: User):
-    expire = datetime.utcnow() + timedelta(
-        seconds=dbuser.on_hold_expire_duration
-    )
-    dbuser.expire = expire
     db.commit()
     db.refresh(dbuser)
     return dbuser
