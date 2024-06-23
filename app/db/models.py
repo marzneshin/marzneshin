@@ -29,7 +29,7 @@ from app.models.proxy import (
 )
 from app.models.user import (
     ReminderType,
-    UserDataLimitResetStrategy,
+    UserDataUsageResetStrategy,
     UserStatus,
 )
 
@@ -127,9 +127,9 @@ class User(Base):
     )
     data_limit = Column(BigInteger)
     data_limit_reset_strategy = Column(
-        Enum(UserDataLimitResetStrategy),
+        Enum(UserDataUsageResetStrategy),
         nullable=False,
-        default=UserDataLimitResetStrategy.no_reset,
+        default=UserDataUsageResetStrategy.no_reset,
     )
     ip_limit = Column(Integer, nullable=False, default=-1)
     settings = Column(String(1024))

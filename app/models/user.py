@@ -28,7 +28,7 @@ class UserStatus(str, Enum):
     expired = "expired"
 
 
-class UserDataLimitResetStrategy(str, Enum):
+class UserDataUsageResetStrategy(str, Enum):
     no_reset = "no_reset"
     day = "day"
     week = "week"
@@ -56,8 +56,8 @@ class User(BaseModel):
         ge=0, default=None, description="data_limit can be 0 or greater"
     )
     enabled: bool = Field(default=True)
-    data_limit_reset_strategy: UserDataLimitResetStrategy = (
-        UserDataLimitResetStrategy.no_reset
+    data_limit_reset_strategy: UserDataUsageResetStrategy = (
+        UserDataUsageResetStrategy.no_reset
     )
     note: Annotated[str, Field(max_length=500)] | None = None
     sub_updated_at: datetime | None = Field(None)
@@ -104,7 +104,7 @@ class UserCreate(User):
 
 class UserModify(UserCreate):
     service_ids: list[int] | None = Field(None)
-    data_limit_reset_strategy: UserDataLimitResetStrategy | None = Field(None)
+    data_limit_reset_strategy: UserDataUsageResetStrategy | None = Field(None)
     model_config = ConfigDict(
         json_schema_extra={
             "example": {

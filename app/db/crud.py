@@ -34,7 +34,7 @@ from app.models.service import Service as ServiceModify, ServiceCreate
 from app.models.user import (
     ReminderType,
     UserCreate,
-    UserDataLimitResetStrategy,
+    UserDataUsageResetStrategy,
     UserModify,
     UserStatus,
     UserUsageResponse,
@@ -229,7 +229,7 @@ def get_users(
     status: Optional[Union[UserStatus, list]] = None,
     sort: Optional[List[UsersSortingOptions]] = None,
     admin: Optional[Admin] = None,
-    reset_strategy: Optional[Union[UserDataLimitResetStrategy, list]] = None,
+    reset_strategy: Optional[Union[UserDataUsageResetStrategy, list]] = None,
     return_with_count: bool = False,
 ) -> Union[List[User], Tuple[List[User], int]]:
     query = db.query(User)
