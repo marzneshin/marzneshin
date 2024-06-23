@@ -5,7 +5,7 @@ import { useUserSubscriptionRevokeCmd } from "@marzneshin/features/users";
 import type { QRCodeProps } from "./qrcode";
 import type { FC } from 'react';
 
-import { SubscriptionLinkButton } from "./subcription-link-button";
+import { SubscriptionLinkButton } from "./subscription-link-button";
 export const SubscriptionActions: FC<QRCodeProps> = ({ entity }) => {
   const subscribeQrLink = getSubscriptionLink(entity.subscription_url);
   const { mutate: revokeSubscription } = useUserSubscriptionRevokeCmd();

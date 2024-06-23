@@ -106,7 +106,7 @@ class UserCreate(User):
             self.on_hold_expire_duration or self.on_hold_timeout
         ):
             raise ValueError(
-                "on hold parametrs set when user status isn't on_hold."
+                "on hold parameters set when user status isn't on_hold."
             )
         return self
 

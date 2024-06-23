@@ -197,7 +197,7 @@
     "user_reset": {
       "error": "Failed to reset {{name}} data usage",
       "success": {
-        "title": "{{name}} data usage is successfuly reseted",
+        "title": "{{name}} data usage is successfully reset",
         "desc": ""
       }
     }
