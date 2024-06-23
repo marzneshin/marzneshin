@@ -35,10 +35,7 @@ SERVER_IP = get_public_ip()
 
 STATUS_EMOJIS = {
     "active": "✅",
-    "expired": "⌛️",
-    "limited": "🪫",
-    "disabled": "❌",
-    "on_hold": "🔌",
+    "inactive": "❌",
 }
 
 subscription_handlers = {
