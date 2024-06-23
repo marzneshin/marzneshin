@@ -32,11 +32,8 @@ export const DashboardLayout = () => {
     const {
         collapsed,
         panelRef,
-        open,
         setCollapsed,
-        setOpen,
         toggleCollapse,
-        toggleOpen,
     } = usePanelToggle(isDesktop);
 
     return (
@@ -47,12 +44,11 @@ export const DashboardLayout = () => {
                         <Link to="/">
                             <HeaderLogo />
                         </Link>
-                        <ToggleButton
-                            isDesktop={isDesktop}
-                            collapsed={collapsed}
-                            open={open}
-                            onToggle={isDesktop ? toggleCollapse : toggleOpen}
-                        />
+                        {isDesktop &&
+                            <ToggleButton
+                                collapsed={collapsed}
+                                onToggle={toggleCollapse}
+                            />}
                     </>
                 }
                 center={

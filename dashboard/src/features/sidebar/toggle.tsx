@@ -4,16 +4,12 @@ import { PanelBottomClose, PanelBottomOpen, PanelRightClose, PanelRightOpen } fr
 import { FC } from 'react';
 
 interface ToggleButtonProps {
-    isDesktop: boolean;
     collapsed: boolean;
-    open: boolean;
     onToggle: () => void;
 }
 
-export const ToggleButton: FC<ToggleButtonProps> = ({ isDesktop, collapsed, open, onToggle }) => {
-    const Icon = isDesktop ?
-        (collapsed ? PanelRightClose : PanelRightOpen) :
-        (open ? PanelBottomClose : PanelBottomOpen);
+export const ToggleButton: FC<ToggleButtonProps> = ({ collapsed, onToggle }) => {
+    const Icon = (collapsed ? PanelRightClose : PanelRightOpen);
 
     return (
         <Button className="p-2 bg-secondary-foreground border-2 text-primary-foreground dark:bg-secondary dark:text-primary" onClick={onToggle}>
