@@ -10,6 +10,7 @@ import { useAuth } from "@marzneshin/features/auth";
 import {
     SupportUs,
 } from "@marzneshin/features/support-us";
+import { VersionIndicator } from "@marzneshin/features/version-indicator";
 
 interface DashboardSidebarProps {
     collapsed: boolean;
@@ -68,6 +69,7 @@ export const DashboardSidebar: FC<DashboardSidebarProps> = ({
                                 :
                                 <SupportUs variant="local-storage" structure="card" />
                             }
+                            <VersionIndicator />
                         </Sidebar.Footer>
                     </div>
                 </Sidebar>
