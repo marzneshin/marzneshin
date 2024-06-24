@@ -98,7 +98,7 @@ def modify_admin(
     if username != admin.username and bool(dbadmin.is_sudo):
         raise HTTPException(
             status_code=403,
-            detail="You're not allowed to edit another sudoers account. Use marzban-cli instead.",
+            detail="You're not allowed to edit another sudoers account. Use marzneshin-cli instead.",
         )
 
     dbadmin = crud.update_admin(db, dbadmin, modified_admin)
@@ -114,7 +114,7 @@ def remove_admin(username: str, db: DBDep, admin: SudoAdminDep):
     if bool(dbadmin.is_sudo):
         raise HTTPException(
             status_code=403,
-            detail="You're not allowed to delete sudoers accounts. Use marzban-cli instead.",
+            detail="You're not allowed to delete sudoers accounts. Use marzneshin-cli instead.",
         )
 
     crud.remove_admin(db, dbadmin)
