@@ -60,7 +60,7 @@ def get_subscription_user(
     try:
         int(key, 16)
     except ValueError:
-        raise HTTPException(status_code=404, detail="Invalid key")
+        raise HTTPException(status_code=404)
 
     db_user = crud.get_user(db, username)
     if db_user is User and db_user.key == key:
