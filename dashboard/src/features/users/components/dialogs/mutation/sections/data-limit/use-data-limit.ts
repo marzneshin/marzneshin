@@ -16,7 +16,8 @@ export const useDataLimit = () => {
             form.setValue("data_limit", 0);
             form.setValue("data_limit_reset_strategy", "no_reset");
         }
-    }, [isDataLimitEnabled, form]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isDataLimitEnabled]);
 
     return { isDataLimitEnabled, setIsDataLimitEnabled };
 };
