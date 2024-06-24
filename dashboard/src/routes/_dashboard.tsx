@@ -84,7 +84,7 @@ export const DashboardLayout = () => {
                                     <Outlet />
                                 </Suspense>
                             </main>
-                            <footer className="h-30 py-2">
+                            <footer className="h-10 py-2">
                                 <VersionIndicator />
                             </footer>
                         </ResizablePanel>
