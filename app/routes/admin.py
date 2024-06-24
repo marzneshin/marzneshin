@@ -31,7 +31,7 @@ def authenticate_admin(
 
 
 @router.get("", response_model=Page[Admin])
-def get_admins(db: DBDep, admin: SudoAdminDep, username: str = None):
+def get_admins(db: DBDep, admin: SudoAdminDep, username: str | None = None):
     query = db.query(DBAdmin)
     if username:
         query = query.filter(DBAdmin.username.ilike(f"%{username}%"))
