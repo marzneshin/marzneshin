@@ -110,9 +110,6 @@ class User(Base):
         viewonly=True,
         distinct_target_key=True,
     )
-    status = Column(
-        Enum(UserStatus), nullable=False, default=UserStatus.active
-    )
     used_traffic = Column(BigInteger, default=0)
     lifetime_used_traffic = Column(
         BigInteger, default=0, server_default="0", nullable=False
@@ -190,6 +187,10 @@ class User(Base):
     @is_active.expression
     def is_active(cls):
         return and_(cls.enabled == True, ~cls.expired, ~cls.data_limit_reached)
+
+    @property
+    def status(self):
+        return UserStatus.ACTIVE if self.is_active() else UserStatus.INACTIVE
 
 
 class Inbound(Base):

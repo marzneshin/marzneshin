@@ -1,14 +1,11 @@
 from app.db import crud, GetDB
 from app.models.node import NodeStatus
-from app.models.user import UserStatus
 
 
 class MarzNodeDB:
     def list_users(self):
         with GetDB() as db:
-            relations = crud.get_node_users(
-                db, self.id, [UserStatus.active, UserStatus.on_hold]
-            )
+            relations = crud.get_node_users(db, self.id)
             users = dict()
             for rel in relations:
                 if not users.get(rel[0]):

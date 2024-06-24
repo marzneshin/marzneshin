@@ -6,7 +6,6 @@ from app import marznode
 from .grpcio import MarzNodeGRPCIO
 from .grpclib import MarzNodeGRPCLIB
 from ..models.node import NodeConnectionBackend
-from ..models.user import UserStatus
 
 if TYPE_CHECKING:
     from app.db import User as DBUser
@@ -19,7 +18,7 @@ async def update_user(user: "DBUser", old_inbounds: set | None = None):
         old_inbounds = set()
 
     node_inbounds = defaultdict(list)
-    if user.status in (UserStatus.on_hold, UserStatus.active):
+    if user.is_active:
         for inb in user.inbounds:
             node_inbounds[inb.node_id].append(inb.tag)
     else:

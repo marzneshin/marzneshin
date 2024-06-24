@@ -1,6 +1,6 @@
 import asyncio
 import logging
-from datetime import datetime, timezone
+from datetime import datetime, timedelta
 from enum import Enum
 
 import sqlalchemy
@@ -25,7 +25,6 @@ from app.models.user import (
     UserCreate,
     UserModify,
     UserResponse,
-    UserStatus,
     UserUsagesResponse,
 )
 from app.utils import report
@@ -47,7 +46,6 @@ def get_users(
     db: DBDep,
     admin: AdminDep,
     username: list[str] = Query(None),
-    status: list[UserStatus] = Query(None),
     order_by: UsersSortingOptions = Query(None),
     descending: bool = Query(False),
 ):
@@ -65,9 +63,6 @@ def get_users(
             query = query.filter(User.username.in_(username))
         else:
             query = query.filter(User.username.ilike(f"%{username[0]}%"))
-
-    if status:
-        query = query.filter(User.status.in_(status))
 
     if admin:
         query = query.filter(User.admin == admin)
@@ -121,7 +116,7 @@ async def reset_users_data_usage(db: DBDep, admin: SudoAdminDep):
 
 
 @router.delete("/expired")
-def delete_expired(passed_time: int, db: DBDep, admin: AdminDep):
+async def delete_expired(passed_time: int, db: DBDep, admin: AdminDep):
     """
     Delete expired users
     - **passed_time** must be a timestamp
@@ -132,12 +127,12 @@ def delete_expired(passed_time: int, db: DBDep, admin: AdminDep):
 
     db_users = crud.get_users(
         db=db,
-        status=[UserStatus.expired, UserStatus.limited],
+        expired=True,
         admin=dbadmin if not admin.is_sudo else None,
     )
 
-    current_time = int(datetime.now(timezone.utc).timestamp())
-    expiration_threshold = current_time - passed_time
+    current_time = datetime.utcnow()
+    expiration_threshold = current_time - timedelta(seconds=passed_time)
     expired_users = [
         user
         for user in db_users
@@ -147,6 +142,7 @@ def delete_expired(passed_time: int, db: DBDep, admin: AdminDep):
         raise HTTPException(status_code=404, detail="No expired user found.")
 
     for db_user in expired_users:
+        await marznode.operations.remove_user(db_user)
         crud.remove_user(db, db_user)
 
         asyncio.create_task(
@@ -173,25 +169,25 @@ async def modify_user(
     """
     Modify a user
 
-    - set **expire** to 0 to make the user unlimited in time, null for no change
     - set **data_limit** to 0 to make the user unlimited in data, null for no change
     """
     old_status = db_user.status
+    active_before = db_user.is_active
     status_change = bool(
         modifications.status and modifications.status != db_user.status
     )
 
     old_inbounds = {(i.node_id, i.protocol, i.tag) for i in db_user.inbounds}
     new_user = crud.update_user(db, db_user, modifications)
+    active_after = new_user.is_active
     new_inbounds = {(i.node_id, i.protocol, i.tag) for i in new_user.inbounds}
     user = UserResponse.model_validate(db_user)
 
     inbound_change = old_inbounds != new_inbounds
+
     if (
-        inbound_change
-        and user.enabled
-        and user.status in {UserStatus.active, UserStatus.on_hold}
-    ):
+        inbound_change and new_user.is_active
+    ) or active_before != active_after:
         await marznode.operations.update_user(new_user, old_inbounds)
 
     asyncio.create_task(report.user_updated(user=user, by=admin))
@@ -254,13 +250,10 @@ async def reset_user_data_usage(db_user: UserDep, db: DBDep, admin: AdminDep):
     """
     Reset user data usage
     """
-    previous_status = db_user.status
+    was_active = db_user.status
     db_user = crud.reset_user_data_usage(db, db_user)
 
-    if (
-        db_user.status == UserStatus.active
-        and previous_status == UserStatus.limited
-    ):
+    if db_user.is_active and not was_active:
         await marznode.operations.update_user(db_user)
 
     user = UserResponse.model_validate(db_user)
@@ -318,7 +311,7 @@ async def revoke_user_subscription(
     """
     db_user = crud.revoke_user_sub(db, db_user)
 
-    if db_user.status in [UserStatus.active, UserStatus.on_hold]:
+    if db_user.is_active:
         await marznode.operations.remove_user(db_user)
         await marznode.operations.update_user(db_user)
     user = UserResponse.model_validate(db_user)

@@ -14,7 +14,6 @@ from app.utils.notification import (
     UserDataUsageReset,
     UserDeleted,
     UserEnabled,
-    UserExpired,
     UserLimited,
     UserSubscriptionRevoked,
     UserUpdated,
@@ -32,7 +31,7 @@ async def status_change(
         await telegram.report_status_change(username, status)
     except Exception:
         pass
-    if status == UserStatus.limited:
+    if status == UserStatus.INACTIVE:
         await notify(
             UserLimited(
                 username=username,
@@ -40,15 +39,7 @@ async def status_change(
                 user=user,
             )
         )
-    elif status == UserStatus.expired:
-        await notify(
-            UserExpired(
-                username=username,
-                action=Notification.Type.user_expired,
-                user=user,
-            )
-        )
-    elif status == UserStatus.active:
+    elif status == UserStatus.ACTIVE:
         await notify(
             UserEnabled(
                 username=username,

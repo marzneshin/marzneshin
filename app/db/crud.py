@@ -106,8 +106,8 @@ def assure_node_inbounds(db: Session, inbounds: List[Inbound], node_id: int):
 
 def get_node_users(
     db: Session,
-    node_id: Optional[int],
-    statuses: Optional[List[UserStatus]] = None,
+    node_id: int,
+    is_active: bool | None = True,
 ):
     query = (
         db.query(User.id, User.username, User.key, Inbound)
@@ -117,8 +117,8 @@ def get_node_users(
         .join(Service.users)
         .filter(Inbound.node_id == node_id)
     )
-    if isinstance(statuses, list):
-        query = query.filter(User.status.in_(statuses))
+    if is_active:
+        query = query.filter(User.is_active == is_active)
     return query.all()
 
 
@@ -222,13 +222,15 @@ def get_users(
     offset: Optional[int] = None,
     limit: Optional[int] = None,
     usernames: Optional[List[str]] = None,
-    status: Optional[Union[UserStatus, list]] = None,
     sort: Optional[List[UsersSortingOptions]] = None,
     admin: Optional[Admin] = None,
     reset_strategy: Optional[Union[UserDataUsageResetStrategy, list]] = None,
     expire_strategy: (
         UserExpireStrategy | list[UserExpireStrategy] | None
     ) = None,
+    is_active: bool | None = None,
+    expired: bool | None = None,
+    data_limit_reached: bool | None = None,
 ) -> Union[List[User], Tuple[List[User], int]]:
     query = db.query(User)
 
@@ -237,12 +239,6 @@ def get_users(
             query = query.filter(User.username.ilike(f"%{usernames[0]}%"))
         else:
             query = query.filter(User.username.in_(usernames))
-
-    if status:
-        if isinstance(status, list):
-            query = query.filter(User.status.in_(status))
-        else:
-            query = query.filter(User.status == status)
 
     if reset_strategy:
         if isinstance(reset_strategy, list):
@@ -259,6 +255,14 @@ def get_users(
             query = query.filter(User.expire_strategy.in_(expire_strategy))
         else:
             query = query.filter(User.expire_strategy == expire_strategy)
+    if is_active:
+        query = query.filter(User.is_active == is_active)
+
+    if expired:
+        query = query.filter(User.expired == expired)
+
+    if data_limit_reached:
+        query = query.filter(User.data_limit_reached == data_limit_reached)
 
     if admin:
         query = query.filter(User.admin == admin)
@@ -268,6 +272,7 @@ def get_users(
 
     if offset:
         query = query.offset(offset)
+
     if limit:
         query = query.limit(limit)
 
@@ -304,17 +309,23 @@ def get_user_usages(
 
 def get_users_count(
     db: Session,
-    status: UserStatus | None = None,
     admin: Admin | None = None,
     enabled: bool | None = None,
     online: bool | None = None,
     expire_strategy: UserExpireStrategy | None = None,
+    is_active: bool | None = None,
+    expired: bool | None = None,
+    data_limit_reached: bool | None = None,
 ):
     query = db.query(User.id)
     if admin:
         query = query.filter(User.admin_id == admin.id)
-    if status:
-        query = query.filter(User.status == status)
+    if is_active:
+        query = query.filter(User.is_active == is_active)
+    if expired:
+        query = query.filter(User.expired == expired)
+    if data_limit_reached:
+        query = query.filter(User.data_limit_reached == data_limit_reached)
     if enabled:
         query = query.filter(User.enabled == enabled)
     if online is True:
@@ -398,8 +409,6 @@ def reset_user_data_usage(db: Session, dbuser: User):
 
     dbuser.used_traffic = 0
 
-    if dbuser.status == UserStatus.limited:
-        dbuser.status = UserStatus.active.value
     db.add(dbuser)
 
     db.commit()
@@ -429,15 +438,8 @@ def reset_all_users_data_usage(db: Session, admin: Optional[Admin] = None):
     if admin:
         query = query.filter(User.admin == admin)
 
-    for dbuser in query.all():
-        dbuser.used_traffic = 0
-        if dbuser.status not in [
-            UserStatus.expired,
-        ]:
-            dbuser.status = UserStatus.active
-        dbuser.usage_logs.clear()
-        dbuser.node_usages.clear()
-        db.add(dbuser)
+    for db_user in query.all():
+        db_user.used_traffic = 0
 
     db.commit()
 

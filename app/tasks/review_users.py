@@ -73,7 +73,7 @@ def add_notification_reminders(
 async def review_users():
     now = datetime.utcnow()
     with GetDB() as db:
-        for user in get_users(db, status=UserStatus.active):
+        for user in get_users(db, is_active=True):
             """looking for to be expired/limited users"""
             limited = user.data_limit and user.used_traffic >= user.data_limit
             expired = user.expire_date and user.expire_date <= now
@@ -104,7 +104,9 @@ async def review_users():
             )
 
         for user in get_users(
-            db, expire_strategy=UserExpireStrategy.START_ON_FIRST_USE
+            db,
+            expire_strategy=UserExpireStrategy.START_ON_FIRST_USE,
+            is_active=True,
         ):
             """looking for to be activated users"""
             base_time = user.edit_at or user.created_at

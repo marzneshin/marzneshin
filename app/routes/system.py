@@ -7,7 +7,7 @@ from app.dependencies import DBDep, AdminDep, SudoAdminDep
 from app.models.node import NodeStatus
 from app.models.settings import SubscriptionSettings, TelegramSettings
 from app.models.system import UsersStats, NodesStats, AdminsStats
-from app.models.user import UserStatus
+from app.models.user import UserExpireStrategy
 
 router = APIRouter(tags=["System"], prefix="/system")
 
@@ -67,24 +67,22 @@ def get_users_stats(db: DBDep, admin: AdminDep):
             db, admin=admin if not admin.is_sudo else None
         ),
         active=crud.get_users_count(
-            db,
-            admin=admin if not admin.is_sudo else None,
-            status=UserStatus.active,
+            db, admin=admin if not admin.is_sudo else None, is_active=True
         ),
         on_hold=crud.get_users_count(
             db,
             admin=admin if not admin.is_sudo else None,
-            status=UserStatus.on_hold,
+            expire_strategy=UserExpireStrategy.START_ON_FIRST_USE,
         ),
         expired=crud.get_users_count(
             db,
             admin=admin if not admin.is_sudo else None,
-            status=UserStatus.expired,
+            expired=True,
         ),
         limited=crud.get_users_count(
             db,
             admin=admin if not admin.is_sudo else None,
-            status=UserStatus.limited,
+            data_limit_reached=True,
         ),
         online=crud.get_users_count(
             db, admin=admin if not admin.is_sudo else None, online=True

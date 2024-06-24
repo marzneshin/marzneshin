@@ -3,7 +3,7 @@ from datetime import datetime
 
 from app import marznode
 from app.db import crud, GetDB, get_users
-from app.models.user import UserDataUsageResetStrategy, UserStatus
+from app.models.user import UserDataUsageResetStrategy
 
 logger = logging.getLogger(__name__)
 
@@ -35,14 +35,10 @@ async def reset_user_data_usage():
             if not (now - last_reset_time).days >= num_days_to_reset:
                 continue
 
-            old_status = user.status
+            was_active = user.is_active
             crud.reset_user_data_usage(db, user)
             # make user active if limited on usage reset
-            if (
-                user.enabled
-                and user.status == UserStatus.active
-                and old_status == UserStatus.limited
-            ):
+            if user.is_active and not was_active:
                 await marznode.operations.update_user(user)
 
-            logger.info(f'User data usage reset for User "{user.username}"')
+            logger.info("User data usage reset for User `%s`", user.username)
