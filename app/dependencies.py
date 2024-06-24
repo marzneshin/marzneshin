@@ -53,6 +53,7 @@ def sudo_admin(admin: Annotated[Admin, Depends(get_current_admin)]):
         )
     return admin
 
+
 def get_subscription_user(
     username: str, key: str, db: Annotated[Session, Depends(get_db)]
 ):
@@ -75,8 +76,7 @@ def get_user(
 ):
     db_user = crud.get_user(db, username)
     if not (
-        admin.is_sudo
-        or (db_user and db_user.admin.username == admin.username)
+        admin.is_sudo or (db_user and db_user.admin.username == admin.username)
     ):
         raise HTTPException(status_code=403, detail="You're not allowed")
 

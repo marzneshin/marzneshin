@@ -43,6 +43,7 @@ from .tasks import (
 
 logger = logging.getLogger(__name__)
 
+
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     await nodes_startup()
@@ -50,6 +51,7 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     scheduler.shutdown()
     logger.info("Sending pending notifications before shutdown...")
     await send_notifications()
+
 
 app = FastAPI(
     title="MarzneshinAPI",
@@ -101,7 +103,6 @@ if WEBHOOK_ADDRESS:
         hours=2,
         start_date=dt.utcnow() + td(minutes=1),
     )
-
 
 
 @app.exception_handler(RequestValidationError)
