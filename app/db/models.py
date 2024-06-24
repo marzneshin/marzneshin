@@ -15,7 +15,10 @@ from sqlalchemy import (
     Table,
     UniqueConstraint,
     JSON,
+    and_,
+    func,
 )
+from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.expression import text
 
@@ -153,6 +156,40 @@ class User(Base):
     @property
     def service_ids(self):
         return [service.id for service in self.services]
+
+    @hybrid_property
+    def expired(self):
+        if self.expire_strategy == "fixed_date":
+            return self.expire_date < datetime.utcnow()
+        return False
+
+    @expired.expression
+    def expired(cls):
+        return and_(
+            cls.expire_strategy == "fixed_date", cls.expire_date < func.now()
+        )
+
+    @hybrid_property
+    def data_limit_reached(self):
+        if self.data_limit is not None:
+            return self.used_traffic >= self.data_limit
+        return False
+
+    @data_limit_reached.expression
+    def data_limit_reached(cls):
+        return and_(
+            cls.data_limit.isnot(None), cls.used_traffic >= cls.data_limit
+        )
+
+    @hybrid_property
+    def is_active(self):
+        return (
+            self.enabled and not self.expired and not self.data_limit_reached
+        )
+
+    @is_active.expression
+    def is_active(cls):
+        return and_(cls.enabled == True, ~cls.expired, ~cls.data_limit_reached)
 
 
 class Inbound(Base):
