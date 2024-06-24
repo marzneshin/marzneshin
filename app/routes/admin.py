@@ -95,7 +95,7 @@ def modify_admin(
         raise HTTPException(status_code=404, detail="Admin not found")
 
     # If a sudoer admin wants to edit another sudoer
-    if (username != admin.username) and dbadmin.is_sudo:
+    if username != admin.username and bool(dbadmin.is_sudo):
         raise HTTPException(
             status_code=403,
             detail="You're not allowed to edit another sudoers account. Use marzban-cli instead.",
@@ -111,7 +111,7 @@ def remove_admin(username: str, db: DBDep, admin: SudoAdminDep):
     if not dbadmin:
         raise HTTPException(status_code=404, detail="Admin not found")
 
-    if dbadmin.is_sudo:
+    if bool(dbadmin.is_sudo):
         raise HTTPException(
             status_code=403,
             detail="You're not allowed to delete sudoers accounts. Use marzban-cli instead.",
