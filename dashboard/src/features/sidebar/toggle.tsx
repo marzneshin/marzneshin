@@ -1,6 +1,6 @@
 
 import { Button } from '@marzneshin/components';
-import { PanelBottomClose, PanelBottomOpen, PanelRightClose, PanelRightOpen } from 'lucide-react';
+import { PanelRightClose, PanelRightOpen } from 'lucide-react';
 import { FC } from 'react';
 
 interface ToggleButtonProps {
