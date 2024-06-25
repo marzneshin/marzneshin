@@ -72,13 +72,12 @@ class UserCreate(User):
             "example": {
                 "username": "user1234",
                 "services": [1, 2, 3],
-                "expire": "2023-11-03T20:30:00",
+                "expire_strategy": "start_on_first_use",
+                "usage_duration": 86400 * 14,
+                "activation_deadline": "2024-11-03T20:30:00",
                 "data_limit": 0,
                 "data_limit_reset_strategy": "no_reset",
-                "status": "active",
                 "note": "",
-                "on_hold_timeout": "2023-11-03T20:30:00",
-                "on_hold_expire_duration": 0,
             }
         }
     )
@@ -107,14 +106,12 @@ class UserModify(UserCreate):
         json_schema_extra={
             "example": {
                 "username": "mammad1234",
-                "services": [1, 2, 3],
-                "expire": 0,
+                "service_ids": [1, 2, 3],
+                "expire_strategy": "fixed_date",
+                "expire_date": "2023-11-03T20:30:00",
                 "data_limit": 0,
                 "data_limit_reset_strategy": "no_reset",
-                "status": "active",
                 "note": "",
-                "on_hold_timeout": "2023-11-03T20:30:00",
-                "on_hold_expire_duration": 0,
             }
         }
     )
