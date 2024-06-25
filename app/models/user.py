@@ -54,7 +54,6 @@ class User(BaseModel):
     data_limit: int | None = Field(
         ge=0, default=None, description="data_limit can be 0 or greater"
     )
-    enabled: bool = Field(default=True)
     data_limit_reset_strategy: UserDataUsageResetStrategy = (
         UserDataUsageResetStrategy.no_reset
     )
@@ -123,9 +122,13 @@ class UserModify(UserCreate):
 
 class UserResponse(User):
     id: int
-    status: UserStatus
+    activated: bool
+    is_active: bool
+    expired: bool
+    data_limit_reached: bool
+    enabled: bool
     used_traffic: int
-    lifetime_used_traffic: int = 0
+    lifetime_used_traffic: int
     created_at: datetime
     service_ids: list[int]
 
