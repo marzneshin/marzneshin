@@ -107,18 +107,15 @@ def assure_node_inbounds(db: Session, inbounds: List[Inbound], node_id: int):
 def get_node_users(
     db: Session,
     node_id: int,
-    is_active: bool | None = True,
 ):
     query = (
         db.query(User.id, User.username, User.key, Inbound)
         .distinct()
-        .where(User.enabled == True)
         .join(Inbound.services)
         .join(Service.users)
         .filter(Inbound.node_id == node_id)
+        .filter(User.is_active == True)
     )
-    if is_active:
-        query = query.filter(User.is_active == is_active)
     return query.all()
 
 
@@ -229,6 +226,7 @@ def get_users(
         UserExpireStrategy | list[UserExpireStrategy] | None
     ) = None,
     is_active: bool | None = None,
+    activated: bool | None = None,
     expired: bool | None = None,
     data_limit_reached: bool | None = None,
 ) -> Union[List[User], Tuple[List[User], int]]:
@@ -257,6 +255,9 @@ def get_users(
             query = query.filter(User.expire_strategy == expire_strategy)
     if is_active:
         query = query.filter(User.is_active == is_active)
+
+    if activated:
+        query = query.filter(User.activated == activated)
 
     if expired:
         query = query.filter(User.expired == expired)
@@ -372,13 +373,13 @@ def remove_user(db: Session, dbuser: User):
 
 def update_user(db: Session, dbuser: User, modify: UserModify):
     if modify.data_limit is not None:
-        # in case there is modification to a user's data limit
-        dbuser.data_limit = (
-            modify.data_limit or None
-        )  # set it to the new limit
+        dbuser.data_limit = modify.data_limit or None
 
-    if modify.expire is not None:
-        dbuser.expire = modify.expire or None
+    if modify.expire_strategy is not None:
+        dbuser.expire_strategy = modify.expire_strategy or None
+
+    if modify.expire_date is not None:
+        dbuser.expire_date = modify.expire_date or None
 
     if modify.note is not None:
         dbuser.note = modify.note or None

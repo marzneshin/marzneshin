@@ -40,5 +40,7 @@ async def reset_user_data_usage():
             # make user active if limited on usage reset
             if user.is_active and not was_active:
                 await marznode.operations.update_user(user)
+                user.activated = True
+                db.commit()
 
             logger.info("User data usage reset for User `%s`", user.username)
