@@ -106,6 +106,7 @@ def downgrade() -> None:
             ),
             autoincrement=False,
             nullable=False,
+            server_default="active",
         ),
     )
     op.alter_column(
