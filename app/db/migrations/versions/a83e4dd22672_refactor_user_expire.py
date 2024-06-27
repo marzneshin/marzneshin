@@ -24,7 +24,7 @@ def upgrade() -> None:
 
     if dialect == "postgresql":
         op.execute(
-            "CREATE TYPE userexpirestrategy AS ENUM ('NEVER', 'FIXED_DATE', 'START_ON_FIRST_USE')"
+            "CREATE TYPE userexpirestrategy IF NOT EXISTS AS ENUM ('NEVER', 'FIXED_DATE', 'START_ON_FIRST_USE')"
         )
 
     op.add_column(

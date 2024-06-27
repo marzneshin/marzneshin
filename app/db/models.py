@@ -191,7 +191,7 @@ class User(Base):
 
     @property
     def status(self):
-        return UserStatus.ACTIVE if self.is_active() else UserStatus.INACTIVE
+        return UserStatus.ACTIVE if self.is_active else UserStatus.INACTIVE
 
 
 class Inbound(Base):
