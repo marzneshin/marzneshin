@@ -10,7 +10,6 @@ import {
 } from "@marzneshin/components";
 import { FC } from "react";
 import {
-    useUserUsageResetCmd,
     UserType,
     UsersStatus,
     UsersStatusBadge,
@@ -59,7 +58,6 @@ const CircularProgressBarRow: FC<{
 
 export const UserInfoTable: FC<UserInfoTableProps> = ({ entity }) => {
     const { t } = useTranslation();
-    const { mutate: resetUsage } = useUserUsageResetCmd();
     const expireDate = entity.expire
         ? isDate(entity.expire)
             ? entity.expire

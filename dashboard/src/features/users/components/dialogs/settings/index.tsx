@@ -11,7 +11,10 @@ import {
     TabsTrigger,
 } from "@marzneshin/components";
 import { UserServicesTable } from "@marzneshin/features/users";
-import type { UserType } from "@marzneshin/features/users";
+import {
+    useUserUsageResetCmd,
+    type UserType
+} from "@marzneshin/features/users";
 import { type FC, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { QRCodeSection, UserInfoTable } from "./user-info";
@@ -32,6 +35,7 @@ export const UsersSettingsDialog: FC<UsersSettingsDialogProps> = ({
     onClose,
 }) => {
     const { t } = useTranslation();
+    const { mutate: resetUsage } = useUserUsageResetCmd();
 
     useEffect(() => {
         if (!open) onClose();
