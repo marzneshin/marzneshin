@@ -22,6 +22,7 @@ jobs:
             ci
             docs
             feat
+            improve
             fix
             merge
             perf
