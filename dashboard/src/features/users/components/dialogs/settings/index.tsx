@@ -47,8 +47,7 @@ export const UsersSettingsDialog: FC<UsersSettingsDialogProps> = ({
                     <Tabs defaultValue="info" className="w-full h-full">
                         <TabsList className="w-full bg-accent">
                             <TabsTrigger className="w-full" value="info">
-                                {" "}
-                                {t("user_info")}{" "}
+                                {t("user_info")}
                             </TabsTrigger>
                             <TabsTrigger className="w-full" value="services">
                                 {t("services")}
