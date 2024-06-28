@@ -15,6 +15,7 @@ import { type FC, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { QRCodeSection, UserInfoTable } from "./user-info";
 import { SubscriptionActions } from "./user-info/subscription-actions";
+import { UserStatusEnableButton } from "./user-info/user-status-enable-button";
 
 interface UsersSettingsDialogProps {
     onOpenChange: (state: boolean) => void;
@@ -60,6 +61,12 @@ export const UsersSettingsDialog: FC<UsersSettingsDialogProps> = ({
                             <UserInfoTable entity={entity} />
                             <QRCodeSection entity={entity} />
                             <SubscriptionActions entity={entity} />
+                            <div className="flex flex-row justify-center items-center gap-2">
+                                <Button className="w-1/2" onClick={() => resetUsage(entity)}>
+                                    {t("page.users.reset_usage")}
+                                </Button>
+                                <UserStatusEnableButton user={entity} />
+                            </div>
                         </TabsContent>
                         <TabsContent value="services">
                             <UserServicesTable user={entity} />

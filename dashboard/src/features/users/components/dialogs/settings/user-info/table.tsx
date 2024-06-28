@@ -1,5 +1,4 @@
 import {
-    Button,
     Card,
     CardContent,
     CardHeader,
@@ -19,7 +18,6 @@ import {
 import { CircularProgress } from "@nextui-org/progress";
 import { useTranslation } from "react-i18next";
 import { format, isDate, isValid } from "date-fns";
-import { UserStatusEnableButton } from "./user-status-enable-button";
 
 interface UserInfoTableProps {
     entity: UserType;
@@ -114,12 +112,6 @@ export const UserInfoTable: FC<UserInfoTableProps> = ({ entity }) => {
                         <TableRowWithCell label={t("note")} value={entity.note} />
                     </TableBody>
                 </Table>
-                <div className="flex flex-row justify-center items-center gap-2">
-                    <Button className="w-full" onClick={() => resetUsage(entity)}>
-                        {t("page.users.reset_usage")}
-                    </Button>
-                    <UserStatusEnableButton user={entity} />
-                </div>
             </CardContent>
         </Card>
     );
