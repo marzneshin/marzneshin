@@ -17,7 +17,9 @@ app.add_typer(cli.user.app, name="user")
 
 # Hidden completion app
 app_completion = typer.Typer(
-    no_args_is_help=True, help="Generate and install completion scripts.", hidden=True
+    no_args_is_help=True,
+    help="Generate and install completion scripts.",
+    hidden=True,
 )
 app.add_typer(app_completion, name="completion")
 

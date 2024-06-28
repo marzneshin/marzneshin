@@ -89,7 +89,10 @@ def create_admin(
     with GetDB() as db:
         try:
             crud.create_admin(
-                db, AdminCreate(username=username, password=password, is_sudo=is_sudo)
+                db,
+                AdminCreate(
+                    username=username, password=password, is_sudo=is_sudo
+                ),
             )
             utils.success(f'Admin "{username}" created successfully.')
         except IntegrityError:
@@ -180,16 +183,23 @@ def import_from_env(
                 utils.error("Aborted.")
 
             admin = crud.partial_update_admin(
-                db, current_admin, AdminPartialModify(password=password, is_sudo=True)
+                db,
+                current_admin,
+                AdminPartialModify(password=password, is_sudo=True),
             )
         # If env admin does not exist yet
         else:
             admin = crud.create_admin(
-                db, AdminCreate(username=username, password=password, is_sudo=True)
+                db,
+                AdminCreate(
+                    username=username, password=password, is_sudo=True
+                ),
             )
 
         updated_user_count = (
-            db.query(User).filter_by(admin_id=None).update({"admin_id": admin.id})
+            db.query(User)
+            .filter_by(admin_id=None)
+            .update({"admin_id": admin.id})
         )
         db.commit()
 
