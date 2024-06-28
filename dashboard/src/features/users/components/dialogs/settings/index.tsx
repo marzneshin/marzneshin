@@ -1,4 +1,5 @@
 import {
+    Button,
     ScrollArea,
     Sheet,
     SheetContent,
@@ -50,8 +51,10 @@ export const UsersSettingsDialog: FC<UsersSettingsDialogProps> = ({
                                 {t("user_info")}{" "}
                             </TabsTrigger>
                             <TabsTrigger className="w-full" value="services">
-                                {" "}
-                                {t("services")}{" "}
+                                {t("services")}
+                            </TabsTrigger>
+                            <TabsTrigger className="w-full" value="subscription">
+                                {t("subscription")}
                             </TabsTrigger>
                         </TabsList>
                         <TabsContent
@@ -59,8 +62,6 @@ export const UsersSettingsDialog: FC<UsersSettingsDialogProps> = ({
                             className="flex flex-col gap-2 w-full h-full"
                         >
                             <UserInfoTable entity={entity} />
-                            <QRCodeSection entity={entity} />
-                            <SubscriptionActions entity={entity} />
                             <div className="flex flex-row justify-center items-center gap-2">
                                 <Button className="w-1/2" onClick={() => resetUsage(entity)}>
                                     {t("page.users.reset_usage")}
@@ -70,6 +71,10 @@ export const UsersSettingsDialog: FC<UsersSettingsDialogProps> = ({
                         </TabsContent>
                         <TabsContent value="services">
                             <UserServicesTable user={entity} />
+                        </TabsContent>
+                        <TabsContent value="subscription">
+                            <QRCodeSection entity={entity} />
+                            <SubscriptionActions entity={entity} />
                         </TabsContent>
                     </Tabs>
                 </ScrollArea>
