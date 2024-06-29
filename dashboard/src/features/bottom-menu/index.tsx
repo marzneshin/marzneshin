@@ -9,7 +9,7 @@ type BottomMenuItemProps = Omit<SidebarItem, 'isParent' | 'subItem'>
 
 const BottomMenuItem: FC<BottomMenuItemProps & { active: boolean }> = ({ title, icon, to, active }) => {
     return (
-        <Button asChild variant={active ? "default" : "secondary"} className="gap-1 flex flex-col justify-center text-xs h-full py-2 size-14">
+        <Button asChild variant={active ? "default" : "ghost"} className="gap-1 flex flex-col justify-center text-xs h-full py-2 size-14">
             <Link to={to}>
                 {icon}
                 {title}
@@ -63,7 +63,7 @@ export const DashboardBottomMenu = ({ variant = "admin" }: { variant: "sudo-admi
     const { isCurrentRouteActive } = useIsCurrentRoute()
     const items = variant === "sudo-admin" ? sudoAdminItems : adminItems;
     return (
-        <div className="w-full flex flex-row justify-evenly items-center">
+        <div className="w-full flex flex-row justify-between items-center">
             {items.map((item: BottomMenuItemProps) => (
                 <BottomMenuItem
                     active={isCurrentRouteActive(item.to)}

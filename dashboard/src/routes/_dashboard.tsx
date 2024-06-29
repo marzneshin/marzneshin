@@ -95,7 +95,7 @@ export const DashboardLayout = () => {
                             <Suspense fallback={<Loading />}>
                                 <Outlet />
                             </Suspense>
-                            <footer className="h-30 border-t-3 py-2">
+                            <footer className="h-30 border-t-3 py-2 px-5">
                                 <DashboardBottomMenu variant={isSudo() ? "sudo-admin" : "admin"} />
                             </footer>
                         </main>
