@@ -3,9 +3,6 @@ import logging
 from datetime import datetime as dt
 from datetime import timedelta as td
 
-from typing import AsyncGenerator
-from contextlib import asynccontextmanager
-
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from fastapi import FastAPI, Request, status
 from fastapi.encoders import jsonable_encoder
@@ -43,21 +40,10 @@ from .tasks import (
 
 logger = logging.getLogger(__name__)
 
-
-@asynccontextmanager
-async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
-    await nodes_startup()
-    yield
-    scheduler.shutdown()
-    logger.info("Sending pending notifications before shutdown...")
-    await send_notifications()
-
-
 app = FastAPI(
     title="MarzneshinAPI",
     description="Unified GUI Censorship Resistant Solution Powered by Xray",
     version=__version__,
-    lifespan=lifespan,
     docs_url="/docs" if DOCS else None,
     redoc_url="/redoc" if DOCS else None,
 )
@@ -103,6 +89,18 @@ if WEBHOOK_ADDRESS:
         hours=2,
         start_date=dt.utcnow() + td(minutes=1),
     )
+
+
+@app.on_event("startup")
+async def on_start():
+    await nodes_startup()
+
+
+@app.on_event("shutdown")
+async def on_shutdown():
+    scheduler.shutdown()
+    logger.info("Sending pending notifications before shutdown...")
+    await send_notifications()
 
 
 @app.exception_handler(RequestValidationError)

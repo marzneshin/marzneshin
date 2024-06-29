@@ -84,7 +84,7 @@ def get_inbound(id: int, db: DBDep):
 
 
 @router.get("/{id}/hosts", response_model=Page[InboundHostResponse])
-def get_inbound_hosts(id: int, db: DBDep):
+def get_inbound_hosts(id: int | None, db: DBDep):
     """
     Get hosts of a specific inbound
     """
