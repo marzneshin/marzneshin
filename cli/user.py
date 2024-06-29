@@ -19,9 +19,7 @@ def list_users(
     username: Optional[List[str]] = typer.Option(
         None, *utils.FLAGS["username"], help="Search by username(s)"
     ),
-    status: Optional[crud.UserStatus] = typer.Option(
-        None, *utils.FLAGS["status"]
-    ),
+    status: Optional[crud.UserStatus] = typer.Option(None, *utils.FLAGS["status"]),
     admin: Optional[str] = typer.Option(
         None, "--admin", "--owner", help="Search by owner admin's username"
     ),
@@ -58,11 +56,7 @@ def list_users(
                     user.username,
                     user.status.value,
                     readable_size(user.used_traffic),
-                    (
-                        readable_size(user.data_limit)
-                        if user.data_limit
-                        else "Unlimited"
-                    ),
+                    readable_size(user.data_limit) if user.data_limit else "Unlimited",
                     user.data_limit_reset_strategy.value,
                     utils.readable_datetime(user.expire, include_time=False),
                     user.admin.username if user.admin else "",
@@ -89,8 +83,7 @@ def set_owner(
     """
     with GetDB() as db:
         user: User = utils.raise_if_falsy(
-            crud.get_user(db, username=username),
-            f'User "{username}" not found.',
+            crud.get_user(db, username=username), f'User "{username}" not found.'
         )
 
         dbadmin = utils.raise_if_falsy(
