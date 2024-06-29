@@ -9,7 +9,7 @@ from app.models.admin import Admin, oauth2_scheme
 from app.utils.jwt import get_admin_payload
 
 
-def get_db():  # Dependency
+def get_db():
     with GetDB() as db:
         yield db
 
@@ -27,9 +27,8 @@ def get_admin(
         return
 
     if dbadmin.password_reset_at:
-        if not payload.get("created_at"):
-            return
-        if dbadmin.password_reset_at > payload.get("created_at"):
+        created_at = payload.get("created_at")
+        if not created_at or dbadmin.password_reset_at > created_at:
             return
 
     return Admin.model_validate(dbadmin)
@@ -61,12 +60,13 @@ def get_subscription_user(
     try:
         int(key, 16)
     except ValueError:
-        raise HTTPException(404)
+        raise HTTPException(status_code=404)
 
     db_user = crud.get_user(db, username)
-    if not db_user or db_user.key != key:
-        raise HTTPException(404)
-    return db_user
+    if db_user and db_user.key == key:
+        return db_user
+    else:
+        raise HTTPException(status_code=404)
 
 
 def get_user(
@@ -76,8 +76,7 @@ def get_user(
 ):
     db_user = crud.get_user(db, username)
     if not (
-        admin.is_sudo
-        or (db_user.admin and db_user.admin.username == admin.username)
+        admin.is_sudo or (db_user and db_user.admin.username == admin.username)
     ):
         raise HTTPException(status_code=403, detail="You're not allowed")
 
