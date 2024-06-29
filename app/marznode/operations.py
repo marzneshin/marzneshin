@@ -11,7 +11,7 @@ if TYPE_CHECKING:
     from app.db import User as DBUser
 
 
-async def update_user(
+def update_user(
     user: "DBUser", old_inbounds: set | None = None, remove: bool = False
 ):
     """updates a user on all related nodes"""
@@ -19,7 +19,7 @@ async def update_user(
         old_inbounds = set()
 
     node_inbounds = defaultdict(list)
-    if remove:
+    if not user.is_active or remove:
         for inb in user.inbounds:
             node_inbounds[inb.node_id]
     else:
