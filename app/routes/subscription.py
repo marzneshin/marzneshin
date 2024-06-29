@@ -161,7 +161,7 @@ def user_subscription_with_client_type(
         "profile-web-page-url": str(request.url),
         "support-url": subscription_settings.support_link,
         "profile-title": encode_title(subscription_settings.profile_title),
-        "profile-update-interval": subscription_settings.update_interval,
+        "profile-update-interval": str(subscription_settings.update_interval),
         "subscription-userinfo": "; ".join(
             f"{key}={val}"
             for key, val in get_subscription_user_info(user).items()
