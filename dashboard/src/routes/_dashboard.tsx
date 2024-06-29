@@ -24,6 +24,7 @@ import { GithubRepo } from "@marzneshin/features/github-repo";
 import { CommandBox } from "@marzneshin/features/search-command";
 import { DashboardBottomMenu } from "@marzneshin/features/bottom-menu";
 import { VersionIndicator } from "@marzneshin/features/version-indicator";
+import { Settings } from "lucide-react";
 
 export const DashboardLayout = () => {
     const isDesktop = useScreenBreakpoint("md");
@@ -38,17 +39,22 @@ export const DashboardLayout = () => {
     return (
         <div className="flex flex-col w-screen h-screen">
             <Header
-                start={
+                start={isDesktop ? (
                     <>
+
                         <Link to="/">
                             <HeaderLogo />
                         </Link>
-                        {isDesktop &&
-                            <ToggleButton
-                                collapsed={collapsed}
-                                onToggle={toggleCollapse}
-                            />}
+                        <ToggleButton
+                            collapsed={collapsed}
+                            onToggle={toggleCollapse}
+                        />
                     </>
+                ) : (
+                    <Link to="/settings">
+                        <Settings className="bg-gray-800 size-10 rounded-md text-2xl p-2" />
+                    </Link>
+                )
                 }
                 center={<CommandBox />}
                 end={
