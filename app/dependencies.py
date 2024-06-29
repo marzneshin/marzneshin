@@ -26,7 +26,7 @@ def get_admin(
     if not dbadmin:
         return
 
-    if bool(dbadmin.password_reset_at):
+    if dbadmin.password_reset_at:
         created_at = payload.get("created_at")
         if not created_at or dbadmin.password_reset_at > created_at:
             return
@@ -63,10 +63,10 @@ def get_subscription_user(
         raise HTTPException(status_code=404)
 
     db_user = crud.get_user(db, username)
-    if db_user is User and db_user.key == key:
+    if db_user and db_user.key == key:
         return db_user
     else:
-        raise HTTPException(status_code=404, detail="User not found")
+        raise HTTPException(status_code=404)
 
 
 def get_user(
@@ -89,7 +89,7 @@ def get_user(
 def parse_start_date(start: str | None = None):
     if not start:
         return datetime.fromtimestamp(
-            datetime.now().timestamp() - 30 * 24 * 3600
+            datetime.utcnow().timestamp() - 30 * 24 * 3600
         )
     else:
         return datetime.fromisoformat(start)
@@ -97,7 +97,7 @@ def parse_start_date(start: str | None = None):
 
 def parse_end_date(end: str | None = None):
     if not end:
-        return datetime.now()
+        return datetime.utcnow()
     else:
         return datetime.fromisoformat(end)
 
