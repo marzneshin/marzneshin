@@ -291,7 +291,7 @@ the `UVICORN_HOST` and `UVICORN_PORT` environment variables.
 | NUMBER_OF_RECURRENT_NOTIFICATIONS | How many times to retry if an error detected in sending a notification (default: `3`)                 |
 | RECURRENT_NOTIFICATIONS_TIMEOUT   | Timeout between each retry if an error detected in sending a notification in seconds (default: `180`) |
 | NOTIFY_REACHED_USAGE_PERCENT      | At which percentage of usage to send the warning notification (default: `80`)                         |
-| NOTIFY_DAYS_LEFT                  | When to send warning notifaction about expiration (default: `3`)                                      |
+| NOTIFY_DAYS_LEFT                  | When to send warning notification about expiration (default: `3`)                                      |
 
 # API
 
@@ -348,7 +348,7 @@ For more information, You can read [Marzneshin CLI's documentation](./cli/README
 
 You can set a webhook address and Marzneshin will send the notifications to that address.
 
-the requests will be sent as a post request to the adress provided by `WEBHOOK_ADDRESS` with `WEBHOOK_SECRET`
+the requests will be sent as a post request to the address provided by `WEBHOOK_ADDRESS` with `WEBHOOK_SECRET`
 as `x-webhook-secret` in the headers.
 
 Example request sent from Marzneshin:

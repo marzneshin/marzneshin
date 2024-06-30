@@ -1,4 +1,5 @@
 import { Button } from "@marzneshin/components";
+import { cn } from "@marzneshin/utils";
 import { UserType, useUserStatusEnable } from "@marzneshin/features/users";
 import { LoaderIcon } from "lucide-react";
 import { FC, useCallback, useState } from "react";
@@ -23,7 +24,7 @@ export const UserStatusEnableButton: FC<UserStatusEnableButtonProps> = ({ user }
 
     return (
         <Button
-            className={bgColor}
+            className={cn(bgColor, "w-1/2")}
             onClick={handleUserStatusEnabledToggle}
         >
             {isPending ? <LoaderIcon className="animate-spin" /> : t(!userStatus ? 'enable' : 'disable')}

@@ -1,4 +1,5 @@
 import {
+    Button,
     ScrollArea,
     Sheet,
     SheetContent,
@@ -10,11 +11,15 @@ import {
     TabsTrigger,
 } from "@marzneshin/components";
 import { UserServicesTable } from "@marzneshin/features/users";
-import type { UserType } from "@marzneshin/features/users";
+import {
+    useUserUsageResetCmd,
+    type UserType
+} from "@marzneshin/features/users";
 import { type FC, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { QRCodeSection, UserInfoTable } from "./user-info";
 import { SubscriptionActions } from "./user-info/subscription-actions";
+import { UserStatusEnableButton } from "./user-info/user-status-enable-button";
 
 interface UsersSettingsDialogProps {
     onOpenChange: (state: boolean) => void;
@@ -30,6 +35,7 @@ export const UsersSettingsDialog: FC<UsersSettingsDialogProps> = ({
     onClose,
 }) => {
     const { t } = useTranslation();
+    const { mutate: resetUsage } = useUserUsageResetCmd();
 
     useEffect(() => {
         if (!open) onClose();
@@ -45,12 +51,13 @@ export const UsersSettingsDialog: FC<UsersSettingsDialogProps> = ({
                     <Tabs defaultValue="info" className="w-full h-full">
                         <TabsList className="w-full bg-accent">
                             <TabsTrigger className="w-full" value="info">
-                                {" "}
-                                {t("user_info")}{" "}
+                                {t("user_info")}
                             </TabsTrigger>
                             <TabsTrigger className="w-full" value="services">
-                                {" "}
-                                {t("services")}{" "}
+                                {t("services")}
+                            </TabsTrigger>
+                            <TabsTrigger className="w-full" value="subscription">
+                                {t("subscription")}
                             </TabsTrigger>
                         </TabsList>
                         <TabsContent
@@ -58,11 +65,19 @@ export const UsersSettingsDialog: FC<UsersSettingsDialogProps> = ({
                             className="flex flex-col gap-2 w-full h-full"
                         >
                             <UserInfoTable entity={entity} />
-                            <QRCodeSection entity={entity} />
-                            <SubscriptionActions entity={entity} />
+                            <div className="flex flex-row justify-center items-center gap-2">
+                                <Button className="w-1/2" onClick={() => resetUsage(entity)}>
+                                    {t("page.users.reset_usage")}
+                                </Button>
+                                <UserStatusEnableButton user={entity} />
+                            </div>
                         </TabsContent>
                         <TabsContent value="services">
                             <UserServicesTable user={entity} />
+                        </TabsContent>
+                        <TabsContent value="subscription">
+                            <QRCodeSection entity={entity} />
+                            <SubscriptionActions entity={entity} />
                         </TabsContent>
                     </Tabs>
                 </ScrollArea>

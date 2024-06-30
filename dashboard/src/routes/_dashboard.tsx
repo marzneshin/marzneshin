@@ -1,6 +1,4 @@
 import {
-    Drawer,
-    DrawerContent,
     Header,
     ResizableHandle,
     ResizablePanel,
@@ -24,40 +22,41 @@ import {
 } from "@tanstack/react-router";
 import { GithubRepo } from "@marzneshin/features/github-repo";
 import { CommandBox } from "@marzneshin/features/search-command";
-import { DashboardFooter } from "@marzneshin/features/footer";
-
+import { DashboardBottomMenu } from "@marzneshin/features/bottom-menu";
+import { VersionIndicator } from "@marzneshin/features/version-indicator";
+import { Settings } from "lucide-react";
 
 export const DashboardLayout = () => {
     const isDesktop = useScreenBreakpoint("md");
     const {
         collapsed,
         panelRef,
-        open,
         setCollapsed,
-        setOpen,
         toggleCollapse,
-        toggleOpen,
     } = usePanelToggle(isDesktop);
+    const { isSudo } = useAuth();
 
     return (
         <div className="flex flex-col w-screen h-screen">
             <Header
-                start={
+                start={isDesktop ? (
                     <>
+
                         <Link to="/">
                             <HeaderLogo />
                         </Link>
                         <ToggleButton
-                            isDesktop={isDesktop}
                             collapsed={collapsed}
-                            open={open}
-                            onToggle={isDesktop ? toggleCollapse : toggleOpen}
+                            onToggle={toggleCollapse}
                         />
                     </>
+                ) : (
+                    <Link to="/settings">
+                        <Settings className="bg-gray-800 size-10 rounded-md text-2xl p-2" />
+                    </Link>
+                )
                 }
-                center={
-                    <CommandBox />
-                }
+                center={<CommandBox />}
                 end={
                     <>
                         <GithubRepo variant={isDesktop ? "full" : "mini"} />
@@ -65,57 +64,51 @@ export const DashboardLayout = () => {
                     </>
                 }
             />
-            {isDesktop ? (
-                <ResizablePanelGroup direction="horizontal" className="block sm:hidden">
-                    <ResizablePanel
-                        collapsible
-                        collapsedSize={2}
-                        onCollapse={() => setCollapsed(true)}
-                        onExpand={() => setCollapsed(false)}
-                        minSize={15}
-                        className={cn("w-[120px] min-w-[70px]")}
-                        defaultSize={20}
-                        ref={panelRef}
-                        maxSize={30}
-                    >
-                        <DashboardSidebar
-                            collapsed={collapsed}
-                            setCollapsed={setCollapsed}
-                        />
-                    </ResizablePanel>
-                    <ResizableHandle withHandle className="w-[2px]" />
-                    <ResizablePanel>
-                        <main className="flex flex-col items-center justify-center">
+            <div className="flex flex-1 overflow-hidden">
+                {isDesktop ? (
+                    <ResizablePanelGroup direction="horizontal" className="flex h-full w-full">
+                        <ResizablePanel
+                            collapsible
+                            collapsedSize={2}
+                            onCollapse={() => setCollapsed(true)}
+                            onExpand={() => setCollapsed(false)}
+                            minSize={15}
+                            className={cn("w-[120px] min-w-[70px]")}
+                            defaultSize={20}
+                            ref={panelRef}
+                            maxSize={30}
+                        >
+                            <DashboardSidebar
+                                collapsed={collapsed}
+                                setCollapsed={setCollapsed}
+                            />
+                        </ResizablePanel>
+                        <ResizableHandle withHandle className="w-[2px]" />
+                        <ResizablePanel className="flex-col flex justify-between">
+                            <main className="flex flex-col h-full">
+                                <Suspense fallback={<Loading />}>
+                                    <Outlet />
+                                </Suspense>
+                            </main>
+                            <footer className="h-10 py-2">
+                                <VersionIndicator />
+                            </footer>
+                        </ResizablePanel>
+                    </ResizablePanelGroup>
+                ) : (
+                    <div className="flex flex-col h-full w-full">
+                        <main className="flex flex-col h-full overflow-y-auto">
                             <Suspense fallback={<Loading />}>
                                 <Outlet />
-                                <DashboardFooter />
                             </Suspense>
-                            <Toaster position="top-center" />
+                            <footer className="h-30 border-t-3 py-2 px-5">
+                                <DashboardBottomMenu variant={isSudo() ? "sudo-admin" : "admin"} />
+                            </footer>
                         </main>
-                    </ResizablePanel>
-                </ResizablePanelGroup>
-            ) : (
-                <div>
-                    <aside>
-                        <Drawer open={open} onOpenChange={setOpen}>
-                            <DrawerContent>
-                                <DashboardSidebar
-                                    collapsed={collapsed}
-                                    setCollapsed={setCollapsed}
-                                    setOpen={setOpen}
-                                    open={open}
-                                />
-                            </DrawerContent>
-                        </Drawer>
-                    </aside>
-                    <main className="sm:block">
-                        <Suspense fallback={<Loading />}>
-                            <Outlet />
-                        </Suspense>
-                        <Toaster position="top-center" />
-                    </main>
-                </div>
-            )}
+                    </div>
+                )}
+            </div>
+            <Toaster position="top-center" />
         </div>
     );
 };

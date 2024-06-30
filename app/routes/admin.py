@@ -31,7 +31,7 @@ def authenticate_admin(
 
 
 @router.get("", response_model=Page[Admin])
-def get_admins(db: DBDep, admin: SudoAdminDep, username: str = None):
+def get_admins(db: DBDep, admin: SudoAdminDep, username: str | None = None):
     query = db.query(DBAdmin)
     if username:
         query = query.filter(DBAdmin.username.ilike(f"%{username}%"))
@@ -95,10 +95,10 @@ def modify_admin(
         raise HTTPException(status_code=404, detail="Admin not found")
 
     # If a sudoer admin wants to edit another sudoer
-    if (username != admin.username) and dbadmin.is_sudo:
+    if username != admin.username and dbadmin.is_sudo:
         raise HTTPException(
             status_code=403,
-            detail="You're not allowed to edit another sudoers account. Use marzban-cli instead.",
+            detail="You're not allowed to edit another sudoers account. Use marzneshin-cli instead.",
         )
 
     dbadmin = crud.update_admin(db, dbadmin, modified_admin)
@@ -114,7 +114,7 @@ def remove_admin(username: str, db: DBDep, admin: SudoAdminDep):
     if dbadmin.is_sudo:
         raise HTTPException(
             status_code=403,
-            detail="You're not allowed to delete sudoers accounts. Use marzban-cli instead.",
+            detail="You're not allowed to delete sudoers accounts. Use marzneshin-cli instead.",
         )
 
     crud.remove_admin(db, dbadmin)

@@ -1,6 +1,6 @@
 import { Badge } from "@marzneshin/components";
 
-export const DashboardFooter = () => {
+export const VersionIndicator = () => {
     return (
         <div className="size-full flex justify-center items-center dark:text-neutral-300 text-neutral-800">
             <Badge>
