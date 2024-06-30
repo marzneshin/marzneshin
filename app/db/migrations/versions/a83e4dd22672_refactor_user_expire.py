@@ -46,17 +46,34 @@ def upgrade() -> None:
                 "START_ON_FIRST_USE",
                 name="userexpirestrategy",
             ),
-            nullable=True,
+            server_default="NEVER",
+            nullable=False,
         ),
     )
 
-    op.alter_column(
-        "users", "on_hold_timeout", new_column_name="activation_deadline"
-    )
-    op.alter_column("users", "expire", new_column_name="expire_date")
-    op.alter_column(
-        "users", "on_hold_expire_duration", new_column_name="usage_duration"
-    )
+    if dialect == "sqlite":
+        for old, new, type_ in [
+            ("on_hold_timeout", "activation_deadline", sa.DateTime),
+            ("expire", "expire_date", sa.DateTime),
+            ("on_hold_expire_duration", "usage_duration", sa.Integer),
+        ]:
+            op.add_column("users", sa.Column(new, type_))
+
+            # Step 2: Copy data from the old column to the new column
+            op.execute(f"UPDATE users SET {new} = {old}")
+
+            with op.batch_alter_table("users") as batch_op:
+                batch_op.drop_column(old)
+    else:
+        op.alter_column(
+            "users", "on_hold_timeout", new_column_name="activation_deadline"
+        )
+        op.alter_column("users", "expire", new_column_name="expire_date")
+        op.alter_column(
+            "users",
+            "on_hold_expire_duration",
+            new_column_name="usage_duration",
+        )
     # ### end Alembic commands ###
     users_table = table(
         "users",
@@ -88,9 +105,6 @@ def upgrade() -> None:
             .where(users_table.c.id == user[0])
             .values(expire_strategy=expire_strategy)
         )
-
-    # Step 3: Make the new column non-nullable if needed
-    op.alter_column("users", "expire_strategy", nullable=False)
 
     op.drop_column("users", "status")
 
