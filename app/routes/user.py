@@ -198,7 +198,7 @@ async def modify_user(
 
     logger.info("User `%s` modified", db_user.username)
 
-    if active_after != active_after:
+    if active_before != active_after:
         asyncio.ensure_future(
             report.status_change(
                 username=db_user.username,
