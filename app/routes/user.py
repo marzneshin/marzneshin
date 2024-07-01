@@ -41,6 +41,16 @@ class UsersSortingOptions(str, Enum):
     CREATED_AT = "created_at"
 
 
+user_filters = [
+    "username",
+    "is_active",
+    "activated",
+    "expired",
+    "data_limit_reached",
+    "enabled",
+]
+
+
 @router.get("", response_model=Page[UserResponse])
 def get_users(
     db: DBDep,
@@ -48,6 +58,11 @@ def get_users(
     username: list[str] = Query(None),
     order_by: UsersSortingOptions = Query(None),
     descending: bool = Query(False),
+    is_active: bool | None = Query(None),
+    activated: bool | None = Query(None),
+    expired: bool | None = Query(None),
+    data_limit_reached: bool | None = Query(None),
+    enabled: bool | None = Query(None),
 ):
     """
     Filters users based on the options
@@ -58,11 +73,18 @@ def get_users(
 
     admin = dbadmin if not admin.is_sudo else None
 
-    if username:
-        if len(username) > 1:
-            query = query.filter(User.username.in_(username))
-        else:
-            query = query.filter(User.username.ilike(f"%{username[0]}%"))
+    for name in user_filters:
+        value = locals().get(name)
+        if value is not None:
+            if name == "username":
+                if len(username) > 1:
+                    query = query.filter(User.username.in_(username))
+                else:
+                    query = query.filter(
+                        User.username.ilike(f"%{username[0]}%")
+                    )
+            else:
+                query = query.filter(getattr(User, name) == value)
 
     if admin:
         query = query.filter(User.admin == admin)
