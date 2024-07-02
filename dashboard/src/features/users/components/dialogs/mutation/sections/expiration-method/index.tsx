@@ -54,7 +54,7 @@ export const ExpirationMethodFields: FC<ExpirationMethodProps> = ({ entity }) =>
                     <TabsTrigger
                         className="w-full"
                         value="start_on_first_use">
-                        {t('page.users.onhold_expire')}
+                        {t('page.users.on_first_use')}
                     </TabsTrigger>
                     <TabsTrigger
                         className="w-full"
