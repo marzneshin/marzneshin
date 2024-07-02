@@ -18,7 +18,6 @@ import {
     useUsersUpdateMutation,
     UserSchema,
 } from "@marzneshin/features/users";
-
 import { UsernameField, NoteField, ServicesField } from "./fields";
 import { useMutationDialog } from "@marzneshin/hooks";
 import { DataLimitFields, ExpirationMethodFields } from "./sections";
@@ -81,11 +80,11 @@ export const UsersMutationDialog: FC<UsersMutationDialogProps> = ({
                             <div className="flex-col grid-cols-2 gap-2 sm:flex md:grid h-full">
                                 <div>
                                     <UsernameField disabled={!!entity?.username} />
-                                    <Separator className="my-3"/>
+                                    <Separator className="my-3" />
                                     <DataLimitFields />
-                                    <Separator className="my-3"/>
+                                    <Separator className="my-3" />
                                     <ExpirationMethodFields entity={entity} />
-                                    <Separator className="my-3"/>
+                                    <Separator className="my-3" />
                                     <NoteField />
                                 </div>
                                 <VStack>
