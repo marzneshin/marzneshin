@@ -16,9 +16,9 @@ import {
     DATA_LIMIT_METRIC,
     useUsersCreationMutation,
     useUsersUpdateMutation,
+    UserSchema,
 } from "@marzneshin/features/users";
 
-import { UserSchema } from "./schema";
 import { UsernameField, NoteField, ServicesField } from "./fields";
 import { useMutationDialog } from "@marzneshin/hooks";
 import { DataLimitFields, ExpirationMethodFields } from "./sections";
@@ -40,14 +40,10 @@ export const UsersMutationDialog: FC<UsersMutationDialogProps> = ({
     const getDefaultValues = useCallback(
         (): UserMutationType => ({
             service_ids: [],
-            data_limit: undefined,
-            expire: null,
+            expire_strategy: "fixed_date",
             username: "",
             data_limit_reset_strategy: "no_reset",
-            status: "active",
             note: "",
-            on_hold_expire_duration: 0,
-            on_hold_timeout: undefined,
         }),
         [],
     );
