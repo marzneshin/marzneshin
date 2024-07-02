@@ -43,7 +43,7 @@ export const ExpirationMethodFields: FC<ExpirationMethodProps> = ({ entity }) =>
             <Tabs
                 defaultValue={defaultExpirationMethodTab}
                 onValueChange={handleTabChange}
-                className="mt-2 w-full"
+                className="w-full"
             >
                 <TabsList className="flex flex-row items-center p-1 w-full rounded-md bg-accent">
                     <TabsTrigger

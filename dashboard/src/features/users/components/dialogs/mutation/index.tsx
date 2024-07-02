@@ -67,8 +67,8 @@ export const UsersMutationDialog: FC<UsersMutationDialogProps> = ({
     return (
         <Dialog open={open} onOpenChange={onOpenChange} defaultOpen={true}>
             <DialogContent className="min-w-full h-full md:h-auto md:min-w-[42rem]">
-                <ScrollArea className="flex flex-col justify-between h-full">
-                    <DialogHeader>
+                <ScrollArea className="flex flex-col justify-between h-full ">
+                    <DialogHeader className="mb-3">
                         <DialogTitle className="text-primary">
                             {entity
                                 ? t("page.users.dialogs.edition.title")
@@ -76,15 +76,15 @@ export const UsersMutationDialog: FC<UsersMutationDialogProps> = ({
                         </DialogTitle>
                     </DialogHeader>
                     <Form {...form}>
-                        <form onSubmit={handleSubmit} className=" m-2">
+                        <form onSubmit={handleSubmit} >
                             <div className="flex-col grid-cols-2 gap-2 sm:flex md:grid h-full">
-                                <div>
+                                <div className="space-y-3">
                                     <UsernameField disabled={!!entity?.username} />
-                                    <Separator className="my-3" />
+                                    <Separator />
                                     <DataLimitFields />
-                                    <Separator className="my-3" />
+                                    <Separator />
                                     <ExpirationMethodFields entity={entity} />
-                                    <Separator className="my-3" />
+                                    <Separator />
                                     <NoteField />
                                 </div>
                                 <VStack>
