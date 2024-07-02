@@ -1,11 +1,10 @@
 import type { ColumnDef } from "@tanstack/react-table";
-import type { UserType } from "@marzneshin/features/users";
 import {
-    UsersStatusBadge,
-    UsersStatus,
+    type UserType,
     OnlineStatus,
     UserUsedTraffic,
 } from "@marzneshin/features/users";
+import { Badge } from "@marzneshin/components";
 import { DataTableColumnHeader } from "@marzneshin/components/data-table/column-header";
 import i18n from "@marzneshin/features/i18n";
 import {
@@ -36,16 +35,6 @@ export const columns = (actions: ColumnAction): ColumnDef<UserType>[] => [
         ),
     },
     {
-        accessorKey: "status",
-        header: ({ column }) => (
-            <DataTableColumnHeader title={i18n.t("status")} column={column} />
-        ),
-        cell: ({ row }) => (
-            <UsersStatusBadge status={UsersStatus[row.original.status]} />
-        ),
-        enableSorting: false,
-    },
-    {
         accessorKey: "used_traffic",
         header: ({ column }) => (
             <DataTableColumnHeader
@@ -56,6 +45,42 @@ export const columns = (actions: ColumnAction): ColumnDef<UserType>[] => [
         cell: ({ row }) => <UserUsedTraffic user={row.original} />,
     },
     {
+        accessorKey: "activated",
+        header: ({ column }) => (
+            <DataTableColumnHeader
+                title={i18n.t("activated")}
+                column={column}
+            />
+        ),
+        cell: ({ row }) => row.original.activated ? <Badge variant="positive">{i18n.t("active")}</Badge> : <Badge variant="destructive">{i18n.t("inactive")}</Badge>,
+    },
+    {
+        accessorKey: "enabled",
+        header: ({ column }) => (
+            <DataTableColumnHeader
+                title={i18n.t("enabled")}
+                column={column}
+            />
+        ),
+        cell: ({ row }) => row.original.enabled ? <Badge variant="positive">{i18n.t("enabled")}</Badge> : <Badge variant="destructive">{i18n.t("disabled")}</Badge>,
+    },
+    {
+        accessorKey: "expire_strategy",
+        header: ({ column }) => (
+            <DataTableColumnHeader
+                title={i18n.t("page.users.expire_method")}
+                column={column}
+            />
+        ),
+        cell: ({ row }) => (
+            <Badge>{{
+                start_on_first_use: i18n.t("page.users.on_first_use"),
+                fixed_date: i18n.t("page.users.fixed_date"),
+                never: i18n.t("page.users.never"),
+            }[row.original.expire_strategy]}</Badge>
+        )
+    },
+    {
         accessorKey: "expire",
         header: ({ column }) => (
             <DataTableColumnHeader
@@ -63,10 +88,13 @@ export const columns = (actions: ColumnAction): ColumnDef<UserType>[] => [
                 column={column}
             />
         ),
-        cell: ({ row }) =>
-            row.original.expire
-                ? format(row.original.expire.toLocaleString(), "PPP")
-                : "Unlimited",
+        cell: ({ row }) => (
+            {
+                start_on_first_use: row.original.usage_duration && `${(row.original.usage_duration / 86400)} Day`,
+                fixed_date: row.original.expire_date && format(row.original.expire_date?.toLocaleString(), "PPP"),
+                never: "Never",
+            }[row.original.expire_strategy]
+        )
     },
     {
         id: "actions",
