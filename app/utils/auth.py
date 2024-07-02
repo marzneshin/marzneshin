@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from typing import Union
 
-from jose import JWTError, jwt
+import jwt
 
 from app.config import get_secret_key
 from app.config.env import JWT_ACCESS_TOKEN_EXPIRE_MINUTES
@@ -25,19 +25,20 @@ def create_admin_token(username: str, is_sudo=False) -> str:
 def get_admin_payload(token: str) -> Union[dict, None]:
     try:
         payload = jwt.decode(token, get_secret_key(), algorithms=["HS256"])
-        username: str = payload.get("sub")
-        access: str = payload.get("access")
-        if not username or access not in ("admin", "sudo"):
-            return
-        try:
-            created_at = datetime.utcfromtimestamp(payload["iat"])
-        except KeyError:
-            created_at = None
-
-        return {
-            "username": username,
-            "is_sudo": access == "sudo",
-            "created_at": created_at,
-        }
-    except JWTError:
+    except jwt.DecodeError:
         return
+
+    username: str = payload.get("sub")
+    access: str = payload.get("access")
+    if not username or access not in ("admin", "sudo"):
+        return
+    try:
+        created_at = datetime.utcfromtimestamp(payload["iat"])
+    except KeyError:
+        created_at = None
+
+    return {
+        "username": username,
+        "is_sudo": access == "sudo",
+        "created_at": created_at,
+    }
