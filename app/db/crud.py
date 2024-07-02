@@ -253,16 +253,17 @@ def get_users(
             query = query.filter(User.expire_strategy.in_(expire_strategy))
         else:
             query = query.filter(User.expire_strategy == expire_strategy)
-    if is_active:
+
+    if isinstance(is_active, bool):
         query = query.filter(User.is_active == is_active)
 
-    if activated:
+    if isinstance(activated, bool):
         query = query.filter(User.activated == activated)
 
-    if expired:
+    if isinstance(expired, bool):
         query = query.filter(User.expired == expired)
 
-    if data_limit_reached:
+    if isinstance(data_limit_reached, bool):
         query = query.filter(User.data_limit_reached == data_limit_reached)
 
     if admin:
