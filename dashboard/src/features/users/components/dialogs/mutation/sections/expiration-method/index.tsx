@@ -5,8 +5,9 @@ import {
     TabsContent,
     FormLabel
 } from '@marzneshin/components';
-import {
+import type {
     UserMutationType,
+    ExpireStrategy,
 } from "@marzneshin/features/users";
 import {
     ExpireDateField,
@@ -17,7 +18,6 @@ import { TabsList } from "@radix-ui/react-tabs";
 import { useTranslation } from "react-i18next";
 import {
     useExpirationMethodTabs,
-    type ExpirationMethodStrategy
 } from "./use-expiration-method-tabs";
 
 interface ExpirationMethodProps {
@@ -32,7 +32,7 @@ export const ExpirationMethodFields: FC<ExpirationMethodProps> = ({ entity }) =>
     } = useExpirationMethodTabs({ entity });
 
     const handleTabChange = (value: string) => {
-        setSelectedExpirationMethodTab(value as ExpirationMethodStrategy);
+        setSelectedExpirationMethodTab(value as ExpireStrategy);
     };
 
     return (
@@ -48,24 +48,24 @@ export const ExpirationMethodFields: FC<ExpirationMethodProps> = ({ entity }) =>
                 <TabsList className="flex flex-row items-center p-1 w-full rounded-md bg-accent">
                     <TabsTrigger
                         className="w-full"
-                        value="determined">
-                        {t('page.users.determined_expire')}
+                        value="fixed_date">
+                        {t('page.users.fixed_date')}
                     </TabsTrigger>
                     <TabsTrigger
                         className="w-full"
-                        value="onhold">
+                        value="start_on_first_use">
                         {t('page.users.onhold_expire')}
                     </TabsTrigger>
                     <TabsTrigger
                         className="w-full"
-                        value="unlimited">
-                        {t('page.users.unlimited')}
+                        value="never">
+                        {t('page.users.never')}
                     </TabsTrigger>
                 </TabsList>
-                <TabsContent value="determined">
+                <TabsContent value="fixed_date">
                     <ExpireDateField />
                 </TabsContent>
-                <TabsContent value="onhold">
+                <TabsContent value="start_on_first_use">
                     <OnHoldExpireDurationField />
                     <OnHoldTimeoutField />
                 </TabsContent>

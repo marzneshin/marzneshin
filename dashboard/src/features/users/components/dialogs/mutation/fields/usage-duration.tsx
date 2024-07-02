@@ -6,7 +6,7 @@ import {
     FormLabel,
     FormMessage
 } from '@marzneshin/components';
-import { FC, useEffect, useState } from 'react'
+import { type FC, useEffect, useState } from 'react'
 import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
@@ -14,20 +14,20 @@ export const OnHoldExpireDurationField: FC = () => {
     const form = useFormContext();
     const { t } = useTranslation();
 
-    const defaultDuration = (form.getValues('on_hold_expire_duration') ?? 0) / 86400;
+    const defaultDuration = (form.getValues('usage_duration') ?? 0) / 86400;
     const [duration, setDuration] = useState<number>(defaultDuration);
 
     useEffect(() => {
-        form.setValue('on_hold_expire_duration', duration * 86400);
+        form.setValue('usage_duration', duration * 86400);
     }, [form, duration]);
 
     return (
         <FormField
             control={form.control}
-            name="on_hold_expire_duration"
+            name="usage_duration"
             render={({ field }) => (
                 <FormItem>
-                    <FormLabel>{t('page.users.on_hold_expire_duration')} ({t('days')})</FormLabel>
+                    <FormLabel>{t('page.users.usage_duration')} ({t('days')})</FormLabel>
                     <FormControl>
                         <Input
                             {...field}
