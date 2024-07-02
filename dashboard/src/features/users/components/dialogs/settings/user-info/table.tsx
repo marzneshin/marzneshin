@@ -17,14 +17,11 @@ import {
     UserDataLimitReachedPill,
 } from "@marzneshin/features/users";
 import { useTranslation } from "react-i18next";
-import { isDate } from "date-fns";
 
 export const UserInfoTable: FC<UserProp> = ({ user: entity }) => {
     const { t } = useTranslation();
     const expireDate = entity.expire_date
-        ? isDate(entity.expire_date)
-            ? entity.expire_date
-            : new Date(entity.expire_date)
+        ? new Date(entity.expire_date)
         : null;
 
     return (
