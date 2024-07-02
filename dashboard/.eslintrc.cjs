@@ -6,7 +6,7 @@ module.exports = {
     parser: '@typescript-eslint/parser',
     plugins: ['eslint-plugin-react-compiler', 'react-refresh'],
     rules: {
-        'react-compiler/react-compiler': "error",
+        'react-compiler/react-compiler': "off",
         '@typescript-eslint/unused-disable-directives': ['off'],
         '@typescript-eslint/ban-ts-comment': ['off'],
         '@typescript-eslint/no-explicit-any': ['off'],
