@@ -3,8 +3,11 @@ import {
     type UserType,
     OnlineStatus,
     UserUsedTraffic,
+    UserActivatedPill,
+    UserEnabledPill,
+    UserExpireStrategyPill,
+    UserExpirationValue
 } from "@marzneshin/features/users";
-import { Badge } from "@marzneshin/components";
 import { DataTableColumnHeader } from "@marzneshin/components/data-table/column-header";
 import i18n from "@marzneshin/features/i18n";
 import {
@@ -14,7 +17,6 @@ import {
 } from "@marzneshin/components";
 import { LinkIcon } from "lucide-react";
 import { getSubscriptionLink } from "@marzneshin/utils";
-import { format } from "date-fns";
 
 interface ColumnAction {
     onDelete: (user: UserType) => void;
@@ -52,7 +54,7 @@ export const columns = (actions: ColumnAction): ColumnDef<UserType>[] => [
                 column={column}
             />
         ),
-        cell: ({ row }) => row.original.activated ? <Badge variant="positive">{i18n.t("active")}</Badge> : <Badge variant="destructive">{i18n.t("inactive")}</Badge>,
+        cell: ({ row }) => <UserActivatedPill user={row.original} />,
     },
     {
         accessorKey: "enabled",
@@ -62,7 +64,7 @@ export const columns = (actions: ColumnAction): ColumnDef<UserType>[] => [
                 column={column}
             />
         ),
-        cell: ({ row }) => row.original.enabled ? <Badge variant="positive">{i18n.t("enabled")}</Badge> : <Badge variant="destructive">{i18n.t("disabled")}</Badge>,
+        cell: ({ row }) => <UserEnabledPill user={row.original} />,
     },
     {
         accessorKey: "expire_strategy",
@@ -72,13 +74,7 @@ export const columns = (actions: ColumnAction): ColumnDef<UserType>[] => [
                 column={column}
             />
         ),
-        cell: ({ row }) => (
-            <Badge>{{
-                start_on_first_use: i18n.t("page.users.on_first_use"),
-                fixed_date: i18n.t("page.users.fixed_date"),
-                never: i18n.t("page.users.never"),
-            }[row.original.expire_strategy]}</Badge>
-        )
+        cell: ({ row }) => <UserExpireStrategyPill user={row.original} />
     },
     {
         accessorKey: "expire",
@@ -88,13 +84,7 @@ export const columns = (actions: ColumnAction): ColumnDef<UserType>[] => [
                 column={column}
             />
         ),
-        cell: ({ row }) => (
-            {
-                start_on_first_use: row.original.usage_duration && `${(row.original.usage_duration / 86400)} Day`,
-                fixed_date: row.original.expire_date && format(row.original.expire_date?.toLocaleString(), "PPP"),
-                never: "Never",
-            }[row.original.expire_strategy]
-        )
+        cell: ({ row }) => <UserExpirationValue user={row.original} />,
     },
     {
         id: "actions",
