@@ -10,7 +10,7 @@ import { type FC, useEffect, useState } from 'react'
 import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-export const OnHoldExpireDurationField: FC = () => {
+export const UsageDurationField: FC = () => {
     const form = useFormContext();
     const { t } = useTranslation();
 

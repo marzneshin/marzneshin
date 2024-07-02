@@ -11,8 +11,8 @@ import type {
 } from "@marzneshin/features/users";
 import {
     ExpireDateField,
-    OnHoldTimeoutField,
-    OnHoldExpireDurationField,
+    ActivationDeadlineField,
+    UsageDurationField,
 } from "@marzneshin/features/users/components/dialogs/mutation/fields";
 import { TabsList } from "@radix-ui/react-tabs";
 import { useTranslation } from "react-i18next";
@@ -66,8 +66,8 @@ export const ExpirationMethodFields: FC<ExpirationMethodProps> = ({ entity }) =>
                     <ExpireDateField />
                 </TabsContent>
                 <TabsContent value="start_on_first_use">
-                    <OnHoldExpireDurationField />
-                    <OnHoldTimeoutField />
+                    <UsageDurationField />
+                    <ActivationDeadlineField />
                 </TabsContent>
             </Tabs>
         </>
