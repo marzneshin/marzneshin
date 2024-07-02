@@ -42,11 +42,11 @@ export const UserInfoTable: FC<UserProp> = ({ user: entity }) => {
                             value={<UserActivatedPill user={entity} />}
                         />
                         {{
-                            fixed_date: () => <DateTableRow
+                            fixed_date: (<DateTableRow
                                 label={t("page.users.expire_date")}
                                 date={expireDate}
-                            />,
-                            start_on_first_use: () => (
+                            />),
+                            start_on_first_use: (
                                 <>
                                     <TableRowWithCell
                                         label={t("page.users.usage_duration")}
@@ -58,8 +58,8 @@ export const UserInfoTable: FC<UserProp> = ({ user: entity }) => {
                                     />
                                 </>
                             ),
-                            never: () => t('never')
-                        }[entity.expire_strategy]()}
+                            never: t('never')
+                        }[entity.expire_strategy]}
 
                         {entity.data_limit && (
                             <>
