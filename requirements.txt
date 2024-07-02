@@ -19,7 +19,6 @@ pyTelegramBotAPI==4.15.2
 python-decouple==3.8
 python-dotenv==1.0.0
 python-dateutil==2.8.2
-python-jose==3.3.0
 pytz==2023.3.post1
 qrcode==7.4.2
 requests==2.32.2
@@ -36,3 +35,4 @@ xxhash==3.4.1
 grpcio==1.60.0
 psycopg==3.1.18
 v2share==0.1.0b9
+PyJWT~=2.8.0

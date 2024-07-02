@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 
 from app.db import crud, User, GetDB
 from app.models.admin import Admin, oauth2_scheme
-from app.utils.jwt import get_admin_payload
+from app.utils.auth import get_admin_payload
 
 
 def get_db():
