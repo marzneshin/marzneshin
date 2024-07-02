@@ -110,7 +110,7 @@ async def modify_service(
         )
     else:
         for user in response.users:
-            await marznode.operations.update_user(
+            marznode.operations.update_user(
                 user, old_inbounds=old_inbounds
             )
         return response

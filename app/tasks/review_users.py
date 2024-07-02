@@ -27,7 +27,7 @@ async def review_users():
         for user in get_users(db, activated=True, is_active=False):
             """looking for expired/to be limited users who are still active"""
 
-            await marznode.operations.update_user(user)
+            marznode.operations.update_user(user)
             user.activated = False
             db.commit()
             db.refresh(user)
