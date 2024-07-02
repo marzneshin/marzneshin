@@ -17,9 +17,12 @@ import {
 } from "@marzneshin/features/users";
 import { type FC, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { QRCodeSection, UserInfoTable } from "./user-info";
-import { SubscriptionActions } from "./user-info/subscription-actions";
-import { UserStatusEnableButton } from "./user-info/user-status-enable-button";
+import {
+    UserStatusEnableButton,
+    SubscriptionActions,
+    QRCodeSection,
+    UserInfoTable
+} from "./user-info";
 
 interface UsersSettingsDialogProps {
     onOpenChange: (state: boolean) => void;
@@ -64,7 +67,7 @@ export const UsersSettingsDialog: FC<UsersSettingsDialogProps> = ({
                             value="info"
                             className="flex flex-col gap-2 w-full h-full"
                         >
-                            <UserInfoTable entity={entity} />
+                            <UserInfoTable user={entity} />
                             <div className="flex flex-row justify-center items-center gap-2">
                                 <Button className="w-1/2" onClick={() => resetUsage(entity)}>
                                     {t("page.users.reset_usage")}
