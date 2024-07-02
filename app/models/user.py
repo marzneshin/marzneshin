@@ -1,5 +1,5 @@
 import secrets
-from datetime import datetime, timedelta
+from datetime import datetime
 from enum import Enum
 from typing import Annotated
 
@@ -48,7 +48,7 @@ class User(BaseModel):
     ]
     expire_strategy: UserExpireStrategy
     expire_date: datetime | None = Field(None)
-    usage_duration: timedelta | None = Field(None)
+    usage_duration: int | None = Field(None)
     activation_deadline: datetime | None = Field(None)
     key: str = Field(default_factory=lambda: secrets.token_hex(16))
     data_limit: int | None = Field(
