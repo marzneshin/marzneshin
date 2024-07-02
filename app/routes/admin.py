@@ -11,7 +11,7 @@ from app.db import Session, crud
 from app.db.models import Admin as DBAdmin
 from app.dependencies import AdminDep, SudoAdminDep, DBDep
 from app.models.admin import Admin, AdminCreate, AdminInDB, AdminModify, Token
-from app.utils.jwt import create_admin_token
+from app.utils.auth import create_admin_token
 
 router = APIRouter(tags=["Admin"], prefix="/admins")
 
