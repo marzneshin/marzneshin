@@ -118,7 +118,7 @@ async def add_user(new_user: UserCreate, db: DBDep, admin: AdminDep):
         raise HTTPException(status_code=409, detail="User already exists")
 
     user = UserResponse.model_validate(db_user)
-    await marznode.operations.update_user(user=db_user)
+    marznode.operations.update_user(user=db_user)
     asyncio.ensure_future(
         report.user_created(user=user, user_id=db_user.id, by=admin)
     )
@@ -205,7 +205,7 @@ async def modify_user(
     if (
         inbound_change and new_user.is_active
     ) or active_before != active_after:
-        await marznode.operations.update_user(
+        marznode.operations.update_user(
             new_user,
             old_inbounds,
         )
@@ -245,7 +245,7 @@ async def remove_user(db_user: UserDep, db: DBDep, admin: AdminDep):
     """
     Remove a user
     """
-    await marznode.operations.update_user(db_user)
+    marznode.operations.update_user(db_user)
 
     crud.remove_user(db, db_user)
     db.flush()
@@ -283,7 +283,7 @@ async def reset_user_data_usage(db_user: UserDep, db: DBDep, admin: AdminDep):
     db_user = crud.reset_user_data_usage(db, db_user)
 
     if db_user.is_active and not was_active:
-        await marznode.operations.update_user(db_user)
+        marznode.operations.update_user(db_user)
         db_user.activated = True
         db.commit()
 
@@ -306,7 +306,7 @@ async def enable_user(db_user: UserDep, db: DBDep, admin: AdminDep):
     db_user.activated = True
     db.commit()
 
-    await marznode.operations.update_user(db_user)
+    marznode.operations.update_user(db_user)
 
     user = UserResponse.model_validate(db_user)
 
@@ -326,7 +326,7 @@ async def disable_user(db_user: UserDep, db: DBDep, admin: AdminDep):
     db_user.activated = False
     db.commit()
 
-    await marznode.operations.update_user(db_user)
+    marznode.operations.update_user(db_user)
 
     user = UserResponse.model_validate(db_user)
 
@@ -345,8 +345,8 @@ async def revoke_user_subscription(
     db_user = crud.revoke_user_sub(db, db_user)
 
     if db_user.is_active:
-        await marznode.operations.update_user(db_user, remove=True)
-        await marznode.operations.update_user(db_user)
+        marznode.operations.update_user(db_user, remove=True)
+        marznode.operations.update_user(db_user)
     user = UserResponse.model_validate(db_user)
     asyncio.ensure_future(
         report.user_subscription_revoked(user=user, by=admin)
