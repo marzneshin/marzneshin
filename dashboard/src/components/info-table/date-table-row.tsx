@@ -7,7 +7,7 @@ export const DateTableRow: FC<{ label: string; date?: Date | null | string }> = 
     date,
 }) => {
     let formattedDate = "";
-    if (date && isValid(date)) {
+    if (date && isValid(new Date(date))) {
         formattedDate = format(date, "PPP");
     }
     return <TableRowWithCell label={label} value={formattedDate} />;
