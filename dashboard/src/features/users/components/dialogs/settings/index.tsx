@@ -10,8 +10,8 @@ import {
     TabsList,
     TabsTrigger,
 } from "@marzneshin/components";
-import { UserServicesTable } from "@marzneshin/features/users";
 import {
+    UserServicesTable,
     useUserUsageResetCmd,
     type UserType
 } from "@marzneshin/features/users";
@@ -46,11 +46,11 @@ export const UsersSettingsDialog: FC<UsersSettingsDialogProps> = ({
 
     return (
         <Sheet open={open} onOpenChange={onOpenChange}>
-            <SheetContent className="sm:min-w-full md:min-w-[700px]">
-                <ScrollArea className="flex flex-col gap-4 m-3 h-full">
-                    <SheetHeader className="my-1">
-                        <SheetTitle>{t("settings")}</SheetTitle>
-                    </SheetHeader>
+            <SheetContent className="sm:min-w-full md:min-w-[700px] space-y-5">
+                <SheetHeader >
+                    <SheetTitle>{t("settings")}</SheetTitle>
+                </SheetHeader>
+                <ScrollArea className="flex flex-col gap-4 h-full">
                     <Tabs defaultValue="info" className="w-full h-full">
                         <TabsList className="w-full bg-accent">
                             <TabsTrigger className="w-full" value="info">
@@ -68,7 +68,7 @@ export const UsersSettingsDialog: FC<UsersSettingsDialogProps> = ({
                             className="flex flex-col gap-2 w-full h-full"
                         >
                             <UserInfoTable user={entity} />
-                            <div className="flex flex-row justify-center items-center gap-2">
+                            <div className="hstack justify-center items-center gap-2">
                                 <Button className="w-1/2" onClick={() => resetUsage(entity)}>
                                     {t("page.users.reset_usage")}
                                 </Button>
