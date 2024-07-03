@@ -147,6 +147,7 @@
       }
     },
     "users": {
+      "data_limit_reached": "Data Limit Reached",
       "note-placeholder": "Additional information about user",
       "data_limit": "Data Limit",
       "traffic": "Traffic",
