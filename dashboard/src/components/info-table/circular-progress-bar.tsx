@@ -3,17 +3,21 @@ import {
     TableCell,
     TableRow,
 } from "@marzneshin/components";
+import { useTranslation } from "react-i18next";
 import type { FC } from "react";
 
 export const CircularProgressBarRow: FC<{
     label: string;
     value: number;
-    limit: number;
-}> = ({ label, value, limit }) => (
-    <TableRow>
-        <TableCell>{label}</TableCell>
-        <TableCell>
-            <CircularProgress size="sm" value={(value / limit) * 100} />
-        </TableCell>
-    </TableRow>
-);
+    limit: number | undefined;
+}> = ({ label, value, limit }) => {
+    const { t } = useTranslation()
+    return (
+        <TableRow>
+            <TableCell>{label}</TableCell>
+            <TableCell>
+                {limit ? <CircularProgress size="sm" value={(value / limit) * 100} /> : t("unlimited")}
+            </TableCell>
+        </TableRow>
+    )
+};

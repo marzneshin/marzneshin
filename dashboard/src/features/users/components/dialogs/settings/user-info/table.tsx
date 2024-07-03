@@ -63,19 +63,16 @@ export const UserInfoTable: FC<UserProp> = ({ user: entity }) => {
                             never: t('never')
                         }[entity.expire_strategy]}
 
-                        {entity.data_limit && (
-                            <>
-                                <CircularProgressBarRow
-                                    label={t("page.users.used_traffic")}
-                                    value={entity.used_traffic}
-                                    limit={entity.data_limit}
-                                />
-                                <TableRowWithCell
-                                    label={t("page.users.data_limit_reached")}
-                                    value={<UserDataLimitReachedPill user={entity} />}
-                                />
-                            </>
-                        )}
+                        <CircularProgressBarRow
+                            label={t("page.users.used_traffic")}
+                            value={entity.used_traffic}
+                            limit={entity.data_limit}
+                        />
+
+                        <TableRowWithCell
+                            label={t("page.users.data_limit_reached")}
+                            value={<UserDataLimitReachedPill user={entity} />}
+                        />
                         <DateTableRow
                             label={t("page.users.online_at")}
                             date={entity.online_at}

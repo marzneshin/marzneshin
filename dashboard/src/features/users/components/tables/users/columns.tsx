@@ -37,6 +37,17 @@ export const columns = (actions: ColumnAction): ColumnDef<UserType>[] => [
         ),
     },
     {
+        accessorKey: "activated",
+        enableSorting: false,
+        header: ({ column }) => (
+            <DataTableColumnHeader
+                title={i18n.t("activated")}
+                column={column}
+            />
+        ),
+        cell: ({ row }) => <UserActivatedPill user={row.original} />,
+    },
+    {
         accessorKey: "used_traffic",
         header: ({ column }) => (
             <DataTableColumnHeader
@@ -47,17 +58,8 @@ export const columns = (actions: ColumnAction): ColumnDef<UserType>[] => [
         cell: ({ row }) => <UserUsedTraffic user={row.original} />,
     },
     {
-        accessorKey: "activated",
-        header: ({ column }) => (
-            <DataTableColumnHeader
-                title={i18n.t("activated")}
-                column={column}
-            />
-        ),
-        cell: ({ row }) => <UserActivatedPill user={row.original} />,
-    },
-    {
         accessorKey: "enabled",
+        enableSorting: false,
         header: ({ column }) => (
             <DataTableColumnHeader
                 title={i18n.t("enabled")}
@@ -74,10 +76,11 @@ export const columns = (actions: ColumnAction): ColumnDef<UserType>[] => [
                 column={column}
             />
         ),
-        cell: ({ row }) => <UserExpireStrategyPill user={row.original} />
+        cell: ({ row }) => <UserExpireStrategyPill user={row.original} />,
+        enableSorting: false,
     },
     {
-        accessorKey: "expire",
+        accessorKey: "expire_date",
         header: ({ column }) => (
             <DataTableColumnHeader
                 title={i18n.t("page.users.expire_date")}
