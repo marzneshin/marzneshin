@@ -13,7 +13,7 @@ const UserDelete = () => {
     const value = useRouterUserContext()
     const navigate = useNavigate({ from: "/users/$userId/delete" });
 
-    return value && (
+    return (value && value.user) && (
         <UsersDeleteConfirmationDialog
             open={deleteDialogOpen}
             onOpenChange={setDeleteDialogOpen}
