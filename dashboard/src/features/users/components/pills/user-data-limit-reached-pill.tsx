@@ -7,7 +7,7 @@ export const UserDataLimitReachedPill: FC<UserProp> = ({ user }) => {
     const { t } = useTranslation();
     return (
         <BooleanPill
-            active={user.data_limit_reached}
+            active={!user.data_limit_reached}
             activeLabel={t('left')}
             inactiveLabel={t('reached')}
         />
