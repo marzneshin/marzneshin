@@ -164,7 +164,8 @@ async def delete_expired(passed_time: int, db: DBDep, admin: AdminDep):
         raise HTTPException(status_code=404, detail="No expired user found.")
 
     for db_user in expired_users:
-        marznode.operations.update_user(db_user)
+        if db_user.activated and not db_user.is_active:
+            marznode.operations.update_user(db_user)
         crud.remove_user(db, db_user)
 
         asyncio.ensure_future(
@@ -206,8 +207,7 @@ async def modify_user(
         inbound_change and new_user.is_active
     ) or active_before != active_after:
         marznode.operations.update_user(
-            new_user,
-            old_inbounds,
+            new_user, old_inbounds, remove=~db_user.is_active
         )
         db_user.activated = db_user.is_active
         db.commit()
@@ -245,7 +245,7 @@ async def remove_user(db_user: UserDep, db: DBDep, admin: AdminDep):
     """
     Remove a user
     """
-    marznode.operations.update_user(db_user)
+    marznode.operations.update_user(db_user, remove=True)
 
     crud.remove_user(db, db_user)
     db.flush()
@@ -326,7 +326,7 @@ async def disable_user(db_user: UserDep, db: DBDep, admin: AdminDep):
     db_user.activated = False
     db.commit()
 
-    marznode.operations.update_user(db_user)
+    marznode.operations.update_user(db_user, remove=True)
 
     user = UserResponse.model_validate(db_user)
 

@@ -110,7 +110,10 @@ async def modify_service(
         )
     else:
         for user in response.users:
-            marznode.operations.update_user(user, old_inbounds=old_inbounds)
+            if user.activated:
+                marznode.operations.update_user(
+                    user, old_inbounds=old_inbounds
+                )
         return response
 
 

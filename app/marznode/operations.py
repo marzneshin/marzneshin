@@ -19,7 +19,7 @@ def update_user(
         old_inbounds = set()
 
     node_inbounds = defaultdict(list)
-    if not user.is_active or remove:
+    if remove:
         for inb in user.inbounds:
             node_inbounds[inb.node_id]
     else:

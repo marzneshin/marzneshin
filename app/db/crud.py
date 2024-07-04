@@ -114,7 +114,7 @@ def get_node_users(
         .join(Inbound.services)
         .join(Service.users)
         .filter(Inbound.node_id == node_id)
-        .filter(User.is_active == True)
+        .filter(User.activated == True)
     )
     return query.all()
 
