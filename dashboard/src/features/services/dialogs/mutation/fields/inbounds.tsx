@@ -5,6 +5,7 @@ import {
     FormLabel,
     FormField,
     Checkbox,
+    ScrollArea,
     EntityFieldCard,
 } from "@marzneshin/components";
 import {
@@ -71,20 +72,22 @@ export const InboundsField = () => {
             render={() => (
                 <FormItem>
                     <FormLabel>{t("inbounds")}</FormLabel>
-                    {inbounds.map((inbound) => (
-                        <FormField
-                            key={inbound.id}
-                            control={form.control}
-                            name="inbound_ids"
-                            render={({ field }) => (
-                                <FormItem key={inbound.id}>
-                                    <FormControl>
-                                        <InboundCard inbound={inbound} field={field} />
-                                    </FormControl>
-                                </FormItem>
-                            )}
-                        />
-                    ))}
+                    <ScrollArea className="flex flex-col justify-start  h-full max-h-[20rem]">
+                        {inbounds.map((inbound) => (
+                            <FormField
+                                key={inbound.id}
+                                control={form.control}
+                                name="inbound_ids"
+                                render={({ field }) => (
+                                    <FormItem key={inbound.id} className="mb-1">
+                                        <FormControl>
+                                            <InboundCard inbound={inbound} field={field} />
+                                        </FormControl>
+                                    </FormItem>
+                                )}
+                            />
+                        ))}
+                    </ScrollArea>
                     <FormMessage />
                 </FormItem>
             )}
