@@ -8,7 +8,7 @@ import {
     RouterUserContext,
     userQueryOptions,
 } from "@marzneshin/features/users";
-import { Suspense } from "react";
+import { Suspense, useMemo } from "react";
 import {
     AlertDialog,
     AlertDialogContent,
@@ -17,8 +17,9 @@ import {
 const UserProvider = () => {
     const { username } = Route.useLoaderData()
     const { data: user, isPending } = useSuspenseQuery(userQueryOptions({ username }))
+    const value = useMemo(() => ({ user, isPending }), [user, isPending])
     return (
-        <RouterUserContext.Provider value={{ user, isPending }}>
+        <RouterUserContext.Provider value={ }>
             <Suspense>
                 <Outlet />
             </Suspense>
