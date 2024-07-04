@@ -7,7 +7,6 @@ from typing import List, Optional, Tuple, Union
 from sqlalchemy import and_, delete, update, select
 from sqlalchemy.orm import Session
 
-from app.config.env import NOTIFY_DAYS_LEFT, NOTIFY_REACHED_USAGE_PERCENT
 from app.db.models import (
     JWT,
     TLS,
@@ -34,14 +33,11 @@ from app.models.service import Service as ServiceModify, ServiceCreate
 from app.models.user import (
     ReminderType,
     UserCreate,
-    UserDataLimitResetStrategy,
+    UserDataUsageResetStrategy,
     UserModify,
     UserStatus,
     UserUsageResponse,
-)
-from app.utils.helpers import (
-    calculate_expiration_days,
-    calculate_usage_percent,
+    UserExpireStrategy,
 )
 
 
@@ -110,19 +106,16 @@ def assure_node_inbounds(db: Session, inbounds: List[Inbound], node_id: int):
 
 def get_node_users(
     db: Session,
-    node_id: Optional[int],
-    statuses: Optional[List[UserStatus]] = None,
+    node_id: int,
 ):
     query = (
         db.query(User.id, User.username, User.key, Inbound)
         .distinct()
-        .where(User.enabled == True)
         .join(Inbound.services)
         .join(Service.users)
         .filter(Inbound.node_id == node_id)
+        .filter(User.activated == True)
     )
-    if isinstance(statuses, list):
-        query = query.filter(User.status.in_(statuses))
     return query.all()
 
 
@@ -210,12 +203,12 @@ UsersSortingOptions = Enum(
         "username": User.username.asc(),
         "used_traffic": User.used_traffic.asc(),
         "data_limit": User.data_limit.asc(),
-        "expire": User.expire.asc(),
+        "expire": User.expire_date.asc(),
         "created_at": User.created_at.asc(),
         "-username": User.username.desc(),
         "-used_traffic": User.used_traffic.desc(),
         "-data_limit": User.data_limit.desc(),
-        "-expire": User.expire.desc(),
+        "-expire": User.expire_date.desc(),
         "-created_at": User.created_at.desc(),
     },
 )
@@ -226,11 +219,16 @@ def get_users(
     offset: Optional[int] = None,
     limit: Optional[int] = None,
     usernames: Optional[List[str]] = None,
-    status: Optional[Union[UserStatus, list]] = None,
     sort: Optional[List[UsersSortingOptions]] = None,
     admin: Optional[Admin] = None,
-    reset_strategy: Optional[Union[UserDataLimitResetStrategy, list]] = None,
-    return_with_count: bool = False,
+    reset_strategy: Optional[Union[UserDataUsageResetStrategy, list]] = None,
+    expire_strategy: (
+        UserExpireStrategy | list[UserExpireStrategy] | None
+    ) = None,
+    is_active: bool | None = None,
+    activated: bool | None = None,
+    expired: bool | None = None,
+    data_limit_reached: bool | None = None,
 ) -> Union[List[User], Tuple[List[User], int]]:
     query = db.query(User)
 
@@ -239,12 +237,6 @@ def get_users(
             query = query.filter(User.username.ilike(f"%{usernames[0]}%"))
         else:
             query = query.filter(User.username.in_(usernames))
-
-    if status:
-        if isinstance(status, list):
-            query = query.filter(User.status.in_(status))
-        else:
-            query = query.filter(User.status == status)
 
     if reset_strategy:
         if isinstance(reset_strategy, list):
@@ -256,23 +248,35 @@ def get_users(
                 User.data_limit_reset_strategy == reset_strategy
             )
 
+    if expire_strategy:
+        if isinstance(expire_strategy, list):
+            query = query.filter(User.expire_strategy.in_(expire_strategy))
+        else:
+            query = query.filter(User.expire_strategy == expire_strategy)
+
+    if isinstance(is_active, bool):
+        query = query.filter(User.is_active == is_active)
+
+    if isinstance(activated, bool):
+        query = query.filter(User.activated == activated)
+
+    if isinstance(expired, bool):
+        query = query.filter(User.expired == expired)
+
+    if isinstance(data_limit_reached, bool):
+        query = query.filter(User.data_limit_reached == data_limit_reached)
+
     if admin:
         query = query.filter(User.admin == admin)
-
-    # count it before applying limit and offset
-    if return_with_count:
-        count = query.count()
 
     if sort:
         query = query.order_by(*(opt.value for opt in sort))
 
     if offset:
         query = query.offset(offset)
+
     if limit:
         query = query.limit(limit)
-
-    if return_with_count:
-        return query.all(), count
 
     return query.all()
 
@@ -307,41 +311,54 @@ def get_user_usages(
 
 def get_users_count(
     db: Session,
-    status: UserStatus | None = None,
     admin: Admin | None = None,
     enabled: bool | None = None,
     online: bool | None = None,
+    expire_strategy: UserExpireStrategy | None = None,
+    is_active: bool | None = None,
+    expired: bool | None = None,
+    data_limit_reached: bool | None = None,
 ):
     query = db.query(User.id)
     if admin:
         query = query.filter(User.admin_id == admin.id)
-    if status:
-        query = query.filter(User.status == status)
+    if is_active:
+        query = query.filter(User.is_active == is_active)
+    if expired:
+        query = query.filter(User.expired == expired)
+    if data_limit_reached:
+        query = query.filter(User.data_limit_reached == data_limit_reached)
     if enabled:
         query = query.filter(User.enabled == enabled)
-    if online:
+    if online is True:
         query = query.filter(
             User.online_at > (datetime.utcnow() - timedelta(seconds=30))
         )
+    elif online is False:
+        query = query.filter(
+            User.online_at < (datetime.utcnow() - timedelta(seconds=30))
+        )
+    if expire_strategy:
+        query = query.filter(User.expire_strategy == expire_strategy)
+
     return query.count()
 
 
 def create_user(db: Session, user: UserCreate, admin: Admin = None):
     dbuser = User(
         username=user.username,
-        # proxies=proxies,
         key=user.key,
+        expire_strategy=user.expire_strategy,
+        expire_date=user.expire_date,
+        usage_duration=user.usage_duration,
+        activation_deadline=user.activation_deadline,
         services=db.query(Service)
         .filter(Service.id.in_(user.service_ids))
         .all(),  # user.services,
-        status=user.status,
         data_limit=(user.data_limit or None),
-        expire=(user.expire or None),
         admin=admin,
         data_limit_reset_strategy=user.data_limit_reset_strategy,
         note=user.note,
-        on_hold_expire_duration=(user.on_hold_expire_duration or None),
-        on_hold_timeout=(user.on_hold_timeout or None),
     )
     db.add(dbuser)
     db.commit()
@@ -356,64 +373,26 @@ def remove_user(db: Session, dbuser: User):
 
 
 def update_user(db: Session, dbuser: User, modify: UserModify):
-    if modify.status is not None:
-        dbuser.status = modify.status
-
     if modify.data_limit is not None:
-        # in case there is modification to a user's data limit
-        dbuser.data_limit = (
-            modify.data_limit or None
-        )  # set it to the new limit
-        if dbuser.status is not UserStatus.expired:
-            # in case the user isn't already disabled/expired
-            if (
-                not dbuser.data_limit
-                or dbuser.used_traffic < dbuser.data_limit
-            ):
-                # in case the user is unlimited or hasn't reached the limit already
-                if dbuser.status != UserStatus.on_hold:
-                    dbuser.status = UserStatus.active
+        dbuser.data_limit = modify.data_limit or None
 
-                if not dbuser.data_limit or (
-                    calculate_usage_percent(
-                        dbuser.used_traffic, dbuser.data_limit
-                    )
-                    < NOTIFY_REACHED_USAGE_PERCENT
-                ):
-                    delete_notification_reminder_by_type(
-                        db, dbuser.id, ReminderType.data_usage
-                    )
-            else:
-                # the user has reached the new data limit
-                dbuser.status = UserStatus.limited
+    if modify.expire_strategy is not None:
+        dbuser.expire_strategy = modify.expire_strategy or None
 
-    if modify.expire is not None:
-        dbuser.expire = modify.expire or None
-        if dbuser.status in (UserStatus.active, UserStatus.expired):
-            if not dbuser.expire or dbuser.expire > datetime.utcnow():
-                dbuser.status = UserStatus.active
-                if not dbuser.expire or (
-                    calculate_expiration_days(dbuser.expire) > NOTIFY_DAYS_LEFT
-                ):
-                    delete_notification_reminder_by_type(
-                        db, dbuser.id, ReminderType.expiration_date
-                    )
-            else:
-                dbuser.status = UserStatus.expired
+    if modify.expire_date is not None:
+        dbuser.expire_date = modify.expire_date or None
 
     if modify.note is not None:
         dbuser.note = modify.note or None
 
     if modify.data_limit_reset_strategy is not None:
-        dbuser.data_limit_reset_strategy = (
-            modify.data_limit_reset_strategy.value
-        )
+        dbuser.data_limit_reset_strategy = modify.data_limit_reset_strategy
 
-    if modify.on_hold_timeout is not None:
-        dbuser.on_hold_timeout = modify.on_hold_timeout
+    if modify.activation_deadline is not None:
+        dbuser.activation_deadline = modify.activation_deadline
 
-    if modify.on_hold_expire_duration is not None:
-        dbuser.on_hold_expire_duration = modify.on_hold_expire_duration
+    if modify.usage_duration is not None:
+        dbuser.usage_duration = modify.usage_duration
 
     if modify.service_ids is not None:
         dbuser.services = (
@@ -432,8 +411,6 @@ def reset_user_data_usage(db: Session, dbuser: User):
 
     dbuser.used_traffic = 0
 
-    if dbuser.status == UserStatus.limited:
-        dbuser.status = UserStatus.active.value
     db.add(dbuser)
 
     db.commit()
@@ -463,16 +440,8 @@ def reset_all_users_data_usage(db: Session, admin: Optional[Admin] = None):
     if admin:
         query = query.filter(User.admin == admin)
 
-    for dbuser in query.all():
-        dbuser.used_traffic = 0
-        if dbuser.status not in [
-            UserStatus.on_hold,
-            UserStatus.expired,
-        ]:
-            dbuser.status = UserStatus.active
-        dbuser.usage_logs.clear()
-        dbuser.node_usages.clear()
-        db.add(dbuser)
+    for db_user in query.all():
+        db_user.used_traffic = 0
 
     db.commit()
 
@@ -486,16 +455,6 @@ def update_user_status(db: Session, dbuser: User, status: UserStatus):
 
 def set_owner(db: Session, dbuser: User, admin: Admin):
     dbuser.admin = admin
-    db.commit()
-    db.refresh(dbuser)
-    return dbuser
-
-
-def start_user_expire(db: Session, dbuser: User):
-    expire = datetime.utcnow() + timedelta(
-        seconds=dbuser.on_hold_expire_duration
-    )
-    dbuser.expire = expire
     db.commit()
     db.refresh(dbuser)
     return dbuser

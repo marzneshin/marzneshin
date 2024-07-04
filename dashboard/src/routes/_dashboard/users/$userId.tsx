@@ -1,46 +1,36 @@
 import {
     createFileRoute,
-    defer,
-    Await,
     Outlet,
 } from "@tanstack/react-router";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { queryClient } from "@marzneshin/utils";
 import {
     RouterUserContext,
-    fetchUser,
+    userQueryOptions,
 } from "@marzneshin/features/users";
-import { Suspense } from "react";
+import { Suspense, useMemo } from "react";
 import {
     AlertDialog,
     AlertDialogContent,
-    Loading
 } from "@marzneshin/components";
 
 const UserProvider = () => {
-    const { user } = Route.useLoaderData()
+    const { username } = Route.useLoaderData()
+    const { data: user, isPending } = useSuspenseQuery(userQueryOptions({ username }))
+    const value = useMemo(() => ({ user, isPending }), [user, isPending])
     return (
-        <Suspense fallback={<Loading />}>
-            <Await promise={user}>
-                {(user) => (
-                    <RouterUserContext.Provider value={{ user }}>
-                        <Suspense>
-                            <Outlet />
-                        </Suspense>
-                    </RouterUserContext.Provider>
-                )}
-            </Await>
-        </Suspense>
+        <RouterUserContext.Provider value={ }>
+            <Suspense>
+                <Outlet />
+            </Suspense>
+        </RouterUserContext.Provider>
     )
 }
 
 export const Route = createFileRoute('/_dashboard/users/$userId')({
     loader: async ({ params }) => {
-        const userPromise = fetchUser({
-            queryKey: ["users", params.userId]
-        });
-
-        return {
-            user: defer(userPromise)
-        }
+        queryClient.ensureQueryData(userQueryOptions({ username: params.userId }))
+        return { username: params.userId };
     },
     errorComponent: () => (
         <AlertDialog open={true}>

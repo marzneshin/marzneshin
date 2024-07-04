@@ -1,10 +1,9 @@
 import asyncio
 import logging
+from contextlib import asynccontextmanager
 from datetime import datetime as dt
 from datetime import timedelta as td
-
 from typing import AsyncGenerator
-from contextlib import asynccontextmanager
 
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from fastapi import FastAPI, Request, status
@@ -82,7 +81,7 @@ app.add_middleware(
 scheduler = AsyncIOScheduler(timezone="UTC")
 scheduler.add_job(record_user_usages, "interval", coalesce=True, seconds=30)
 scheduler.add_job(
-    review_users, "interval", seconds=600, coalesce=True, max_instances=1
+    review_users, "interval", seconds=30, coalesce=True, max_instances=1
 )
 scheduler.add_job(reset_user_data_usage, "interval", coalesce=True, hours=1)
 scheduler.add_job(

@@ -16,9 +16,8 @@ import {
     DATA_LIMIT_METRIC,
     useUsersCreationMutation,
     useUsersUpdateMutation,
+    UserSchema,
 } from "@marzneshin/features/users";
-
-import { UserSchema } from "./schema";
 import { UsernameField, NoteField, ServicesField } from "./fields";
 import { useMutationDialog } from "@marzneshin/hooks";
 import { DataLimitFields, ExpirationMethodFields } from "./sections";
@@ -40,14 +39,10 @@ export const UsersMutationDialog: FC<UsersMutationDialogProps> = ({
     const getDefaultValues = useCallback(
         (): UserMutationType => ({
             service_ids: [],
-            data_limit: undefined,
-            expire: null,
+            expire_strategy: "fixed_date",
             username: "",
             data_limit_reset_strategy: "no_reset",
-            status: "active",
             note: "",
-            on_hold_expire_duration: 0,
-            on_hold_timeout: undefined,
         }),
         [],
     );
@@ -72,8 +67,8 @@ export const UsersMutationDialog: FC<UsersMutationDialogProps> = ({
     return (
         <Dialog open={open} onOpenChange={onOpenChange} defaultOpen={true}>
             <DialogContent className="min-w-full h-full md:h-auto md:min-w-[42rem]">
-                <ScrollArea className="flex flex-col justify-between h-full">
-                    <DialogHeader>
+                <ScrollArea className="flex flex-col justify-between h-full ">
+                    <DialogHeader className="mb-3">
                         <DialogTitle className="text-primary">
                             {entity
                                 ? t("page.users.dialogs.edition.title")
@@ -81,15 +76,15 @@ export const UsersMutationDialog: FC<UsersMutationDialogProps> = ({
                         </DialogTitle>
                     </DialogHeader>
                     <Form {...form}>
-                        <form onSubmit={handleSubmit} className=" m-2">
+                        <form onSubmit={handleSubmit} >
                             <div className="flex-col grid-cols-2 gap-2 sm:flex md:grid h-full">
-                                <div>
+                                <div className="space-y-3">
                                     <UsernameField disabled={!!entity?.username} />
-                                    <Separator className="my-3"/>
+                                    <Separator />
                                     <DataLimitFields />
-                                    <Separator className="my-3"/>
+                                    <Separator />
                                     <ExpirationMethodFields entity={entity} />
-                                    <Separator className="my-3"/>
+                                    <Separator />
                                     <NoteField />
                                 </div>
                                 <VStack>

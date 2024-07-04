@@ -27,8 +27,7 @@ from app.db import GetDB, crud
 from app.models.proxy import (
     InboundHostSecurity,
 )
-from app.models.user import UserResponse
-from app.models.user import UserStatus
+from app.models.user import UserResponse, UserExpireStrategy
 from app.utils.keygen import gen_uuid, gen_password
 from app.utils.system import get_public_ip, readable_size
 
@@ -36,10 +35,7 @@ SERVER_IP = get_public_ip()
 
 STATUS_EMOJIS = {
     "active": "✅",
-    "expired": "⌛️",
-    "limited": "🪫",
-    "disabled": "❌",
-    "on_hold": "🔌",
+    "inactive": "❌",
 }
 
 subscription_handlers = {
@@ -118,12 +114,11 @@ def format_time_left(seconds_left: int) -> str:
 
 
 def setup_format_variables(extra_data: dict) -> dict:
+    expire_strategy = extra_data.get("expire_strategy")
+    expire_datetime = extra_data.get("expire_date")
+    usage_duration = extra_data.get("usage_duration")
 
-    user_status = extra_data.get("status")
-    expire_datetime = extra_data.get("expire")
-    on_hold_expire_duration = extra_data.get("on_hold_expire_duration")
-
-    if user_status != UserStatus.on_hold:
+    if expire_strategy != UserExpireStrategy.START_ON_FIRST_USE:
         if expire_datetime is not None:
             seconds_left = (expire_datetime - dt.utcnow()).total_seconds()
             expire_date = expire_datetime.date()
@@ -135,24 +130,15 @@ def setup_format_variables(extra_data: dict) -> dict:
             days_left = (expire_datetime - dt.utcnow()).days + 1
             time_left = format_time_left(seconds_left)
         else:
-            days_left = "∞"
-            time_left = "∞"
-            expire_date = "∞"
-            jalali_expire_date = "∞"
+            days_left, time_left, expire_date, jalali_expire_date = "∞" * 4
     else:
-        if (
-            on_hold_expire_duration is not None
-            and on_hold_expire_duration >= 0
-        ):
-            days_left = timedelta(seconds=on_hold_expire_duration).days
-            time_left = format_time_left(on_hold_expire_duration)
+        if usage_duration is not None and usage_duration >= 0:
+            days_left = timedelta(seconds=usage_duration).days
+            time_left = format_time_left(usage_duration)
             expire_date = "-"
             jalali_expire_date = "-"
         else:
-            days_left = "∞"
-            time_left = "∞"
-            expire_date = "∞"
-            jalali_expire_date = "∞"
+            days_left, time_left, expire_date, jalali_expire_date = "∞" * 4
 
     if extra_data.get("data_limit"):
         data_limit = readable_size(extra_data["data_limit"])

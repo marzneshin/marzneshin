@@ -14,3 +14,5 @@ export * from "./loading";
 export * from "./entity-field-card";
 export * from "./logo";
 export * from "./awaiting";
+export * from "./boolean-pill";
+export * from "./info-table";

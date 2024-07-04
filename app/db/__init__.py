@@ -2,7 +2,6 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
 from .base import Base, SessionLocal, engine  # noqa
-
 from .crud import (
     create_admin,
     create_notification_reminder,  # noqa
@@ -27,9 +26,7 @@ from .crud import (
     update_user,
     update_user_status,
     update_user_sub,
-    start_user_expire,
 )
-
 from .models import JWT, System, User  # noqa
 
 
@@ -56,7 +53,6 @@ __all__ = [
     "remove_user",
     "update_user",
     "update_user_status",
-    "start_user_expire",
     "update_user_sub",
     "revoke_user_sub",
     "set_owner",

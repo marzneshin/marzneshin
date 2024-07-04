@@ -6,32 +6,32 @@ from app import marznode
 from .grpcio import MarzNodeGRPCIO
 from .grpclib import MarzNodeGRPCLIB
 from ..models.node import NodeConnectionBackend
-from ..models.user import UserStatus
 
 if TYPE_CHECKING:
     from app.db import User as DBUser
 
 
-async def update_user(user: "DBUser", old_inbounds: set | None = None):
-    """updates a user on all nodes
-    even though this isn't efficient it is extremely precise"""
+def update_user(
+    user: "DBUser", old_inbounds: set | None = None, remove: bool = False
+):
+    """updates a user on all related nodes"""
     if old_inbounds is None:
         old_inbounds = set()
 
     node_inbounds = defaultdict(list)
-    if user.status in (UserStatus.on_hold, UserStatus.active):
-        for inb in user.inbounds:
-            node_inbounds[inb.node_id].append(inb.tag)
-    else:
+    if remove:
         for inb in user.inbounds:
             node_inbounds[inb.node_id]
+    else:
+        for inb in user.inbounds:
+            node_inbounds[inb.node_id].append(inb.tag)
 
     for inb in old_inbounds:
         node_inbounds[inb[0]]
 
     for node_id, tags in node_inbounds.items():
         if marznode.nodes.get(node_id):
-            asyncio.create_task(
+            asyncio.ensure_future(
                 marznode.nodes[node_id].update_user(user=user, inbounds=tags)
             )
 
@@ -41,7 +41,9 @@ async def remove_user(user: "DBUser"):
 
     for node_id in node_ids:
         if marznode.nodes.get(node_id):
-            await marznode.nodes[node_id].update_user(user=user, inbounds=[])
+            asyncio.ensure_future(
+                marznode.nodes[node_id].update_user(user=user, inbounds=[])
+            )
 
 
 async def remove_node(node_id: int):

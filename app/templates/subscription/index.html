@@ -35,17 +35,7 @@
             color: white;
         }
 
-        .limited {
-            background-color: #F44336;
-            color: white;
-        }
-
-        .expired {
-            background-color: #FF9800;
-            color: white;
-        }
-
-        .disabled {
+        .inactive {
             background-color: #9E9E9E;
             color: white;
         }
@@ -73,79 +63,81 @@
 </head>
 
 <body>
-    <h1>User Information</h1>
-    <p>Username: {{ user.username }}</p>
-    <p>Status: <span
-            class="status {% if user.status.value == 'active' %}active{% elif user.status.value == 'limited' %}limited{% elif user.status.value == 'expired' %}expired{% elif user.status.value == 'disabled' %}disabled{% endif %}">{{
-            user.status.value }}</span></p>
-    <p>Data Limit: {% if not user.data_limit %}∞{% else %}{{ user.data_limit | bytesformat }}{% endif %}</p>
-    <p>Data Used: {{ user.used_traffic | bytesformat }}{% if user.data_limit_reset_strategy != 'no_reset' %} (resets
-        every {{ user.data_limit_reset_strategy.value }}){% endif %}</p>
-    <p>Expiration Date:
-        {% if not user.expire %}
-        ∞
-        {% else %}
-        {% set current_datetime = now() %}
-        {% set remaining_days = ((user.expire - current_datetime).days) %}
-        {{ user.expire | datetime }} ({{ remaining_days | int }} days
-        remaining)
-        {% endif %}</p>
+<h1>User Information</h1>
+<p>Username: {{ user.username }} <span class="status {% if user.is_active %}active{% else %}inactive{% endif %}">{{
+    "Active" if user.is_active else "Inactive"}}</span></p>
 
-    {% if user.status == 'active' or user.status == 'on_hold' %}
-    <h2>Links:</h2>
-    <ul>
-        {% for link in links %}
-        <li>
-            <input type="text" value="{{ link }}" readonly>
-            <button class="copy-button" onclick="copyLink('{{ link }}', this)">Copy</button>
-            <button class="qr-button" data-link="{{ link }}">QR Code</button>
-        </li>
-        {% endfor %}
-    </ul>
-    <div class="qr-popup" id="qrPopup">
-        <div class="qr-close-button">
-            <button onclick="closeQrPopup()">X</button>
-        </div>
-        <div id="qrCodeContainer"></div>
+<p>Data Used: {{ user.used_traffic | bytesformat }}{% if user.data_limit_reset_strategy != 'no_reset' %} (resets
+    every {{ user.data_limit_reset_strategy.value }}){% endif %}</p>
+<p>Data Limit: {% if not user.data_limit %}∞{% else %}{{ user.data_limit | bytesformat }}{% endif %}</p>
+<p>Expiration Date:
+    {% if user.expire_strategy == "never" %}
+    never
+    {% elif user.expire_strategy == "start_on_first_use" %}
+    {{ user.usage_duration // 3600 // 24}} days after the first use
+    {% else %}
+    {% set current_datetime = now() %}
+    {% set remaining_days = ((user.expire_date - current_datetime).days) %}
+    {{ user.expire_date | datetime }} ({{ remaining_days | int }} days
+    remaining)
+    {% endif %}</p>
+
+{% if user.is_active %}
+<h2>Links:</h2>
+<ul>
+    {% for link in links %}
+    <li>
+        <input type="text" value="{{ link }}" readonly>
+        <button class="copy-button" onclick="copyLink('{{ link }}', this)">Copy</button>
+        <button class="qr-button" data-link="{{ link }}">QR Code</button>
+    </li>
+    {% endfor %}
+</ul>
+<div class="qr-popup" id="qrPopup">
+    <div class="qr-close-button">
+        <button onclick="closeQrPopup()">X</button>
     </div>
-    {% endif %}
+    <div id="qrCodeContainer"></div>
+</div>
+{% endif %}
 
-    <script>
-        function copyLink(link, button) {
-            const tempInput = document.createElement('input');
-            tempInput.setAttribute('value', link);
-            document.body.appendChild(tempInput);
-            tempInput.select();
-            document.execCommand('copy');
-            document.body.removeChild(tempInput);
+<script>
 
-            button.textContent = 'Copied!';
-            setTimeout(function () {
-                button.textContent = 'Copy';
-            }, 1500);
-        }
+    function copyLink(link, button) {
+        const tempInput = document.createElement('input');
+        tempInput.setAttribute('value', link);
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        document.execCommand('copy');
+        document.body.removeChild(tempInput);
 
-        const qrButtons = document.querySelectorAll('.qr-button');
-        const qrPopup = document.getElementById('qrPopup');
+        button.textContent = 'Copied!';
+        setTimeout(function () {
+            button.textContent = 'Copy';
+        }, 1500);
+    }
 
-        qrButtons.forEach((qrButton) => {
-            qrButton.addEventListener('click', () => {
-                const link = qrButton.dataset.link;
-                while (qrCodeContainer.firstChild) {
-                    qrCodeContainer.removeChild(qrCodeContainer.firstChild);
-                }
-                const qrCode = new QRCode(qrCodeContainer, {
-                    text: link,
-                    width: 256,
-                    height: 256
-                });
-                qrPopup.style.display = 'block';
+    const qrButtons = document.querySelectorAll('.qr-button');
+    const qrPopup = document.getElementById('qrPopup');
+
+    qrButtons.forEach((qrButton) => {
+        qrButton.addEventListener('click', () => {
+            const link = qrButton.dataset.link;
+            while (qrCodeContainer.firstChild) {
+                qrCodeContainer.removeChild(qrCodeContainer.firstChild);
+            }
+            const qrCode = new QRCode(qrCodeContainer, {
+                text: link,
+                width: 256,
+                height: 256
             });
+            qrPopup.style.display = 'block';
         });
-        function closeQrPopup() {
-            document.getElementById('qrPopup').style.display = 'none';
-        }
-    </script>
+    });
+    function closeQrPopup() {
+        document.getElementById('qrPopup').style.display = 'none';
+    }
+</script>
 </body>
 
 </html>

@@ -3,20 +3,21 @@ import { useFormContext } from "react-hook-form";
 
 export const useDataLimit = () => {
     const form = useFormContext();
-    const data_limit = form.watch("data_limit");
+    const dataLimit = form.watch("data_limit");
 
-    const [isDataLimitEnabled, setIsDataLimitEnabled] = useState(data_limit !== 0);
+    const [isDataLimitEnabled, setIsDataLimitEnabled] = useState(dataLimit !== 0);
 
     useEffect(() => {
-        setIsDataLimitEnabled(data_limit !== 0);
-    }, [data_limit]);
+        setIsDataLimitEnabled(dataLimit !== 0);
+    }, [dataLimit]);
 
     useEffect(() => {
         if (!isDataLimitEnabled) {
             form.setValue("data_limit", 0);
             form.setValue("data_limit_reset_strategy", "no_reset");
         }
-    }, [isDataLimitEnabled, form]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isDataLimitEnabled]);
 
     return { isDataLimitEnabled, setIsDataLimitEnabled };
 };

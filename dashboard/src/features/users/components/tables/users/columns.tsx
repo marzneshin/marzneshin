@@ -1,10 +1,12 @@
 import type { ColumnDef } from "@tanstack/react-table";
-import type { UserType } from "@marzneshin/features/users";
 import {
-    UsersStatusBadge,
-    UsersStatus,
+    type UserType,
     OnlineStatus,
     UserUsedTraffic,
+    UserActivatedPill,
+    UserEnabledPill,
+    UserExpireStrategyPill,
+    UserExpirationValue
 } from "@marzneshin/features/users";
 import { DataTableColumnHeader } from "@marzneshin/components/data-table/column-header";
 import i18n from "@marzneshin/features/i18n";
@@ -15,7 +17,6 @@ import {
 } from "@marzneshin/components";
 import { LinkIcon } from "lucide-react";
 import { getSubscriptionLink } from "@marzneshin/utils";
-import { format } from "date-fns";
 
 interface ColumnAction {
     onDelete: (user: UserType) => void;
@@ -36,14 +37,15 @@ export const columns = (actions: ColumnAction): ColumnDef<UserType>[] => [
         ),
     },
     {
-        accessorKey: "status",
-        header: ({ column }) => (
-            <DataTableColumnHeader title={i18n.t("status")} column={column} />
-        ),
-        cell: ({ row }) => (
-            <UsersStatusBadge status={UsersStatus[row.original.status]} />
-        ),
+        accessorKey: "activated",
         enableSorting: false,
+        header: ({ column }) => (
+            <DataTableColumnHeader
+                title={i18n.t("activated")}
+                column={column}
+            />
+        ),
+        cell: ({ row }) => <UserActivatedPill user={row.original} />,
     },
     {
         accessorKey: "used_traffic",
@@ -56,17 +58,36 @@ export const columns = (actions: ColumnAction): ColumnDef<UserType>[] => [
         cell: ({ row }) => <UserUsedTraffic user={row.original} />,
     },
     {
-        accessorKey: "expire",
+        accessorKey: "enabled",
+        enableSorting: false,
+        header: ({ column }) => (
+            <DataTableColumnHeader
+                title={i18n.t("enabled")}
+                column={column}
+            />
+        ),
+        cell: ({ row }) => <UserEnabledPill user={row.original} />,
+    },
+    {
+        accessorKey: "expire_strategy",
+        header: ({ column }) => (
+            <DataTableColumnHeader
+                title={i18n.t("page.users.expire_method")}
+                column={column}
+            />
+        ),
+        cell: ({ row }) => <UserExpireStrategyPill user={row.original} />,
+        enableSorting: false,
+    },
+    {
+        accessorKey: "expire_date",
         header: ({ column }) => (
             <DataTableColumnHeader
                 title={i18n.t("page.users.expire_date")}
                 column={column}
             />
         ),
-        cell: ({ row }) =>
-            row.original.expire
-                ? format(row.original.expire.toLocaleString(), "PPP")
-                : "Unlimited",
+        cell: ({ row }) => <UserExpirationValue user={row.original} />,
     },
     {
         id: "actions",

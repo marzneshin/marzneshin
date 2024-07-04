@@ -8,7 +8,7 @@ import {
     EntityQueryKeyType
 } from "@marzneshin/features/entity-table";
 
-export type SortUserBy = "username" | "used_traffic" | "data_limit" | "expire" | "created_at"
+export type SortUserBy = "username" | "used_traffic" | "data_limit" | "expire_date" | "created_at"
 
 export async function fetchUsers({ queryKey }: EntityQueryKeyType): FetchEntityReturn<UserType> {
     return fetch(`/users`, {

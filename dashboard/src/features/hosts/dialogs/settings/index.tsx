@@ -6,9 +6,7 @@ import {
     SheetTitle,
     Table,
     TableBody,
-    TableCell,
-    TableHead,
-    TableRow,
+    TableRowWithCell,
 } from "@marzneshin/components"
 import { useTranslation } from "react-i18next"
 import { HostType } from "../.."
@@ -37,62 +35,13 @@ export const HostSettingsDialog: FC<HostsSettingsDialogProps> = ({ onOpenChange,
                 </SheetHeader>
                 <Table>
                     <TableBody>
-                        <TableRow>
-                            <TableHead>
-                                {t('remark')}
-                            </TableHead>
-                            <TableCell>
-                                {entity.remark}
-                            </TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableHead>
-                                {t('address')}
-                            </TableHead>
-                            <TableCell>
-                                {entity.address}
-                            </TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableHead>
-                                {t('port')}
-                            </TableHead>
-                            <TableCell>
-                                {entity.port}
-                            </TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableHead>
-                                {t('host')}
-                            </TableHead>
-                            <TableCell>
-                                {entity.host}
-                            </TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableHead>
-                                {t('path')}
-                            </TableHead>
-                            <TableCell>
-                                {entity.path}
-                            </TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableHead>
-                                {t('sni')}
-                            </TableHead>
-                            <TableCell>
-                                {entity.sni}
-                            </TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableHead>
-                                {t('alpn')}
-                            </TableHead>
-                            <TableCell>
-                                {entity.alpn}
-                            </TableCell>
-                        </TableRow>
+                        <TableRowWithCell label={t('remark')} value={entity.remark} />
+                        <TableRowWithCell label={t('address')} value={entity.address} />
+                        <TableRowWithCell label={t('port')} value={entity.port} />
+                        <TableRowWithCell label={t('host')} value={entity.host} />
+                        <TableRowWithCell label={t('path')} value={entity.path} />
+                        <TableRowWithCell label={t('sni')} value={entity.sni} />
+                        <TableRowWithCell label={t('alpn')} value={entity.alpn} />
                     </TableBody>
                 </Table>
             </SheetContent>

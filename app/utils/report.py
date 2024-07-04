@@ -3,7 +3,6 @@ from typing import Optional
 
 from app import telegram
 from app.db import Session, create_notification_reminder
-from app.db.models import UserStatus
 from app.models.admin import Admin
 from app.models.user import ReminderType, UserResponse
 from app.utils.notification import (
@@ -14,7 +13,6 @@ from app.utils.notification import (
     UserDataUsageReset,
     UserDeleted,
     UserEnabled,
-    UserExpired,
     UserLimited,
     UserSubscriptionRevoked,
     UserUpdated,
@@ -24,7 +22,7 @@ from app.utils.notification import (
 
 async def status_change(
     username: str,
-    status: UserStatus,
+    activation: bool,
     user: UserResponse,
     by: Optional[Admin] = None,
 ) -> None:
@@ -32,23 +30,15 @@ async def status_change(
         await telegram.report_status_change(username, status)
     except Exception:
         pass
-    if status == UserStatus.limited:
+    if activation is False:
         await notify(
             UserLimited(
                 username=username,
-                action=Notification.Type.user_limited,
+                action=Notification.Type.user_disabled,
                 user=user,
             )
         )
-    elif status == UserStatus.expired:
-        await notify(
-            UserExpired(
-                username=username,
-                action=Notification.Type.user_expired,
-                user=user,
-            )
-        )
-    elif status == UserStatus.active:
+    elif activation is True:
         await notify(
             UserEnabled(
                 username=username,
@@ -64,7 +54,7 @@ async def user_created(user: UserResponse, user_id: int, by: Admin) -> None:
         user_id=user_id,
         username=user.username,
         by=by.username,
-        expire_date=user.expire,
+        expire_date=user.expire_date,
         data_limit=user.data_limit,
         # proxies=[]
         services=user.services,
@@ -84,7 +74,7 @@ async def user_updated(user: UserResponse, by: Admin) -> None:
     try:
         await telegram.report_user_modification(
             username=user.username,
-            expire_date=user.expire,
+            expire_date=user.expire_date,
             data_limit=user.data_limit,
             services=user.services,
             by=by.username,

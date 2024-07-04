@@ -5,63 +5,23 @@ import {
     CardTitle,
     Table,
     TableBody,
-    TableCell,
-    TableRow,
+    TableRowWithCell,
+    DateTableRow,
 } from "@marzneshin/components";
 import { FC } from "react";
 import {
-    UserType,
-    UsersStatus,
-    UsersStatusBadge,
+    type UserProp,
+    UserEnabledPill,
+    UserUsedTraffic,
+    UserActivatedPill,
+    UserDataLimitReachedPill,
 } from "@marzneshin/features/users";
-import { CircularProgress } from "@nextui-org/progress";
 import { useTranslation } from "react-i18next";
-import { format, isDate, isValid } from "date-fns";
 
-interface UserInfoTableProps {
-    entity: UserType;
-}
-
-const TableRowWithCell: FC<{
-    label: string;
-    value: string | number | JSX.Element;
-}> = ({ label, value }) => (
-    <TableRow>
-        <TableCell>{label}</TableCell>
-        <TableCell>{value}</TableCell>
-    </TableRow>
-);
-
-const DateTableRow: FC<{ label: string; date: Date | string }> = ({
-    label,
-    date,
-}) => {
-    let formattedDate = "";
-    if (date && isValid(date)) {
-        formattedDate = format(date, "PPP");
-    }
-    return <TableRowWithCell label={label} value={formattedDate} />;
-};
-
-const CircularProgressBarRow: FC<{
-    label: string;
-    value: number;
-    limit: number;
-}> = ({ label, value, limit }) => (
-    <TableRow>
-        <TableCell>{label}</TableCell>
-        <TableCell>
-            <CircularProgress size="sm" value={(value / limit) * 100} />
-        </TableCell>
-    </TableRow>
-);
-
-export const UserInfoTable: FC<UserInfoTableProps> = ({ entity }) => {
+export const UserInfoTable: FC<UserProp> = ({ user: entity }) => {
     const { t } = useTranslation();
-    const expireDate = entity.expire
-        ? isDate(entity.expire)
-            ? entity.expire
-            : new Date(entity.expire)
+    const expireDate = entity.expire_date
+        ? new Date(entity.expire_date)
         : null;
 
     return (
@@ -74,35 +34,48 @@ export const UserInfoTable: FC<UserInfoTableProps> = ({ entity }) => {
                     <TableBody>
                         <TableRowWithCell label={t("username")} value={entity.username} />
                         <TableRowWithCell
-                            label={t("status")}
-                            value={<UsersStatusBadge status={UsersStatus[entity.status]} />}
+                            label={t("enabled")}
+                            value={<UserEnabledPill user={entity} />}
                         />
-                        {expireDate && entity.on_hold_expire_duration === 0 ? (
-                            <DateTableRow
-                                label={t("page.users.expire_date")}
-                                date={expireDate}
-                            />
-                        ) : (
-                            <>
-                                <TableRowWithCell
-                                    label={t("page.users.on_hold_expire_duration")}
-                                    value={entity.on_hold_expire_duration}
+                        <TableRowWithCell
+                            label={t("activated")}
+                            value={<UserActivatedPill user={entity} />}
+                        />
+                        {{
+                            fixed_date: (
+                                <DateTableRow
+                                    label={t("page.users.expire_date")}
+                                    date={expireDate}
                                 />
-                                {entity.on_hold_timeout && (
-                                    <DateTableRow
-                                        label={t("page.users.expire_date")}
-                                        date={entity.on_hold_timeout}
+                            ),
+                            start_on_first_use: (
+                                <>
+                                    <TableRowWithCell
+                                        label={t("page.users.usage_duration")}
+                                        value={(entity.usage_duration ? entity.usage_duration : 0) / 86400}
                                     />
-                                )}
-                            </>
-                        )}
-                        {entity.data_limit && (
-                            <CircularProgressBarRow
-                                label={t("page.users.used_traffic")}
-                                value={entity.used_traffic}
-                                limit={entity.data_limit}
-                            />
-                        )}
+                                    <DateTableRow
+                                        label={t("page.users.activation_deadline")}
+                                        date={entity.activation_deadline}
+                                    />
+                                </>
+                            ),
+                            never: (
+                                <TableRowWithCell
+                                    label={t("page.users.expire_method")}
+                                    value={t('never')}
+                                />
+                            )
+                        }[entity.expire_strategy]}
+
+                        <TableRowWithCell
+                            label={t("page.users.used_traffic")}
+                            value={<UserUsedTraffic user={entity} />}
+                        />
+                        <TableRowWithCell
+                            label={t("page.users.data_limit_reached")}
+                            value={<UserDataLimitReachedPill user={entity} />}
+                        />
                         <DateTableRow
                             label={t("page.users.online_at")}
                             date={entity.online_at}

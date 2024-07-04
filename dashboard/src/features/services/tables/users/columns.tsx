@@ -3,11 +3,12 @@ import { DataTableColumnHeader } from "@marzneshin/components/data-table/column-
 import i18n from "@marzneshin/features/i18n"
 import {
     UserType,
-    UsersStatus,
-    UsersStatusBadge
+    UserActivatedPill,
+    UserEnabledPill,
+    UserExpirationValue,
+    userTrafficSortingFn,
 } from "@marzneshin/features/users"
 import { CircularProgress } from "@nextui-org/progress";
-import { format } from "date-fns";
 import { Badge } from "@marzneshin/components";
 
 export const columns: ColumnDef<UserType>[] = [
@@ -16,9 +17,24 @@ export const columns: ColumnDef<UserType>[] = [
         header: ({ column }) => <DataTableColumnHeader title={i18n.t('username')} column={column} />,
     },
     {
-        accessorKey: 'status',
-        header: ({ column }) => <DataTableColumnHeader title={i18n.t('status')} column={column} />,
-        cell: ({ row }) => <UsersStatusBadge status={UsersStatus[row.original.status ? row.original.status : 'error']} />,
+        accessorKey: "activated",
+        header: ({ column }) => (
+            <DataTableColumnHeader
+                title={i18n.t("activated")}
+                column={column}
+            />
+        ),
+        cell: ({ row }) => <UserActivatedPill user={row.original} />,
+    },
+    {
+        accessorKey: "enabled",
+        header: ({ column }) => (
+            <DataTableColumnHeader
+                title={i18n.t("enabled")}
+                column={column}
+            />
+        ),
+        cell: ({ row }) => <UserEnabledPill user={row.original} />,
     },
     {
         accessorKey: "used_traffic",
@@ -35,19 +51,16 @@ export const columns: ColumnDef<UserType>[] = [
                 return <Badge>No Limit</Badge>
             }
         },
-        sortingFn: (rowA, rowB) => {
-            if (rowA.original.data_limit && rowB.original.data_limit) {
-                const rowAUsedTraffic = (rowA.original.used_traffic / rowA.original.data_limit) * 100
-                const rowBUsedTraffic = (rowA.original.used_traffic / rowA.original.data_limit) * 100
-                return rowAUsedTraffic > rowBUsedTraffic ? 1 : rowBUsedTraffic > rowAUsedTraffic ? -1 : 0
-            } else {
-                return 0
-            }
-        }
+        sortingFn: (rowA, rowB) => userTrafficSortingFn(rowA.original, rowB.original)
     },
     {
-        accessorKey: 'expire',
-        header: ({ column }) => <DataTableColumnHeader title={i18n.t('expire')} column={column} />,
-        cell: ({ row }) => row.original.expire && format(row.original.expire, "PPP")
-    }
+        accessorKey: "expire",
+        header: ({ column }) => (
+            <DataTableColumnHeader
+                title={i18n.t("page.users.expire_date")}
+                column={column}
+            />
+        ),
+        cell: ({ row }) => <UserExpirationValue user={row.original} />,
+    },
 ];
