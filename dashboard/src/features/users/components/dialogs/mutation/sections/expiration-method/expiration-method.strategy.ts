@@ -42,7 +42,7 @@ export class FixedStrategy
     implements ExpirationMethodStrategy {
 
     apply(form: ReturnType<typeof useFormContext>) {
-        form.setValue("status", 'active');
+        form.setValue("expire_strategy", 'fixed_date');
         form.setValue("on_hold_expire_duration", 0);
         form.setValue("activation_deadline", null);
         this.clearErrors(form);
