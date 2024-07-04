@@ -19,7 +19,7 @@ const UserProvider = () => {
     const { data: user, isPending } = useSuspenseQuery(userQueryOptions({ username }))
     const value = useMemo(() => ({ user, isPending }), [user, isPending])
     return (
-        <RouterUserContext.Provider value={ }>
+        <RouterUserContext.Provider value={value}>
             <Suspense>
                 <Outlet />
             </Suspense>
