@@ -18,6 +18,7 @@ const UserOpen = () => {
             open={settingsDialogOpen}
             onOpenChange={setSettingsDialogOpen}
             entity={value.user}
+            isPending={!!value.isPending}
             onClose={() => navigate({ to: "/users" })}
         />
     );

@@ -1,10 +1,10 @@
 import { type FC } from "react";
 
 interface AwaitingProps {
-    isFetching: boolean;
-    isNotFound: boolean;
-    NotFound: JSX.Element;
-    Skeleton: JSX.Element;
+    isFetching?: boolean;
+    isNotFound?: boolean;
+    NotFound?: JSX.Element;
+    Skeleton?: JSX.Element;
     Component: JSX.Element;
 }
 

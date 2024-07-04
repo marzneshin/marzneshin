@@ -13,7 +13,7 @@ interface UsersStatusEnabledQuery {
 }
 
 export async function userStatusEnabled({ user, enabled }: UsersStatusEnabledQuery): Promise<UserMutationType> {
-    const action = enabled ? 'enable' : 'disable'
+    const action = enabled ? 'enable' : 'disable';
     return fetch(`/users/${user.username}/${action}`, { method: 'post' }).then((user) => {
         return user;
     });
@@ -34,6 +34,7 @@ const handleSuccess = (value: UserMutationType) => {
             description: i18n.t('events.user_status.success.desc')
         })
     queryClient.invalidateQueries({ queryKey: [UsersStatusEnabledFetchKey] })
+    queryClient.invalidateQueries({ queryKey: [UsersStatusEnabledFetchKey, value.username] })
 }
 
 
