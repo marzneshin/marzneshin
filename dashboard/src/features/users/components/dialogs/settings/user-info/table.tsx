@@ -7,12 +7,12 @@ import {
     TableBody,
     TableRowWithCell,
     DateTableRow,
-    CircularProgressBarRow
 } from "@marzneshin/components";
 import { FC } from "react";
 import {
     type UserProp,
     UserEnabledPill,
+    UserUsedTraffic,
     UserActivatedPill,
     UserDataLimitReachedPill,
 } from "@marzneshin/features/users";
@@ -68,12 +68,10 @@ export const UserInfoTable: FC<UserProp> = ({ user: entity }) => {
                             )
                         }[entity.expire_strategy]}
 
-                        <CircularProgressBarRow
+                        <TableRowWithCell
                             label={t("page.users.used_traffic")}
-                            value={entity.used_traffic}
-                            limit={entity.data_limit}
+                            value={<UserUsedTraffic user={entity} />}
                         />
-
                         <TableRowWithCell
                             label={t("page.users.data_limit_reached")}
                             value={<UserDataLimitReachedPill user={entity} />}
