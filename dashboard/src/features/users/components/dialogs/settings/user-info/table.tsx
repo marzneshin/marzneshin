@@ -60,7 +60,12 @@ export const UserInfoTable: FC<UserProp> = ({ user: entity }) => {
                                     />
                                 </>
                             ),
-                            never: t('never')
+                            never: (
+                                <TableRowWithCell
+                                    label={t("page.users.expire_method")}
+                                    value={t('never')}
+                                />
+                            )
                         }[entity.expire_strategy]}
 
                         <CircularProgressBarRow
