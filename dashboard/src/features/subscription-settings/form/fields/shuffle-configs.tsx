@@ -8,13 +8,13 @@ import {
 import { useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-export const TemplateOnAcceptanceField = () => {
+export const ShuffleConfigsField = () => {
     const { t } = useTranslation()
     const form = useFormContext();
     return (
         <FormField
             control={form.control}
-            name="template_on_acceptance"
+            name="shuffle_configs"
             render={({ field }) => (
                 <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md py-2">
                     <FormControl>
@@ -25,7 +25,7 @@ export const TemplateOnAcceptanceField = () => {
                     </FormControl>
                     <div className="space-y-1 leading-none">
                         <FormLabel>
-                            {t("page.settings.subscription-settings.template-on-acceptance")}
+                            {t("page.settings.subscription-settings.shuffle-configs")}
                         </FormLabel>
                     </div>
                 </FormItem>

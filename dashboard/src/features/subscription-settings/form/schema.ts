@@ -9,6 +9,9 @@ export const schema = z.object({
         })
     ),
     // url_prefix: z.string().default(""),
+    shuffle_configs: z.boolean(),
+    placeholder_if_disabled: z.boolean(),
+    placeholder_remark: z.string(),
     template_on_acceptance: z.boolean().default(false),
     profile_title: z.string().default(""),
     support_link: z.string().default(""),

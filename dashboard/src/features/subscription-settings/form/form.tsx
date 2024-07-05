@@ -19,7 +19,10 @@ import {
     TemplateOnAcceptanceField,
     ProfileTitleField,
     SupportLinkField,
-    UpdateIntervalField
+    UpdateIntervalField,
+    PlaceholderRemarkField,
+    PlaceholderIfDisabledField,
+    ShuffleConfigsField
 } from "./fields";
 import { NoRulesAlert } from "./no-rules-alert";
 import {
@@ -80,6 +83,9 @@ export function SubscriptionRulesForm() {
                     <SupportLinkField />
                 </div>
                 <TemplateOnAcceptanceField />
+                <PlaceholderRemarkField />
+                <PlaceholderIfDisabledField />
+                <ShuffleConfigsField />
                 <Separator className="my-3" />
                 <h4 className="text-lg mt-2">
                     {t("page.settings.subscription-settings.subscription-title")}
