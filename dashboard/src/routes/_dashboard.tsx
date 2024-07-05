@@ -57,7 +57,7 @@ export const DashboardLayout = () => {
                 end={
                     <>
                         <GithubRepo variant={isDesktop ? "full" : "mini"} />
-                        {!(isDesktop && isSudo) && (<Link to="/settings">
+                        {(!isDesktop && isSudo()) && (<Link to="/settings">
                             <Settings className="bg-gray-800 text-secondary dark:hover:bg-secondary-foreground dark:hover:text-secondary dark:text-secondary-foreground size-10 rounded-md text-2xl p-2" />
                         </Link>
                         )}
