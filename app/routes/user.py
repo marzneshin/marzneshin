@@ -207,7 +207,7 @@ async def modify_user(
         inbound_change and new_user.is_active
     ) or active_before != active_after:
         marznode.operations.update_user(
-            new_user, old_inbounds, remove=~db_user.is_active
+            new_user, old_inbounds, remove=not db_user.is_active
         )
         db_user.activated = db_user.is_active
         db.commit()
