@@ -72,13 +72,22 @@ def upgrade() -> None:
                 batch_op.drop_column(old)
     else:
         op.alter_column(
-            "users", "on_hold_timeout", new_column_name="activation_deadline"
+            "users",
+            "on_hold_timeout",
+            new_column_name="activation_deadline",
+            existing_type=sa.DateTime,
         )
-        op.alter_column("users", "expire", new_column_name="expire_date")
+        op.alter_column(
+            "users",
+            "expire",
+            new_column_name="expire_date",
+            existing_type=sa.DateTime,
+        )
         op.alter_column(
             "users",
             "on_hold_expire_duration",
             new_column_name="usage_duration",
+            existing_type=sa.BigInteger,
         )
     # ### end Alembic commands ###
     users_table = table(
@@ -130,12 +139,23 @@ def downgrade() -> None:
         ),
     )
     op.alter_column(
-        "users", "activation_deadline", new_column_name="on_hold_timeout"
+        "users",
+        "activation_deadline",
+        new_column_name="on_hold_timeout",
+        existing_type=sa.DateTime,
     )
     op.alter_column(
-        "users", "usage_duration", new_column_name="on_hold_expire_duration"
+        "users",
+        "usage_duration",
+        new_column_name="on_hold_expire_duration",
+        existing_type=sa.BigInteger,
     )
-    op.alter_column("users", "expire_date", new_column_name="expire")
+    op.alter_column(
+        "users",
+        "expire_date",
+        new_column_name="expire",
+        existing_type=sa.DateTime,
+    )
     op.drop_column("users", "expire_strategy")
     op.drop_column("users", "activated")
     # ### end Alembic commands ###
