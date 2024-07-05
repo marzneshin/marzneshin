@@ -78,11 +78,11 @@
 
 @layer base {
   .font-body {
-    font-family: "Lato";
+    font-family: "Lato", sans-serif;
   }
 
   .font-header {
-    font-family: "Ubuntu";
+    font-family: "Ubuntu", sans-serif;
   }
 
   .vstack {
