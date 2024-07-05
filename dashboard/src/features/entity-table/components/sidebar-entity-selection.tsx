@@ -38,29 +38,27 @@ export const SidebarEntitySelection = () => {
                 </TableRow>
             </TableHeader>
             <TableBody>
-                <ScrollArea className="w-full h-full p-2">
-                    <ToggleGroup
-                        type="single"
-                        onValueChange={(value) => setSidebarEntityId(value ==="" ? undefined : value)}
-                        defaultValue={String(sidebarEntityId)}
-                    >
-                        <div className="flex flex-col w-full gap-2">
-                            {sidebarEntities.map((entity: any) => (
-                                <ToggleGroupItem
-                                    className="px-0 w-full h-full"
-                                    value={String(entity.id)}
-                                    key={String(entity.id)}
-                                    id={String(entity.id)}>
-                                    <SidebarEntityCard
-                                        {...sidebarCardProps}
-                                        entity={entity}
-                                        checked={sidebarEntityId === String(entity.id)}
-                                    />
-                                </ToggleGroupItem>
-                            ))}
-                        </div>
-                    </ToggleGroup>
-                </ScrollArea>
+                <ToggleGroup
+                    type="single"
+                    onValueChange={(value) => setSidebarEntityId(value === "" ? undefined : value)}
+                    defaultValue={String(sidebarEntityId)}
+                >
+                    <ScrollArea className="flex flex-col justify-start p-1 gap-3 h-full max-h-[20rem]">
+                        {sidebarEntities.map((entity: any) => (
+                            <ToggleGroupItem
+                                className="px-0 w-full h-full"
+                                value={String(entity.id)}
+                                key={String(entity.id)}
+                                id={String(entity.id)}>
+                                <SidebarEntityCard
+                                    {...sidebarCardProps}
+                                    entity={entity}
+                                    checked={sidebarEntityId === String(entity.id)}
+                                />
+                            </ToggleGroupItem>
+                        ))}
+                    </ScrollArea>
+                </ToggleGroup>
             </TableBody>
         </Table>
     )

@@ -39,27 +39,28 @@ export const DashboardLayout = () => {
     return (
         <div className="flex flex-col w-screen h-screen">
             <Header
-                start={isDesktop ? (
+                start={
                     <>
-
                         <Link to="/">
                             <HeaderLogo />
                         </Link>
-                        <ToggleButton
-                            collapsed={collapsed}
-                            onToggle={toggleCollapse}
-                        />
+                        {isDesktop && (
+
+                            <ToggleButton
+                                collapsed={collapsed}
+                                onToggle={toggleCollapse}
+                            />
+                        )}
                     </>
-                ) : (
-                    <Link to="/settings">
-                        <Settings className="bg-gray-800 text-secondary dark:hover:bg-secondary-foreground dark:hover:text-secondary dark:text-secondary-foreground size-10 rounded-md text-2xl p-2" />
-                    </Link>
-                )
                 }
                 center={<CommandBox />}
                 end={
                     <>
                         <GithubRepo variant={isDesktop ? "full" : "mini"} />
+                        {(!isDesktop && isSudo()) && (<Link to="/settings">
+                            <Settings className="bg-gray-800 text-secondary dark:hover:bg-secondary-foreground dark:hover:text-secondary dark:text-secondary-foreground size-10 rounded-md text-2xl p-2" />
+                        </Link>
+                        )}
                         <HeaderMenu />
                     </>
                 }

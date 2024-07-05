@@ -4,6 +4,7 @@ import { Link } from "@tanstack/react-router";
 import { FC } from "react";
 import { Box, Home, Server, ServerCog, UsersIcon } from 'lucide-react';
 import { useIsCurrentRoute } from "@marzneshin/hooks";
+import { cn } from "@marzneshin/utils";
 
 type BottomMenuItemProps = Omit<SidebarItem, 'isParent' | 'subItem'>
 
@@ -63,7 +64,7 @@ export const DashboardBottomMenu = ({ variant = "admin" }: { variant: "sudo-admi
     const { isCurrentRouteActive } = useIsCurrentRoute()
     const items = variant === "sudo-admin" ? sudoAdminItems : adminItems;
     return (
-        <div className="w-full flex flex-row justify-between items-center">
+        <div className={cn("w-full flex flex-row  items-center", variant == "admin" ? "justify-evenly" : "justify-between")}>
             {items.map((item: BottomMenuItemProps) => (
                 <BottomMenuItem
                     active={isCurrentRouteActive(item.to)}
