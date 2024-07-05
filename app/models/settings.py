@@ -25,6 +25,9 @@ class SubscriptionSettings(BaseModel):
     profile_title: str
     support_link: str
     update_interval: int
+    shuffle_configs: bool = False
+    placeholder_if_disabled: bool = True
+    placeholder_remark: str = "disabled"
     rules: list[SubscriptionRule]
 
 
