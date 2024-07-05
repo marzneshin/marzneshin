@@ -57,7 +57,7 @@ jobs:
         working-directory: ./dashboard/
 
       - name: Build Dashboard
-        run: npm run build -- --outDir dist --base '/dashboard/'
+        run: npm run build --if-present -- --outDir 'dist' --assetsDir 'static' 
         working-directory: ./dashboard/
 
       - name: Set up QEMU
