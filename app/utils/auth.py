@@ -25,7 +25,7 @@ def create_admin_token(username: str, is_sudo=False) -> str:
 def get_admin_payload(token: str) -> Union[dict, None]:
     try:
         payload = jwt.decode(token, get_secret_key(), algorithms=["HS256"])
-    except jwt.DecodeError:
+    except jwt.InvalidTokenError:
         return
 
     username: str = payload.get("sub")
