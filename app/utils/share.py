@@ -36,9 +36,9 @@ from app.utils.system import get_public_ip, readable_size
 
 SERVER_IP = get_public_ip()
 
-STATUS_EMOJIS = {
-    "active": "✅",
-    "inactive": "❌",
+ACTIVITY_EMOJIS = {
+    True: "✅",
+    False: "❌",
 }
 
 subscription_handlers = {
@@ -186,10 +186,9 @@ def setup_format_variables(extra_data: dict) -> dict:
             data_left = 0
         data_left = readable_size(data_left)
     else:
-        data_limit = "∞"
-        data_left = "∞"
+        data_limit, data_left = "∞" * 2
 
-    status_emoji = STATUS_EMOJIS.get(extra_data.get("status")) or ""
+    status_emoji = ACTIVITY_EMOJIS.get(extra_data.get("is_active")) or ""
 
     format_variables = defaultdict(
         lambda: "<missing>",
