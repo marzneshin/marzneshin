@@ -67,8 +67,11 @@
   },
   "page": {
     "settings": {
-      "template-on-acceptance": "Template on Acceptance",
       "subscription-settings": {
+        "template-on-acceptance": "Template on Acceptance",
+        "placeholder-remark": "Placeholder Remark",
+        "placeholder-if-disabled": "Placeholder if Disabled",
+        "shuffle-configs": "Shuffle Configs",
         "url-prefix": "URL Prefix",
         "profile-title": "Profile Title",
         "support-link": "Support Link",

@@ -74,18 +74,15 @@
     --input: 217.2 32.6% 17.5%;
     --ring: 212.7 26.8% 83.9%;
   }
-
-
 }
-
 
 @layer base {
   .font-body {
-    font-family: 'Lato';
+    font-family: "Lato", sans-serif;
   }
 
   .font-header {
-    font-family: 'Ubuntu';
+    font-family: "Ubuntu", sans-serif;
   }
 
   .vstack {

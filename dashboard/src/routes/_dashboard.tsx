@@ -52,7 +52,7 @@ export const DashboardLayout = () => {
                     </>
                 ) : (
                     <Link to="/settings">
-                        <Settings className="bg-gray-800 size-10 rounded-md text-2xl p-2" />
+                        <Settings className="bg-gray-800 text-secondary dark:hover:bg-secondary-foreground dark:hover:text-secondary dark:text-secondary-foreground size-10 rounded-md text-2xl p-2" />
                     </Link>
                 )
                 }

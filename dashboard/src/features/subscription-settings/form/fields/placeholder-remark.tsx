@@ -1,30 +1,29 @@
 import {
-    FormControl,
     FormField,
     FormItem,
     FormLabel,
-    FormMessage,
     Input,
+    FormControl,
     Popover,
     PopoverTrigger,
     PopoverContent,
 } from "@marzneshin/components";
-import { PopoverGuide } from '@marzneshin/features/hosts';
+import { PopoverGuide } from "@marzneshin/features/hosts";
+import { InfoIcon } from 'lucide-react';
 import { useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { InfoIcon } from 'lucide-react';
 
-export const RemarkField = () => {
+export const PlaceholderRemarkField = () => {
     const { t } = useTranslation()
-    const form = useFormContext()
+    const form = useFormContext();
     return (
         <FormField
             control={form.control}
-            name="remark"
+            name="placeholder_remark"
             render={({ field }) => (
                 <FormItem>
                     <FormLabel className="flex flex-row items-center gap-2">
-                        {t('name')}
+                        {t("page.settings.subscription-settings.placeholder-remark")}
                         <Popover>
                             <PopoverTrigger>
                                 <InfoIcon className="size-5" />
@@ -35,9 +34,8 @@ export const RemarkField = () => {
                         </Popover>
                     </FormLabel>
                     <FormControl>
-                        <Input {...field} />
+                        <Input className="h-8" {...field} />
                     </FormControl>
-                    <FormMessage />
                 </FormItem>
             )}
         />

@@ -3,18 +3,18 @@ from collections import defaultdict
 
 from fastapi import APIRouter
 from fastapi import Header, HTTPException, Path, Request, Response
-from fastapi.responses import HTMLResponse
+from starlette.responses import HTMLResponse
 
-from app.config.env import (
-    SUBSCRIPTION_PAGE_TEMPLATE,
-)
 from app.db import crud
 from app.db.models import Settings
 from app.dependencies import DBDep, SubUserDep, StartDateDep, EndDateDep
 from app.models.settings import SubscriptionSettings
 from app.models.user import UserResponse
-from app.templates import render_template
-from app.utils.share import encode_title, generate_subscription
+from app.utils.share import (
+    encode_title,
+    generate_subscription,
+    generate_subscription_template,
+)
 
 router = APIRouter(prefix="/sub", tags=["Subscription"])
 
@@ -39,7 +39,9 @@ def get_subscription_user_info(user: UserResponse) -> dict:
         "upload": 0,
         "download": user.used_traffic,
         "total": user.data_limit,
-        "expire": user.expire,
+        "expire": (
+            user.expire_date if user.expire_strategy == "fixed_date" else None
+        ),
     }
 
 
@@ -66,14 +68,8 @@ def user_subscription(
         subscription_settings.template_on_acceptance
         and "text/html" in request.headers.get("Accept", [])
     ):
-        links = generate_subscription(
-            user=db_user, config_format="links"
-        ).split()
         return HTMLResponse(
-            render_template(
-                SUBSCRIPTION_PAGE_TEMPLATE,
-                {"user": user, "links": links},
-            )
+            generate_subscription_template(db_user, subscription_settings)
         )
 
     response_headers = {
@@ -92,13 +88,9 @@ def user_subscription(
     for rule in subscription_settings.rules:
         if re.match(rule.pattern, user_agent):
             if rule.result.value == "template":
-                links = generate_subscription(
-                    user=db_user, config_format="links"
-                ).split()
                 return HTMLResponse(
-                    render_template(
-                        SUBSCRIPTION_PAGE_TEMPLATE,
-                        {"user": user, "links": links},
+                    generate_subscription_template(
+                        db_user, subscription_settings
                     )
                 )
             elif rule.result.value == "block":
@@ -114,6 +106,10 @@ def user_subscription(
                 user=db_user,
                 config_format=config_format,
                 as_base64=b64,
+                use_placeholder=not user.is_active
+                and subscription_settings.placeholder_if_disabled,
+                placeholder_remark=subscription_settings.placeholder_remark,
+                shuffle=subscription_settings.shuffle_configs,
             )
             return Response(
                 content=conf,
@@ -137,6 +133,15 @@ def user_get_usage(
     usages = crud.get_user_usages(db, db_user, start_date, end_date)
 
     return {"usages": usages, "username": db_user.username}
+
+
+client_type_mime_type = {
+    "sing-box": "application/json",
+    "clash-meta": "text/yaml",
+    "clash": "text/yaml",
+    "xray": "application/json",
+    "v2ray": "text/plain",
+}
 
 
 @router.get("/{username}/{key}/{client_type}")
@@ -169,39 +174,17 @@ def user_subscription_with_client_type(
         ),
     }
 
-    if client_type == "clash-meta":
-        conf = generate_subscription(user=db_user, config_format="clash-meta")
-        return Response(
-            content=conf, media_type="text/yaml", headers=response_headers
-        )
-
-    elif client_type == "sing-box":
-        conf = generate_subscription(user=db_user, config_format="sing-box")
-        return Response(
-            content=conf,
-            media_type="application/json",
-            headers=response_headers,
-        )
-    elif client_type == "clash":
-        conf = generate_subscription(user=db_user, config_format="clash")
-        return Response(
-            content=conf, media_type="text/yaml", headers=response_headers
-        )
-
-    elif client_type == "v2ray":
-        conf = generate_subscription(
-            user=db_user, config_format="links", as_base64=True
-        )
-        return Response(
-            content=conf, media_type="text/plain", headers=response_headers
-        )
-    elif client_type == "xray":
-        return Response(
-            content=generate_subscription(user=db_user, config_format="xray"),
-            media_type="application/json",
-            headers=response_headers,
-        )
-    else:
-        raise HTTPException(
-            status_code=400, detail="Invalid subscription type"
-        )
+    conf = generate_subscription(
+        user=db_user,
+        config_format="links" if client_type == "v2ray" else client_type,
+        as_base64=client_type == "v2ray",
+        use_placeholder=not user.is_active
+        and subscription_settings.placeholder_if_disabled,
+        placeholder_remark=subscription_settings.placeholder_remark,
+        shuffle=subscription_settings.shuffle_configs,
+    )
+    return Response(
+        content=conf,
+        media_type=client_type_mime_type[client_type],
+        headers=response_headers,
+    )

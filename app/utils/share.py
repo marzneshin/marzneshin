@@ -22,20 +22,23 @@ from app.config.env import (
     XRAY_SUBSCRIPTION_TEMPLATE,
     SINGBOX_SUBSCRIPTION_TEMPLATE,
     CLASH_SUBSCRIPTION_TEMPLATE,
+    SUBSCRIPTION_PAGE_TEMPLATE,
 )
 from app.db import GetDB, crud
 from app.models.proxy import (
     InboundHostSecurity,
 )
+from app.models.settings import SubscriptionSettings
 from app.models.user import UserResponse, UserExpireStrategy
+from app.templates import render_template
 from app.utils.keygen import gen_uuid, gen_password
 from app.utils.system import get_public_ip, readable_size
 
 SERVER_IP = get_public_ip()
 
-STATUS_EMOJIS = {
-    "active": "✅",
-    "inactive": "❌",
+ACTIVITY_EMOJIS = {
+    True: "✅",
+    False: "❌",
 }
 
 subscription_handlers = {
@@ -57,14 +60,32 @@ handlers_templates = {
 }
 
 
+def generate_subscription_template(
+    db_user, subscription_settings: SubscriptionSettings
+):
+    print(subscription_settings.shuffle_configs)
+    links = generate_subscription(
+        user=db_user,
+        config_format="links",
+        use_placeholder=not db_user.is_active
+        and subscription_settings.placeholder_if_disabled,
+        placeholder_remark=subscription_settings.placeholder_remark,
+        shuffle=subscription_settings.shuffle_configs,
+    ).split()
+    return render_template(
+        SUBSCRIPTION_PAGE_TEMPLATE,
+        {"user": UserResponse.model_validate(db_user), "links": links},
+    )
+
+
 def generate_subscription(
     user: "UserResponse",
     config_format: Literal["links", "xray", "clash-meta", "clash", "sing-box"],
     as_base64: bool = False,
+    use_placeholder: bool = False,
+    placeholder_remark: str = "disabled",
+    shuffle: bool = False,
 ) -> str:
-
-    inbounds = user.inbounds
-    key = user.key
     extra_data = UserResponse.model_validate(user).model_dump(
         exclude={"subscription_url", "services", "inbounds"}
     )
@@ -81,9 +102,27 @@ def generate_subscription(
     else:
         subscription_handler = subscription_handler_class()
 
-    config = process_inbounds_and_tags(
-        inbounds, key, format_variables, conf=subscription_handler
-    )
+    if use_placeholder:
+        placeholder_config = V2Data(
+            "vmess",
+            placeholder_remark.format_map(format_variables),
+            "127.0.0.1",
+            80,
+        )
+        configs = [placeholder_config]
+
+    else:
+        configs = generate_user_configs(
+            user.inbounds,
+            user.key,
+            format_variables,
+        )
+
+    if shuffle:
+        random.shuffle(configs)
+
+    subscription_handler.add_proxies(configs)
+    config = subscription_handler.render()
 
     return (
         config if not as_base64 else base64.b64encode(config.encode()).decode()
@@ -147,10 +186,9 @@ def setup_format_variables(extra_data: dict) -> dict:
             data_left = 0
         data_left = readable_size(data_left)
     else:
-        data_limit = "∞"
-        data_left = "∞"
+        data_limit, data_left = "∞" * 2
 
-    status_emoji = STATUS_EMOJIS.get(extra_data.get("status")) or ""
+    status_emoji = ACTIVITY_EMOJIS.get(extra_data.get("is_active")) or ""
 
     format_variables = defaultdict(
         lambda: "<missing>",
@@ -171,13 +209,14 @@ def setup_format_variables(extra_data: dict) -> dict:
     return format_variables
 
 
-def process_inbounds_and_tags(
+def generate_user_configs(
     inbounds: list,
     key: str,
     format_variables: dict,
-    conf=None,
 ) -> Union[List, str]:
+
     salt = secrets.token_hex(8)
+    configs = []
 
     for inb in inbounds:
         inb_id, inbound, protocol, tag = (
@@ -248,8 +287,9 @@ def process_inbounds_and_tags(
                 data.fragment_packets = host.fragment["packets"]
                 data.fragment_length = host.fragment["length"]
                 data.fragment_interval = host.fragment["interval"]
-            conf.add_proxies([data])
-    return conf.render()
+            configs.append(data)
+
+    return configs
 
 
 def encode_title(text: str) -> str:
