@@ -56,6 +56,7 @@ def upgrade() -> None:
                             "result": "xray",
                         },
                         {"pattern": "^v2rayNG/", "result": "base64-links"},
+                        {"pattern": "^[Ss]treisand", "result": "xray"},
                         {"pattern": ".*", "result": "base64-links"},
                     ],
                 },
