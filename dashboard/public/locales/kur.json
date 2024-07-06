@@ -3,7 +3,7 @@
   "status": "Dox",
   "address": "Edrês",
   "users": "Bekarhêneran",
-  "nodes": "Girêkan",
+  "nodes": "Nodekan",
   "services": "Rajekan",
   "hosts": "Hostkan",
   "username": "Nawî Bekarhêneran",
@@ -15,11 +15,31 @@
   "actions": "Fermankan",
   "settings": "Sazkarîyekan",
   "logs": "Tomarekan",
+  "note": "Têbînî",
   "config": "Kanfîg",
-  "open": "Kirnewe",
-  "delete": "Sirrînewe",
+  "tag": "Tag",
+  "protocol": "Konûs",
+  "online": "Serhêll",
+  "offline": "Derhêll",
+  "not_connected": "Piçrraw",
+  "apply": "Guncandin",
   "port": "Port",
-  "create": "Dirust bike",
+  "mux": "Mux",
+  "fragment": "Fragment",
+  "enabled": "Çalake",
+  "activated": "Bizvandî",
+  "unlimited": "bêsnûr",
+  "left": "Mawe",
+  "reached": "Tewawbowe",
+  "inactive": "Nabizvand",
+  "active": "Bizvandî",
+  "cancel": "Hellweşênerewe",
+  "disabled": "Naçalak",
+  "language": "Ziman",
+  "theme": "Wapêşandan",
+  "pattern": "Şêwe",
+  "result": "Berhem",
+  "create": "Dirust kirdin",
   "path": "Path",
   "host": "Host",
   "alpn": "ALPN",
@@ -39,77 +59,111 @@
   "dark": "Tarîk",
   "system": "Sîstim",
   "advanced-options": "Bijardikanî pêşkewtû",
+  "deselect": "Hellweşandinewey",
+  "view": "Şêwey",
+  "certificate": "certificate",
+  "support-us": {
+    "title": "piştgîrîman biken",
+    "desc": "marznêşîn nermekallayekî serçawekirawe û azad, legellman bin û be bexşîn pişitgîrî xotan nîşan biden.",
+    "donate": "pêşkeş"
+  },
   "page": {
     "settings": {
+      "subscription-settings": {
+        "template-on-acceptance": "template on acceptance",
+        "placeholder-remark": "placeholder remark",
+        "placeholder-if-disabled": "placeholder if disabled",
+        "shuffle-configs": "rêkixstnekanî têkellaw",
+        "url-prefix": "url prefix",
+        "profile-title": "nawnîşanî pirrofaylî",
+        "support-link": "lînkî pişitgîrî",
+        "update-interval": "update interval",
+        "add-rule": "add rule",
+        "reset-local-changes": "reset changes",
+        "title": "rêkixstnekanî beşdarîkirdin",
+        "subscription-title": "subscription rules",
+        "subscription-desc": "yasakanî beşdarîkirdinit be rêkupêkî ziyad bike.",
+        "alert": {
+          "title": "hîç yasayek nîye",
+          "desc": "hîç yasayek bo beşdarîkirdin diyarî nekirawe"
+        }
+      },
       "certificate": {
-        "copy": "Kopî Birrwaname",
-        "error": "Birrwaname berdest nîye",
-        "copied": "Birrwaname Kopî kira"
+        "copy": "kopî birrwaname",
+        "error": "birrwaname berdest nîye",
+        "copied": "birrwaname kopî kira"
       }
     },
     "login": {
       "username": {
         "error": {
-          "isRequired": "Nawî bekarhêner pêwîste"
+          "isrequired": "nawî bekarhêner pêwîste"
         }
       },
       "password": {
         "error": {
-          "is-required": "Têperwişe pêwîste"
+          "is-required": "têperwişe pêwîste"
         }
       }
     },
     "nodes": {
       "settings": {
-        "title": "Sazkarîyekanî Node",
-        "detail": "Wurdekaryekan",
+        "title": "sazkarîyekanî node",
+        "detail": "zanyarî ziyatir",
         "log-container": {
-          "title": "Xray logs"
+          "title": "tomarî xray"
         }
       },
       "dialogs": {
         "creation": {
-          "title": "Nodes Creation"
+          "title": "ziyad kirdin node"
         },
         "deletion": {
-          "title": "Nodes Deletion"
+          "title": "labirdin node"
         },
         "edition": {
-          "title": "Nodes Edition"
+          "title": "gorîn node"
         }
       },
-      "usage_coefficient": "Usage Coefficient",
-      "connection_backend": "Backend Connection",
-      "connection_backend_desc": "Used for remote tls connections",
+      "usage_coefficient": "rêjey bekarhênan",
+      "connection_backend": "peywendî backend",
+      "connection_backend_desc": "eme bo peywendîyekanî tls le dûrewe bekardêt",
       "certificate-alert": {
-        "title": "Nodes Certificate Configuration",
-        "desc": "If you aim to configure your nodes certificate, checkout settings page.",
-        "click": "Click Here"
+        "title": "rêkixstnî birrwanamey girêkan",
+        "desc": "eger amanict eweye birrwanamey girêkant rêkbxeyt, laperrey rêkixstnekanî pişkinîn bike.",
+        "click": "destirrageyiştin be certificate"
       }
     },
     "services": {
       "settings": {
-        "title": "Servicecs Settings",
-        "detail": "Details"
+        "title": "rêkixstnekanî services",
+        "detail": "zanyarî ziyatir"
       },
       "dialogs": {
         "creation": {
-          "title": "Services Creation"
+          "title": "dirust kirdin service"
         },
         "deletion": {
-          "title": "Services Deletion"
+          "title": "sirînewey service"
         },
         "edition": {
-          "title": "Services Edition"
+          "title": "gorîn service"
         }
       }
     },
     "users": {
+      "data_limit_reached": "Sinûrî data geyişte",
+      "traffic": "Traffic",
+      "never": "Hergîz",
+      "fixed_date": "Berwarî cêgîr",
+      "on_first_use": "Ragîraw",
+      "usage_duration": "Mawey Bekarhênan",
+      "activation_deadline": "Diwamollet",
       "note-placeholder": "Têbînî leser bekarhêner",
-      "data_limit": "Sinûrî data",
+      "data_limit": "sinûrî data",
       "used_traffic": "Traffic bekarhêndiraw",
       "data_limit_reset_strategy": "Şêwazî sirrinewey sinûrî data",
-      "online_at": "Online Le",
+      "online_at": "Serhêll Le",
       "expire_date": "Katî beserçûn",
       "unlimited": "Bêsinûr",
       "limited": "Sinûrdar",
@@ -120,32 +174,32 @@
       "reset_usage": "Rêsitkirdinî bekarhênraw",
       "revoke_subscription": "Hellweşandinewey Beşdarîkirdn",
       "on_hold_expire_duration": "Ragîraw",
-      "on_hold_timeout": "Kotayî hatnî ragirtn",
+      "on_hold_timeout": "Kotayî hatinî ragirtin",
       "settings": {
         "subscription_link": {
-          "copied": "Subscription Link Copied",
-          "copy": "Copy Subscription Link",
-          "error": "Unable to copy Subscription Link"
+          "copied": "Lînkî beşdarîkirdn kopî kira",
+          "copy": "Lînkî beşdarîkirdn kopî bike",
+          "error": "Natwanrêt besterî beşdarîkirdin kopî bikrêt"
         }
       },
       "services-alert": {
-        "title": "No Service were found",
-        "desc": "Make sure you create services to enable your users with inbounds to connect with.",
-        "click": "Click Here"
+        "title": "Hîç service nedozrawetewe",
+        "desc": "Dillnyabe ke Service dirust dekeyt bo ewey bekarhênerant ke inboundis yan heye bitwanin peywendîyan pêwe biken.",
+        "click": "Kirtey êre bike"
       },
       "dialogs": {
         "edition": {
-          "title": "Users Edition"
+          "title": "Gorîn Bekarhêner"
         },
         "creation": {
-          "title": "Users Creation"
+          "title": "Dirust kirdin Bekarhêner"
         },
         "deletion": {
-          "title": "Users Deletion"
+          "title": "Sirînewey Bekarhêner"
         },
         "mutation": {
           "note": {
-            "desc": "Leave a note about your user"
+            "desc": "Têbînîyek leser bekarhênereket becêbhêlle"
           }
         }
       }
@@ -155,9 +209,9 @@
         "interval": "Interval",
         "length": "Length",
         "packets": "Packets",
-        "length-error": "Length can not exceed 32 char and must be number-number",
-        "interval-error": "Interval can not exceed 32 char and must be number-number",
-        "packets-error": "Packets can not exceed 32 char and must be number-number or be tlshello"
+        "length-error": "Length natwanêt le 32 pît zyatir bêt û debêt be şewey jimare-jimare bêt",
+        "interval-error": "Interval natwanêt le 32 pît zyatir bêt û debêt be şewey jimare-jimare bêt",
+        "packets-error": "Packets natwanêt le 32 pît zyatir bêt û debêt be şewey jimare-jimare bêt yan tlshello"
       },
       "popover-guide": {
         "title": "Using this setting, you are able to assign specific address for each inbound.",
@@ -215,7 +269,7 @@
         },
         "mutation": {
           "allowinsecure": {
-            "alert": "Due to security concerns, it is not recommended to allow Insecure"
+            "alert": "Behoy nîgeranîye emnîyekanewe, pêşinyar dekrêt em bijardeye çalak bêt"
           }
         }
       }
