@@ -32,7 +32,7 @@ export const SidebarEntitySelection = () => {
                             className="p-1"
                             onMouseDown={() => setSidebarEntityId(undefined)}
                         >
-                            Unselect
+                            {t('deselect')}
                         </Button>
                     </TableHead>
                 </TableRow>

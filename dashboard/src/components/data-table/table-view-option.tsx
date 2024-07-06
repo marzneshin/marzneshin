@@ -28,7 +28,7 @@ export function DataTableViewOptions<TData>({
                     className="ml-auto mr-2 lg:flex"
                 >
                     <MixerHorizontalIcon className="mr-2 w-4 h-4" />
-                    View
+                    {t('view')}
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-[150px]">
