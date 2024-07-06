@@ -2,7 +2,6 @@ import asyncio
 from collections import defaultdict
 from datetime import datetime
 
-from grpclib import GRPCError
 from sqlalchemy import and_, select, insert, update, bindparam
 
 from app import marznode
@@ -115,7 +114,7 @@ async def get_users_stats(
 ) -> tuple[int, list[dict]]:
     try:
         params = list()
-        for stat in await node.fetch_users_stats():
+        for stat in await asyncio.wait_for(node.fetch_users_stats(), 10):
             if stat.usage:
                 params.append({"uid": stat.uid, "value": stat.usage})
         return node_id, params
