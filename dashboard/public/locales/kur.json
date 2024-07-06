@@ -28,14 +28,14 @@
   "fragment": "Fragment",
   "enabled": "Çalake",
   "activated": "Bizvandî",
-  "unlimited": "Unlimited",
-  "left": "Left",
-  "reached": "Reached",
-  "inactive": "Inactive",
-  "active": "Active",
-  "cancel": "Cancel",
-  "disabled": "Disabled",
-  "language": "Language",
+  "unlimited": "bêsnûr",
+  "left": "Mawe",
+  "reached": "Tewawbowe",
+  "inactive": "Nabizvand",
+  "active": "Bizvandî",
+  "cancel": "Hellweşênerewe",
+  "disabled": "Naçalak",
+  "language": "Ziman",
   "theme": "Wapêşandan",
   "pattern": "Şêwe",
   "result": "Berhem",
@@ -152,11 +152,18 @@
       }
     },
     "users": {
-      "note-placeholder": "têbînî leser bekarhêner",
+      "data_limit_reached": "Sinûrî data geyişte",
+      "traffic": "Traffic",
+      "never": "Hergîz",
+      "fixed_date": "Berwarî cêgîr",
+      "on_first_use": "Ragîraw",
+      "usage_duration": "Mawey Bekarhênan",
+      "activation_deadline": "Diwamollet",
+      "note-placeholder": "Têbînî leser bekarhêner",
       "data_limit": "sinûrî data",
-      "used_traffic": "traffic bekarhêndiraw",
+      "used_traffic": "Traffic bekarhêndiraw",
       "data_limit_reset_strategy": "Şêwazî sirrinewey sinûrî data",
-      "online_at": "Online Le",
+      "online_at": "Serhêll Le",
       "expire_date": "Katî beserçûn",
       "unlimited": "Bêsinûr",
       "limited": "Sinûrdar",
@@ -202,9 +209,9 @@
         "interval": "Interval",
         "length": "Length",
         "packets": "Packets",
-        "length-error": "Length can not exceed 32 char and must be number-number",
-        "interval-error": "Interval can not exceed 32 char and must be number-number",
-        "packets-error": "Packets can not exceed 32 char and must be number-number or be tlshello"
+        "length-error": "Length natwanêt le 32 pît zyatir bêt û debêt be şewey jimare-jimare bêt",
+        "interval-error": "Interval natwanêt le 32 pît zyatir bêt û debêt be şewey jimare-jimare bêt",
+        "packets-error": "Packets natwanêt le 32 pît zyatir bêt û debêt be şewey jimare-jimare bêt yan tlshello"
       },
       "popover-guide": {
         "title": "Using this setting, you are able to assign specific address for each inbound.",
@@ -262,7 +269,7 @@
         },
         "mutation": {
           "allowinsecure": {
-            "alert": "Due to security concerns, it is not recommended to allow Insecure"
+            "alert": "Behoy nîgeranîye emnîyekanewe, pêşinyar dekrêt em bijardeye çalak bêt"
           }
         }
       }
