@@ -47,7 +47,7 @@ export const UserInfoTable: FC<UserProp> = ({ user: entity }) => {
                             value={<UserDataLimitReachedPill user={entity} />}
                         />
                         <TableRowWithCell
-                            label={t("page.users.expired")}
+                            label={t("expired")}
                             value={<UserExpiredPill user={entity} />}
                         />
                         {{
