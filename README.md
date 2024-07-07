@@ -141,13 +141,6 @@ If you are eager to run the project using the source code, check the section bel
 <details markdown="1">
 <summary><h3>Manual install (advanced)</h3></summary>
 
-Install xray on your machine
-
-You can install it using [Xray-install](https://github.com/XTLS/Xray-install)
-
-```bash
-bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install
-```
 
 Clone this project and install the dependencies (you'd need Python >= 3.10)
 
