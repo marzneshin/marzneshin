@@ -4,7 +4,6 @@ import {
     OnlineStatus,
     UserUsedTraffic,
     UserActivatedPill,
-    UserEnabledPill,
     UserExpireStrategyPill,
     UserExpirationValue
 } from "@marzneshin/features/users";
