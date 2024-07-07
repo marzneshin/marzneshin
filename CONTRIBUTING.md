@@ -50,9 +50,48 @@ black .
 
 ## Frontend
 
+The frontend follows a feature-oriented development structure. Features are essentially
+components, hooks, logics, services which provide user-experience that it coupled with domain
+and UI functionality. 
+
+### Features
+`features` folder encapsulate all features. Features can be categorized in few groups, **Core domain**, **Support**. 
+Core domain features deliver a set of solutions to the problem the application intened to resolve. Meanwhile 
+Support features provide a set of solutions that are independent from domain model, however, they are necessary 
+for the application to fully deliver the experience the user expect.
+
+### Generic Components
+
+`components` folder is a place for react generic components that will be reused by features.
+The same logic goes for `hooks`, `types`, folder.
+
+### Atomic components 
+
+`components/ui` folder is a place for atomic components that are the backbone of the application.
+These components are based on  shadcn component template, however, depending when you are reading this,
+we probably have diverged a lot.
+
+### Utils
+
+These functions are generic and reused across codebase, although, they will be transfered to their 
+own generic folder or feature folder as they grow in complexity and code usage.
+
+### Routes and pages
+
+`routes` folder is tanstack routing folder, containg pages and routing logic.
+
+├── routes               # @tanstack/react-router routing 
+├── features
+│   └── users            # core domain feature
+│   └── nodes            # core domain feature
+│   └── hosts            # core domain feature
+│   └── entity-table     # support feature
+│   └── github-repo      # support feature
+├── components
+│   └── ui               # atomic components
+
 To build the frontend you'll need the following dependencies:
 
-- npm
 - pnpm
 
 then run `make dashboard-deps && make dashboard build` for it to build; or `make dashboard-dev` for development
