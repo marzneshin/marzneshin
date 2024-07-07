@@ -67,9 +67,9 @@
   "subscription": "اشتراک",
   "subscription_link": "لینک اشتراک",
   "fingerprint": "فینگرپرینت",
-  "expired": "",
-  "finished": "",
-  "valid": "",
+  "expired": "انقضا",
+  "finished": "اتمام",
+  "valid": "مانده",
   "page": {
     "settings": {
       "subscription-settings": {
