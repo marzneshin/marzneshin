@@ -31,7 +31,7 @@
   "host": "Host",
   "alpn": "ALPN",
   "security": "Security",
-  "user_info": "Users Info",
+  "user_info": "User Info",
   "subscription": "Subscription",
   "subscription_link": "Subscription Link",
   "fingerprint": "Fingerprint",
