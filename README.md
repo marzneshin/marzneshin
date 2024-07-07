@@ -160,11 +160,14 @@ python3 -m pip install -r requirements.txt
 
 Alternatively, to have an isolated environment you can use [Python Virtualenv](https://pypi.org/project/virtualenv/)
 
-Then run the following command to run the database migration scripts
+To install dashboard dependencies and build the dashboard:
 
 ```bash
-alembic upgrade head
+make dashboard-deps
+make dashboard-build
 ```
+
+note that you'll need pnpm and npm installed.
 
 If you want to use `marzneshin-cli`, you should link it to a file in your `$PATH`, make it executable, and install the
 auto-completion:
@@ -191,7 +194,7 @@ nano .env
 Eventually, launch the application using command below
 
 ```bash
-python3 main.py
+make start
 ```
 
 To launch with linux systemctl (copy marzneshin.service file to `/var/lib/marzneshin/marzneshin.service`)
@@ -291,7 +294,7 @@ the `UVICORN_HOST` and `UVICORN_PORT` environment variables.
 | NUMBER_OF_RECURRENT_NOTIFICATIONS | How many times to retry if an error detected in sending a notification (default: `3`)                 |
 | RECURRENT_NOTIFICATIONS_TIMEOUT   | Timeout between each retry if an error detected in sending a notification in seconds (default: `180`) |
 | NOTIFY_REACHED_USAGE_PERCENT      | At which percentage of usage to send the warning notification (default: `80`)                         |
-| NOTIFY_DAYS_LEFT                  | When to send warning notification about expiration (default: `3`)                                      |
+| NOTIFY_DAYS_LEFT                  | When to send warning notification about expiration (default: `3`)                                     |
 
 # API
 
