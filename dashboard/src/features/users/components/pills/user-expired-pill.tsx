@@ -7,7 +7,7 @@ export const UserExpiredPill: FC<UserProp> = ({ user }) => {
     const { t } = useTranslation();
     return (
         <BooleanPill
-            active={user.expired}
+            active={!user.expired}
             activeLabel={t('valid')}
             inactiveLabel={t('finished')}
         />
