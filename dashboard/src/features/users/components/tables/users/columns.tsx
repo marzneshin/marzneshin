@@ -58,17 +58,6 @@ export const columns = (actions: ColumnAction): ColumnDef<UserType>[] => [
         cell: ({ row }) => <UserUsedTraffic user={row.original} />,
     },
     {
-        accessorKey: "enabled",
-        enableSorting: false,
-        header: ({ column }) => (
-            <DataTableColumnHeader
-                title={i18n.t("enabled")}
-                column={column}
-            />
-        ),
-        cell: ({ row }) => <UserEnabledPill user={row.original} />,
-    },
-    {
         accessorKey: "expire_strategy",
         header: ({ column }) => (
             <DataTableColumnHeader
