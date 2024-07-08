@@ -30,6 +30,7 @@
     "desc": "مرزنشین نرم‌افزار رایگان و آزاد است. با دونیت کردن حمایت خود را نشان دهید.",
     "donate": "دونیت"
   },
+  "deselect": "لغو انتخاب",
   "home": "خانه",
   "name": "نام",
   "status": "حالت",
@@ -67,6 +68,9 @@
   "subscription": "اشتراک",
   "subscription_link": "لینک اشتراک",
   "fingerprint": "فینگرپرینت",
+  "expired": "انقضا",
+  "finished": "اتمام",
+  "valid": "مانده",
   "page": {
     "settings": {
       "subscription-settings": {

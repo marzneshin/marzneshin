@@ -31,7 +31,7 @@
   "host": "Host",
   "alpn": "ALPN",
   "security": "Security",
-  "user_info": "Users Info",
+  "user_info": "User Info",
   "subscription": "Subscription",
   "subscription_link": "Subscription Link",
   "fingerprint": "Fingerprint",
@@ -63,6 +63,9 @@
   "deselect": "Deselect",
   "view": "View",
   "certificate": "Certificate",
+  "valid": "Valid",
+  "finished": "Finished",
+  "expired": "Expired",
   "support-us": {
     "title": "Support Us",
     "desc": "Marzneshin is free and open-source software (FOSS), join us and show your support by donating.",
