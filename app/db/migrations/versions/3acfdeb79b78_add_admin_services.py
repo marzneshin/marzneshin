@@ -38,7 +38,7 @@ def upgrade() -> None:
             "all_services_access",
             sa.Boolean(),
             server_default=sa.sql.false(),
-            nullable=True,
+            nullable=False,
         ),
     )
     op.add_column(

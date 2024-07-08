@@ -70,7 +70,10 @@ class Admin(Base):
         "Service", secondary=admins_services, back_populates="admins"
     )
     all_services_access = Column(
-        Boolean, default=False, server_default=sqlalchemy.sql.false()
+        Boolean,
+        nullable=False,
+        default=False,
+        server_default=sqlalchemy.sql.false(),
     )
     created_at = Column(DateTime, default=datetime.utcnow)
     is_sudo = Column(Boolean, default=False)
