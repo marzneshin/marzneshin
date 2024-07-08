@@ -37,18 +37,12 @@ from app.models.user import (
     UserExpireStrategy,
 )
 
-
-class Admin(Base):
-    __tablename__ = "admins"
-
-    id = Column(Integer, primary_key=True)
-    username = Column(String(32), unique=True, index=True)
-    hashed_password = Column(String(128))
-    users = relationship("User", back_populates="admin")
-    created_at = Column(DateTime, default=datetime.utcnow)
-    is_sudo = Column(Boolean, default=False)
-    password_reset_at = Column(DateTime)
-
+admins_services = Table(
+    "admins_services",
+    Base.metadata,
+    Column("admin_id", ForeignKey("admins.id"), primary_key=True),
+    Column("service_id", ForeignKey("services.id"), primary_key=True),
+)
 
 inbounds_services = Table(
     "inbounds_services",
@@ -65,10 +59,32 @@ users_services = Table(
 )
 
 
+class Admin(Base):
+    __tablename__ = "admins"
+
+    id = Column(Integer, primary_key=True)
+    username = Column(String(32), unique=True, index=True)
+    hashed_password = Column(String(128))
+    users = relationship("User", back_populates="admin")
+    services = relationship(
+        "Service", secondary=admins_services, back_populates="admins"
+    )
+    all_services_access = Column(
+        Boolean, default=False, server_default=sqlalchemy.sql.false()
+    )
+    created_at = Column(DateTime, default=datetime.utcnow)
+    is_sudo = Column(Boolean, default=False)
+    password_reset_at = Column(DateTime)
+    subscription_url_prefix = Column(String(256))
+
+
 class Service(Base):
     __tablename__ = "services"
     id = Column(Integer, primary_key=True)
     name = Column(String(64))
+    admins = relationship(
+        "Admin", secondary=admins_services, back_populates="services"
+    )
     users = relationship(
         "User", secondary=users_services, back_populates="services"
     )
@@ -250,7 +266,7 @@ class InboundHost(Base):
         Boolean,
         default=False,
         nullable=False,
-        server_default=sqlalchemy.sql.true(),
+        server_default=sqlalchemy.sql.false(),
     )
     fragment = Column(JSON())
 
