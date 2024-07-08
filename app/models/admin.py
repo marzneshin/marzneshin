@@ -20,6 +20,11 @@ class Admin(BaseModel):
     id: int | None = None
     username: str
     is_sudo: bool
+    enabled: bool = True
+    all_services_access: bool = False
+    modify_users_access: bool = True
+    service_ids: list = []
+    subscription_url_prefix: str = ""
     model_config = ConfigDict(from_attributes=True)
 
 
