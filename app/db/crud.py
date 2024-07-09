@@ -2,6 +2,7 @@ import json
 import secrets
 from datetime import datetime, timedelta
 from enum import Enum
+from types import NoneType
 from typing import List, Optional, Tuple, Union
 
 from sqlalchemy import and_, delete, update, select
@@ -21,7 +22,7 @@ from app.db.models import (
     System,
     User,
 )
-from app.models.admin import AdminCreate, AdminModify, AdminPartialModify
+from app.models.admin import AdminCreate, AdminPartialModify
 from app.models.node import (
     NodeCreate,
     NodeModify,
@@ -481,6 +482,13 @@ def create_admin(db: Session, admin: AdminCreate):
         username=admin.username,
         hashed_password=admin.hashed_password,
         is_sudo=admin.is_sudo,
+        enabled=admin.enabled,
+        all_services_access=admin.all_services_access,
+        modify_users_access=admin.modify_users_access,
+        service_ids=db.query(Service)
+        .filter(Service.id.in_(admin.service_ids))
+        .all(),
+        subscription_url_prefix=admin.subscription_url_prefix,
     )
     db.add(dbadmin)
     db.commit()
@@ -488,11 +496,27 @@ def create_admin(db: Session, admin: AdminCreate):
     return dbadmin
 
 
-def update_admin(db: Session, dbadmin: Admin, modified_admin: AdminModify):
-    dbadmin.is_sudo = modified_admin.is_sudo
-    if dbadmin.hashed_password != modified_admin.hashed_password:
-        dbadmin.hashed_password = modified_admin.hashed_password
-        dbadmin.password_reset_at = datetime.utcnow()
+def update_admin(
+    db: Session, dbadmin: Admin, modifications: AdminPartialModify
+):
+    for attribute in [
+        "is_sudo",
+        "hashed_password",
+        "enabled",
+        "all_services_access",
+        "modify_users_access",
+        "subscription_url_prefix",
+    ]:
+        if not isinstance(getattr(modifications, attribute), NoneType):
+            setattr(dbadmin, attribute, getattr(modifications, attribute))
+            if attribute == "hashed_password":
+                dbadmin.password_reset_at = datetime.utcnow()
+    if isinstance(modifications.service_ids, list):
+        dbadmin.services = (
+            db.query(Service)
+            .filter(Service.id.in_(modifications.service_ids))
+            .all()
+        )
     db.commit()
     db.refresh(dbadmin)
     return dbadmin

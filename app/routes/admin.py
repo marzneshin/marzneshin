@@ -10,7 +10,13 @@ from fastapi_pagination.ext.sqlalchemy import paginate
 from app.db import Session, crud
 from app.db.models import Admin as DBAdmin
 from app.dependencies import AdminDep, SudoAdminDep, DBDep
-from app.models.admin import Admin, AdminCreate, AdminInDB, AdminModify, Token
+from app.models.admin import (
+    Admin,
+    AdminCreate,
+    AdminInDB,
+    Token,
+    AdminPartialModify,
+)
 from app.utils.auth import create_admin_token
 
 router = APIRouter(tags=["Admin"], prefix="/admins")
@@ -77,7 +83,10 @@ def admin_token(
 
 @router.put("/{username}", response_model=Admin)
 def modify_admin(
-    username: str, modified_admin: AdminModify, db: DBDep, admin: AdminDep
+    username: str,
+    modified_admin: AdminPartialModify,
+    db: DBDep,
+    admin: AdminDep,
 ):
     if not (admin.is_sudo or admin.username == username):
         raise HTTPException(status_code=403, detail="You're not allowed")

@@ -67,13 +67,28 @@ class Admin(Base):
     hashed_password = Column(String(128))
     users = relationship("User", back_populates="admin")
     services = relationship(
-        "Service", secondary=admins_services, back_populates="admins"
+        "Service",
+        secondary=admins_services,
+        back_populates="admins",
+        lazy="joined",
+    )
+    enabled = Column(
+        Boolean,
+        nullable=False,
+        default=True,
+        server_default=sqlalchemy.sql.true(),
     )
     all_services_access = Column(
         Boolean,
         nullable=False,
         default=False,
         server_default=sqlalchemy.sql.false(),
+    )
+    modify_users_access = Column(
+        Boolean,
+        nullable=False,
+        default=True,
+        server_default=sqlalchemy.sql.true(),
     )
     created_at = Column(DateTime, default=datetime.utcnow)
     is_sudo = Column(Boolean, default=False)
@@ -84,6 +99,10 @@ class Admin(Base):
         default="",
         server_default=sqlalchemy.sql.text(""),
     )
+
+    @property
+    def service_ids(self):
+        return [service.id for service in self.services]
 
 
 class Service(Base):
