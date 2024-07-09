@@ -19,6 +19,7 @@ from app.dependencies import (
     UserDep,
     StartDateDep,
     EndDateDep,
+    ModifyUsersAccess,
 )
 from app.models.service import ServiceResponse
 from app.models.user import (
@@ -138,7 +139,12 @@ async def reset_users_data_usage(db: DBDep, admin: SudoAdminDep):
 
 
 @router.delete("/expired")
-async def delete_expired(passed_time: int, db: DBDep, admin: AdminDep):
+async def delete_expired(
+    passed_time: int,
+    db: DBDep,
+    admin: AdminDep,
+    modify_access: ModifyUsersAccess,
+):
     """
     Delete expired users
     - **passed_time** must be a timestamp
@@ -187,7 +193,11 @@ def get_user(db_user: UserDep):
 
 @router.put("/{username}", response_model=UserResponse)
 async def modify_user(
-    db_user: UserDep, modifications: UserModify, db: DBDep, admin: AdminDep
+    db_user: UserDep,
+    modifications: UserModify,
+    db: DBDep,
+    admin: AdminDep,
+    modify_access: ModifyUsersAccess,
 ):
     """
     Modify a user
@@ -241,7 +251,12 @@ async def modify_user(
 
 
 @router.delete("/{username}")
-async def remove_user(db_user: UserDep, db: DBDep, admin: AdminDep):
+async def remove_user(
+    db_user: UserDep,
+    db: DBDep,
+    admin: AdminDep,
+    modify_access: ModifyUsersAccess,
+):
     """
     Remove a user
     """
@@ -275,7 +290,12 @@ def get_user_services(username: str, db: DBDep):
 
 
 @router.post("/{username}/reset", response_model=UserResponse)
-async def reset_user_data_usage(db_user: UserDep, db: DBDep, admin: AdminDep):
+async def reset_user_data_usage(
+    db_user: UserDep,
+    db: DBDep,
+    admin: AdminDep,
+    modify_access: ModifyUsersAccess,
+):
     """
     Reset user data usage
     """
@@ -296,7 +316,12 @@ async def reset_user_data_usage(db_user: UserDep, db: DBDep, admin: AdminDep):
 
 
 @router.post("/{username}/enable", response_model=UserResponse)
-async def enable_user(db_user: UserDep, db: DBDep, admin: AdminDep):
+async def enable_user(
+    db_user: UserDep,
+    db: DBDep,
+    admin: AdminDep,
+    modify_access: ModifyUsersAccess,
+):
     """
     Enables a user
     """
@@ -316,7 +341,12 @@ async def enable_user(db_user: UserDep, db: DBDep, admin: AdminDep):
 
 
 @router.post("/{username}/disable", response_model=UserResponse)
-async def disable_user(db_user: UserDep, db: DBDep, admin: AdminDep):
+async def disable_user(
+    db_user: UserDep,
+    db: DBDep,
+    admin: AdminDep,
+    modify_access: ModifyUsersAccess,
+):
     """
     Disables a user
     """
@@ -337,7 +367,10 @@ async def disable_user(db_user: UserDep, db: DBDep, admin: AdminDep):
 
 @router.post("/{username}/revoke_sub", response_model=UserResponse)
 async def revoke_user_subscription(
-    db_user: UserDep, db: DBDep, admin: AdminDep
+    db_user: UserDep,
+    db: DBDep,
+    admin: AdminDep,
+    modify_access: ModifyUsersAccess,
 ):
     """
     Revoke users subscription (Subscription link and proxies)
