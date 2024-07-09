@@ -47,7 +47,7 @@ def upgrade() -> None:
             "subscription_url_prefix",
             sa.String(length=256),
             nullable=False,
-            server_default=sa.sql.text(""),
+            server_default="",
         ),
     )
 
