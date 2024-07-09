@@ -78,7 +78,12 @@ class Admin(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
     is_sudo = Column(Boolean, default=False)
     password_reset_at = Column(DateTime)
-    subscription_url_prefix = Column(String(256))
+    subscription_url_prefix = Column(
+        String(256),
+        nullable=False,
+        default="",
+        server_default=sqlalchemy.sql.text(""),
+    )
 
 
 class Service(Base):

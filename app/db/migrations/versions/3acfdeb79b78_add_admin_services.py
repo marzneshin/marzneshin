@@ -44,7 +44,10 @@ def upgrade() -> None:
     op.add_column(
         "admins",
         sa.Column(
-            "subscription_url_prefix", sa.String(length=256), nullable=True
+            "subscription_url_prefix",
+            sa.String(length=256),
+            nullable=False,
+            server_default=sa.sql.text(""),
         ),
     )
 
