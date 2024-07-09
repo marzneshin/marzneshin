@@ -345,7 +345,17 @@ def get_users_count(
     return query.count()
 
 
-def create_user(db: Session, user: UserCreate, admin: Admin = None):
+def create_user(
+    db: Session,
+    user: UserCreate,
+    admin: Admin = None,
+    allowed_services: list | None = None,
+):
+    service_ids = (
+        [sid for sid in user.service_ids if sid in allowed_services]
+        if allowed_services is not None
+        else user.service_ids
+    )
     dbuser = User(
         username=user.username,
         key=user.key,
@@ -354,7 +364,7 @@ def create_user(db: Session, user: UserCreate, admin: Admin = None):
         usage_duration=user.usage_duration,
         activation_deadline=user.activation_deadline,
         services=db.query(Service)
-        .filter(Service.id.in_(user.service_ids))
+        .filter(Service.id.in_(service_ids))
         .all(),  # user.services,
         data_limit=(user.data_limit or None),
         admin=admin,
@@ -373,7 +383,12 @@ def remove_user(db: Session, dbuser: User):
     db.commit()
 
 
-def update_user(db: Session, dbuser: User, modify: UserModify):
+def update_user(
+    db: Session,
+    dbuser: User,
+    modify: UserModify,
+    allowed_services: list | None = None,
+):
     if modify.data_limit is not None:
         dbuser.data_limit = modify.data_limit or None
 
@@ -396,8 +411,15 @@ def update_user(db: Session, dbuser: User, modify: UserModify):
         dbuser.usage_duration = modify.usage_duration
 
     if modify.service_ids is not None:
+        if allowed_services is not None:
+            service_ids = [
+                sid for sid in modify.service_ids if sid in allowed_services
+            ]
+        else:
+            service_ids = modify.service_ids
+
         dbuser.services = (
-            db.query(Service).filter(Service.id.in_(modify.service_ids)).all()
+            db.query(Service).filter(Service.id.in_(service_ids)).all()
         )
     dbuser.edit_at = datetime.utcnow()
 
