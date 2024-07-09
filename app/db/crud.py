@@ -473,7 +473,7 @@ def get_tls_certificate(db: Session):
     return db.query(TLS).first()
 
 
-def get_admin(db: Session, username: str):
+def get_admin(db: Session, username: str) -> Admin | None:
     return db.query(Admin).filter(Admin.username == username).first()
 
 
