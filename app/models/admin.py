@@ -16,7 +16,7 @@ class Token(BaseModel):
 
 class Admin(BaseModel):
     id: int | None = None
-    username: str | None = None
+    username: str
     is_sudo: bool
     enabled: bool = True
     all_services_access: bool = False
@@ -33,6 +33,11 @@ class AdminCreate(Admin):
     @property
     def hashed_password(self):
         return pwd_context.hash(self.password)
+
+
+class AdminResponse(Admin):
+    id: int
+    users_data_usage: int
 
 
 class AdminModify(Admin):
@@ -53,7 +58,8 @@ class AdminPartialModify(AdminModify):
         k: v | None for k, v in AdminModify.__annotations__.items()
     }"""
 
-    password: str | None
+    password: str | None = None
+    username: str | None = None
     is_sudo: bool | None = None
     enabled: bool | None = None
     all_services_access: bool | None = None

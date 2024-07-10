@@ -16,6 +16,7 @@ from app.models.admin import (
     AdminInDB,
     Token,
     AdminPartialModify,
+    AdminResponse,
 )
 from app.utils.auth import create_admin_token
 
@@ -36,7 +37,7 @@ def authenticate_admin(
     )
 
 
-@router.get("", response_model=Page[Admin])
+@router.get("", response_model=Page[AdminResponse])
 def get_admins(db: DBDep, admin: SudoAdminDep, username: str | None = None):
     query = db.query(DBAdmin)
     if username:
@@ -81,7 +82,7 @@ def admin_token(
     )
 
 
-@router.put("/{username}", response_model=Admin)
+@router.put("/{username}", response_model=AdminResponse)
 def modify_admin(
     username: str,
     modified_admin: AdminPartialModify,

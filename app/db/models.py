@@ -18,9 +18,10 @@ from sqlalchemy import (
     JSON,
     and_,
     func,
+    select,
 )
 from sqlalchemy.ext.hybrid import hybrid_property
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, column_property
 from sqlalchemy.sql.expression import text
 
 from app.config.env import SUBSCRIPTION_URL_PREFIX
@@ -105,6 +106,15 @@ class Admin(Base):
     @property
     def service_ids(self):
         return [service.id for service in self.services]
+
+    @classmethod
+    def __declare_last__(cls):
+        cls.users_data_usage = column_property(
+            select(func.coalesce(func.sum(User.lifetime_used_traffic), 0))
+            .where(User.admin_id == cls.id)
+            .correlate_except(User)
+            .scalar_subquery()
+        )
 
 
 class Service(Base):
