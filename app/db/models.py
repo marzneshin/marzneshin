@@ -1,4 +1,5 @@
 import os
+import secrets
 from datetime import datetime
 
 import sqlalchemy.sql
@@ -22,6 +23,7 @@ from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.expression import text
 
+from app.config.env import SUBSCRIPTION_URL_PREFIX
 from app.db.base import Base
 from app.models.node import NodeStatus
 from app.models.proxy import (
@@ -235,6 +237,14 @@ class User(Base):
     @property
     def status(self):
         return UserStatus.ACTIVE if self.is_active else UserStatus.INACTIVE
+
+    @property
+    def subscription_url(self):
+        prefix = self.admin.subscription_url_prefix or SUBSCRIPTION_URL_PREFIX
+        return (
+            prefix.replace("*", secrets.token_hex(8))
+            + f"/sub/{self.username}/{self.key}"
+        )
 
 
 class Inbound(Base):
