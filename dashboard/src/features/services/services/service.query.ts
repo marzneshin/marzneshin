@@ -14,7 +14,7 @@ export async function fetchService({
     });
 }
 
-export const ServiceQueryFetchKey = "services";
+const ServiceQueryFetchKey = "services";
 
 export const useServiceQuery = ({ serviceId }: { serviceId: number }) => {
     return useQuery({

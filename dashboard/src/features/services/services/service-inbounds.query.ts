@@ -25,7 +25,7 @@ export async function fetchServiceInbounds({
     });
 }
 
-export const ServicesQueryFetchKey = "services";
+const ServicesQueryFetchKey = "services";
 
 export const useInboundsServiceQuery = ({
     serviceId, page = 1, size = 50

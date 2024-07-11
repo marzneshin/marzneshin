@@ -2,8 +2,7 @@
 import { FC } from "react";
 import { DataTable } from "@marzneshin/components";
 import { columns } from "./columns";
-import { useUsersServiceQuery } from "../../services/service-users.query";
-import { ServiceType } from "../..";
+import { useUsersServiceQuery, type ServiceType } from "@marzneshin/features/services";
 
 interface ServicesUsersTableProps {
     service: ServiceType

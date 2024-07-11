@@ -17,10 +17,10 @@ import {
     type AdminMutationType,
     AdminType,
 } from "@marzneshin/features/admins";
+import { ServicesField } from "@marzneshin/features/services";
+import { UsernameField } from "@marzneshin/features/users";
 import {
     PasswordField,
-    UsernameField,
-    ServicesField,
     EnabledField,
     ModifyUsersAccessField,
     SubscriptionUrlPrefixField,

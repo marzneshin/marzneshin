@@ -10,9 +10,11 @@ import {
 } from "@marzneshin/components"
 import { type FC, useEffect } from "react"
 import { useTranslation } from "react-i18next"
-import { ServiceType } from "..";
-import { ServiceInboundsTable } from "../tables/inbounds";
-import { ServicesUsersTable } from "../tables/users";
+import {
+    ServicesUsersTable,
+    ServiceInboundsTable,
+    ServiceType
+} from "@marzneshin/features/services";
 
 interface ServicecSettingsDialogProps {
     onOpenChange: (state: boolean) => void

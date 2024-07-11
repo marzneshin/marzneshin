@@ -2,7 +2,7 @@ import { type FC, useCallback, useEffect, useState } from "react";
 import { useInboundsQuery } from "@marzneshin/features/inbounds";
 import { Button, DataTable } from "@marzneshin/components";
 import { columns } from "./columns";
-import { type ServiceType, useServicesUpdateMutation } from "../..";
+import { type ServiceType, useServicesUpdateMutation } from "@marzneshin/features/services";
 import { useTranslation } from "react-i18next";
 import type { RowSelectionState } from "@tanstack/react-table";
 
