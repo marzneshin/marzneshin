@@ -18,7 +18,7 @@ const AdminEdit = () => {
         <AdminsMutationDialog
             open={editDialogOpen}
             onOpenChange={setEditDialogOpen}
-            entity={value.user}
+            entity={value.admin}
             onClose={() => navigate({ to: "/admins" })}
         />
     );

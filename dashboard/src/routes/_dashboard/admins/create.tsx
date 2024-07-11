@@ -1,20 +1,19 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { UsersMutationDialog } from "@marzneshin/features/users";
+import { CreateAdminsMutationDialog } from "@marzneshin/features/admins";
 import { useDialog } from "@marzneshin/hooks";
 
-const UserCreate = () => {
+const AdminCreate = () => {
     const [mutationDialogOpen, setMutationDialogOpen] = useDialog(true);
-    const navigate = useNavigate({ from: "/users/create" });
+    const navigate = useNavigate({ from: "/admins/create" });
     return (
-        <UsersMutationDialog
+        <CreateAdminsMutationDialog
             open={mutationDialogOpen}
             onOpenChange={setMutationDialogOpen}
-            entity={null}
-            onClose={() => navigate({ to: "/users" })}
+            onClose={() => navigate({ to: "/admins" })}
         />
     );
 }
 
 export const Route = createFileRoute("/_dashboard/admins/create")({
-    component: UserCreate,
+    component: AdminCreate,
 });

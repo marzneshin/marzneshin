@@ -3,26 +3,26 @@ import {
     useNavigate,
 } from "@tanstack/react-router";
 import {
-    UsersDeleteConfirmationDialog,
-    useRouterUserContext,
-} from "@marzneshin/features/users";
+    AdminsDeleteConfirmationDialog,
+    useRouterAdminContext,
+} from "@marzneshin/features/admins";
 import { useDialog } from "@marzneshin/hooks";
 
-const UserDelete = () => {
+const AdminDelete = () => {
     const [deleteDialogOpen, setDeleteDialogOpen] = useDialog(true);
-    const value = useRouterUserContext()
+    const value = useRouterAdminContext()
     const navigate = useNavigate({ from: "/admins/$adminId/delete" });
 
-    return !!(value?.user) && (
-        <UsersDeleteConfirmationDialog
+    return !!(value?.admin) && (
+        <AdminsDeleteConfirmationDialog
             open={deleteDialogOpen}
             onOpenChange={setDeleteDialogOpen}
-            entity={value.user}
+            entity={value.admin}
             onClose={() => navigate({ to: "/admins" })}
         />
     );
 }
 
 export const Route = createFileRoute('/_dashboard/admins/$adminId/delete')({
-    component: UserDelete,
+    component: AdminDelete,
 })
