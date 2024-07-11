@@ -1,4 +1,5 @@
 import os
+import secrets
 from datetime import datetime
 
 import sqlalchemy.sql
@@ -17,11 +18,13 @@ from sqlalchemy import (
     JSON,
     and_,
     func,
+    select,
 )
 from sqlalchemy.ext.hybrid import hybrid_property
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, column_property
 from sqlalchemy.sql.expression import text
 
+from app.config.env import SUBSCRIPTION_URL_PREFIX
 from app.db.base import Base
 from app.models.node import NodeStatus
 from app.models.proxy import (
@@ -67,13 +70,28 @@ class Admin(Base):
     hashed_password = Column(String(128))
     users = relationship("User", back_populates="admin")
     services = relationship(
-        "Service", secondary=admins_services, back_populates="admins"
+        "Service",
+        secondary=admins_services,
+        back_populates="admins",
+        lazy="joined",
+    )
+    enabled = Column(
+        Boolean,
+        nullable=False,
+        default=True,
+        server_default=sqlalchemy.sql.true(),
     )
     all_services_access = Column(
         Boolean,
         nullable=False,
         default=False,
         server_default=sqlalchemy.sql.false(),
+    )
+    modify_users_access = Column(
+        Boolean,
+        nullable=False,
+        default=True,
+        server_default=sqlalchemy.sql.true(),
     )
     created_at = Column(DateTime, default=datetime.utcnow)
     is_sudo = Column(Boolean, default=False)
@@ -84,6 +102,19 @@ class Admin(Base):
         default="",
         server_default=sqlalchemy.sql.text(""),
     )
+
+    @property
+    def service_ids(self):
+        return [service.id for service in self.services]
+
+    @classmethod
+    def __declare_last__(cls):
+        cls.users_data_usage = column_property(
+            select(func.coalesce(func.sum(User.lifetime_used_traffic), 0))
+            .where(User.admin_id == cls.id)
+            .correlate_except(User)
+            .scalar_subquery()
+        )
 
 
 class Service(Base):
@@ -216,6 +247,14 @@ class User(Base):
     @property
     def status(self):
         return UserStatus.ACTIVE if self.is_active else UserStatus.INACTIVE
+
+    @property
+    def subscription_url(self):
+        prefix = self.admin.subscription_url_prefix or SUBSCRIPTION_URL_PREFIX
+        return (
+            prefix.replace("*", secrets.token_hex(8))
+            + f"/sub/{self.username}/{self.key}"
+        )
 
 
 class Inbound(Base):

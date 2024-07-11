@@ -7,12 +7,9 @@ from pydantic import (
     ConfigDict,
     BaseModel,
     Field,
-    computed_field,
     StringConstraints,
     model_validator,
 )
-
-from app.config.env import SUBSCRIPTION_URL_PREFIX
 
 USERNAME_REGEXP = r"^\w{3,32}$"
 
@@ -128,15 +125,9 @@ class UserResponse(User):
     lifetime_used_traffic: int
     created_at: datetime
     service_ids: list[int]
+    subscription_url: str
 
     model_config = ConfigDict(from_attributes=True)
-
-    @computed_field
-    @property
-    def subscription_url(self) -> str:
-        salt = secrets.token_hex(8)
-        url_prefix = SUBSCRIPTION_URL_PREFIX.replace("*", salt)
-        return f"{url_prefix}/sub/{self.username}/{self.key}"
 
 
 class UserUsageResponse(BaseModel):

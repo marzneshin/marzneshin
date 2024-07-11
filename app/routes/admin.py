@@ -10,7 +10,15 @@ from fastapi_pagination.ext.sqlalchemy import paginate
 from app.db import Session, crud
 from app.db.models import Admin as DBAdmin
 from app.dependencies import AdminDep, SudoAdminDep, DBDep
-from app.models.admin import Admin, AdminCreate, AdminInDB, AdminModify, Token
+from app.marznode.operations import update_user
+from app.models.admin import (
+    Admin,
+    AdminCreate,
+    AdminInDB,
+    Token,
+    AdminPartialModify,
+    AdminResponse,
+)
 from app.utils.auth import create_admin_token
 
 router = APIRouter(tags=["Admin"], prefix="/admins")
@@ -30,7 +38,7 @@ def authenticate_admin(
     )
 
 
-@router.get("", response_model=Page[Admin])
+@router.get("", response_model=Page[AdminResponse])
 def get_admins(db: DBDep, admin: SudoAdminDep, username: str | None = None):
     query = db.query(DBAdmin)
     if username:
@@ -75,9 +83,12 @@ def admin_token(
     )
 
 
-@router.put("/{username}", response_model=Admin)
+@router.put("/{username}", response_model=AdminResponse)
 def modify_admin(
-    username: str, modified_admin: AdminModify, db: DBDep, admin: AdminDep
+    username: str,
+    modified_admin: AdminPartialModify,
+    db: DBDep,
+    admin: AdminDep,
 ):
     if not (admin.is_sudo or admin.username == username):
         raise HTTPException(status_code=403, detail="You're not allowed")
@@ -103,6 +114,50 @@ def modify_admin(
 
     dbadmin = crud.update_admin(db, dbadmin, modified_admin)
     return dbadmin
+
+
+@router.get("/{username}/disable_users", response_model=AdminResponse)
+async def disable_users(username: str, db: DBDep, admin: SudoAdminDep):
+    db_admin = crud.get_admin(db, username)
+    if not db_admin:
+        raise HTTPException(status_code=404, detail="Admin not found")
+
+    if db_admin.is_sudo and db_admin.username != admin.username:
+        raise HTTPException(
+            status_code=403,
+            detail="You're not allowed.",
+        )
+
+    for user in crud.get_users(db, admin=db_admin, enabled=True):
+        if user.activated:
+            update_user(user, remove=True)
+        user.enabled = False
+        user.activated = False
+    db.commit()
+
+    return db_admin
+
+
+@router.get("/{username}/enable_users", response_model=AdminResponse)
+async def enable_users(username: str, db: DBDep, admin: SudoAdminDep):
+    db_admin = crud.get_admin(db, username)
+    if not db_admin:
+        raise HTTPException(status_code=404, detail="Admin not found")
+
+    if db_admin.is_sudo and db_admin.username != admin.username:
+        raise HTTPException(
+            status_code=403,
+            detail="You're not allowed.",
+        )
+
+    for user in crud.get_users(db, admin=db_admin, enabled=False):
+        user.enabled = True
+        if user.is_active:
+            update_user(user)
+            user.activated = True
+    db.commit()
+
+    return db_admin
 
 
 @router.delete("/{username}")
