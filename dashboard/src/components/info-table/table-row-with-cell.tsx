@@ -3,7 +3,7 @@ import { FC } from "react";
 
 interface TableRowWithCellProps {
     label: string | JSX.Element;
-    value?: string | number | JSX.Element;
+    value?: null | string | number | JSX.Element;
 }
 
 export const TableRowWithCell: FC<TableRowWithCellProps> = ({ label, value }) => (
