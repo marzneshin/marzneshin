@@ -1,4 +1,5 @@
 import {
+    Button,
     FormControl,
     FormField,
     FormItem,
@@ -6,12 +7,12 @@ import {
     FormLabel,
     FormMessage,
 } from "@marzneshin/components";
-import type { FC, InputHTMLAttributes } from "react";
+import { type FC } from "react";
 import { useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-export const PasswordField: FC<InputHTMLAttributes<HTMLElement>> = ({
-    disabled,
+export const PasswordField: FC<{ change: boolean, handleChange: (s: boolean) => void }> = ({
+    change, handleChange
 }) => {
     const form = useFormContext();
     const { t } = useTranslation();
@@ -24,7 +25,21 @@ export const PasswordField: FC<InputHTMLAttributes<HTMLElement>> = ({
                 <FormItem>
                     <FormLabel>{t("password")}</FormLabel>
                     <FormControl>
-                        <Input disabled={disabled} {...field} />
+                        {change ?
+                            (<Input  {...field} />)
+                            : (
+                                <Button
+                                    className="border w-full"
+                                    variant="ghost"
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        handleChange(true);
+                                    }}
+                                >
+                                    {t("change")}
+                                </Button>
+                            )
+                        }
                     </FormControl>
                     <FormMessage />
                 </FormItem>

@@ -1,4 +1,4 @@
-import { type FC, useEffect, useCallback } from "react";
+import { type FC, useState, useEffect, useCallback } from "react";
 import {
     DialogTitle,
     DialogContent,
@@ -47,7 +47,7 @@ export const AdminsMutationDialog: FC<AdminsMutationDialogProps> = ({
         (): AdminMutationType => ({
             service_ids: [],
             username: "",
-            password: "",
+            password: null,
             is_sudo: false,
             enabled: true,
         }),
@@ -62,6 +62,14 @@ export const AdminsMutationDialog: FC<AdminsMutationDialogProps> = ({
         schema: AdminMutationSchema,
         getDefaultValue: getDefaultValues,
     });
+
+    const [change, setChange] = useState<boolean>(entity === null);
+    if (entity !== null)
+        form.setValue("password", null,
+            {
+                shouldTouch: true,
+                shouldDirty: true,
+            });
 
     useEffect(() => {
         if (!open) onClose();
@@ -81,7 +89,7 @@ export const AdminsMutationDialog: FC<AdminsMutationDialogProps> = ({
                             <div className="flex-col grid-cols-2 gap-2 sm:flex md:grid h-full">
                                 <div className="space-y-3">
                                     <UsernameField />
-                                    <PasswordField />
+                                    <PasswordField change={change} handleChange={setChange} />
                                     <EnabledField />
                                     <ModifyUsersAccessField />
                                     <SubscriptionUrlPrefixField />
