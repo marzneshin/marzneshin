@@ -511,7 +511,7 @@ def create_admin(db: Session, admin: AdminCreate):
         enabled=admin.enabled,
         all_services_access=admin.all_services_access,
         modify_users_access=admin.modify_users_access,
-        service_ids=db.query(Service)
+        services=db.query(Service)
         .filter(Service.id.in_(admin.service_ids))
         .all(),
         subscription_url_prefix=admin.subscription_url_prefix,
