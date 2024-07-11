@@ -83,6 +83,15 @@ def admin_token(
     )
 
 
+@router.get("/{username}", response_model=AdminResponse)
+def get_admin(
+    username: str,
+    db: DBDep,
+    admin: SudoAdminDep,
+):
+    return crud.get_admin(db, username)
+
+
 @router.put("/{username}", response_model=AdminResponse)
 def modify_admin(
     username: str,
