@@ -4,16 +4,16 @@ import { toast } from "sonner";
 import i18n from "@marzneshin/features/i18n";
 import {
     AdminsQueryFetchKey,
-    EditAdminType
+    AdminMutation
 } from "@marzneshin/features/admins";
 
-export async function updateAdmin(admin: EditAdminType): Promise<EditAdminType> {
+export async function updateAdmin(admin: AdminMutation): Promise<AdminMutation> {
     return fetch(`/admins/${admin.username}`, { method: 'put', body: admin }).then((admin) => {
         return admin;
     });
 }
 
-const handleError = (error: Error, value: EditAdminType) => {
+const handleError = (error: Error, value: AdminMutation) => {
     toast.error(
         i18n.t('events.update.error', { name: value.username }),
         {
@@ -21,7 +21,7 @@ const handleError = (error: Error, value: EditAdminType) => {
         })
 }
 
-const handleSuccess = (value: EditAdminType) => {
+const handleSuccess = (value: AdminMutation) => {
     toast.success(
         i18n.t('events.update.success.title', { name: value.username }),
         {

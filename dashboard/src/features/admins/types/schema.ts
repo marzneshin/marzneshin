@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const CreateAdminSchema = z.object({
+export const AdminMutationSchema = z.object({
     username: z.string().min(1, { message: 'Username is required' }),
     is_sudo: z.boolean(),
     enabled: z.boolean().optional(),
@@ -14,11 +14,4 @@ export const CreateAdminSchema = z.object({
         .optional()
 });
 
-export const EditAdminSchema = z.object({
-    username: z.string().min(1, { message: 'Username is required' }),
-    password: z.string(),
-    is_sudo: z.boolean(),
-});
-
-export type CreateAdminType = z.infer<typeof CreateAdminSchema>;
-export type EditAdminType = z.infer<typeof EditAdminSchema>;
+export type AdminMutationType = z.infer<typeof AdminMutationSchema>;
