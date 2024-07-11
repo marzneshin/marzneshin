@@ -97,19 +97,8 @@ def modify_admin(
     username: str,
     modified_admin: AdminPartialModify,
     db: DBDep,
-    admin: AdminDep,
+    admin: SudoAdminDep,
 ):
-    if not (admin.is_sudo or admin.username == username):
-        raise HTTPException(status_code=403, detail="You're not allowed")
-
-    # If a non-sudoer admin is making itself a sudoer
-    if (admin.username == username) and (
-        modified_admin.is_sudo and not admin.is_sudo
-    ):
-        raise HTTPException(
-            status_code=403, detail="You can't make yourself sudoer!"
-        )
-
     dbadmin = crud.get_admin(db, username)
     if not dbadmin:
         raise HTTPException(status_code=404, detail="Admin not found")
