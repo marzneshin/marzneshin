@@ -10,7 +10,7 @@ export async function fetchAdmin({
 
 export const AdminQueryFetchKey = "admins";
 
-export const userQueryOptions = ({ username }: { username: string }) => {
+export const adminQueryOptions = ({ username }: { username: string }) => {
     return queryOptions({
         queryKey: [AdminQueryFetchKey, username],
         queryFn: fetchAdmin,
