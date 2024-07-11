@@ -6,7 +6,9 @@ import {
     Page,
     Loading,
 } from '@marzneshin/components';
+import { SudoRoute } from '@marzneshin/features/sudo-routes'
 import { createFileRoute, Outlet } from '@tanstack/react-router'
+import { AdminsTable } from '@marzneshin/features/admins'
 import { type FC, Suspense } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -21,6 +23,7 @@ export const AdminsPage: FC = () => {
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
+                    <AdminsTable />
                     <Suspense fallback={<Loading />}>
                         <Outlet />
                     </Suspense>
@@ -32,5 +35,5 @@ export const AdminsPage: FC = () => {
 
 
 export const Route = createFileRoute('/_dashboard/admins')({
-    component: () => <AdminsPage />,
+    component: () => <SudoRoute><AdminsPage /></SudoRoute>,
 })
