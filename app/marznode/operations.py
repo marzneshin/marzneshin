@@ -6,6 +6,7 @@ from app import marznode
 from .grpcio import MarzNodeGRPCIO
 from .grpclib import MarzNodeGRPCLIB
 from ..models.node import NodeConnectionBackend
+from ..models.user import User
 
 if TYPE_CHECKING:
     from app.db import User as DBUser
@@ -32,7 +33,9 @@ def update_user(
     for node_id, tags in node_inbounds.items():
         if marznode.nodes.get(node_id):
             asyncio.ensure_future(
-                marznode.nodes[node_id].update_user(user=user, inbounds=tags)
+                marznode.nodes[node_id].update_user(
+                    user=User.model_validate(user), inbounds=tags
+                )
             )
 
 
