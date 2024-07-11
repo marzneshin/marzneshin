@@ -1,6 +1,6 @@
 import { Skeleton } from "@marzneshin/components";
 
-export const UserInfoSkeleton = () => {
+export const SettingsInfoSkeleton = () => {
     return (
         <div className="p-5 bg-gray-900 rounded-lg w-96">
             <h2 className="text-white mb-5">

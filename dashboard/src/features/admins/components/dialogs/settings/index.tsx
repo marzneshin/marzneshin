@@ -10,6 +10,7 @@ import {
     TabsList,
     TabsTrigger,
     Awaiting,
+    SettingsInfoSkeleton,
 } from "@marzneshin/components";
 import {
     type AdminType
@@ -19,7 +20,6 @@ import { useTranslation } from "react-i18next";
 import {
     AdminInfoTable
 } from "./admin-info";
-import { AdminInfoSkeleton } from "./skeleton";
 
 interface AdminsSettingsDialogProps {
     onOpenChange: (state: boolean) => void;
@@ -79,7 +79,7 @@ export const AdminsSettingsDialog: FC<AdminsSettingsDialogProps> = ({
                             </Tabs>
                         </ScrollArea>
                     ) : (<div>Not Found</div>)}
-                    Skeleton={<AdminInfoSkeleton />}
+                    Skeleton={<SettingsInfoSkeleton />}
                     isFetching={isPending}
                 />
             </SheetContent>

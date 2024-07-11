@@ -10,6 +10,7 @@ import {
     TabsList,
     TabsTrigger,
     Awaiting,
+    SettingsInfoSkeleton,
 } from "@marzneshin/components";
 import {
     UserServicesTable,
@@ -24,7 +25,6 @@ import {
     QRCodeSection,
     UserInfoTable
 } from "./user-info";
-import { UserInfoSkeleton } from "./skeleton";
 
 interface UsersSettingsDialogProps {
     onOpenChange: (state: boolean) => void;
@@ -91,7 +91,7 @@ export const UsersSettingsDialog: FC<UsersSettingsDialogProps> = ({
                             </Tabs>
                         </ScrollArea>
                     ) : (<div>Not Found</div>)}
-                    Skeleton={<UserInfoSkeleton />}
+                    Skeleton={<SettingsInfoSkeleton />}
                     isFetching={isPending}
                 />
             </SheetContent>
