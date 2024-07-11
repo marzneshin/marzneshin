@@ -1,27 +1,26 @@
 import {
     createFileRoute,
-    // useNavigate,
+    useNavigate,
 } from "@tanstack/react-router";
 import {
     useRouterAdminContext,
-    // AdminsSettingsDialog,
+    AdminsSettingsDialog,
 } from "@marzneshin/features/admins";
-// import { useDialog } from "@marzneshin/hooks";
+import { useDialog } from "@marzneshin/hooks";
 
 const AdminOpen = () => {
-    // const [settingsDialogOpen, setSettingsDialogOpen] = useDialog(true);
+    const [settingsDialogOpen, setSettingsDialogOpen] = useDialog(true);
     const value = useRouterAdminContext()
-    // const navigate = useNavigate({ from: "/admins/$adminId" });
+    const navigate = useNavigate({ from: "/admins/$adminId" });
 
     return value && (
-        <div>Admin settings</div>
-        // <AdminsSettingsDialog
-        //     open={settingsDialogOpen}
-        //     onOpenChange={setSettingsDialogOpen}
-        //     entity={value.admin}
-        //     isPending={!!value.isPending}
-        //     onClose={() => navigate({ to: "/admins" })}
-        // />
+        <AdminsSettingsDialog
+            open={settingsDialogOpen}
+            onOpenChange={setSettingsDialogOpen}
+            entity={value.admin}
+            isPending={!!value.isPending}
+            onClose={() => navigate({ to: "/admins" })}
+        />
     );
 }
 
