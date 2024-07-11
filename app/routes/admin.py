@@ -10,6 +10,7 @@ from fastapi_pagination.ext.sqlalchemy import paginate
 from app.db import Session, crud
 from app.db.models import Admin as DBAdmin
 from app.dependencies import AdminDep, SudoAdminDep, DBDep
+from app.marznode.operations import update_user
 from app.models.admin import (
     Admin,
     AdminCreate,
@@ -113,6 +114,50 @@ def modify_admin(
 
     dbadmin = crud.update_admin(db, dbadmin, modified_admin)
     return dbadmin
+
+
+@router.get("/{username}/disable_users", response_model=AdminResponse)
+async def disable_users(username: str, db: DBDep, admin: SudoAdminDep):
+    db_admin = crud.get_admin(db, username)
+    if not db_admin:
+        raise HTTPException(status_code=404, detail="Admin not found")
+
+    if db_admin.is_sudo and db_admin.username != admin.username:
+        raise HTTPException(
+            status_code=403,
+            detail="You're not allowed.",
+        )
+
+    for user in crud.get_users(db, admin=db_admin, enabled=True):
+        if user.activated:
+            update_user(user, remove=True)
+        user.enabled = False
+        user.activated = False
+    db.commit()
+
+    return db_admin
+
+
+@router.get("/{username}/enable_users", response_model=AdminResponse)
+async def enable_users(username: str, db: DBDep, admin: SudoAdminDep):
+    db_admin = crud.get_admin(db, username)
+    if not db_admin:
+        raise HTTPException(status_code=404, detail="Admin not found")
+
+    if db_admin.is_sudo and db_admin.username != admin.username:
+        raise HTTPException(
+            status_code=403,
+            detail="You're not allowed.",
+        )
+
+    for user in crud.get_users(db, admin=db_admin, enabled=False):
+        user.enabled = True
+        if user.is_active:
+            update_user(user)
+            user.activated = True
+    db.commit()
+
+    return db_admin
 
 
 @router.delete("/{username}")

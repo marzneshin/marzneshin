@@ -230,6 +230,7 @@ def get_users(
     activated: bool | None = None,
     expired: bool | None = None,
     data_limit_reached: bool | None = None,
+    enabled: bool | None = None,
 ) -> Union[List[User], Tuple[List[User], int]]:
     query = db.query(User)
 
@@ -266,6 +267,9 @@ def get_users(
 
     if isinstance(data_limit_reached, bool):
         query = query.filter(User.data_limit_reached == data_limit_reached)
+
+    if isinstance(enabled, bool):
+        query = query.filter(User.enabled == enabled)
 
     if admin:
         query = query.filter(User.admin == admin)
