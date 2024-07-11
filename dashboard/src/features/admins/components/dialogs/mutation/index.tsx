@@ -90,9 +90,9 @@ export const AdminsMutationDialog: FC<AdminsMutationDialogProps> = ({
                                 <div className="space-y-3">
                                     <UsernameField disabled={!!entity} />
                                     <PasswordField change={change} handleChange={setChange} />
+                                    <SubscriptionUrlPrefixField />
                                     <EnabledField />
                                     <ModifyUsersAccessField />
-                                    <SubscriptionUrlPrefixField />
                                     <SudoPrivilageField />
                                     <AllServicesAccessField />
                                 </div>
