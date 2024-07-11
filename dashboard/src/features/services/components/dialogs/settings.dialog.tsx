@@ -1,8 +1,6 @@
 import {
-    Sheet,
-    SheetContent,
-    SheetHeader,
-    SheetTitle,
+    SettingsDialogProps,
+    SettingsDialog,
     Tabs,
     TabsContent,
     TabsList,
@@ -16,9 +14,7 @@ import {
     ServiceType
 } from "@marzneshin/features/services";
 
-interface ServicecSettingsDialogProps {
-    onOpenChange: (state: boolean) => void
-    open: boolean
+interface ServicecSettingsDialogProps extends SettingsDialogProps {
     entity: ServiceType
     onClose: () => void;
 }
@@ -33,26 +29,19 @@ export const ServiceSettingsDialog: FC<ServicecSettingsDialogProps> = ({
     }, [open, onClose]);
 
     return (
-        <Sheet open={open} onOpenChange={onOpenChange}>
-            <SheetContent className="sm:min-w-full md:min-w-[700px]" >
-                <SheetHeader>
-                    <SheetTitle>
-                        {t('page.services.settings.title')}
-                    </SheetTitle>
-                </SheetHeader>
-                <Tabs className="my-3 w-full h-full" defaultValue="inbounds">
-                    <TabsList className="w-full">
-                        <TabsTrigger className="w-full" value="inbounds">{t('inbounds')}</TabsTrigger>
-                        <TabsTrigger className="w-full" value="users">{t('users')}</TabsTrigger>
-                    </TabsList>
-                    <TabsContent value="inbounds" className="h-full">
-                        <ServiceInboundsTable service={entity} />
-                    </TabsContent>
-                    <TabsContent value="users" className="h-full">
-                        <ServicesUsersTable service={entity} />
-                    </TabsContent>
-                </Tabs>
-            </SheetContent>
-        </Sheet>
+        <SettingsDialog open={open} onOpenChange={onOpenChange}>
+            <Tabs className="my-3 w-full h-full" defaultValue="inbounds">
+                <TabsList className="w-full">
+                    <TabsTrigger className="w-full" value="inbounds">{t('inbounds')}</TabsTrigger>
+                    <TabsTrigger className="w-full" value="users">{t('users')}</TabsTrigger>
+                </TabsList>
+                <TabsContent value="inbounds" className="h-full">
+                    <ServiceInboundsTable service={entity} />
+                </TabsContent>
+                <TabsContent value="users" className="h-full">
+                    <ServicesUsersTable service={entity} />
+                </TabsContent>
+            </Tabs>
+        </SettingsDialog>
     )
 }

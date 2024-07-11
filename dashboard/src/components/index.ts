@@ -1,4 +1,5 @@
 export * from "./ui";
+export * from "./settings-dialog";
 export * from "./header";
 export * from "./sidebar";
 export * from "./data-table";
