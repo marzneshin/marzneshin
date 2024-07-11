@@ -88,7 +88,7 @@ export const AdminsMutationDialog: FC<AdminsMutationDialogProps> = ({
                         <form onSubmit={handleSubmit} >
                             <div className="flex-col grid-cols-2 gap-2 sm:flex md:grid h-full">
                                 <div className="space-y-3">
-                                    <UsernameField />
+                                    <UsernameField disabled={!!entity} />
                                     <PasswordField change={change} handleChange={setChange} />
                                     <EnabledField />
                                     <ModifyUsersAccessField />
