@@ -8,7 +8,7 @@ import {
 } from "@marzneshin/features/entity-table";
 
 export async function fetchAdmins({ queryKey }: EntityQueryKeyType): FetchEntityReturn<AdminType> {
-    return fetch(`/admin`, {
+    return fetch(`/admins`, {
         query: {
             page: queryKey[1],
             size: queryKey[2],
