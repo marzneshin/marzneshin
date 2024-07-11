@@ -16,7 +16,7 @@ export const EnabledField = () => {
             control={form.control}
             name="enabled"
             render={({ field }) => (
-                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md py-2">
+                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md">
                     <FormControl>
                         <Checkbox
                             checked={field.value}

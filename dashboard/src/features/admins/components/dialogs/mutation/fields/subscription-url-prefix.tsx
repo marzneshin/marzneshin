@@ -22,7 +22,7 @@ export const SubscriptionUrlPrefixField: FC<InputHTMLAttributes<HTMLElement>> = 
             name="subscription_url_prefix"
             render={({ field }) => (
                 <FormItem>
-                    <FormLabel>{t("page.admins.create-dialog.subscription-url-prefix")}</FormLabel>
+                    <FormLabel>{t("page.admins.subscription-url-prefix")}</FormLabel>
                     <FormControl>
                         <Input disabled={disabled} {...field} />
                     </FormControl>

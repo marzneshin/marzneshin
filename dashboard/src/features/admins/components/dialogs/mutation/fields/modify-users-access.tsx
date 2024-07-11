@@ -16,7 +16,7 @@ export const ModifyUsersAccessField = () => {
             control={form.control}
             name="modify_users_access"
             render={({ field }) => (
-                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md py-2">
+                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md">
                     <FormControl>
                         <Checkbox
                             checked={field.value}
@@ -25,7 +25,7 @@ export const ModifyUsersAccessField = () => {
                     </FormControl>
                     <div className="space-y-1 leading-none">
                         <FormLabel>
-                            {t("page.admins.create-dialog.modify-users-access")}
+                            {t("page.admins.modify-users-access")}
                         </FormLabel>
                     </div>
                 </FormItem>

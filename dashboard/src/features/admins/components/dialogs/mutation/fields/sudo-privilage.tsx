@@ -16,7 +16,7 @@ export const SudoPrivilageField = () => {
             control={form.control}
             name="is_sudo"
             render={({ field }) => (
-                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md py-2">
+                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md">
                     <FormControl>
                         <Checkbox
                             checked={field.value}
@@ -25,7 +25,7 @@ export const SudoPrivilageField = () => {
                     </FormControl>
                     <div className="space-y-1 leading-none">
                         <FormLabel>
-                            {t("page.admins.sudo-Privilage")}
+                            {t("page.admins.sudo-privilage")}
                         </FormLabel>
                     </div>
                 </FormItem>

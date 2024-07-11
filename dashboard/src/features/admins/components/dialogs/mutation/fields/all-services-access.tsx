@@ -16,7 +16,7 @@ export const AllServicesAccessField = () => {
             control={form.control}
             name="all_services_access"
             render={({ field }) => (
-                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md py-2">
+                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md">
                     <FormControl>
                         <Checkbox
                             checked={field.value}
@@ -25,7 +25,7 @@ export const AllServicesAccessField = () => {
                     </FormControl>
                     <div className="space-y-1 leading-none">
                         <FormLabel>
-                            {t("page.settings.all-services-access")}
+                            {t("page.admins.all-services-access")}
                         </FormLabel>
                     </div>
                 </FormItem>
