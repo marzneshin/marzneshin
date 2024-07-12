@@ -81,7 +81,7 @@ export const AdminsMutationDialog: FC<AdminsMutationDialogProps> = ({
                 <ScrollArea className="flex flex-col justify-between h-full ">
                     <DialogHeader className="mb-3">
                         <DialogTitle className="text-primary">
-                            {t("page.admins.dialogs.creation.title")}
+                            {t(entity ? "page.admins.dialogs.edition.title" : "page.admins.dialogs.creation.title")}
                         </DialogTitle>
                     </DialogHeader>
                     <Form {...form}>
