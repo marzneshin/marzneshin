@@ -8,15 +8,13 @@ import { DataTableColumnHeader } from "@marzneshin/components/data-table/column-
 import i18n from "@marzneshin/features/i18n";
 import {
     DataTableActionsCell,
+    NoPropogationButton,
 } from "@marzneshin/components";
+import {
+    type ColumnActions
+} from "@marzneshin/features/entity-table";
 
-interface ColumnAction {
-    onDelete: (admin: AdminType) => void;
-    onOpen: (admin: AdminType) => void;
-    onEdit: (admin: AdminType) => void;
-}
-
-export const columns = (actions: ColumnAction): ColumnDef<AdminType>[] => [
+export const columns = (actions: ColumnActions<AdminType>): ColumnDef<AdminType>[] => [
     {
         accessorKey: "username",
         header: ({ column }) => (
@@ -47,24 +45,10 @@ export const columns = (actions: ColumnAction): ColumnDef<AdminType>[] => [
     {
         id: "actions",
         cell: ({ row }) => {
-            const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    actions.onOpen(row.original);
-                }
-            };
-
             return (
-                <div
-                    className="flex flex-row gap-2 items-center"
-                    onClick={(e) => e.stopPropagation()}
-                    onKeyDown={handleKeyDown}
-                    tabIndex={0}
-                    role="button"
-                >
+                <NoPropogationButton row={row} actions={actions}>
                     <DataTableActionsCell {...actions} row={row} />
-                </div>
+                </NoPropogationButton>
             );
         },
     }

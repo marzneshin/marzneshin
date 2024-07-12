@@ -1,17 +1,14 @@
-import { ColumnDef } from "@tanstack/react-table"
-import { ServiceType } from "@marzneshin/features/services"
-import { DataTableColumnHeader } from "@marzneshin/components/data-table/column-header"
-import i18n from "@marzneshin/features/i18n"
-import { DataTableActionsCell } from "@marzneshin/components"
+import { ColumnDef } from "@tanstack/react-table";
+import { ServiceType } from "@marzneshin/features/services";
+import { DataTableColumnHeader } from "@marzneshin/components/data-table/column-header";
+import i18n from "@marzneshin/features/i18n";
+import {
+    DataTableActionsCell,
+    NoPropogationButton,
+} from "@marzneshin/components";
+import { ColumnActions } from "@marzneshin/features/entity-table";
 
-interface ColumnAction {
-    onDelete: (service: ServiceType) => void;
-    onOpen: (node: ServiceType) => void;
-    onEdit: (node: ServiceType) => void;
-}
-
-
-export const columns = (actions: ColumnAction): ColumnDef<ServiceType>[] => ([
+export const columns = (actions: ColumnActions<ServiceType>): ColumnDef<ServiceType>[] => ([
     {
         accessorKey: "name",
         header: ({ column }) => <DataTableColumnHeader title={i18n.t('name')} column={column} />,
@@ -28,6 +25,12 @@ export const columns = (actions: ColumnAction): ColumnDef<ServiceType>[] => ([
     },
     {
         id: "actions",
-        cell: ({ row }) => <DataTableActionsCell {...actions} row={row} />
-    },
+        cell: ({ row }) => {
+            return (
+                <NoPropogationButton row={row} actions={actions}>
+                    <DataTableActionsCell {...actions} row={row} />
+                </NoPropogationButton>
+            );
+        },
+    }
 ]);

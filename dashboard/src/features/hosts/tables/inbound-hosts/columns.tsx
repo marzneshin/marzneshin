@@ -2,16 +2,15 @@ import { ColumnDef } from "@tanstack/react-table"
 import { HostType } from "@marzneshin/features/hosts"
 import { DataTableColumnHeader } from "@marzneshin/components/data-table/column-header"
 import i18n from "@marzneshin/features/i18n"
-import { DataTableActionsCell } from "@marzneshin/components"
+import {
+    type ColumnActions
+} from "@marzneshin/features/entity-table";
+import {
+    DataTableActionsCell,
+    NoPropogationButton,
+} from "@marzneshin/components"
 
-interface ColumnAction {
-    onDelete: (host: HostType) => void;
-    onOpen: (host: HostType) => void;
-    onEdit: (host: HostType) => void;
-}
-
-
-export const columns = (actions: ColumnAction): ColumnDef<HostType>[] => ([
+export const columns = (actions: ColumnActions<HostType>): ColumnDef<HostType>[] => ([
     {
         accessorKey: "remark",
         header: ({ column }) => <DataTableColumnHeader title={i18n.t('name')} column={column} />,
@@ -26,6 +25,12 @@ export const columns = (actions: ColumnAction): ColumnDef<HostType>[] => ([
     },
     {
         id: "actions",
-        cell: ({ row }) => <DataTableActionsCell {...actions} row={row} />
-    },
+        cell: ({ row }) => {
+            return (
+                <NoPropogationButton row={row} actions={actions}>
+                    <DataTableActionsCell {...actions} row={row} />
+                </NoPropogationButton>
+            );
+        },
+    }
 ]);
