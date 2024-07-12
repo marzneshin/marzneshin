@@ -16,11 +16,11 @@ interface SidebarEntityTablePopoverProps {
 export const SidebarEntityTablePopover: FC<SidebarEntityTablePopoverProps> = ({
     buttonChild,
 }) => (
-    <Popover >
+    <Popover>
         <PopoverTrigger asChild>
             <Button
                 variant="outline"
-                className="mr-2 ml-auto lg:flex"
+                className="mr-1 lg:flex"
             >
                 {buttonChild}
             </Button>
