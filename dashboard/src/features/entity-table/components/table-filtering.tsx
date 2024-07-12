@@ -16,7 +16,7 @@ export const TableFiltering: FC<TableFilteringProps> = () => {
             placeholder={t('table.filter-placeholder', { name: filtering.column })}
             value={filtering.columnFilters}
             onChange={(e) => filtering.setColumnFilters(e.target.value)}
-            className="max-w-sm w-[8rem] md:w-[20rem]"
+            className=" w-full md:w-[20rem]"
         />
     );
 }
