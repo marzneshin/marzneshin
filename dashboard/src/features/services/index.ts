@@ -1,5 +1,4 @@
 export * from './types'
-export * from './tables'
+export * from './components'
 export * from './services'
-export * from './dialogs'
-export * from './router-context'
+export * from './contexts'

@@ -13,17 +13,13 @@ import {
     CopyToClipboardButton,
     DataTableActionsCell,
     buttonVariants,
+    NoPropogationButton,
 } from "@marzneshin/components";
 import { LinkIcon } from "lucide-react";
 import { getSubscriptionLink } from "@marzneshin/utils";
+import { type ColumnActions } from "@marzneshin/features/entity-table";
 
-interface ColumnAction {
-    onDelete: (user: UserType) => void;
-    onOpen: (user: UserType) => void;
-    onEdit: (user: UserType) => void;
-}
-
-export const columns = (actions: ColumnAction): ColumnDef<UserType>[] => [
+export const columns = (actions: ColumnActions<UserType>): ColumnDef<UserType>[] => [
     {
         accessorKey: "username",
         header: ({ column }) => (
@@ -79,38 +75,22 @@ export const columns = (actions: ColumnAction): ColumnDef<UserType>[] => [
     },
     {
         id: "actions",
-        cell: ({ row }) => {
-            const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    actions.onOpen(row.original);
-                }
-            };
-
-            return (
-                <div
-                    className="flex flex-row gap-2 items-center"
-                    onClick={(e) => e.stopPropagation()}
-                    onKeyDown={handleKeyDown}
-                    tabIndex={0}
-                    role="button"
-                >
-                    <CopyToClipboardButton
-                        text={getSubscriptionLink(row.original.subscription_url)}
-                        successMessage={i18n.t(
-                            "page.users.settings.subscription_link.copied",
-                        )}
-                        copyIcon={LinkIcon}
-                        className={buttonVariants({
-                            variant: "secondary",
-                            className: "size-8",
-                        })}
-                        tooltipMsg={i18n.t("page.users.settings.subscription_link.copy")}
-                    />
-                    <DataTableActionsCell {...actions} row={row} />
-                </div>
-            );
-        },
+        cell: ({ row }) => (
+            <NoPropogationButton row={row} actions={actions}>
+                <CopyToClipboardButton
+                    text={getSubscriptionLink(row.original.subscription_url)}
+                    successMessage={i18n.t(
+                        "page.users.settings.subscription_link.copied",
+                    )}
+                    copyIcon={LinkIcon}
+                    className={buttonVariants({
+                        variant: "secondary",
+                        className: "size-8",
+                    })}
+                    tooltipMsg={i18n.t("page.users.settings.subscription_link.copy")}
+                />
+                <DataTableActionsCell {...actions} row={row} />
+            </NoPropogationButton>
+        )
     }
 ];

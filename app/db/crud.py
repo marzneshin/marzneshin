@@ -2,6 +2,7 @@ import json
 import secrets
 from datetime import datetime, timedelta
 from enum import Enum
+from types import NoneType
 from typing import List, Optional, Tuple, Union
 
 from sqlalchemy import and_, delete, update, select
@@ -21,7 +22,7 @@ from app.db.models import (
     System,
     User,
 )
-from app.models.admin import AdminCreate, AdminModify, AdminPartialModify
+from app.models.admin import AdminCreate, AdminPartialModify
 from app.models.node import (
     NodeCreate,
     NodeModify,
@@ -229,6 +230,7 @@ def get_users(
     activated: bool | None = None,
     expired: bool | None = None,
     data_limit_reached: bool | None = None,
+    enabled: bool | None = None,
 ) -> Union[List[User], Tuple[List[User], int]]:
     query = db.query(User)
 
@@ -265,6 +267,9 @@ def get_users(
 
     if isinstance(data_limit_reached, bool):
         query = query.filter(User.data_limit_reached == data_limit_reached)
+
+    if isinstance(enabled, bool):
+        query = query.filter(User.enabled == enabled)
 
     if admin:
         query = query.filter(User.admin == admin)
@@ -344,7 +349,17 @@ def get_users_count(
     return query.count()
 
 
-def create_user(db: Session, user: UserCreate, admin: Admin = None):
+def create_user(
+    db: Session,
+    user: UserCreate,
+    admin: Admin = None,
+    allowed_services: list | None = None,
+):
+    service_ids = (
+        [sid for sid in user.service_ids if sid in allowed_services]
+        if allowed_services is not None
+        else user.service_ids
+    )
     dbuser = User(
         username=user.username,
         key=user.key,
@@ -353,7 +368,7 @@ def create_user(db: Session, user: UserCreate, admin: Admin = None):
         usage_duration=user.usage_duration,
         activation_deadline=user.activation_deadline,
         services=db.query(Service)
-        .filter(Service.id.in_(user.service_ids))
+        .filter(Service.id.in_(service_ids))
         .all(),  # user.services,
         data_limit=(user.data_limit or None),
         admin=admin,
@@ -372,7 +387,12 @@ def remove_user(db: Session, dbuser: User):
     db.commit()
 
 
-def update_user(db: Session, dbuser: User, modify: UserModify):
+def update_user(
+    db: Session,
+    dbuser: User,
+    modify: UserModify,
+    allowed_services: list | None = None,
+):
     if modify.data_limit is not None:
         dbuser.data_limit = modify.data_limit or None
 
@@ -395,8 +415,15 @@ def update_user(db: Session, dbuser: User, modify: UserModify):
         dbuser.usage_duration = modify.usage_duration
 
     if modify.service_ids is not None:
+        if allowed_services is not None:
+            service_ids = [
+                sid for sid in modify.service_ids if sid in allowed_services
+            ]
+        else:
+            service_ids = modify.service_ids
+
         dbuser.services = (
-            db.query(Service).filter(Service.id.in_(modify.service_ids)).all()
+            db.query(Service).filter(Service.id.in_(service_ids)).all()
         )
     dbuser.edit_at = datetime.utcnow()
 
@@ -472,7 +499,7 @@ def get_tls_certificate(db: Session):
     return db.query(TLS).first()
 
 
-def get_admin(db: Session, username: str):
+def get_admin(db: Session, username: str) -> Admin | None:
     return db.query(Admin).filter(Admin.username == username).first()
 
 
@@ -481,6 +508,13 @@ def create_admin(db: Session, admin: AdminCreate):
         username=admin.username,
         hashed_password=admin.hashed_password,
         is_sudo=admin.is_sudo,
+        enabled=admin.enabled,
+        all_services_access=admin.all_services_access,
+        modify_users_access=admin.modify_users_access,
+        services=db.query(Service)
+        .filter(Service.id.in_(admin.service_ids))
+        .all(),
+        subscription_url_prefix=admin.subscription_url_prefix,
     )
     db.add(dbadmin)
     db.commit()
@@ -488,11 +522,27 @@ def create_admin(db: Session, admin: AdminCreate):
     return dbadmin
 
 
-def update_admin(db: Session, dbadmin: Admin, modified_admin: AdminModify):
-    dbadmin.is_sudo = modified_admin.is_sudo
-    if dbadmin.hashed_password != modified_admin.hashed_password:
-        dbadmin.hashed_password = modified_admin.hashed_password
-        dbadmin.password_reset_at = datetime.utcnow()
+def update_admin(
+    db: Session, dbadmin: Admin, modifications: AdminPartialModify
+):
+    for attribute in [
+        "is_sudo",
+        "hashed_password",
+        "enabled",
+        "all_services_access",
+        "modify_users_access",
+        "subscription_url_prefix",
+    ]:
+        if not isinstance(getattr(modifications, attribute), NoneType):
+            setattr(dbadmin, attribute, getattr(modifications, attribute))
+            if attribute == "hashed_password":
+                dbadmin.password_reset_at = datetime.utcnow()
+    if isinstance(modifications.service_ids, list):
+        dbadmin.services = (
+            db.query(Service)
+            .filter(Service.id.in_(modifications.service_ids))
+            .all()
+        )
     db.commit()
     db.refresh(dbadmin)
     return dbadmin

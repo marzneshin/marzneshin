@@ -11,14 +11,15 @@ import {
     VStack,
 } from "@marzneshin/components";
 import { useTranslation } from "react-i18next";
-import type { UserMutationType } from "@marzneshin/features/users";
+import { UsernameField, type UserMutationType } from "@marzneshin/features/users";
 import {
     DATA_LIMIT_METRIC,
     useUsersCreationMutation,
     useUsersUpdateMutation,
     UserSchema,
 } from "@marzneshin/features/users";
-import { UsernameField, NoteField, ServicesField } from "./fields";
+import { ServicesField } from "@marzneshin/features/services";
+import { NoteField } from "./fields";
 import { useMutationDialog } from "@marzneshin/hooks";
 import { DataLimitFields, ExpirationMethodFields } from "./sections";
 

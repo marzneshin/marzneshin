@@ -32,6 +32,7 @@
   "alpn": "ALPN",
   "security": "Security",
   "user_info": "User Info",
+  "admin_info": "Admin Info",
   "subscription": "Subscription",
   "subscription_link": "Subscription Link",
   "fingerprint": "Fingerprint",
@@ -66,6 +67,10 @@
   "valid": "Valid",
   "finished": "Finished",
   "expired": "Expired",
+  "change": "Change",
+  "admins": "Admins",
+  "normal": "Normal",
+  "sudo": "Sudo",
   "support-us": {
     "title": "Support Us",
     "desc": "Marzneshin is free and open-source software (FOSS), join us and show your support by donating.",
@@ -203,6 +208,24 @@
           }
         }
       }
+    },
+    "admins": {
+      "permission": "Permission",
+      "dialogs": {
+        "creation": {
+          "title": "Create admin"
+        },
+        "edition": {
+          "title": "Edit admin"
+        },
+        "deletion": {
+          "title": "Delete admin"
+        }
+      },
+      "modify-users-access": "Modify users access",
+      "subscription-url-prefix": "Subscription URL prefix",
+      "sudo-privilage": "Sudo privilage",
+      "all-services-access": "All services access"
     },
     "hosts": {
       "fragment": {

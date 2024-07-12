@@ -23,7 +23,7 @@ export async function fetchServiceUsers({ queryKey }: FetchServiceUsersType): Pr
     });
 }
 
-export const ServicesQueryFetchKey = "services";
+const ServicesQueryFetchKey = "services";
 
 export const useUsersServiceQuery = ({
     serviceId, page = 1, size = 50
