@@ -8,7 +8,7 @@ from fastapi_pagination import Page
 from fastapi_pagination.ext.sqlalchemy import paginate
 
 from app.db import Session, crud
-from app.db.models import Admin as DBAdmin
+from app.db.models import Admin as DBAdmin, Service, User
 from app.dependencies import AdminDep, SudoAdminDep, DBDep
 from app.marznode.operations import update_user
 from app.models.admin import (
@@ -19,6 +19,8 @@ from app.models.admin import (
     AdminPartialModify,
     AdminResponse,
 )
+from app.models.service import ServiceResponse
+from app.models.user import UserResponse
 from app.utils.auth import create_admin_token
 
 router = APIRouter(tags=["Admin"], prefix="/admins")
@@ -112,6 +114,41 @@ def modify_admin(
 
     dbadmin = crud.update_admin(db, dbadmin, modified_admin)
     return dbadmin
+
+
+@router.get("/{username}/services", response_model=Page[ServiceResponse])
+def get_admin_services(username: str, db: DBDep, admin: SudoAdminDep):
+    """
+    Get user services
+    """
+    db_admin = crud.get_admin(db, username)
+    if not db_admin:
+        raise HTTPException(status_code=404, detail="Admin not found")
+
+    if db_admin.is_sudo or db_admin.all_services_access:
+        query = db.query(Service)
+    else:
+        query = (
+            db.query(Service)
+            .join(Service.admins)
+            .where(DBAdmin.id == db_admin.id)
+        )
+
+    return paginate(query)
+
+
+@router.get("/{username}/users", response_model=Page[UserResponse])
+def get_admin_users(username: str, db: DBDep, admin: SudoAdminDep):
+    """
+    Get user services
+    """
+    db_admin = crud.get_admin(db, username)
+    if not db_admin:
+        raise HTTPException(status_code=404, detail="Admin not found")
+
+    query = db.query(User).where(User.admin_id == db_admin.id)
+
+    return paginate(query)
 
 
 @router.get("/{username}/disable_users", response_model=AdminResponse)
