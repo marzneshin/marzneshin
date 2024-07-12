@@ -46,7 +46,7 @@ def upgrade() -> None:
         sa.Column(
             "modify_users_access",
             sa.Boolean(),
-            server_default=sa.sql.false(),
+            server_default=sa.sql.true(),
             nullable=False,
         ),
     )
