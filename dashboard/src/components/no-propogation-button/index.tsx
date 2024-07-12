@@ -19,15 +19,15 @@ export function NoPropogationButton<T>({ children, actions, row }: NoPropogation
     }, [actions, row.original]);
 
     return (
-        <div
+        <input
             className="flex flex-row gap-2 items-center"
             onClick={(e) => e.stopPropagation()}
             onKeyDown={handleKeyDown}
             tabIndex={0}
-            role="button"
+            type="button"
         >
             {children}
-        </div>
+        </input>
     )
 }
 
