@@ -70,7 +70,7 @@ def get_users(
     """
     dbadmin = crud.get_admin(db, admin.username)
 
-    query = db.query(User)
+    query = db.query(User).filter(User.removed == False)
 
     admin = dbadmin if not admin.is_sudo else None
 
@@ -171,14 +171,13 @@ async def delete_expired(
     expired_users = [
         user
         for user in db_users
-        if user.expire is not None and user.expire <= expiration_threshold
+        if user.expire_date is not None
+        and user.expire_date <= expiration_threshold
     ]
     if not expired_users:
         raise HTTPException(status_code=404, detail="No expired user found.")
 
     for db_user in expired_users:
-        if db_user.activated and not db_user.is_active:
-            marznode.operations.update_user(db_user)
         crud.remove_user(db, db_user)
 
         asyncio.ensure_future(

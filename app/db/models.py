@@ -153,6 +153,12 @@ class User(Base):
         default=True,
         server_default=sqlalchemy.sql.true(),
     )
+    removed = Column(
+        Boolean,
+        nullable=False,
+        default=False,
+        server_default=sqlalchemy.sql.false(),
+    )
     services = relationship(
         "Service",
         secondary=users_services,
@@ -237,12 +243,20 @@ class User(Base):
     @hybrid_property
     def is_active(self):
         return (
-            self.enabled and not self.expired and not self.data_limit_reached
+            self.enabled
+            and not self.expired
+            and not self.data_limit_reached
+            and not self.removed
         )
 
     @is_active.expression
     def is_active(cls):
-        return and_(cls.enabled == True, ~cls.expired, ~cls.data_limit_reached)
+        return and_(
+            cls.enabled == True,
+            ~cls.expired,
+            ~cls.data_limit_reached,
+            ~cls.removed,
+        )
 
     @property
     def status(self):
