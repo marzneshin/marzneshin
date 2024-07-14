@@ -54,7 +54,9 @@ def get_service(id: int, db: DBDep, admin: AdminDep):
     if not dbservice:
         raise HTTPException(status_code=404, detail="Service not found")
 
-    if id not in admin.service_ids:
+    if not (
+        admin.is_sudo or admin.all_services_access or id in admin.service_ids
+    ):
         raise HTTPException(status_code=403, detail="You're not allowed")
 
     return dbservice
