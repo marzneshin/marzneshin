@@ -40,7 +40,9 @@ def get_subscription_user_info(user: UserResponse) -> dict:
         "download": user.used_traffic,
         "total": user.data_limit,
         "expire": (
-            user.expire_date if user.expire_strategy == "fixed_date" else None
+            int(user.expire_date.timestamp())
+            if user.expire_strategy == "fixed_date"
+            else None
         ),
     }
 
