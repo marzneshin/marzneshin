@@ -7,7 +7,7 @@ export const UserSchema = z.object({
     data_limit: z
         .union([z.string().transform((str) => (Number(str))), z.number()])
         .refine(val => val >= 0, { message: 'The minimum number is 0' })
-        .transform((val) => Math.round(val) * DATA_LIMIT_METRIC ?? 0)
+        .transform((val) => (Math.round(val) ?? 0) * DATA_LIMIT_METRIC)
         .nullable()
         .optional(),
     data_limit_reset_strategy: z
