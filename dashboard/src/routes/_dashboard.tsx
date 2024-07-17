@@ -24,7 +24,6 @@ import { GithubRepo } from "@marzneshin/features/github-repo";
 import { CommandBox } from "@marzneshin/features/search-command";
 import { DashboardBottomMenu } from "@marzneshin/features/bottom-menu";
 import { VersionIndicator } from "@marzneshin/features/version-indicator";
-import { Settings } from "lucide-react";
 
 export const DashboardLayout = () => {
     const isDesktop = useScreenBreakpoint("md");
@@ -57,10 +56,6 @@ export const DashboardLayout = () => {
                 end={
                     <>
                         <GithubRepo variant={isDesktop ? "full" : "mini"} />
-                        {(!isDesktop && isSudo()) && (<Link to="/settings">
-                            <Settings className="bg-gray-800 text-secondary dark:hover:bg-secondary-foreground dark:hover:text-secondary dark:text-secondary-foreground size-10 rounded-md text-2xl p-2" />
-                        </Link>
-                        )}
                         <HeaderMenu />
                     </>
                 }
