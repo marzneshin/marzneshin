@@ -38,11 +38,11 @@ def get_subscription_user_info(user: UserResponse) -> dict:
     return {
         "upload": 0,
         "download": user.used_traffic,
-        "total": user.data_limit,
+        "total": user.data_limit or 0,
         "expire": (
             int(user.expire_date.timestamp())
             if user.expire_strategy == "fixed_date"
-            else None
+            else 0
         ),
     }
 
@@ -83,7 +83,6 @@ def user_subscription(
         "subscription-userinfo": "; ".join(
             f"{key}={val}"
             for key, val in get_subscription_user_info(user).items()
-            if val is not None
         ),
     }
 
@@ -172,7 +171,6 @@ def user_subscription_with_client_type(
         "subscription-userinfo": "; ".join(
             f"{key}={val}"
             for key, val in get_subscription_user_info(user).items()
-            if val is not None
         ),
     }
 
