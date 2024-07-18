@@ -25,15 +25,11 @@ import { DataLimitFields, ExpirationMethodFields } from "./sections";
 
 interface UsersMutationDialogProps {
     entity: UserMutationType | null;
-    open: boolean;
-    onOpenChange: (state: boolean) => void;
     onClose: () => void;
 }
 
 export const UsersMutationDialog: FC<UsersMutationDialogProps> = ({
     entity,
-    open,
-    onOpenChange,
     onClose,
 }) => {
     const { t } = useTranslation();
@@ -48,9 +44,8 @@ export const UsersMutationDialog: FC<UsersMutationDialogProps> = ({
         [],
     );
 
-    const { form, handleSubmit } = useMutationDialog({
+    const { open, onOpenChange, form, handleSubmit } = useMutationDialog({
         entity,
-        onOpenChange,
         createMutation: useUsersCreationMutation(),
         updateMutation: useUsersUpdateMutation(),
         schema: UserSchema,

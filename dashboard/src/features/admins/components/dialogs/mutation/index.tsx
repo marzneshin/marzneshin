@@ -1,4 +1,4 @@
-import { type FC, useState, useEffect, useCallback } from "react";
+import { type FC, useState, useCallback } from "react";
 import {
     DialogTitle,
     DialogContent,
@@ -27,18 +27,9 @@ import {
     SudoPrivilageField,
     AllServicesAccessField,
 } from "./fields";
-import { useMutationDialog } from "@marzneshin/hooks";
+import { useMutationDialog, MutationDialogProps } from "@marzneshin/hooks";
 
-interface AdminsMutationDialogProps {
-    open: boolean;
-    onOpenChange: (state: boolean) => void;
-    onClose: () => void;
-    entity?: AdminType | null;
-}
-
-export const AdminsMutationDialog: FC<AdminsMutationDialogProps> = ({
-    open,
-    onOpenChange,
+export const AdminsMutationDialog: FC<MutationDialogProps<AdminType>> = ({
     onClose,
     entity = null,
 }) => {
@@ -54,9 +45,9 @@ export const AdminsMutationDialog: FC<AdminsMutationDialogProps> = ({
         [],
     );
 
-    const { form, handleSubmit } = useMutationDialog({
+    const { onOpenChange, open, form, handleSubmit } = useMutationDialog({
         entity,
-        onOpenChange,
+        onClose,
         createMutation: useAdminsCreationMutation(),
         updateMutation: useAdminsUpdateMutation(),
         schema: AdminMutationSchema,
@@ -70,10 +61,6 @@ export const AdminsMutationDialog: FC<AdminsMutationDialogProps> = ({
                 shouldTouch: true,
                 shouldDirty: true,
             });
-
-    useEffect(() => {
-        if (!open) onClose();
-    }, [open, onClose]);
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange} defaultOpen={true}>

@@ -1,4 +1,4 @@
-import { type FC, useEffect } from "react";
+import { type FC } from "react";
 import {
     DialogTitle,
     DialogContent,
@@ -27,14 +27,7 @@ import {
     useNodesUpdateMutation,
 } from "../..";
 import type { NodeType } from "../..";
-import { useMutationDialog } from "@marzneshin/hooks";
-
-interface MutationDialogProps {
-    entity: NodeType | null;
-    open: boolean;
-    onOpenChange: (state: boolean) => void;
-    onClose: () => void;
-}
+import { useMutationDialog, MutationDialogProps } from "@marzneshin/hooks";
 
 const getDefaultValue = (): NodeType => ({
     name: "",
@@ -45,27 +38,21 @@ const getDefaultValue = (): NodeType => ({
     connection_backend: "grpclib",
 });
 
-export const MutationDialog: FC<MutationDialogProps> = ({
+export const MutationDialog: FC<MutationDialogProps<NodeType>> = ({
     entity,
-    open,
-    onOpenChange,
     onClose,
 }) => {
     const updateMutation = useNodesUpdateMutation();
     const createMutation = useNodesCreationMutation();
     const { t } = useTranslation();
-    const { form, handleSubmit } = useMutationDialog({
-        onOpenChange,
+    const { onOpenChange, open, form, handleSubmit } = useMutationDialog({
         entity,
+        onClose,
         schema: NodeSchema,
         createMutation,
         updateMutation,
         getDefaultValue,
     });
-
-    useEffect(() => {
-        if (!open) onClose();
-    }, [open, onClose]);
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange} defaultOpen={true}>
