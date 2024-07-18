@@ -2,6 +2,7 @@ import { useFormContext } from "react-hook-form";
 import { ExpireStrategy } from "@marzneshin/features/users";
 
 abstract class ExpirationMethodStrategy {
+    protected abstract strategy: string;
     protected abstract applyFieldValues(form: ReturnType<typeof useFormContext>): void;
 
     protected clearErrors(form: ReturnType<typeof useFormContext>) {
@@ -11,37 +12,36 @@ abstract class ExpirationMethodStrategy {
     }
 
     public apply(form: ReturnType<typeof useFormContext>) {
+        form.setValue("expire_strategy", this.strategy);
         this.applyFieldValues(form)
         this.clearErrors(form)
     }
 }
 
 export class FirstUseStrategy extends ExpirationMethodStrategy {
+    strategy = "start_on_first_use";
 
     protected applyFieldValues(form: ReturnType<typeof useFormContext>) {
-        form.setValue("expire_strategy", "start_on_first_use");
         form.setValue("expire", undefined);
     }
 }
 
-export class NeverStrategy
-    extends ExpirationMethodStrategy {
+export class NeverStrategy extends ExpirationMethodStrategy {
+    strategy = "never";
 
     protected applyFieldValues(form: ReturnType<typeof useFormContext>) {
-        form.setValue("expire_strategy", "never");
         form.setValue("expire_date", undefined);
         form.setValue("activation_deadline", undefined);
         form.setValue("usage_duration", undefined);
     }
 }
 
-export class FixedStrategy
-    extends ExpirationMethodStrategy {
+export class FixedStrategy extends ExpirationMethodStrategy {
+    strategy = "fixed_date";
 
     protected applyFieldValues(form: ReturnType<typeof useFormContext>) {
-        form.setValue("expire_strategy", "fixed_date");
-        form.setValue("on_hold_expire_duration", 0);
-        form.setValue("activation_deadline", null);
+        form.setValue("usage_duration", undefined);
+        form.setValue("activation_deadline", undefined);
     }
 }
 
