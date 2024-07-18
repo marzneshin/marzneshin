@@ -11,6 +11,11 @@ abstract class ExpirationMethodStrategy {
         form.clearErrors("activation_deadline");
     }
 
+    /**
+     * Applied the rules on the form's fields, called by component
+     *
+     * @param form - form object from the context
+     */
     public apply(form: ReturnType<typeof useFormContext>) {
         form.setValue("expire_strategy", this.strategy);
         this.applyFieldValues(form)
