@@ -28,7 +28,7 @@ export class NeverStrategy
     extends ExpirationMethodStrategy {
 
     protected applyFieldValues(form: ReturnType<typeof useFormContext>) {
-        form.setValue("expire_strategy", 'never');
+        form.setValue("expire_strategy", "never");
         form.setValue("expire_date", undefined);
         form.setValue("activation_deadline", undefined);
         form.setValue("usage_duration", undefined);
@@ -39,7 +39,7 @@ export class FixedStrategy
     extends ExpirationMethodStrategy {
 
     protected applyFieldValues(form: ReturnType<typeof useFormContext>) {
-        form.setValue("expire_strategy", 'fixed_date');
+        form.setValue("expire_strategy", "fixed_date");
         form.setValue("on_hold_expire_duration", 0);
         form.setValue("activation_deadline", null);
     }
