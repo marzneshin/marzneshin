@@ -15,9 +15,14 @@ export const useExpirationMethodTabs = ({ entity }: { entity: UserMutationType |
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedExpirationMethodTab]);
 
+    const handleTabChange = (value: string) => {
+        setSelectedExpirationMethodTab(value as ExpireStrategy);
+    };
+
     return {
         selectedExpirationMethodTab: selectedExpirationMethodTab,
         defaultExpirationMethodTab,
         setSelectedExpirationMethodTab,
+        handleTabChange,
     };
 };

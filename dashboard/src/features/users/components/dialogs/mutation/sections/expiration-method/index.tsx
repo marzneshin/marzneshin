@@ -7,7 +7,6 @@ import {
 } from '@marzneshin/components';
 import type {
     UserMutationType,
-    ExpireStrategy,
 } from "@marzneshin/features/users";
 import {
     ExpireDateField,
@@ -25,13 +24,9 @@ interface ExpirationMethodProps {
 export const ExpirationMethodFields: FC<ExpirationMethodProps> = ({ entity }) => {
     const { t } = useTranslation();
     const {
-        setSelectedExpirationMethodTab,
+        handleTabChange,
         defaultExpirationMethodTab
     } = useExpirationMethodTabs({ entity });
-
-    const handleTabChange = (value: string) => {
-        setSelectedExpirationMethodTab(value as ExpireStrategy);
-    };
 
     return (
         <>
