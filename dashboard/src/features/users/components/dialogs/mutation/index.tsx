@@ -1,4 +1,4 @@
-import { type FC, useEffect, useCallback } from "react";
+import { type FC, useMemo } from "react";
 import {
     Separator,
     DialogTitle,
@@ -11,54 +11,44 @@ import {
     VStack,
 } from "@marzneshin/components";
 import { useTranslation } from "react-i18next";
-import { UsernameField, type UserMutationType } from "@marzneshin/features/users";
 import {
     DATA_LIMIT_METRIC,
     useUsersCreationMutation,
     useUsersUpdateMutation,
     UserSchema,
+    UsernameField, type UserMutationType
 } from "@marzneshin/features/users";
 import { ServicesField } from "@marzneshin/features/services";
 import { NoteField } from "./fields";
-import { useMutationDialog } from "@marzneshin/hooks";
+import { MutationDialogProps, useMutationDialog } from "@marzneshin/hooks";
 import { DataLimitFields, ExpirationMethodFields } from "./sections";
+import { DevTool } from '@hookform/devtools';
 
-interface UsersMutationDialogProps {
-    entity: UserMutationType | null;
-    onClose: () => void;
-}
-
-export const UsersMutationDialog: FC<UsersMutationDialogProps> = ({
+export const UsersMutationDialog: FC<MutationDialogProps<UserMutationType>> = ({
     entity,
     onClose,
 }) => {
     const { t } = useTranslation();
-    const getDefaultValues = useCallback(
-        (): UserMutationType => ({
-            service_ids: [],
-            expire_strategy: "fixed_date",
-            username: "",
-            data_limit_reset_strategy: "no_reset",
-            note: "",
-        }),
-        [],
-    );
+    const defaultValue = useMemo(() => ({
+        service_ids: [],
+        expire_strategy: "fixed_date",
+        username: "",
+        data_limit_reset_strategy: "no_reset",
+        note: "",
+    }), [])
 
     const { open, onOpenChange, form, handleSubmit } = useMutationDialog({
         entity,
+        onClose,
         createMutation: useUsersCreationMutation(),
         updateMutation: useUsersUpdateMutation(),
         schema: UserSchema,
-        getDefaultValue: getDefaultValues,
+        defaultValue,
         loadFormtter: (d) => ({
             ...d,
             data_limit: (d.data_limit ? d.data_limit : 0) / DATA_LIMIT_METRIC,
         }),
     });
-
-    useEffect(() => {
-        if (!open) onClose();
-    }, [open, onClose]);
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange} defaultOpen={true}>
@@ -97,6 +87,7 @@ export const UsersMutationDialog: FC<UsersMutationDialogProps> = ({
                         </form>
                     </Form>
                 </ScrollArea>
+                <DevTool control={form.control} placement="top-left" />
             </DialogContent>
         </Dialog>
     );

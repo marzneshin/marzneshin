@@ -29,15 +29,6 @@ import {
 import type { NodeType } from "../..";
 import { useMutationDialog, MutationDialogProps } from "@marzneshin/hooks";
 
-const getDefaultValue = (): NodeType => ({
-    name: "",
-    address: "",
-    status: "none",
-    port: 62050,
-    usage_coefficient: 1,
-    connection_backend: "grpclib",
-});
-
 export const MutationDialog: FC<MutationDialogProps<NodeType>> = ({
     entity,
     onClose,
@@ -51,7 +42,14 @@ export const MutationDialog: FC<MutationDialogProps<NodeType>> = ({
         schema: NodeSchema,
         createMutation,
         updateMutation,
-        getDefaultValue,
+        defaultValue: {
+            name: "",
+            address: "",
+            status: "none",
+            port: 62050,
+            usage_coefficient: 1,
+            connection_backend: "grpclib",
+        },
     });
 
     return (

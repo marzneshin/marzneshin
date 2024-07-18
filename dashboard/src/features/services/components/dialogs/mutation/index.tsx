@@ -25,18 +25,10 @@ export const ServiceSchema = z.object({
     name: z.string().trim().min(1),
 });
 
-type ServiceCreateType = z.infer<typeof ServiceSchema>;
-
-const getDefaultValues = (): ServiceCreateType => ({
-    name: "",
-    inbound_ids: [],
-});
-
 export const MutationDialog: FC<MutationDialogProps<ServiceType>> = ({
     entity,
     onClose,
 }) => {
-    const isEditing = entity !== null;
     const updateMutation = useServicesUpdateMutation();
     const createMutation = useServicesCreationMutation();
     const { open, onOpenChange, form, handleSubmit } = useMutationDialog({
@@ -44,7 +36,10 @@ export const MutationDialog: FC<MutationDialogProps<ServiceType>> = ({
         entity,
         updateMutation,
         createMutation,
-        getDefaultValue: getDefaultValues,
+        defaultValue: {
+            name: "",
+            inbound_ids: [],
+        },
         schema: ServiceSchema,
     });
     const { t } = useTranslation();
@@ -54,7 +49,7 @@ export const MutationDialog: FC<MutationDialogProps<ServiceType>> = ({
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle className="text-primary">
-                        {isEditing
+                        {entity
                             ? t("page.services.dialogs.edition.title")
                             : t("page.services.dialogs.creation.title")}
                     </DialogTitle>

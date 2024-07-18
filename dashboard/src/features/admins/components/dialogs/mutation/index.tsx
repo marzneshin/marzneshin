@@ -1,4 +1,4 @@
-import { type FC, useState, useCallback } from "react";
+import { type FC, useState } from "react";
 import {
     DialogTitle,
     DialogContent,
@@ -14,7 +14,6 @@ import {
     useAdminsCreationMutation,
     useAdminsUpdateMutation,
     AdminMutationSchema,
-    type AdminMutationType,
     AdminType,
 } from "@marzneshin/features/admins";
 import { ServicesField } from "@marzneshin/features/services";
@@ -34,16 +33,6 @@ export const AdminsMutationDialog: FC<MutationDialogProps<AdminType>> = ({
     entity = null,
 }) => {
     const { t } = useTranslation();
-    const getDefaultValues = useCallback(
-        (): AdminMutationType => ({
-            service_ids: [],
-            username: "",
-            password: null,
-            is_sudo: false,
-            enabled: true,
-        }),
-        [],
-    );
 
     const { onOpenChange, open, form, handleSubmit } = useMutationDialog({
         entity,
@@ -51,7 +40,13 @@ export const AdminsMutationDialog: FC<MutationDialogProps<AdminType>> = ({
         createMutation: useAdminsCreationMutation(),
         updateMutation: useAdminsUpdateMutation(),
         schema: AdminMutationSchema,
-        getDefaultValue: getDefaultValues,
+        defaultValue: {
+            service_ids: [],
+            username: "",
+            password: null,
+            is_sudo: false,
+            enabled: true,
+        },
     });
 
     const [change, setChange] = useState<boolean>(entity === null);

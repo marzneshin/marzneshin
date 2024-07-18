@@ -14,7 +14,7 @@ interface IMutationDialog<TData, TError = unknown, TVariables = unknown> extends
     createMutation: UseMutationResult<TData, TError, TVariables>
     updateMutation: UseMutationResult<TData, TError, TVariables>
     schema: ZodSchema
-    getDefaultValue: () => FieldValues
+    defaultValue: FieldValues
     loadFormtter?: (d: FieldValues) => FieldValues
 }
 
@@ -42,13 +42,13 @@ export const useMutationDialog = <TData, TError = unknown, TVariables = unknown>
     createMutation,
     updateMutation,
     schema,
-    getDefaultValue,
+    defaultValue,
     loadFormtter = (s) => s,
 }: IMutationDialog<TData, TError, TVariables>) => {
     const [open, onOpenChange] = useDialog(true);
 
     const form = useForm({
-        defaultValues: entity ? loadFormtter(entity) : getDefaultValue(),
+        defaultValues: entity ? loadFormtter(entity) : defaultValue,
         resolver: zodResolver(schema)
     });
 
@@ -65,10 +65,10 @@ export const useMutationDialog = <TData, TError = unknown, TVariables = unknown>
         if (entity) {
             form.reset(loadFormtter(entity))
         } else {
-            form.reset(getDefaultValue());
+            form.reset(defaultValue);
         }
         // eslint-disable-next-line
-    }, [entity, form, getDefaultValue]);
+    }, [entity, defaultValue]);
 
     useEffect(() => {
         if (!open) onClose();
