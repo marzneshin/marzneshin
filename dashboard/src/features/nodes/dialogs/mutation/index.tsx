@@ -1,4 +1,4 @@
-import { type FC } from "react";
+import { type FC, useMemo } from "react";
 import {
     DialogTitle,
     DialogContent,
@@ -36,20 +36,23 @@ export const MutationDialog: FC<MutationDialogProps<NodeType>> = ({
     const updateMutation = useNodesUpdateMutation();
     const createMutation = useNodesCreationMutation();
     const { t } = useTranslation();
+
+    const defaultValue = useMemo(() => ({
+        name: "",
+        address: "",
+        status: "none",
+        port: 62050,
+        usage_coefficient: 1,
+        connection_backend: "grpclib",
+    }), []);
+
     const { onOpenChange, open, form, handleSubmit } = useMutationDialog({
         entity,
         onClose,
         schema: NodeSchema,
         createMutation,
         updateMutation,
-        defaultValue: {
-            name: "",
-            address: "",
-            status: "none",
-            port: 62050,
-            usage_coefficient: 1,
-            connection_backend: "grpclib",
-        },
+        defaultValue,
     });
 
     return (

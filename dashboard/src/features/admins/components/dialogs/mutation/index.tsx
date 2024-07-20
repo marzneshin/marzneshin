@@ -1,4 +1,4 @@
-import { type FC, useState } from "react";
+import { type FC, useState, useMemo } from "react";
 import {
     DialogTitle,
     DialogContent,
@@ -34,19 +34,21 @@ export const AdminsMutationDialog: FC<MutationDialogProps<AdminType>> = ({
 }) => {
     const { t } = useTranslation();
 
+    const defaultValue = useMemo(() => ({
+        service_ids: [],
+        username: "",
+        password: null,
+        is_sudo: false,
+        enabled: true,
+    }), [])
+
     const { onOpenChange, open, form, handleSubmit } = useMutationDialog({
         entity,
         onClose,
         createMutation: useAdminsCreationMutation(),
         updateMutation: useAdminsUpdateMutation(),
         schema: AdminMutationSchema,
-        defaultValue: {
-            service_ids: [],
-            username: "",
-            password: null,
-            is_sudo: false,
-            enabled: true,
-        },
+        defaultValue,
     });
 
     const [change, setChange] = useState<boolean>(entity === null);

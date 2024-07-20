@@ -6,7 +6,7 @@ import {
     Form,
     Button,
 } from "@marzneshin/components";
-import { type FC } from "react";
+import { type FC, useMemo } from "react";
 import {
     type ServiceType,
     useServicesCreationMutation,
@@ -29,6 +29,10 @@ export const MutationDialog: FC<MutationDialogProps<ServiceType>> = ({
     entity,
     onClose,
 }) => {
+    const defaultValue = useMemo(() => ({
+        name: "",
+        inbound_ids: [],
+    }), []);
     const updateMutation = useServicesUpdateMutation();
     const createMutation = useServicesCreationMutation();
     const { open, onOpenChange, form, handleSubmit } = useMutationDialog({
@@ -36,10 +40,7 @@ export const MutationDialog: FC<MutationDialogProps<ServiceType>> = ({
         entity,
         updateMutation,
         createMutation,
-        defaultValue: {
-            name: "",
-            inbound_ids: [],
-        },
+        defaultValue,
         schema: ServiceSchema,
     });
     const { t } = useTranslation();
