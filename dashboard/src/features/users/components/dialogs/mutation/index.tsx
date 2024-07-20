@@ -22,7 +22,6 @@ import { ServicesField } from "@marzneshin/features/services";
 import { NoteField } from "./fields";
 import { MutationDialogProps, useMutationDialog } from "@marzneshin/hooks";
 import { DataLimitFields, ExpirationMethodFields } from "./sections";
-import { DevTool } from '@hookform/devtools';
 
 export const UsersMutationDialog: FC<MutationDialogProps<UserMutationType>> = ({
     entity,
@@ -87,7 +86,6 @@ export const UsersMutationDialog: FC<MutationDialogProps<UserMutationType>> = ({
                         </form>
                     </Form>
                 </ScrollArea>
-                <DevTool control={form.control} placement="top-left" />
             </DialogContent>
         </Dialog>
     );
