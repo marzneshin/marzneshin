@@ -30,7 +30,6 @@ export const UsersMutationDialog: FC<MutationDialogProps<UserMutationType>> = ({
     const { t } = useTranslation();
     const defaultValue = useMemo(() => ({
         service_ids: [],
-        expire_strategy: "fixed_date",
         username: "",
         data_limit_reset_strategy: "no_reset",
         note: "",

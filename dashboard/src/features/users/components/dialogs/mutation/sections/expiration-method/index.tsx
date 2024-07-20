@@ -25,8 +25,8 @@ export const ExpirationMethodFields: FC<ExpirationMethodProps> = ({ entity }) =>
     const { t } = useTranslation();
     const {
         handleTabChange,
-        defaultExpirationMethodTab
-    } = useExpirationMethodTabs({ entity });
+        selectedExpirationMethodTab
+    } = useExpirationMethodTabs(entity);
 
     return (
         <>
@@ -34,7 +34,7 @@ export const ExpirationMethodFields: FC<ExpirationMethodProps> = ({ entity }) =>
                 {t('page.users.expire_method')}
             </FormLabel>
             <Tabs
-                defaultValue={defaultExpirationMethodTab}
+                defaultValue={selectedExpirationMethodTab}
                 onValueChange={handleTabChange}
                 className="w-full"
             >

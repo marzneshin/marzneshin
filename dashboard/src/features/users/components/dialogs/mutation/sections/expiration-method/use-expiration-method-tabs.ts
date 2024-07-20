@@ -4,12 +4,13 @@ import { useFormContext } from "react-hook-form";
 import { strategies } from "./expiration-method.strategy"
 
 
-export const useExpirationMethodTabs = ({ entity }: { entity: UserMutationType | null }) => {
+export const useExpirationMethodTabs = (entity: UserMutationType | null) => {
     const form = useFormContext();
 
-    const defaultExpirationMethodTab = entity ? entity.expire_strategy : 'fixed_date';
-    const [selectedExpirationMethodTab, setSelectedExpirationMethodTab] = useState<ExpireStrategy>(defaultExpirationMethodTab);
-
+    const [
+        selectedExpirationMethodTab,
+        setSelectedExpirationMethodTab
+    ] = useState<ExpireStrategy>(entity ? entity.expire_strategy : 'fixed_date');
     useEffect(() => {
         strategies[selectedExpirationMethodTab as ExpireStrategy].apply(form);
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -20,8 +21,7 @@ export const useExpirationMethodTabs = ({ entity }: { entity: UserMutationType |
     };
 
     return {
-        selectedExpirationMethodTab: selectedExpirationMethodTab,
-        defaultExpirationMethodTab,
+        selectedExpirationMethodTab,
         setSelectedExpirationMethodTab,
         handleTabChange,
     };
