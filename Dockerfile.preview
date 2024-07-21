@@ -2,11 +2,9 @@ FROM node:20-slim AS frontend-build
 
 WORKDIR /app
 
-COPY ./dashboard ./dashboard
+COPY . .
 
-COPY ./makefile /app
-
-RUN apt-get update && apt-get install make -y
+RUN apt-get update && apt-get install make git -y
 
 RUN npm install -g pnpm
 
