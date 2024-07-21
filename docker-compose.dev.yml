@@ -1,6 +1,8 @@
 services:
   marzneshin:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile.preview
     restart: always
     env_file: .env
     volumes:
