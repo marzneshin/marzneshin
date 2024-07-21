@@ -27,4 +27,4 @@ RUN apt-get update -y \
     && apt-get remove g++ gcc python3-dev -y \
     && rm -rf /var/lib/apt/lists/* 
 
-CMD ["make", "start"]
+CMD ["python", "main.py"]
