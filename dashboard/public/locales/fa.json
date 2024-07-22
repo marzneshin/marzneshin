@@ -230,26 +230,26 @@
           }
         }
       }
-    }
-  },
-  "admins": {
-    "permission": "دسترسی ها",
-    "dialogs": {
-      "creation": {
-        "title": "ایجاد ادمین"
-      },
-      "edition": {
-        "title": "ویرایش ادمین"
-      },
-      "deletion": {
-        "title": "حذف ادمین"
-      }
     },
-    "modify-users-access": "تغییر دسترسی کاربران",
-    "subscription-url-prefix": "پیشوند URL اشتراک",
-    "sudo-privilage": "دسترسی سوپر ادمین",
-    "all-services-access": "دسترسی به کلیه سرویس ها",
-    "users-data-usage": "مصرف کاربران"
+    "admins": {
+      "permission": "دسترسی ها",
+      "dialogs": {
+        "creation": {
+          "title": "ایجاد ادمین"
+        },
+        "edition": {
+          "title": "ویرایش ادمین"
+        },
+        "deletion": {
+          "title": "حذف ادمین"
+        }
+      },
+      "modify-users-access": "تغییر دسترسی کاربران",
+      "subscription-url-prefix": "پیشوند URL اشتراک",
+      "sudo-privilage": "دسترسی سوپر ادمین",
+      "all-services-access": "دسترسی به کلیه سرویس ها",
+      "users-data-usage": "مصرف کاربران"
+    }
   },
   "events": {
     "delete": {
