@@ -11,8 +11,8 @@ export const IsDisabled = () => {
                 <FormItem>
                     <FormControl>
                         <Switch
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
+                            checked={!field.value}
+                            onCheckedChange={(checked) => field.onChange(!checked)}
                         />
                     </FormControl>
                 </FormItem>
