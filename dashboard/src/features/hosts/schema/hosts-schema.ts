@@ -81,4 +81,5 @@ export const HostSchema = z.object({
         ])
         .optional()
         .default("none"),
+    is_disabled: z.boolean(),
 });

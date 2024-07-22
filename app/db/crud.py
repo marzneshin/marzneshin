@@ -185,6 +185,7 @@ def update_host(db: Session, db_host: InboundHost, host: InboundHostModify):
     db_host.fingerprint = host.fingerprint
     db_host.fragment = host.fragment.model_dump() if host.fragment else None
     db_host.mux = host.mux
+    db_host.is_disabled = host.is_disabled
     db.commit()
     db.refresh(db_host)
     return db_host

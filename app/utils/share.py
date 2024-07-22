@@ -235,6 +235,8 @@ def generate_user_configs(
             hosts = crud.get_inbound_hosts(db, inb_id)
 
         for host in hosts:
+            if host.is_disabled:
+                continue
             host_snis = host.sni.split(",") if host.sni else []
             sni_list = host_snis or inbound["sni"]
             if sni_list:
