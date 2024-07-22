@@ -10,8 +10,13 @@ const packetsInterval = (v: string | null | undefined) => {
 };
 
 export const alpnOptions = [
-    "h2", "http/1.1", "h2,http/1.1", "none",
-    "h3", "h3,h2", "h3,h2,http/1.1"
+    "none",
+    "h2",
+    "h3",
+    "h3,h2",
+    "http/1.1",
+    "h2,http/1.1",
+    "h3,h2,http/1.1"
 ]
 
 export const HostSchema = z.object({
