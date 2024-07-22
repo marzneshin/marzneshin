@@ -12,7 +12,7 @@ const UserEdit = () => {
     const value = useRouterUserContext()
     const navigate = useNavigate({ from: "/users/$userId/edit" });
 
-    return value && (
+    return value && value.user && (
         <UsersMutationDialog
             entity={value.user}
             onClose={() => navigate({ to: "/users" })}
