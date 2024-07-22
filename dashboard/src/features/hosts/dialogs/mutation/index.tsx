@@ -1,4 +1,4 @@
-import { type FC, useEffect, useMemo } from "react";
+import { type FC, useEffect } from "react";
 import {
     DialogTitle,
     DialogContent,

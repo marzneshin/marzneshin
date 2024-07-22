@@ -19,12 +19,12 @@ export const UserSchema = z.object({
     usage_duration: z.number().nullable().optional(),
     activation_deadline: z
         .string()
-        .or(z.number())
+        .or(z.date())
         .nullable()
         .optional(),
     expire_date: z
         .string()
-        .or(z.number())
+        .or(z.date())
         .nullable()
         .optional(),
     service_ids: z
