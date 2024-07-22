@@ -34,12 +34,12 @@ export const AdminInfoTable: FC<AdminProp> = ({ admin: entity }) => {
                             value={<AdminEnabledPill admin={entity} />}
                         />
                         <TableRowWithCell
-                            label={t("page.admins.users-data-usage")}
-                            value={`${usersDataUsage[0]} ${usersDataUsage[1]}`}
-                        />
-                        <TableRowWithCell
                             label={t("page.admins.permission")}
                             value={<AdminPermissionPill admin={entity} />}
+                        />
+                        <TableRowWithCell
+                            label={t("page.admins.users-data-usage")}
+                            value={`${usersDataUsage[0]} ${usersDataUsage[1]}`}
                         />
 
                     </TableBody>
