@@ -22,7 +22,7 @@ export const AdminCreateSchema = z.object({
     all_services_access: z.boolean().optional(),
     modify_users_access: z.boolean().optional(),
     subscription_url_prefix: z.string().optional(),
-    password: z.string().min(8, { message: "Password is required" }),
+    password: z.string().min(1, { message: "Password is required" }),
     service_ids: z
         .array(z.number().or(z.string()))
         .transform((v) => v.map(Number))
