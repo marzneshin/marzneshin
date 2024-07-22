@@ -26,7 +26,7 @@ export interface EntityTableProps<T> {
     rowSelection?: UseRowSelectionReturn;
     manualSorting?: boolean;
     onCreate: () => void;
-    onOpen: (entity: T) => void;
+    onOpen: (entity: any) => void;
 }
 
 export function EntityTable<T>({
