@@ -12,6 +12,7 @@ import {
     FormLabel,
     Separator,
     Awaiting,
+    CheckboxField,
 } from "@marzneshin/components";
 import { Schema } from "./schema"
 import { Overlay } from "./overlay"
@@ -22,7 +23,6 @@ import {
     UpdateIntervalField,
     PlaceholderRemarkField,
     PlaceholderIfDisabledField,
-    ShuffleConfigsField
 } from "./fields";
 import { NoRulesAlert } from "./no-rules-alert";
 import {
@@ -82,10 +82,19 @@ export function SubscriptionRulesForm() {
                     <UpdateIntervalField />
                     <SupportLinkField />
                 </div>
-                <TemplateOnAcceptanceField />
+                <CheckboxField
+                    name="template_on_acceptance"
+                    label={t("page.settings.subscription-settings.template-on-acceptance")}
+                />
                 <PlaceholderRemarkField />
-                <PlaceholderIfDisabledField />
-                <ShuffleConfigsField />
+                <CheckboxField
+                    name="placeholder_if_disabled"
+                    label={t("page.settings.subscription-settings.placeholder-if-disabled")}
+                />
+                <CheckboxField
+                    name="shuffle_configs"
+                    label={t("page.settings.subscription-settings.shuffle-configs")}
+                />
                 <Separator className="my-3" />
                 <h4 className="text-lg mt-2">
                     {t("page.settings.subscription-settings.subscription-title")}
