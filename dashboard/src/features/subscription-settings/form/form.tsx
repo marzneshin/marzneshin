@@ -17,12 +17,10 @@ import {
 import { Schema } from "./schema"
 import { Overlay } from "./overlay"
 import {
-    TemplateOnAcceptanceField,
     ProfileTitleField,
     SupportLinkField,
     UpdateIntervalField,
     PlaceholderRemarkField,
-    PlaceholderIfDisabledField,
 } from "./fields";
 import { NoRulesAlert } from "./no-rules-alert";
 import {
