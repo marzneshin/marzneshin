@@ -248,7 +248,8 @@
     "modify-users-access": "تغییر دسترسی کاربران",
     "subscription-url-prefix": "پیشوند URL اشتراک",
     "sudo-privilage": "دسترسی سوپر ادمین",
-    "all-services-access": "دسترسی به کلیه سرویس ها"
+    "all-services-access": "دسترسی به کلیه سرویس ها",
+    "users-data-usage": "مصرف کاربران"
   },
   "events": {
     "delete": {
