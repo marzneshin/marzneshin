@@ -1,4 +1,3 @@
-import type { ColumnDef } from "@tanstack/react-table";
 import {
     type UserType,
     OnlineStatus,
@@ -17,9 +16,9 @@ import {
 } from "@marzneshin/components";
 import { LinkIcon } from "lucide-react";
 import { getSubscriptionLink } from "@marzneshin/utils";
-import { type ColumnActions } from "@marzneshin/features/entity-table";
+import type { ColumnActions, ColumnDefWithSudoRole } from "@marzneshin/features/entity-table";
 
-export const columns = (actions: ColumnActions<UserType>): ColumnDef<UserType>[] => [
+export const columns = (actions: ColumnActions<UserType>): ColumnDefWithSudoRole<UserType>[] => [
     {
         accessorKey: "username",
         header: ({ column }) => (
@@ -29,6 +28,16 @@ export const columns = (actions: ColumnActions<UserType>): ColumnDef<UserType>[]
             <div className="flex flex-row gap-2 items-center">
                 <OnlineStatus user={row.original} /> {row.original.username}
             </div>
+        ),
+    }, {
+        accessorKey: "owner_username",
+        enableSorting: false,
+        sudoVisibleOnly: true,
+        header: ({ column }) => (
+            <DataTableColumnHeader
+                title={i18n.t("owner")}
+                column={column}
+            />
         ),
     },
     {
