@@ -225,7 +225,8 @@
       "modify-users-access": "Modify users access",
       "subscription-url-prefix": "Subscription URL prefix",
       "sudo-privilage": "Sudo privilage",
-      "all-services-access": "All services access"
+      "all-services-access": "All services access",
+      "users-data-usage": "Users Data Usage"
     },
     "hosts": {
       "fragment": {

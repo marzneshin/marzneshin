@@ -59,7 +59,6 @@ export const AdminsSettingsDialog: FC<AdminsSettingsDialogProps> = ({
                         </TabsContent>
                         <TabsContent value="services">
                             {/* <AdminServicesTable admin={entity} /> */}
-                            Services
                         </TabsContent>
                         <TabsContent value="users">
                             Users
