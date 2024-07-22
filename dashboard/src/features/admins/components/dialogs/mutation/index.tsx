@@ -13,7 +13,8 @@ import { useTranslation } from "react-i18next";
 import {
     useAdminsCreationMutation,
     useAdminsUpdateMutation,
-    AdminMutationSchema,
+    AdminEditSchema,
+    AdminCreateSchema,
     AdminType,
 } from "@marzneshin/features/admins";
 import { ServicesField } from "@marzneshin/features/services";
@@ -37,9 +38,9 @@ export const AdminsMutationDialog: FC<MutationDialogProps<AdminType>> = ({
     const defaultValue = useMemo(() => ({
         service_ids: [],
         username: "",
-        password: null,
         is_sudo: false,
         enabled: true,
+        modify_users_access: true,
     }), [])
 
     const { onOpenChange, open, form, handleSubmit } = useMutationDialog({
@@ -47,7 +48,7 @@ export const AdminsMutationDialog: FC<MutationDialogProps<AdminType>> = ({
         onClose,
         createMutation: useAdminsCreationMutation(),
         updateMutation: useAdminsUpdateMutation(),
-        schema: AdminMutationSchema,
+        schema: entity ? AdminEditSchema : AdminCreateSchema,
         defaultValue,
     });
 

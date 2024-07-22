@@ -26,7 +26,7 @@ export const PasswordField: FC<{ change: boolean, handleChange: (s: boolean) => 
                     <FormLabel>{t("password")}</FormLabel>
                     <FormControl>
                         {change ?
-                            (<Input  {...field} />)
+                            (<Input type="password" {...field} />)
                             : (
                                 <Button
                                     className="border w-full"
