@@ -51,9 +51,8 @@ export function SidebarEntityTable<T, S>(props: SidebarEntityTableProps<T, S>) {
         <EntityTableContext.Provider value={entityTableContextValue}>
             <SidebarEntityTableContext.Provider value={sidebarEntityTableContextValue}>
                 <div className="flex flex-col">
-                    <div className="flex items-center justify-between py-4">
-                        <TableFiltering />
-                        <HStack className="gap-0 items-center">
+                    <div className="flex flex-col md:flex-row-reverse items-center py-4 gap-2 w-full">
+                        <div className="flex flex-row justify-center items-center w-full">
                             {!desktop && (
                                 <SidebarEntityTablePopover
                                     buttonChild={
@@ -69,7 +68,8 @@ export function SidebarEntityTable<T, S>(props: SidebarEntityTableProps<T, S>) {
                                     {t("create")}
                                 </Button>
                             )}
-                        </HStack>
+                        </div>
+                        <TableFiltering />
                     </div>
                     <div className="w-full rounded-md border">
                         <ResizablePanelGroup direction="horizontal">

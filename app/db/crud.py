@@ -232,7 +232,7 @@ def get_users(
     data_limit_reached: bool | None = None,
     enabled: bool | None = None,
 ) -> Union[List[User], Tuple[List[User], int]]:
-    query = db.query(User)
+    query = db.query(User).filter(User.removed == False)
 
     if usernames:
         if len(usernames) == 1:
@@ -382,7 +382,8 @@ def create_user(
 
 
 def remove_user(db: Session, dbuser: User):
-    db.delete(dbuser)
+    dbuser.removed = True
+    dbuser.activated = False
     # db.query(User).filter_by(id=user_id).delete()
     db.commit()
 

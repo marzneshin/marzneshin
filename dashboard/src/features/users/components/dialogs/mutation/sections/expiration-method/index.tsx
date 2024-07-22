@@ -16,9 +16,7 @@ import {
 } from "@marzneshin/features/users/components/dialogs/mutation/fields";
 import { TabsList } from "@radix-ui/react-tabs";
 import { useTranslation } from "react-i18next";
-import {
-    useExpirationMethodTabs,
-} from "./use-expiration-method-tabs";
+import { useExpirationMethodTabs } from "./use-expiration-method-tabs";
 
 interface ExpirationMethodProps {
     entity: UserMutationType | null
