@@ -14,9 +14,11 @@ import {
     AdminPermissionPill
 } from "@marzneshin/features/admins";
 import { useTranslation } from "react-i18next";
+import { format } from '@chbphone55/pretty-bytes';
 
 export const AdminInfoTable: FC<AdminProp> = ({ admin: entity }) => {
     const { t } = useTranslation();
+    const usersDataUsage = format(entity.users_data_usage);
 
     return (
         <Card>
@@ -30,6 +32,10 @@ export const AdminInfoTable: FC<AdminProp> = ({ admin: entity }) => {
                         <TableRowWithCell
                             label={t("enabled")}
                             value={<AdminEnabledPill admin={entity} />}
+                        />
+                        <TableRowWithCell
+                            label={t("page.admins.users-data-usage")}
+                            value={`${usersDataUsage[0]} ${usersDataUsage[1]}`}
                         />
                         <TableRowWithCell
                             label={t("page.admins.permission")}

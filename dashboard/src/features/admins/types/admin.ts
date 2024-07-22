@@ -8,5 +8,6 @@ export interface AdminType {
     modify_users_access: boolean;
     service_ids: number[];
     subscription_url_prefix: string;
+    users_data_usage: number;
 }
 
