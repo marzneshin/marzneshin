@@ -38,7 +38,6 @@ export const AdminsMutationDialog: FC<MutationDialogProps<AdminType>> = ({
     const defaultValue = useMemo(() => ({
         service_ids: [],
         username: "",
-        password: null,
         is_sudo: false,
         enabled: true,
         modify_users_access: true,
