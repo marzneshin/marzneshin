@@ -15,15 +15,19 @@ type Story = StoryObj<typeof GithubRepo>;
  * Github repo present repo fullname, description, and repo stars.
  * */
 export const GithubRepoStats: Story = {
-    args: {}
+    args: {
+        full_name: "marzneshin/marzneshin",
+        description: "Scalable and Comprehensive Backend Proxy Management",
+        stargazers_count: 1000,
+    }
 }
-
 
 /**
  * Mini variant of Github repo present repo only the github logo and stars.
  * */
 export const GithubRepoStatsMini: Story = {
     args: {
+        stargazers_count: 1000,
         variant: "mini"
     }
 }

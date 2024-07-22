@@ -6,18 +6,14 @@ import {
     UsersMutationDialog,
     useRouterUserContext,
 } from "@marzneshin/features/users";
-import { useDialog } from "@marzneshin/hooks";
 
 
 const UserEdit = () => {
-    const [editDialogOpen, setEditDialogOpen] = useDialog(true);
     const value = useRouterUserContext()
     const navigate = useNavigate({ from: "/users/$userId/edit" });
 
-    return value && (
+    return value && value.user && (
         <UsersMutationDialog
-            open={editDialogOpen}
-            onOpenChange={setEditDialogOpen}
             entity={value.user}
             onClose={() => navigate({ to: "/users" })}
         />

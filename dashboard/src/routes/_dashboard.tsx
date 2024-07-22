@@ -20,7 +20,7 @@ import {
     createFileRoute,
     redirect
 } from "@tanstack/react-router";
-import { GithubRepo } from "@marzneshin/features/github-repo";
+import { useGithubRepoStatsQuery, GithubRepo } from "@marzneshin/features/github-repo";
 import { CommandBox } from "@marzneshin/features/search-command";
 import { DashboardBottomMenu } from "@marzneshin/features/bottom-menu";
 import { VersionIndicator } from "@marzneshin/features/version-indicator";
@@ -34,6 +34,7 @@ export const DashboardLayout = () => {
         toggleCollapse,
     } = usePanelToggle(isDesktop);
     const { isSudo } = useAuth();
+    const { data: stats } = useGithubRepoStatsQuery()
 
     return (
         <div className="flex flex-col w-screen h-screen">
@@ -55,7 +56,7 @@ export const DashboardLayout = () => {
                 center={<CommandBox />}
                 end={
                     <>
-                        <GithubRepo variant={isDesktop ? "full" : "mini"} />
+                        <GithubRepo {...stats} variant={isDesktop ? "full" : "mini"} />
                         <HeaderMenu />
                     </>
                 }

@@ -1,4 +1,4 @@
-import { type FC, useState, useEffect, useCallback } from "react";
+import { type FC, useState, useMemo } from "react";
 import {
     DialogTitle,
     DialogContent,
@@ -14,7 +14,6 @@ import {
     useAdminsCreationMutation,
     useAdminsUpdateMutation,
     AdminMutationSchema,
-    type AdminMutationType,
     AdminType,
 } from "@marzneshin/features/admins";
 import { ServicesField } from "@marzneshin/features/services";
@@ -27,40 +26,29 @@ import {
     SudoPrivilageField,
     AllServicesAccessField,
 } from "./fields";
-import { useMutationDialog } from "@marzneshin/hooks";
+import { useMutationDialog, MutationDialogProps } from "@marzneshin/hooks";
 
-interface AdminsMutationDialogProps {
-    open: boolean;
-    onOpenChange: (state: boolean) => void;
-    onClose: () => void;
-    entity?: AdminType | null;
-}
-
-export const AdminsMutationDialog: FC<AdminsMutationDialogProps> = ({
-    open,
-    onOpenChange,
+export const AdminsMutationDialog: FC<MutationDialogProps<AdminType>> = ({
     onClose,
     entity = null,
 }) => {
     const { t } = useTranslation();
-    const getDefaultValues = useCallback(
-        (): AdminMutationType => ({
-            service_ids: [],
-            username: "",
-            password: null,
-            is_sudo: false,
-            enabled: true,
-        }),
-        [],
-    );
 
-    const { form, handleSubmit } = useMutationDialog({
+    const defaultValue = useMemo(() => ({
+        service_ids: [],
+        username: "",
+        password: null,
+        is_sudo: false,
+        enabled: true,
+    }), [])
+
+    const { onOpenChange, open, form, handleSubmit } = useMutationDialog({
         entity,
-        onOpenChange,
+        onClose,
         createMutation: useAdminsCreationMutation(),
         updateMutation: useAdminsUpdateMutation(),
         schema: AdminMutationSchema,
-        getDefaultValue: getDefaultValues,
+        defaultValue,
     });
 
     const [change, setChange] = useState<boolean>(entity === null);
@@ -70,10 +58,6 @@ export const AdminsMutationDialog: FC<AdminsMutationDialogProps> = ({
                 shouldTouch: true,
                 shouldDirty: true,
             });
-
-    useEffect(() => {
-        if (!open) onClose();
-    }, [open, onClose]);
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange} defaultOpen={true}>
