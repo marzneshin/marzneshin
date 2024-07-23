@@ -1,5 +1,4 @@
-import { useEffect } from "react";
-import type { FC } from "react";
+import { type FC, useEffect } from "react";
 import {
     DialogTitle,
     DialogContent,
@@ -22,10 +21,10 @@ import {
     getDefaultValues,
     useHostsCreationMutation,
     useHostsUpdateMutation,
+    type HostType,
 } from "@marzneshin/features/hosts";
-import type { HostType } from "@marzneshin/features/hosts";
-import { RemarkField } from "./fields/remark";
 import {
+    RemarkField,
     AddressField,
     PortField,
     HostField,
@@ -34,13 +33,10 @@ import {
     PathField,
     SecurityFields,
 } from "./fields";
+import { useDialog, MutationDialogProps } from "@marzneshin/hooks";
 
-interface MutationDialogProps {
-    entity?: HostType;
-    open: boolean;
+interface HostMutationDialogProps extends MutationDialogProps<HostType> {
     inboundId?: number;
-    onOpenChange: (state: boolean) => void;
-    onClose: () => void;
 }
 
 const transformFormValue = (values: HostType) => {
@@ -50,13 +46,12 @@ const transformFormValue = (values: HostType) => {
     return { ...values, alpn, fingerprint, port };
 };
 
-export const HostsMutationDialog: FC<MutationDialogProps> = ({
+export const HostsMutationDialog: FC<HostMutationDialogProps> = ({
     inboundId,
     entity,
-    open,
-    onOpenChange,
     onClose,
 }) => {
+    const [open, onOpenChange] = useDialog(true);
     const form = useForm({
         defaultValues: entity ? entity : getDefaultValues(),
         resolver: zodResolver(HostSchema),

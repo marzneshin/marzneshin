@@ -64,8 +64,8 @@
   "host": "هاست",
   "alpn": "ALPN",
   "admin_info": "اطلاعات ادمین",
-  "change": "تغیر",
-  "admins": "ادمین ها",
+  "change": "تغییر",
+  "admins": "ادمین‌ها",
   "normal": "عادی",
   "sudo": "سوپر ادمین",
   "security": "امنیت",
@@ -230,25 +230,26 @@
           }
         }
       }
-    }
-  },
-  "admins": {
-    "permission": "دسترسی ها",
-    "dialogs": {
-      "creation": {
-        "title": "ایجاد ادمین"
-      },
-      "edition": {
-        "title": "ویرایش ادمین"
-      },
-      "deletion": {
-        "title": "حذف ادمین"
-      }
     },
-    "modify-users-access": "تغییر دسترسی کاربران",
-    "subscription-url-prefix": "پیشوند URL اشتراک",
-    "sudo-privilage": "دسترسی سوپر ادمین",
-    "all-services-access": "دسترسی به کلیه سرویس ها"
+    "admins": {
+      "permission": "دسترسی ها",
+      "dialogs": {
+        "creation": {
+          "title": "ایجاد ادمین"
+        },
+        "edition": {
+          "title": "ویرایش ادمین"
+        },
+        "deletion": {
+          "title": "حذف ادمین"
+        }
+      },
+      "modify-users-access": "تغییر دسترسی کاربران",
+      "subscription-url-prefix": "پیشوند URL اشتراک",
+      "sudo-privilage": "دسترسی سوپر ادمین",
+      "all-services-access": "دسترسی به کلیه سرویس ها",
+      "users-data-usage": "مصرف کاربران"
+    }
   },
   "events": {
     "delete": {

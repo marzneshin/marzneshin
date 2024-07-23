@@ -13,6 +13,7 @@ import { PopoverGuide } from '@marzneshin/features/hosts';
 import { useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { InfoIcon } from 'lucide-react';
+import { IsDisabled } from "./is-disabled";
 
 export const RemarkField = () => {
     const { t } = useTranslation()
@@ -33,6 +34,7 @@ export const RemarkField = () => {
                                 <PopoverGuide />
                             </PopoverContent>
                         </Popover>
+                        <IsDisabled />
                     </FormLabel>
                     <FormControl>
                         <Input {...field} />

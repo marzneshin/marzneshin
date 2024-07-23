@@ -26,6 +26,9 @@ InboundHostALPN = Enum(
         "h2": "h2",
         "http/1.1": "http/1.1",
         "h2,http/1.1": "h2,http/1.1",
+        "h3": "h3",
+        "h3,h2": "h3,h2",
+        "h3,h2,http/1.1": "h3,h2,http/1.1",
     },
 )
 

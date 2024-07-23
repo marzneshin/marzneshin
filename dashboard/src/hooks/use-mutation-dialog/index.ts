@@ -1,17 +1,20 @@
-
+import { useDialog } from "@marzneshin/hooks";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { UseMutationResult } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { ZodSchema } from "zod";
 
-interface IMutationDialog<TData, TError = unknown, TVariables = unknown> {
-    entity: TData | null
-    onOpenChange: (s: boolean) => void
+export interface MutationDialogProps<TData> {
+    entity: TData | null;
+    onClose: () => void;
+}
+
+interface IMutationDialog<TData, TError = unknown, TVariables = unknown> extends MutationDialogProps<TData> {
     createMutation: UseMutationResult<TData, TError, TVariables>
     updateMutation: UseMutationResult<TData, TError, TVariables>
     schema: ZodSchema
-    getDefaultValue: () => FieldValues
+    defaultValue: FieldValues
     loadFormtter?: (d: FieldValues) => FieldValues
 }
 
@@ -22,11 +25,11 @@ interface IMutationDialog<TData, TError = unknown, TVariables = unknown> {
  * @param updateMutation - react-query mutation hook for entity edition
  * @param entity - Entity value for update, leave empty for creation 
  * @param schema - Entity schema validated by zodResolver
+ * @param onClose - Handler for when the dialog is closed
  * @param getDefaultValue - Default value function return the default value for function
  *  - Must be wrapped in useCallback to avoid infinite useEffect loop
- * @param onOpenChange - Dialog state callback to change the dialog openness state
  *
- * @returns react-hook-form and submit handler 
+ * @returns react-hook-form and submit handler plus the dialog open state
  *
  * @template TData - Mutation Type of Schema
  * @template TError = unknown 
@@ -34,17 +37,18 @@ interface IMutationDialog<TData, TError = unknown, TVariables = unknown> {
  */
 
 export const useMutationDialog = <TData, TError = unknown, TVariables = unknown>({
+    onClose,
     entity,
-    onOpenChange,
     createMutation,
     updateMutation,
     schema,
-    getDefaultValue,
+    defaultValue,
     loadFormtter = (s) => s,
 }: IMutationDialog<TData, TError, TVariables>) => {
+    const [open, onOpenChange] = useDialog(true);
 
     const form = useForm({
-        defaultValues: entity ? loadFormtter(entity) : getDefaultValue(),
+        defaultValues: entity ? loadFormtter(entity) : defaultValue,
         resolver: zodResolver(schema)
     });
 
@@ -61,15 +65,20 @@ export const useMutationDialog = <TData, TError = unknown, TVariables = unknown>
         if (entity) {
             form.reset(loadFormtter(entity))
         } else {
-            form.reset(getDefaultValue());
+            form.reset(defaultValue);
         }
         // eslint-disable-next-line
-    }, [entity, form, getDefaultValue]);
+    }, [entity, defaultValue]);
+
+    useEffect(() => {
+        if (!open) onClose();
+    }, [open, onClose]);
 
     const handleSubmit = form.handleSubmit(submit as SubmitHandler<FieldValues>);
 
     return {
         form,
+        open, onOpenChange,
         handleSubmit
     };
 };

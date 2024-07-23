@@ -9,6 +9,16 @@ const packetsInterval = (v: string | null | undefined) => {
     return v ? /^(:?tlshello|[\d-]{1,32})$/.test(v) : false;
 };
 
+export const alpnOptions = [
+    "none",
+    "h2",
+    "h3",
+    "h3,h2",
+    "http/1.1",
+    "h2,http/1.1",
+    "h3,h2,http/1.1"
+]
+
 export const HostSchema = z.object({
     remark: z.string().min(1, "Remark is required"),
     address: z.string().min(1, "Address is required"),
@@ -50,7 +60,7 @@ export const HostSchema = z.object({
         .enum(["inbound_default", "none", "tls"])
         .default("inbound_default"),
     alpn: z
-        .enum(["h2", "http/1.1", "h2,http/1.1", "none", ""])
+        .enum(["", ...alpnOptions])
         .optional()
         .default("none"),
     allowinsecure: z.boolean().default(false).optional(),
@@ -71,4 +81,5 @@ export const HostSchema = z.object({
         ])
         .optional()
         .default("none"),
+    is_disabled: z.boolean(),
 });

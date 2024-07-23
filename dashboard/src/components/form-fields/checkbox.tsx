@@ -6,15 +6,13 @@ import {
     FormControl,
 } from "@marzneshin/components";
 import { useFormContext } from "react-hook-form";
-import { useTranslation } from "react-i18next";
 
-export const PlaceholderIfDisabledField = () => {
-    const { t } = useTranslation()
+export const CheckboxField = ({ name, label }: { name: string, label: string }) => {
     const form = useFormContext();
     return (
         <FormField
             control={form.control}
-            name="placeholder_if_disabled"
+            name={name}
             render={({ field }) => (
                 <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md py-2">
                     <FormControl>
@@ -25,7 +23,7 @@ export const PlaceholderIfDisabledField = () => {
                     </FormControl>
                     <div className="space-y-1 leading-none">
                         <FormLabel>
-                            {t("page.settings.subscription-settings.placeholder-if-disabled")}
+                            {label}
                         </FormLabel>
                     </div>
                 </FormItem>

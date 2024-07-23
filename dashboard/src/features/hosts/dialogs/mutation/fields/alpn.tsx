@@ -12,10 +12,12 @@ import {
 } from "@marzneshin/components";
 import { useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { alpnOptions } from "@marzneshin/features/hosts";
 
 export const AlpnField = () => {
     const { t } = useTranslation();
     const form = useFormContext();
+
     return (
         <FormField
             control={form.control}
@@ -30,10 +32,7 @@ export const AlpnField = () => {
                             </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                            <SelectItem value="none">None</SelectItem>
-                            <SelectItem value="h2">h2</SelectItem>
-                            <SelectItem value="http/1.1">http 1.1</SelectItem>
-                            <SelectItem value="h2,http/1.1">h2,http/1.1</SelectItem>
+                            {alpnOptions.map((option) => (<SelectItem value={option}>{option}</SelectItem>))}
                         </SelectContent>
                     </Select>
                     <FormMessage />
