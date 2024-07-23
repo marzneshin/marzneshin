@@ -270,6 +270,10 @@ class User(Base):
             + f"/sub/{self.username}/{self.key}"
         )
 
+    @hybrid_property
+    def owner_username(self):
+        return self.admin.username
+
 
 class Inbound(Base):
     __tablename__ = "inbounds"

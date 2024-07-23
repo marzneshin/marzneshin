@@ -126,6 +126,7 @@ class UserResponse(User):
     created_at: datetime
     service_ids: list[int]
     subscription_url: str
+    owner_username: str
 
     model_config = ConfigDict(from_attributes=True)
 

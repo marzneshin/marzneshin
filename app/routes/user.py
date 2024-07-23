@@ -49,6 +49,7 @@ user_filters = [
     "expired",
     "data_limit_reached",
     "enabled",
+    "owner_username",
 ]
 
 
@@ -64,6 +65,7 @@ def get_users(
     expired: bool | None = Query(None),
     data_limit_reached: bool | None = Query(None),
     enabled: bool | None = Query(None),
+    owner_username: str | None = Query(None),
 ):
     """
     Filters users based on the options
@@ -84,6 +86,13 @@ def get_users(
                     query = query.filter(
                         User.username.ilike(f"%{username[0]}%")
                     )
+            elif name == "owner_username":
+                if not dbadmin.is_sudo:
+                    raise HTTPException(403, "You're not allowed.")
+                filter_admin = crud.get_admin(db, value)
+                if not filter_admin:
+                    raise HTTPException(404, "owner_username not found.")
+                query = query.filter(User.admin_id == filter_admin.id)
             else:
                 query = query.filter(getattr(User, name) == value)
 

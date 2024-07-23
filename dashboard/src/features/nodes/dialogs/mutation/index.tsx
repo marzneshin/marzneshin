@@ -38,6 +38,7 @@ export const MutationDialog: FC<MutationDialogProps<NodeType>> = ({
     const { t } = useTranslation();
 
     const defaultValue = useMemo(() => ({
+        id: 0,  
         name: "",
         address: "",
         status: "none",
