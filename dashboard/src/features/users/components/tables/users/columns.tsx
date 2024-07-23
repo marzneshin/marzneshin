@@ -29,17 +29,7 @@ export const columns = (actions: ColumnActions<UserType>): ColumnDefWithSudoRole
                 <OnlineStatus user={row.original} /> {row.original.username}
             </div>
         ),
-    }, {
-        accessorKey: "owner_username",
-        enableSorting: false,
-        sudoVisibleOnly: true,
-        header: ({ column }) => (
-            <DataTableColumnHeader
-                title={i18n.t("owner")}
-                column={column}
-            />
-        ),
-    },
+    }, 
     {
         accessorKey: "activated",
         enableSorting: false,
@@ -50,6 +40,17 @@ export const columns = (actions: ColumnActions<UserType>): ColumnDefWithSudoRole
             />
         ),
         cell: ({ row }) => <UserActivatedPill user={row.original} />,
+    },
+    {
+        accessorKey: "owner_username",
+        enableSorting: false,
+        sudoVisibleOnly: true,
+        header: ({ column }) => (
+            <DataTableColumnHeader
+                title={i18n.t("owner")}
+                column={column}
+            />
+        ),
     },
     {
         accessorKey: "used_traffic",
