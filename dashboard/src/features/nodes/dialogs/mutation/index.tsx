@@ -37,6 +37,7 @@ interface MutationDialogProps {
 }
 
 const getDefaultValue = (): NodeType => ({
+    id: 0,
     name: "",
     address: "",
     status: "none",
