@@ -28,7 +28,6 @@ from app.config.env import SUBSCRIPTION_URL_PREFIX
 from app.db.base import Base
 from app.models.node import NodeStatus
 from app.models.proxy import (
-    InboundHostALPN,
     InboundHostFingerprint,
     InboundHostSecurity,
     ProxyTypes,
@@ -315,10 +314,8 @@ class InboundHost(Base):
         default=InboundHostSecurity.inbound_default,
     )
     alpn = Column(
-        Enum(InboundHostALPN),
-        nullable=False,
-        default=InboundHostSecurity.none,
-        server_default=InboundHostSecurity.none.name,
+        String(32),
+        server_default=sqlalchemy.sql.null(),
     )
     fingerprint = Column(
         Enum(InboundHostFingerprint),

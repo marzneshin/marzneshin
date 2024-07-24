@@ -63,7 +63,6 @@ handlers_templates = {
 def generate_subscription_template(
     db_user, subscription_settings: SubscriptionSettings
 ):
-    print(subscription_settings.shuffle_configs)
     links = generate_subscription(
         user=db_user,
         config_format="links",
@@ -266,7 +265,7 @@ def generate_user_configs(
                 host=req_host,
                 tls=host_tls or inbound["tls"],
                 header_type=inbound.get("header_type"),
-                alpn=host.alpn.value or None,
+                alpn=host.alpn if host.alpn != "none" else None,
                 path=(
                     host.path.format_map(format_variables)
                     if host.path

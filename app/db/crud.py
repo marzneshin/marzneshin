@@ -162,7 +162,7 @@ def add_host(db: Session, inbound: Inbound, host: InboundHostModify):
         host=host.host,
         inbound=inbound,
         security=host.security,
-        alpn=host.alpn,
+        alpn=host.alpn.value,
         fingerprint=host.fingerprint,
         fragment=host.fragment.model_dump() if host.fragment else None,
         mux=host.mux,
@@ -181,7 +181,7 @@ def update_host(db: Session, db_host: InboundHost, host: InboundHostModify):
     db_host.sni = host.sni
     db_host.host = host.host
     db_host.security = host.security
-    db_host.alpn = host.alpn
+    db_host.alpn = host.alpn.value
     db_host.fingerprint = host.fingerprint
     db_host.fragment = host.fragment.model_dump() if host.fragment else None
     db_host.mux = host.mux
