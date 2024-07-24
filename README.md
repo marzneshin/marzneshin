@@ -72,20 +72,19 @@ marznode manages and interacts with vpn backends (such as xray).
 - **Multi Nodes** support for traffic distribution, scalability, and fault tolerance
 - Supports protocols **Vmess**, **VLESS**, **Trojan** and **Shadowsocks** as provided by xray
 - **Multi-protocol** for a single user
-- Manage users' access to inbounds separately
+- Manage users' access to inbounds separately using **services**
 - **Multi-user** on a single inbound
 - Limit users' data and set exire dates
-- reset traffic periodically (daily, weekly,...)
+- Reset traffic periodically (daily, weekly,...)
 - **Subscription link** compatible with **V2ray** (e.g. V2RayNG, OneClick, Nekoray, etc.), **Clash** and **ClashMeta**
 - Automated **Share link** and **QRcode** generator
 - System, nodes, traffic statistics, users monitoring
 - Integrated **Command Line Interface (CLI)**
-- **Multi-admin** support (WIP)
+- [**Multi-admin** support](https://github.com/khodedawsh/marzneshin/issues/73) (WIP)
 - Marzneshin is decoupled from VPN backends
 - Resilient and fault tolerant node management
-- UI performance and redesign
 
-Deployment and Developer Kit:
+**Deployment and Developer Kit:**
 
 - REST-full API
 - Kubernetes and multiple deployment strategy and options (WIP)
@@ -95,7 +94,7 @@ Deployment and Developer Kit:
 - Russian (WIP)
 - English
 - Kurdish (Soranî, Kurmancî)
-- Persian (WIP)
+- Persian
 
 # Installation guide
 
