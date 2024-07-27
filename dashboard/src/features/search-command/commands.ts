@@ -1,0 +1,73 @@
+import {
+    UsersIcon,
+    ServerIcon,
+    BoxIcon,
+    ServerCogIcon,
+    SettingsIcon,
+} from "lucide-react";
+
+export const commandItems = [
+    {
+        group: "Pages",
+        items: [
+            {
+                icon: UsersIcon,
+                label: "users",
+                path: "/users",
+                sudo: false,
+            },
+            {
+                icon: ServerIcon,
+                label: "services",
+                path: "/services",
+                sudo: true,
+            },
+            {
+                icon: BoxIcon,
+                label: "nodes",
+                path: "/nodes",
+                sudo: true,
+            },
+            {
+                icon: ServerCogIcon,
+                label: "hosts",
+                path: "/hosts",
+                sudo: true,
+            },
+        ],
+    },
+    {
+        group: "Actions",
+        items: [
+            {
+                icon: UsersIcon,
+                label: "page.users.dialogs.creation.title",
+                path: "/users/create",
+                sudo: false,
+            },
+            {
+                icon: ServerIcon,
+                label: "page.services.dialogs.creation.title",
+                path: "/services/create",
+                sudo: false,
+            },
+            {
+                icon: BoxIcon,
+                label: "page.nodes.dialogs.creation.title",
+                path: "/nodes/create",
+                sudo: false,
+            },
+        ],
+    },
+    {
+        group: "Settings",
+        items: [
+            {
+                icon: SettingsIcon,
+                label: "settings",
+                path: "/settings",
+                sudo: true,
+            },
+        ],
+    },
+];
