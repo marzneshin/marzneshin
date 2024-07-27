@@ -22,12 +22,12 @@ export const CommandItems: FC<CommandItemsProps> = ({ items, isSudo, setOpen }) 
     return (
         <>
             {items.map((group: CommandGroupConfig, groupIndex: number) => (
-                <React.Fragment key={groupIndex}>
+                <React.Fragment key={group.group}>
                     <CommandGroup heading={group.group}>
-                        {group.items.map((item: CommandItemConfig, itemIndex: number) => (
+                        {group.items.map((item: CommandItemConfig) => (
                             (!item.sudo || isSudo()) && (
                                 <CommandItem
-                                    key={itemIndex}
+                                    key={item.label}
                                     onSelect={() => {
                                         navigate({ to: item.path });
                                         setOpen(false);
