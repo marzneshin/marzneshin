@@ -4,9 +4,22 @@ import {
     BoxIcon,
     ServerCogIcon,
     SettingsIcon,
+    LucideIcon,
 } from "lucide-react";
 
-export const commandItems = [
+export interface CommandItemConfig {
+    icon: LucideIcon;
+    label: string;
+    path: string;
+    sudo: boolean;
+}
+
+export interface CommandGroupConfig {
+    group: string;
+    items: CommandItemConfig[];
+}
+
+export const commandItems: CommandGroupConfig[] = [
     {
         group: "Pages",
         items: [

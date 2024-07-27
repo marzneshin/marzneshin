@@ -1,4 +1,5 @@
-import React from "react";
+// CommandItems.tsx
+import React, { FC } from "react";
 import {
     CommandGroup,
     CommandItem,
@@ -6,17 +7,24 @@ import {
 } from "@marzneshin/components";
 import { useNavigate } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
+import { CommandGroupConfig, CommandItemConfig } from "./commands";
 
-export function CommandItems({ items, isSudo, setOpen }) {
+interface CommandItemsProps {
+    items: CommandGroupConfig[];
+    isSudo: () => boolean;
+    setOpen: (open: boolean) => void;
+}
+
+export const CommandItems: FC<CommandItemsProps> = ({ items, isSudo, setOpen }) => {
     const navigate = useNavigate();
     const { t } = useTranslation();
 
     return (
         <>
-            {items.map((group, groupIndex) => (
+            {items.map((group: CommandGroupConfig, groupIndex: number) => (
                 <React.Fragment key={groupIndex}>
                     <CommandGroup heading={group.group}>
-                        {group.items.map((item, itemIndex) => (
+                        {group.items.map((item: CommandItemConfig, itemIndex: number) => (
                             (!item.sudo || isSudo()) && (
                                 <CommandItem
                                     key={itemIndex}
@@ -36,4 +44,4 @@ export function CommandItems({ items, isSudo, setOpen }) {
             ))}
         </>
     );
-}
+};
