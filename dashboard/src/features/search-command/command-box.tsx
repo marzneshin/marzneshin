@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { useTranslation } from "react-i18next";
 import {
     CommandDialog,
     CommandEmpty,
@@ -14,7 +13,6 @@ import { commandItems } from "./commands";
 
 export function CommandBox() {
     const [open, setOpen] = useState(false);
-    const { t } = useTranslation();
     const { isSudo } = useAuth();
 
     useEffect(() => {
