@@ -48,6 +48,12 @@ export const commandItems: CommandGroupConfig[] = [
                 path: "/hosts",
                 sudo: true,
             },
+            {
+                icon: ShieldIcon,
+                label: "admins",
+                path: "/admins",
+                sudo: true,
+            },
         ],
     },
     {
