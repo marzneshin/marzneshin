@@ -5,6 +5,7 @@ import {
     ServerCogIcon,
     SettingsIcon,
     LucideIcon,
+    ShieldIcon,
 } from "lucide-react";
 
 export interface CommandItemConfig {
@@ -68,6 +69,12 @@ export const commandItems: CommandGroupConfig[] = [
                 icon: BoxIcon,
                 label: "page.nodes.dialogs.creation.title",
                 path: "/nodes/create",
+                sudo: true,
+            },
+            {
+                icon: ShieldIcon,
+                label: "page.admins.dialogs.creation.title",
+                path: "/admins/create",
                 sudo: true,
             },
         ],
