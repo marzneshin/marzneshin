@@ -229,7 +229,9 @@ def generate_user_configs(
         if not inbound:
             continue
 
-        format_variables.update({"TRANSPORT": inbound["network"]})
+        format_variables.update(
+            {"TRANSPORT": inbound.get("network", "<missing>")}
+        )
         with GetDB() as db:
             hosts = crud.get_inbound_hosts(db, inb_id)
 
@@ -237,14 +239,14 @@ def generate_user_configs(
             if host.is_disabled:
                 continue
             host_snis = host.sni.split(",") if host.sni else []
-            sni_list = host_snis or inbound["sni"]
+            sni_list = host_snis or inbound.get("sni", [])
             if sni_list:
                 sni = random.choice(sni_list).replace("*", salt)
             else:
                 sni = ""
 
             host_hosts = host.host.split(",") if host.host else []
-            req_host_list = host_hosts or inbound["host"]
+            req_host_list = host_hosts or inbound.get("host", [])
             if req_host_list:
                 req_host = random.choice(req_host_list).replace("*", salt)
             else:
