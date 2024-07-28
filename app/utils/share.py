@@ -260,10 +260,10 @@ def generate_user_configs(
                 host.remark.format_map(format_variables),
                 host.address.format_map(format_variables),
                 host.port or inbound["port"],
-                transport_type=inbound["network"],
+                transport_type=inbound.get("network"),
                 sni=sni,
                 host=req_host,
-                tls=host_tls or inbound["tls"],
+                tls=host_tls or inbound.get("tls"),
                 header_type=inbound.get("header_type"),
                 alpn=host.alpn if host.alpn != "none" else None,
                 path=(
