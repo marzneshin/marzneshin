@@ -166,6 +166,7 @@ def add_host(db: Session, inbound: Inbound, host: InboundHostModify):
         fingerprint=host.fingerprint,
         fragment=host.fragment.model_dump() if host.fragment else None,
         mux=host.mux,
+        allowinsecure=host.allowinsecure,
     )
     inbound.hosts.append(host)
     db.commit()
