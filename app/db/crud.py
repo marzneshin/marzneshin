@@ -166,6 +166,7 @@ def add_host(db: Session, inbound: Inbound, host: InboundHostModify):
         fingerprint=host.fingerprint,
         fragment=host.fragment.model_dump() if host.fragment else None,
         mux=host.mux,
+        allowinsecure=host.allowinsecure,
     )
     inbound.hosts.append(host)
     db.commit()
@@ -186,6 +187,7 @@ def update_host(db: Session, db_host: InboundHost, host: InboundHostModify):
     db_host.fragment = host.fragment.model_dump() if host.fragment else None
     db_host.mux = host.mux
     db_host.is_disabled = host.is_disabled
+    db_host.allowinsecure = host.allowinsecure
     db.commit()
     db.refresh(db_host)
     return db_host
