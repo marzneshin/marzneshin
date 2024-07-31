@@ -38,28 +38,28 @@ export default meta;
 
 type Story = StoryObj<typeof EntityTable>;
 
+const onEdit = (entity: any) => alert(`Edit entity: ${JSON.stringify(entity)}`)
+const onDelete = (entity: any) => alert(`Delete entity: ${JSON.stringify(entity)}`)
+const onOpen = (entity: any) => alert(`Open entity: ${JSON.stringify(entity)}`)
+
 export const BasicEntityTable: Story = {
     args: {
         fetchEntity: fetchEntity,
-        columnsFn: columnsFnBasicEntityTable,
+        columns: columnsFnBasicEntityTable({ onEdit, onDelete, onOpen }),
         filteredColumn: "name",
         entityKey: "entities",
         onCreate: () => alert("Create entity"),
-        onEdit: (entity: any) => alert(`Edit entity: ${JSON.stringify(entity)}`),
-        onOpen: (entity: any) => alert(`Open entity: ${JSON.stringify(entity)}`),
-        onDelete: (entity: any) => alert(`Delete entity: ${JSON.stringify(entity)}`),
+        onOpen: onOpen,
     }
 };
 
 export const LoadingEntityTable: Story = {
     args: {
         fetchEntity: fetchEntityLoading,
-        columnsFn: columnsFnBasicEntityTable,
+        columns: columnsFnBasicEntityTable({ onEdit, onDelete, onOpen }),
         filteredColumn: "name",
         entityKey: "entities",
         onCreate: () => alert("Create entity"),
-        onEdit: (entity: any) => alert(`Edit entity: ${JSON.stringify(entity)}`),
-        onOpen: (entity: any) => alert(`Open entity: ${JSON.stringify(entity)}`),
-        onDelete: (entity: any) => alert(`Delete entity: ${JSON.stringify(entity)}`),
+        onOpen: onOpen,
     }
 };

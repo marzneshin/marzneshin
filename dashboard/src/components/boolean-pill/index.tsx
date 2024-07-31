@@ -1,15 +1,23 @@
 import type { FC } from "react";
-import { Badge } from "@marzneshin/components";
+import { Badge, BadgeVariantKeys } from "@marzneshin/components";
 
 interface BooleanPillProps {
     active: boolean;
     activeLabel: string;
+    activeVariant?: BadgeVariantKeys;
     inactiveLabel: string;
+    inactiveVariant?: BadgeVariantKeys;
 }
 
-export const BooleanPill: FC<BooleanPillProps> = ({ active, activeLabel, inactiveLabel }) => {
+export const BooleanPill: FC<BooleanPillProps> = ({
+    active,
+    activeLabel,
+    inactiveLabel,
+    activeVariant = "positive",
+    inactiveVariant = "destructive"
+}) => {
     return (
-        <Badge variant={active ? "positive" : "destructive"}>
+        <Badge variant={active ? activeVariant : inactiveVariant}>
             {active ? activeLabel : inactiveLabel}
         </Badge>
     )

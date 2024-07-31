@@ -1,11 +1,43 @@
 {
+  "view": "نما",
+  "certificate": "سرتیفیکت",
+  "mux": "ماکس",
+  "fragment": "فرگمنت",
+  "enable": "فعال کردن",
+  "enabled": "فعال شده",
+  "activated": "کارا",
+  "unlimited": "نامحدود",
+  "left": "مانده",
+  "reached": "رسیده",
+  "inactive": "ناکارا",
+  "active": "کارا",
+  "disable": "غیرفعال کردن",
+  "close": "بستن",
+  "save": "ذخیره",
+  "days": "روز",
+  "cancel": "لغو",
+  "dark": "دارک",
+  "light": "لایت",
+  "system": "سیستم",
+  "disabled": "غیرفعال شده",
+  "advanced-options": "پیشرفته",
+  "language": "زبان",
+  "theme": "تم",
+  "pattern": "الگو",
+  "result": "نتیجه",
+  "support-us": {
+    "title": "حمایت از ما",
+    "desc": "مرزنشین نرم‌افزار رایگان و آزاد است. با دونیت کردن حمایت خود را نشان دهید.",
+    "donate": "دونیت"
+  },
+  "deselect": "لغو انتخاب",
   "home": "خانه",
   "name": "نام",
   "status": "حالت",
   "address": "آدرس",
   "users": "کاربران",
   "nodes": "نود",
-  "services": "سرویسها",
+  "services": "سرویس‌ها",
   "hosts": "هاست",
   "username": "یوزرنیم",
   "password": "پسوورد",
@@ -13,7 +45,7 @@
   "submit": "ارسال",
   "login": "ورود",
   "edit": "ویرایش",
-  "actions": "فعالیتها",
+  "actions": "فعالیت‌ها",
   "settings": "تنظیمات",
   "logs": "لاگ",
   "note": "یادداشت",
@@ -31,13 +63,40 @@
   "path": "مسیر",
   "host": "هاست",
   "alpn": "ALPN",
+  "admin_info": "اطلاعات ادمین",
+  "change": "تغییر",
+  "admins": "ادمین‌ها",
+  "normal": "عادی",
+  "sudo": "ادمین سودو",
+  "owner": "مالک",
   "security": "امنیت",
   "user_info": "اطلاعات کاربر",
   "subscription": "اشتراک",
   "subscription_link": "لینک اشتراک",
   "fingerprint": "فینگرپرینت",
+  "expired": "انقضا",
+  "finished": "اتمام",
+  "valid": "مانده",
   "page": {
     "settings": {
+      "subscription-settings": {
+        "template-on-acceptance": "تمپلیت در صورت پذیرش",
+        "placeholder-remark": "نام کانفیگ جایگزین",
+        "placeholder-if-disabled": "کانفیگ جایگزین در صورت غیرفعالی",
+        "shuffle-configs": "مخلوط کردن کانفیگ‌ها",
+        "profile-title": "عنوان پروفایل",
+        "support-link": "لینک پشتیبانی",
+        "update-interval": "بازه آپدیت",
+        "add-rule": "افزودن قانون",
+        "reset-local-changes": "بازنشانی",
+        "title": "تنظیمات اشتراک",
+        "subscription-title": "قوانین اشتراک",
+        "subscription-desc": "قوانین اشتراک خود را به ترتیب اولویت تنظیم کنید.",
+        "alert": {
+          "title": "قانونی وجود ندارد",
+          "desc": "هیچ قانونی برای اشتراک تنظیم نشده"
+        }
+      },
       "certificate": {
         "copy": "کپی سرتیفیکت",
         "error": "سرتیفیکت در دسترس نیست",
@@ -102,6 +161,15 @@
       }
     },
     "users": {
+      "traffic": "ترافیک",
+      "never": "هرگز",
+      "limited": "محدود شده",
+      "data_limit_method": "محدودیت دیتا",
+      "fixed_date": "تاریخ مشخص",
+      "on_first_use": "از اولین استفاده",
+      "usage_duration": "مدت استفاده",
+      "activation_deadline": "انقضای تعلیق",
+      "data_limit_reached": "به محدودیت دیتا رسیده",
       "note-placeholder": "یادداشتی در مورد کاربر",
       "data_limit": "محدودیت حجم",
       "used_traffic": "ترافیک مصرفی",
@@ -159,10 +227,29 @@
         },
         "mutation": {
           "allowinsecure": {
-            "alert": "فعال کردن این گزینه پیشنهاد نم�شود."
+            "alert": "فعال کردن این گزینه پیشنهاد نمی‌شود."
           }
         }
       }
+    },
+    "admins": {
+      "permission": "دسترسی ها",
+      "dialogs": {
+        "creation": {
+          "title": "ایجاد ادمین"
+        },
+        "edition": {
+          "title": "ویرایش ادمین"
+        },
+        "deletion": {
+          "title": "حذف ادمین"
+        }
+      },
+      "modify-users-access": "تغییر دسترسی کاربران",
+      "subscription-url-prefix": "پیشوند URL اشتراک",
+      "sudo-privilage": "دسترسی سوپر ادمین",
+      "all-services-access": "دسترسی به کلیه سرویس ها",
+      "users-data-usage": "مصرف کاربران"
     }
   },
   "events": {

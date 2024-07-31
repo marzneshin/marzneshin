@@ -31,6 +31,9 @@ def get_admin(
         if not created_at or dbadmin.password_reset_at > created_at:
             return
 
+    if not dbadmin.is_sudo and not dbadmin.enabled:
+        return
+
     return Admin.model_validate(dbadmin)
 
 
@@ -86,6 +89,13 @@ def get_user(
     return db_user
 
 
+def user_modification_access(
+    admin: Annotated[Admin, Depends(get_current_admin)]
+):
+    if not admin.is_sudo and not admin.modify_users_access:
+        raise HTTPException(status_code=403, detail="You're not allowed")
+
+
 def parse_start_date(start: str | None = None):
     if not start:
         return datetime.fromtimestamp(
@@ -109,3 +119,4 @@ SudoAdminDep = Annotated[Admin, Depends(sudo_admin)]
 DBDep = Annotated[Session, Depends(get_db)]
 StartDateDep = Annotated[datetime, Depends(parse_start_date)]
 EndDateDep = Annotated[datetime, Depends(parse_end_date)]
+ModifyUsersAccess = Annotated[None, Depends(user_modification_access)]

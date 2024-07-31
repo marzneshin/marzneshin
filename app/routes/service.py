@@ -18,8 +18,13 @@ router = APIRouter(prefix="/services", tags=["Service"])
 @router.get("", response_model=Page[ServiceResponse])
 def get_services(db: DBDep, admin: AdminDep, name: str = Query(None)):
     query = db.query(Service)
+
     if name:
         query = query.filter(Service.name.ilike(f"%{name}%"))
+
+    if not admin.is_sudo and not admin.all_services_access:
+        query = query.filter(Service.id.in_(admin.service_ids))
+
     return paginate(query)
 
 
@@ -48,6 +53,11 @@ def get_service(id: int, db: DBDep, admin: AdminDep):
     dbservice = crud.get_service(db, id)
     if not dbservice:
         raise HTTPException(status_code=404, detail="Service not found")
+
+    if not (
+        admin.is_sudo or admin.all_services_access or id in admin.service_ids
+    ):
+        raise HTTPException(status_code=403, detail="You're not allowed")
 
     return dbservice
 

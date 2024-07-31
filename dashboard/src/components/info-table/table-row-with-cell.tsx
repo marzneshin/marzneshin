@@ -1,15 +1,15 @@
-import {
-    TableCell,
-    TableRow,
-} from "@marzneshin/components";
+import { TableCell, TableRow } from "@marzneshin/components";
 import { FC } from "react";
 
-export const TableRowWithCell: FC<{
-    label: string;
-    value?: string | number | JSX.Element | null;
-}> = ({ label, value }) => (
+interface TableRowWithCellProps {
+    label: string | JSX.Element;
+    value?: null | string | number | JSX.Element;
+}
+
+export const TableRowWithCell: FC<TableRowWithCellProps> = ({ label, value }) => (
     <TableRow>
         <TableCell>{label}</TableCell>
         <TableCell>{value}</TableCell>
     </TableRow>
 );
+

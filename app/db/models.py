@@ -1,4 +1,5 @@
 import os
+import secrets
 from datetime import datetime
 
 import sqlalchemy.sql
@@ -17,15 +18,16 @@ from sqlalchemy import (
     JSON,
     and_,
     func,
+    select,
 )
 from sqlalchemy.ext.hybrid import hybrid_property
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, column_property
 from sqlalchemy.sql.expression import text
 
+from app.config.env import SUBSCRIPTION_URL_PREFIX
 from app.db.base import Base
 from app.models.node import NodeStatus
 from app.models.proxy import (
-    InboundHostALPN,
     InboundHostFingerprint,
     InboundHostSecurity,
     ProxyTypes,
@@ -37,18 +39,12 @@ from app.models.user import (
     UserExpireStrategy,
 )
 
-
-class Admin(Base):
-    __tablename__ = "admins"
-
-    id = Column(Integer, primary_key=True)
-    username = Column(String(32), unique=True, index=True)
-    hashed_password = Column(String(128))
-    users = relationship("User", back_populates="admin")
-    created_at = Column(DateTime, default=datetime.utcnow)
-    is_sudo = Column(Boolean, default=False)
-    password_reset_at = Column(DateTime)
-
+admins_services = Table(
+    "admins_services",
+    Base.metadata,
+    Column("admin_id", ForeignKey("admins.id"), primary_key=True),
+    Column("service_id", ForeignKey("services.id"), primary_key=True),
+)
 
 inbounds_services = Table(
     "inbounds_services",
@@ -65,10 +61,68 @@ users_services = Table(
 )
 
 
+class Admin(Base):
+    __tablename__ = "admins"
+
+    id = Column(Integer, primary_key=True)
+    username = Column(String(32), unique=True, index=True)
+    hashed_password = Column(String(128))
+    users = relationship("User", back_populates="admin")
+    services = relationship(
+        "Service",
+        secondary=admins_services,
+        back_populates="admins",
+        lazy="joined",
+    )
+    enabled = Column(
+        Boolean,
+        nullable=False,
+        default=True,
+        server_default=sqlalchemy.sql.true(),
+    )
+    all_services_access = Column(
+        Boolean,
+        nullable=False,
+        default=False,
+        server_default=sqlalchemy.sql.false(),
+    )
+    modify_users_access = Column(
+        Boolean,
+        nullable=False,
+        default=True,
+        server_default=sqlalchemy.sql.true(),
+    )
+    created_at = Column(DateTime, default=datetime.utcnow)
+    is_sudo = Column(Boolean, default=False)
+    password_reset_at = Column(DateTime)
+    subscription_url_prefix = Column(
+        String(256),
+        nullable=False,
+        default="",
+        server_default=sqlalchemy.sql.text(""),
+    )
+
+    @property
+    def service_ids(self):
+        return [service.id for service in self.services]
+
+    @classmethod
+    def __declare_last__(cls):
+        cls.users_data_usage = column_property(
+            select(func.coalesce(func.sum(User.lifetime_used_traffic), 0))
+            .where(User.admin_id == cls.id)
+            .correlate_except(User)
+            .scalar_subquery()
+        )
+
+
 class Service(Base):
     __tablename__ = "services"
     id = Column(Integer, primary_key=True)
     name = Column(String(64))
+    admins = relationship(
+        "Admin", secondary=admins_services, back_populates="services"
+    )
     users = relationship(
         "User", secondary=users_services, back_populates="services"
     )
@@ -97,6 +151,12 @@ class User(Base):
         nullable=False,
         default=True,
         server_default=sqlalchemy.sql.true(),
+    )
+    removed = Column(
+        Boolean,
+        nullable=False,
+        default=False,
+        server_default=sqlalchemy.sql.false(),
     )
     services = relationship(
         "Service",
@@ -182,16 +242,36 @@ class User(Base):
     @hybrid_property
     def is_active(self):
         return (
-            self.enabled and not self.expired and not self.data_limit_reached
+            self.enabled
+            and not self.expired
+            and not self.data_limit_reached
+            and not self.removed
         )
 
     @is_active.expression
     def is_active(cls):
-        return and_(cls.enabled == True, ~cls.expired, ~cls.data_limit_reached)
+        return and_(
+            cls.enabled == True,
+            ~cls.expired,
+            ~cls.data_limit_reached,
+            ~cls.removed,
+        )
 
     @property
     def status(self):
         return UserStatus.ACTIVE if self.is_active else UserStatus.INACTIVE
+
+    @property
+    def subscription_url(self):
+        prefix = self.admin.subscription_url_prefix or SUBSCRIPTION_URL_PREFIX
+        return (
+            prefix.replace("*", secrets.token_hex(8))
+            + f"/sub/{self.username}/{self.key}"
+        )
+
+    @hybrid_property
+    def owner_username(self):
+        return self.admin.username
 
 
 class Inbound(Base):
@@ -234,10 +314,8 @@ class InboundHost(Base):
         default=InboundHostSecurity.inbound_default,
     )
     alpn = Column(
-        Enum(InboundHostALPN),
-        nullable=False,
-        default=InboundHostSecurity.none,
-        server_default=InboundHostSecurity.none.name,
+        String(32),
+        server_default=sqlalchemy.sql.null(),
     )
     fingerprint = Column(
         Enum(InboundHostFingerprint),
@@ -250,7 +328,7 @@ class InboundHost(Base):
         Boolean,
         default=False,
         nullable=False,
-        server_default=sqlalchemy.sql.true(),
+        server_default=sqlalchemy.sql.false(),
     )
     fragment = Column(JSON())
 

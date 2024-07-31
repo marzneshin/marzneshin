@@ -19,6 +19,7 @@ from app.dependencies import (
     UserDep,
     StartDateDep,
     EndDateDep,
+    ModifyUsersAccess,
 )
 from app.models.service import ServiceResponse
 from app.models.user import (
@@ -48,6 +49,7 @@ user_filters = [
     "expired",
     "data_limit_reached",
     "enabled",
+    "owner_username",
 ]
 
 
@@ -63,13 +65,14 @@ def get_users(
     expired: bool | None = Query(None),
     data_limit_reached: bool | None = Query(None),
     enabled: bool | None = Query(None),
+    owner_username: str | None = Query(None),
 ):
     """
     Filters users based on the options
     """
     dbadmin = crud.get_admin(db, admin.username)
 
-    query = db.query(User)
+    query = db.query(User).filter(User.removed == False)
 
     admin = dbadmin if not admin.is_sudo else None
 
@@ -83,6 +86,13 @@ def get_users(
                     query = query.filter(
                         User.username.ilike(f"%{username[0]}%")
                     )
+            elif name == "owner_username":
+                if not dbadmin.is_sudo:
+                    raise HTTPException(403, "You're not allowed.")
+                filter_admin = crud.get_admin(db, value)
+                if not filter_admin:
+                    raise HTTPException(404, "owner_username not found.")
+                query = query.filter(User.admin_id == filter_admin.id)
             else:
                 query = query.filter(getattr(User, name) == value)
 
@@ -111,7 +121,14 @@ async def add_user(new_user: UserCreate, db: DBDep, admin: AdminDep):
 
     try:
         db_user = crud.create_user(
-            db, new_user, admin=crud.get_admin(db, admin.username)
+            db,
+            new_user,
+            admin=crud.get_admin(db, admin.username),
+            allowed_services=(
+                admin.service_ids
+                if not admin.is_sudo and not admin.all_services_access
+                else None
+            ),
         )
     except sqlalchemy.exc.IntegrityError:
         db.rollback()
@@ -138,7 +155,12 @@ async def reset_users_data_usage(db: DBDep, admin: SudoAdminDep):
 
 
 @router.delete("/expired")
-async def delete_expired(passed_time: int, db: DBDep, admin: AdminDep):
+async def delete_expired(
+    passed_time: int,
+    db: DBDep,
+    admin: AdminDep,
+    modify_access: ModifyUsersAccess,
+):
     """
     Delete expired users
     - **passed_time** must be a timestamp
@@ -158,14 +180,13 @@ async def delete_expired(passed_time: int, db: DBDep, admin: AdminDep):
     expired_users = [
         user
         for user in db_users
-        if user.expire is not None and user.expire <= expiration_threshold
+        if user.expire_date is not None
+        and user.expire_date <= expiration_threshold
     ]
     if not expired_users:
         raise HTTPException(status_code=404, detail="No expired user found.")
 
     for db_user in expired_users:
-        if db_user.activated and not db_user.is_active:
-            marznode.operations.update_user(db_user)
         crud.remove_user(db, db_user)
 
         asyncio.ensure_future(
@@ -187,7 +208,11 @@ def get_user(db_user: UserDep):
 
 @router.put("/{username}", response_model=UserResponse)
 async def modify_user(
-    db_user: UserDep, modifications: UserModify, db: DBDep, admin: AdminDep
+    db_user: UserDep,
+    modifications: UserModify,
+    db: DBDep,
+    admin: AdminDep,
+    modify_access: ModifyUsersAccess,
 ):
     """
     Modify a user
@@ -197,7 +222,16 @@ async def modify_user(
     active_before = db_user.is_active
 
     old_inbounds = {(i.node_id, i.protocol, i.tag) for i in db_user.inbounds}
-    new_user = crud.update_user(db, db_user, modifications)
+    new_user = crud.update_user(
+        db,
+        db_user,
+        modifications,
+        allowed_services=(
+            admin.service_ids
+            if not admin.is_sudo and not admin.all_services_access
+            else None
+        ),
+    )
     active_after = new_user.is_active
     new_inbounds = {(i.node_id, i.protocol, i.tag) for i in new_user.inbounds}
 
@@ -241,7 +275,12 @@ async def modify_user(
 
 
 @router.delete("/{username}")
-async def remove_user(db_user: UserDep, db: DBDep, admin: AdminDep):
+async def remove_user(
+    db_user: UserDep,
+    db: DBDep,
+    admin: AdminDep,
+    modify_access: ModifyUsersAccess,
+):
     """
     Remove a user
     """
@@ -258,24 +297,30 @@ async def remove_user(db_user: UserDep, db: DBDep, admin: AdminDep):
 
 
 @router.get("/{username}/services", response_model=Page[ServiceResponse])
-def get_user_services(username: str, db: DBDep):
+def get_user_services(user: UserDep, db: DBDep, admin: AdminDep):
     """
     Get user services
     """
-    user = crud.get_user(db, username)
-
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
 
     query = (
-        db.query(Service).join(Service.users).where(User.username == username)
+        db.query(Service)
+        .join(Service.users)
+        .where(User.username == user.username)
     )
+
+    if not admin.is_sudo and not admin.all_services_access:
+        query.filter(Service.id.in_(admin.service_ids))
 
     return paginate(query)
 
 
 @router.post("/{username}/reset", response_model=UserResponse)
-async def reset_user_data_usage(db_user: UserDep, db: DBDep, admin: AdminDep):
+async def reset_user_data_usage(
+    db_user: UserDep,
+    db: DBDep,
+    admin: AdminDep,
+    modify_access: ModifyUsersAccess,
+):
     """
     Reset user data usage
     """
@@ -296,7 +341,12 @@ async def reset_user_data_usage(db_user: UserDep, db: DBDep, admin: AdminDep):
 
 
 @router.post("/{username}/enable", response_model=UserResponse)
-async def enable_user(db_user: UserDep, db: DBDep, admin: AdminDep):
+async def enable_user(
+    db_user: UserDep,
+    db: DBDep,
+    admin: AdminDep,
+    modify_access: ModifyUsersAccess,
+):
     """
     Enables a user
     """
@@ -316,7 +366,12 @@ async def enable_user(db_user: UserDep, db: DBDep, admin: AdminDep):
 
 
 @router.post("/{username}/disable", response_model=UserResponse)
-async def disable_user(db_user: UserDep, db: DBDep, admin: AdminDep):
+async def disable_user(
+    db_user: UserDep,
+    db: DBDep,
+    admin: AdminDep,
+    modify_access: ModifyUsersAccess,
+):
     """
     Disables a user
     """
@@ -337,7 +392,10 @@ async def disable_user(db_user: UserDep, db: DBDep, admin: AdminDep):
 
 @router.post("/{username}/revoke_sub", response_model=UserResponse)
 async def revoke_user_subscription(
-    db_user: UserDep, db: DBDep, admin: AdminDep
+    db_user: UserDep,
+    db: DBDep,
+    admin: AdminDep,
+    modify_access: ModifyUsersAccess,
 ):
     """
     Revoke users subscription (Subscription link and proxies)

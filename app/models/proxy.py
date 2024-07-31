@@ -11,6 +11,7 @@ class ProxyTypes(str, Enum):
     VLESS = "vless"
     Trojan = "trojan"
     Shadowsocks = "shadowsocks"
+    Hysteria2 = "hysteria2"
 
 
 class InboundHostSecurity(str, Enum):
@@ -22,10 +23,13 @@ class InboundHostSecurity(str, Enum):
 InboundHostALPN = Enum(
     "ProxyHostALPN",
     {
-        "none": "",
+        "none": "none",
         "h2": "h2",
         "http/1.1": "http/1.1",
         "h2,http/1.1": "h2,http/1.1",
+        "h3": "h3",
+        "h3,h2": "h3,h2",
+        "h3,h2,http/1.1": "h3,h2,http/1.1",
     },
 )
 
@@ -83,6 +87,13 @@ class InboundHost(BaseModel):
 
         v.format_map(FormatVariables())
 
+        return v
+
+    @field_validator("alpn", mode="before")
+    @classmethod
+    def validate_alpn(cls, v):
+        if not v:
+            return InboundHostALPN.none
         return v
 
 

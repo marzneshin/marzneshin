@@ -1,4 +1,4 @@
-import { HostType, HostsQueryFetchKey } from "@marzneshin/features/hosts";
+import { HostType } from "@marzneshin/features/hosts";
 import { useMutation } from "@tanstack/react-query";
 import { fetch, queryClient } from "@marzneshin/utils";
 import { toast } from "sonner";
@@ -24,7 +24,7 @@ const handleSuccess = (value: HostUpdateRequestDto) => {
         {
             description: i18n.t('events.update.success.desc')
         })
-    queryClient.invalidateQueries({ queryKey: [HostsQueryFetchKey] })
+    queryClient.invalidateQueries({ queryKey: ["inbounds"] })
 }
 
 

@@ -1,4 +1,4 @@
-import { type FC, useEffect } from "react";
+import { type FC, useMemo } from "react";
 import {
     DialogTitle,
     DialogContent,
@@ -27,45 +27,34 @@ import {
     useNodesUpdateMutation,
 } from "../..";
 import type { NodeType } from "../..";
-import { useMutationDialog } from "@marzneshin/hooks";
+import { useMutationDialog, MutationDialogProps } from "@marzneshin/hooks";
 
-interface MutationDialogProps {
-    entity: NodeType | null;
-    open: boolean;
-    onOpenChange: (state: boolean) => void;
-    onClose: () => void;
-}
-
-const getDefaultValue = (): NodeType => ({
-    name: "",
-    address: "",
-    status: "none",
-    port: 62050,
-    usage_coefficient: 1,
-    connection_backend: "grpclib",
-});
-
-export const MutationDialog: FC<MutationDialogProps> = ({
+export const MutationDialog: FC<MutationDialogProps<NodeType>> = ({
     entity,
-    open,
-    onOpenChange,
     onClose,
 }) => {
     const updateMutation = useNodesUpdateMutation();
     const createMutation = useNodesCreationMutation();
     const { t } = useTranslation();
-    const { form, handleSubmit } = useMutationDialog({
-        onOpenChange,
+
+    const defaultValue = useMemo(() => ({
+        id: 0,  
+        name: "",
+        address: "",
+        status: "none",
+        port: 62050,
+        usage_coefficient: 1,
+        connection_backend: "grpclib",
+    }), []);
+
+    const { onOpenChange, open, form, handleSubmit } = useMutationDialog({
         entity,
+        onClose,
         schema: NodeSchema,
         createMutation,
         updateMutation,
-        getDefaultValue,
+        defaultValue,
     });
-
-    useEffect(() => {
-        if (!open) onClose();
-    }, [open, onClose]);
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange} defaultOpen={true}>

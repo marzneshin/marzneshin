@@ -20,11 +20,10 @@ import {
     createFileRoute,
     redirect
 } from "@tanstack/react-router";
-import { GithubRepo } from "@marzneshin/features/github-repo";
+import { useGithubRepoStatsQuery, GithubRepo } from "@marzneshin/features/github-repo";
 import { CommandBox } from "@marzneshin/features/search-command";
 import { DashboardBottomMenu } from "@marzneshin/features/bottom-menu";
 import { VersionIndicator } from "@marzneshin/features/version-indicator";
-import { Settings } from "lucide-react";
 
 export const DashboardLayout = () => {
     const isDesktop = useScreenBreakpoint("md");
@@ -35,6 +34,7 @@ export const DashboardLayout = () => {
         toggleCollapse,
     } = usePanelToggle(isDesktop);
     const { isSudo } = useAuth();
+    const { data: stats } = useGithubRepoStatsQuery()
 
     return (
         <div className="flex flex-col w-screen h-screen">
@@ -56,11 +56,7 @@ export const DashboardLayout = () => {
                 center={<CommandBox />}
                 end={
                     <>
-                        <GithubRepo variant={isDesktop ? "full" : "mini"} />
-                        {(!isDesktop && isSudo()) && (<Link to="/settings">
-                            <Settings className="bg-gray-800 text-secondary dark:hover:bg-secondary-foreground dark:hover:text-secondary dark:text-secondary-foreground size-10 rounded-md text-2xl p-2" />
-                        </Link>
-                        )}
+                        <GithubRepo {...stats} variant={isDesktop ? "full" : "mini"} />
                         <HeaderMenu />
                     </>
                 }

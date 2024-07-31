@@ -19,7 +19,7 @@ export interface GithubRepoStatsResponse {
 
 export const GithubRepoStatsResponseDefault: GithubRepoStatsResponse = {
     full_name: projectInfo.repo,
-    description: "",
+    description: "A fork of Marzban aiming for scalability",
     stargazers_count: 0,
 }
 
@@ -34,7 +34,7 @@ export const useGithubRepoStatsQuery = () => {
     return useQuery({
         queryKey: ["github", projectInfo.repo, "stats"],
         queryFn: fetchGithubRepoStats,
-        refetchInterval: 1000 * 60 * 1, // 5min refresh
+        refetchInterval: 1000 * 60 * 5, // 5min refresh
         initialData: GithubRepoStatsResponseDefault
     })
 }

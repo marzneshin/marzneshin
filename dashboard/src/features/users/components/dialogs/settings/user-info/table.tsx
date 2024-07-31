@@ -15,6 +15,7 @@ import {
     UserUsedTraffic,
     UserActivatedPill,
     UserDataLimitReachedPill,
+    UserExpiredPill,
 } from "@marzneshin/features/users";
 import { useTranslation } from "react-i18next";
 
@@ -34,12 +35,20 @@ export const UserInfoTable: FC<UserProp> = ({ user: entity }) => {
                     <TableBody>
                         <TableRowWithCell label={t("username")} value={entity.username} />
                         <TableRowWithCell
+                            label={t("activated")}
+                            value={<UserActivatedPill user={entity} />}
+                        />
+                        <TableRowWithCell
                             label={t("enabled")}
                             value={<UserEnabledPill user={entity} />}
                         />
                         <TableRowWithCell
-                            label={t("activated")}
-                            value={<UserActivatedPill user={entity} />}
+                            label={t("page.users.data_limit_reached")}
+                            value={<UserDataLimitReachedPill user={entity} />}
+                        />
+                        <TableRowWithCell
+                            label={t("expired")}
+                            value={<UserExpiredPill user={entity} />}
                         />
                         {{
                             fixed_date: (
@@ -71,10 +80,6 @@ export const UserInfoTable: FC<UserProp> = ({ user: entity }) => {
                         <TableRowWithCell
                             label={t("page.users.used_traffic")}
                             value={<UserUsedTraffic user={entity} />}
-                        />
-                        <TableRowWithCell
-                            label={t("page.users.data_limit_reached")}
-                            value={<UserDataLimitReachedPill user={entity} />}
                         />
                         <DateTableRow
                             label={t("page.users.online_at")}

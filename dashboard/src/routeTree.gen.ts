@@ -23,10 +23,13 @@ import { Route as DashboardServicesServiceIdImport } from './routes/_dashboard/s
 import { Route as DashboardNodesCreateImport } from './routes/_dashboard/nodes/create'
 import { Route as DashboardNodesNodeIdImport } from './routes/_dashboard/nodes/$nodeId'
 import { Route as DashboardHostsHostIdImport } from './routes/_dashboard/hosts/$hostId'
+import { Route as DashboardAdminsCreateImport } from './routes/_dashboard/admins/create'
+import { Route as DashboardAdminsAdminIdImport } from './routes/_dashboard/admins/$adminId'
 import { Route as DashboardUsersUserIdIndexImport } from './routes/_dashboard/users/$userId/index'
 import { Route as DashboardServicesServiceIdIndexImport } from './routes/_dashboard/services/$serviceId/index'
 import { Route as DashboardNodesNodeIdIndexImport } from './routes/_dashboard/nodes/$nodeId/index'
 import { Route as DashboardHostsHostIdIndexImport } from './routes/_dashboard/hosts/$hostId/index'
+import { Route as DashboardAdminsAdminIdIndexImport } from './routes/_dashboard/admins/$adminId/index'
 import { Route as DashboardUsersUserIdEditImport } from './routes/_dashboard/users/$userId/edit'
 import { Route as DashboardUsersUserIdDeleteImport } from './routes/_dashboard/users/$userId/delete'
 import { Route as DashboardServicesServiceIdEditImport } from './routes/_dashboard/services/$serviceId/edit'
@@ -36,6 +39,8 @@ import { Route as DashboardNodesNodeIdDeleteImport } from './routes/_dashboard/n
 import { Route as DashboardHostsInboundIdCreateImport } from './routes/_dashboard/hosts/$inboundId/create'
 import { Route as DashboardHostsHostIdEditImport } from './routes/_dashboard/hosts/$hostId/edit'
 import { Route as DashboardHostsHostIdDeleteImport } from './routes/_dashboard/hosts/$hostId/delete'
+import { Route as DashboardAdminsAdminIdEditImport } from './routes/_dashboard/admins/$adminId/edit'
+import { Route as DashboardAdminsAdminIdDeleteImport } from './routes/_dashboard/admins/$adminId/delete'
 
 // Create Virtual Routes
 
@@ -45,6 +50,7 @@ const DashboardSettingsLazyImport = createFileRoute('/_dashboard/settings')()
 const DashboardServicesLazyImport = createFileRoute('/_dashboard/services')()
 const DashboardNodesLazyImport = createFileRoute('/_dashboard/nodes')()
 const DashboardHostsLazyImport = createFileRoute('/_dashboard/hosts')()
+const DashboardAdminsLazyImport = createFileRoute('/_dashboard/admins')()
 
 // Create/Update Routes
 
@@ -100,6 +106,13 @@ const DashboardHostsLazyRoute = DashboardHostsLazyImport.update({
   import('./routes/_dashboard/hosts.lazy').then((d) => d.Route),
 )
 
+const DashboardAdminsLazyRoute = DashboardAdminsLazyImport.update({
+  path: '/admins',
+  getParentRoute: () => DashboardRoute,
+} as any).lazy(() =>
+  import('./routes/_dashboard/admins.lazy').then((d) => d.Route),
+)
+
 const AuthLoginRoute = AuthLoginImport.update({
   path: '/login',
   getParentRoute: () => AuthRoute,
@@ -142,6 +155,16 @@ const DashboardHostsHostIdRoute = DashboardHostsHostIdImport.update({
   getParentRoute: () => DashboardHostsLazyRoute,
 } as any)
 
+const DashboardAdminsCreateRoute = DashboardAdminsCreateImport.update({
+  path: '/create',
+  getParentRoute: () => DashboardAdminsLazyRoute,
+} as any)
+
+const DashboardAdminsAdminIdRoute = DashboardAdminsAdminIdImport.update({
+  path: '/$adminId',
+  getParentRoute: () => DashboardAdminsLazyRoute,
+} as any)
+
 const DashboardUsersUserIdIndexRoute = DashboardUsersUserIdIndexImport.update({
   path: '/',
   getParentRoute: () => DashboardUsersUserIdRoute,
@@ -162,6 +185,12 @@ const DashboardHostsHostIdIndexRoute = DashboardHostsHostIdIndexImport.update({
   path: '/',
   getParentRoute: () => DashboardHostsHostIdRoute,
 } as any)
+
+const DashboardAdminsAdminIdIndexRoute =
+  DashboardAdminsAdminIdIndexImport.update({
+    path: '/',
+    getParentRoute: () => DashboardAdminsAdminIdRoute,
+  } as any)
 
 const DashboardUsersUserIdEditRoute = DashboardUsersUserIdEditImport.update({
   path: '/edit',
@@ -217,6 +246,19 @@ const DashboardHostsHostIdDeleteRoute = DashboardHostsHostIdDeleteImport.update(
   } as any,
 )
 
+const DashboardAdminsAdminIdEditRoute = DashboardAdminsAdminIdEditImport.update(
+  {
+    path: '/edit',
+    getParentRoute: () => DashboardAdminsAdminIdRoute,
+  } as any,
+)
+
+const DashboardAdminsAdminIdDeleteRoute =
+  DashboardAdminsAdminIdDeleteImport.update({
+    path: '/delete',
+    getParentRoute: () => DashboardAdminsAdminIdRoute,
+  } as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -241,6 +283,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/login'
       preLoaderRoute: typeof AuthLoginImport
       parentRoute: typeof AuthImport
+    }
+    '/_dashboard/admins': {
+      id: '/_dashboard/admins'
+      path: '/admins'
+      fullPath: '/admins'
+      preLoaderRoute: typeof DashboardAdminsLazyImport
+      parentRoute: typeof DashboardImport
     }
     '/_dashboard/hosts': {
       id: '/_dashboard/hosts'
@@ -283,6 +332,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof DashboardIndexLazyImport
       parentRoute: typeof DashboardImport
+    }
+    '/_dashboard/admins/$adminId': {
+      id: '/_dashboard/admins/$adminId'
+      path: '/$adminId'
+      fullPath: '/admins/$adminId'
+      preLoaderRoute: typeof DashboardAdminsAdminIdImport
+      parentRoute: typeof DashboardAdminsLazyImport
+    }
+    '/_dashboard/admins/create': {
+      id: '/_dashboard/admins/create'
+      path: '/create'
+      fullPath: '/admins/create'
+      preLoaderRoute: typeof DashboardAdminsCreateImport
+      parentRoute: typeof DashboardAdminsLazyImport
     }
     '/_dashboard/hosts/$hostId': {
       id: '/_dashboard/hosts/$hostId'
@@ -332,6 +395,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/users/create'
       preLoaderRoute: typeof DashboardUsersCreateImport
       parentRoute: typeof DashboardUsersLazyImport
+    }
+    '/_dashboard/admins/$adminId/delete': {
+      id: '/_dashboard/admins/$adminId/delete'
+      path: '/delete'
+      fullPath: '/admins/$adminId/delete'
+      preLoaderRoute: typeof DashboardAdminsAdminIdDeleteImport
+      parentRoute: typeof DashboardAdminsAdminIdImport
+    }
+    '/_dashboard/admins/$adminId/edit': {
+      id: '/_dashboard/admins/$adminId/edit'
+      path: '/edit'
+      fullPath: '/admins/$adminId/edit'
+      preLoaderRoute: typeof DashboardAdminsAdminIdEditImport
+      parentRoute: typeof DashboardAdminsAdminIdImport
     }
     '/_dashboard/hosts/$hostId/delete': {
       id: '/_dashboard/hosts/$hostId/delete'
@@ -396,6 +473,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardUsersUserIdEditImport
       parentRoute: typeof DashboardUsersUserIdImport
     }
+    '/_dashboard/admins/$adminId/': {
+      id: '/_dashboard/admins/$adminId/'
+      path: '/'
+      fullPath: '/admins/$adminId/'
+      preLoaderRoute: typeof DashboardAdminsAdminIdIndexImport
+      parentRoute: typeof DashboardAdminsAdminIdImport
+    }
     '/_dashboard/hosts/$hostId/': {
       id: '/_dashboard/hosts/$hostId/'
       path: '/'
@@ -432,6 +516,14 @@ declare module '@tanstack/react-router' {
 export const routeTree = rootRoute.addChildren({
   AuthRoute: AuthRoute.addChildren({ AuthLoginRoute }),
   DashboardRoute: DashboardRoute.addChildren({
+    DashboardAdminsLazyRoute: DashboardAdminsLazyRoute.addChildren({
+      DashboardAdminsAdminIdRoute: DashboardAdminsAdminIdRoute.addChildren({
+        DashboardAdminsAdminIdDeleteRoute,
+        DashboardAdminsAdminIdEditRoute,
+        DashboardAdminsAdminIdIndexRoute,
+      }),
+      DashboardAdminsCreateRoute,
+    }),
     DashboardHostsLazyRoute: DashboardHostsLazyRoute.addChildren({
       DashboardHostsHostIdRoute: DashboardHostsHostIdRoute.addChildren({
         DashboardHostsHostIdDeleteRoute,
@@ -491,6 +583,7 @@ export const routeTree = rootRoute.addChildren({
     "/_dashboard": {
       "filePath": "_dashboard.tsx",
       "children": [
+        "/_dashboard/admins",
         "/_dashboard/hosts",
         "/_dashboard/nodes",
         "/_dashboard/services",
@@ -502,6 +595,14 @@ export const routeTree = rootRoute.addChildren({
     "/_auth/login": {
       "filePath": "_auth/login.tsx",
       "parent": "/_auth"
+    },
+    "/_dashboard/admins": {
+      "filePath": "_dashboard/admins.lazy.tsx",
+      "parent": "/_dashboard",
+      "children": [
+        "/_dashboard/admins/$adminId",
+        "/_dashboard/admins/create"
+      ]
     },
     "/_dashboard/hosts": {
       "filePath": "_dashboard/hosts.lazy.tsx",
@@ -542,6 +643,19 @@ export const routeTree = rootRoute.addChildren({
     "/_dashboard/": {
       "filePath": "_dashboard/index.lazy.tsx",
       "parent": "/_dashboard"
+    },
+    "/_dashboard/admins/$adminId": {
+      "filePath": "_dashboard/admins/$adminId.tsx",
+      "parent": "/_dashboard/admins",
+      "children": [
+        "/_dashboard/admins/$adminId/delete",
+        "/_dashboard/admins/$adminId/edit",
+        "/_dashboard/admins/$adminId/"
+      ]
+    },
+    "/_dashboard/admins/create": {
+      "filePath": "_dashboard/admins/create.tsx",
+      "parent": "/_dashboard/admins"
     },
     "/_dashboard/hosts/$hostId": {
       "filePath": "_dashboard/hosts/$hostId.tsx",
@@ -591,6 +705,14 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "_dashboard/users/create.tsx",
       "parent": "/_dashboard/users"
     },
+    "/_dashboard/admins/$adminId/delete": {
+      "filePath": "_dashboard/admins/$adminId/delete.tsx",
+      "parent": "/_dashboard/admins/$adminId"
+    },
+    "/_dashboard/admins/$adminId/edit": {
+      "filePath": "_dashboard/admins/$adminId/edit.tsx",
+      "parent": "/_dashboard/admins/$adminId"
+    },
     "/_dashboard/hosts/$hostId/delete": {
       "filePath": "_dashboard/hosts/$hostId/delete.tsx",
       "parent": "/_dashboard/hosts/$hostId"
@@ -626,6 +748,10 @@ export const routeTree = rootRoute.addChildren({
     "/_dashboard/users/$userId/edit": {
       "filePath": "_dashboard/users/$userId/edit.tsx",
       "parent": "/_dashboard/users/$userId"
+    },
+    "/_dashboard/admins/$adminId/": {
+      "filePath": "_dashboard/admins/$adminId/index.tsx",
+      "parent": "/_dashboard/admins/$adminId"
     },
     "/_dashboard/hosts/$hostId/": {
       "filePath": "_dashboard/hosts/$hostId/index.tsx",

@@ -1,10 +1,8 @@
-import type { ColumnDef } from "@tanstack/react-table";
 import {
     type UserType,
     OnlineStatus,
     UserUsedTraffic,
     UserActivatedPill,
-    UserEnabledPill,
     UserExpireStrategyPill,
     UserExpirationValue
 } from "@marzneshin/features/users";
@@ -14,17 +12,13 @@ import {
     CopyToClipboardButton,
     DataTableActionsCell,
     buttonVariants,
+    NoPropogationButton,
 } from "@marzneshin/components";
 import { LinkIcon } from "lucide-react";
 import { getSubscriptionLink } from "@marzneshin/utils";
+import type { ColumnActions, ColumnDefWithSudoRole } from "@marzneshin/features/entity-table";
 
-interface ColumnAction {
-    onDelete: (user: UserType) => void;
-    onOpen: (user: UserType) => void;
-    onEdit: (user: UserType) => void;
-}
-
-export const columns = (actions: ColumnAction): ColumnDef<UserType>[] => [
+export const columns = (actions: ColumnActions<UserType>): ColumnDefWithSudoRole<UserType>[] => [
     {
         accessorKey: "username",
         header: ({ column }) => (
@@ -35,7 +29,7 @@ export const columns = (actions: ColumnAction): ColumnDef<UserType>[] => [
                 <OnlineStatus user={row.original} /> {row.original.username}
             </div>
         ),
-    },
+    }, 
     {
         accessorKey: "activated",
         enableSorting: false,
@@ -48,6 +42,17 @@ export const columns = (actions: ColumnAction): ColumnDef<UserType>[] => [
         cell: ({ row }) => <UserActivatedPill user={row.original} />,
     },
     {
+        accessorKey: "owner_username",
+        enableSorting: false,
+        sudoVisibleOnly: true,
+        header: ({ column }) => (
+            <DataTableColumnHeader
+                title={i18n.t("owner")}
+                column={column}
+            />
+        ),
+    },
+    {
         accessorKey: "used_traffic",
         header: ({ column }) => (
             <DataTableColumnHeader
@@ -56,17 +61,6 @@ export const columns = (actions: ColumnAction): ColumnDef<UserType>[] => [
             />
         ),
         cell: ({ row }) => <UserUsedTraffic user={row.original} />,
-    },
-    {
-        accessorKey: "enabled",
-        enableSorting: false,
-        header: ({ column }) => (
-            <DataTableColumnHeader
-                title={i18n.t("enabled")}
-                column={column}
-            />
-        ),
-        cell: ({ row }) => <UserEnabledPill user={row.original} />,
     },
     {
         accessorKey: "expire_strategy",
@@ -91,38 +85,22 @@ export const columns = (actions: ColumnAction): ColumnDef<UserType>[] => [
     },
     {
         id: "actions",
-        cell: ({ row }) => {
-            const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    actions.onOpen(row.original);
-                }
-            };
-
-            return (
-                <div
-                    className="flex flex-row gap-2 items-center"
-                    onClick={(e) => e.stopPropagation()}
-                    onKeyDown={handleKeyDown}
-                    tabIndex={0}
-                    role="button"
-                >
-                    <CopyToClipboardButton
-                        text={getSubscriptionLink(row.original.subscription_url)}
-                        successMessage={i18n.t(
-                            "page.users.settings.subscription_link.copied",
-                        )}
-                        copyIcon={LinkIcon}
-                        className={buttonVariants({
-                            variant: "secondary",
-                            className: "size-8",
-                        })}
-                        tooltipMsg={i18n.t("page.users.settings.subscription_link.copy")}
-                    />
-                    <DataTableActionsCell {...actions} row={row} />
-                </div>
-            );
-        },
+        cell: ({ row }) => (
+            <NoPropogationButton row={row} actions={actions}>
+                <CopyToClipboardButton
+                    text={getSubscriptionLink(row.original.subscription_url)}
+                    successMessage={i18n.t(
+                        "page.users.settings.subscription_link.copied",
+                    )}
+                    copyIcon={LinkIcon}
+                    className={buttonVariants({
+                        variant: "secondary",
+                        className: "size-8",
+                    })}
+                    tooltipMsg={i18n.t("page.users.settings.subscription_link.copy")}
+                />
+                <DataTableActionsCell {...actions} row={row} />
+            </NoPropogationButton>
+        )
     }
 ];

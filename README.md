@@ -72,20 +72,19 @@ marznode manages and interacts with vpn backends (such as xray).
 - **Multi Nodes** support for traffic distribution, scalability, and fault tolerance
 - Supports protocols **Vmess**, **VLESS**, **Trojan** and **Shadowsocks** as provided by xray
 - **Multi-protocol** for a single user
-- Manage users' access to inbounds separately
+- Manage users' access to inbounds separately using **services**
 - **Multi-user** on a single inbound
 - Limit users' data and set exire dates
-- reset traffic periodically (daily, weekly,...)
+- Reset traffic periodically (daily, weekly,...)
 - **Subscription link** compatible with **V2ray** (e.g. V2RayNG, OneClick, Nekoray, etc.), **Clash** and **ClashMeta**
 - Automated **Share link** and **QRcode** generator
 - System, nodes, traffic statistics, users monitoring
 - Integrated **Command Line Interface (CLI)**
-- **Multi-admin** support (WIP)
+- [**Multi-admin** support](https://github.com/khodedawsh/marzneshin/issues/73) (WIP)
 - Marzneshin is decoupled from VPN backends
 - Resilient and fault tolerant node management
-- UI performance and redesign
 
-Deployment and Developer Kit:
+**Deployment and Developer Kit:**
 
 - REST-full API
 - Kubernetes and multiple deployment strategy and options (WIP)
@@ -95,7 +94,7 @@ Deployment and Developer Kit:
 - Russian (WIP)
 - English
 - Kurdish (Soranî, Kurmancî)
-- Persian (WIP)
+- Persian
 
 # Installation guide
 
@@ -141,13 +140,6 @@ If you are eager to run the project using the source code, check the section bel
 <details markdown="1">
 <summary><h3>Manual install (advanced)</h3></summary>
 
-Install xray on your machine
-
-You can install it using [Xray-install](https://github.com/XTLS/Xray-install)
-
-```bash
-bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install
-```
 
 Clone this project and install the dependencies (you'd need Python >= 3.10)
 
@@ -160,11 +152,14 @@ python3 -m pip install -r requirements.txt
 
 Alternatively, to have an isolated environment you can use [Python Virtualenv](https://pypi.org/project/virtualenv/)
 
-Then run the following command to run the database migration scripts
+To install dashboard dependencies and build the dashboard:
 
 ```bash
-alembic upgrade head
+make dashboard-deps
+make dashboard-build
 ```
+
+note that you'll need pnpm and npm installed.
 
 If you want to use `marzneshin-cli`, you should link it to a file in your `$PATH`, make it executable, and install the
 auto-completion:
@@ -191,7 +186,7 @@ nano .env
 Eventually, launch the application using command below
 
 ```bash
-python3 main.py
+make start
 ```
 
 To launch with linux systemctl (copy marzneshin.service file to `/var/lib/marzneshin/marzneshin.service`)
@@ -291,7 +286,7 @@ the `UVICORN_HOST` and `UVICORN_PORT` environment variables.
 | NUMBER_OF_RECURRENT_NOTIFICATIONS | How many times to retry if an error detected in sending a notification (default: `3`)                 |
 | RECURRENT_NOTIFICATIONS_TIMEOUT   | Timeout between each retry if an error detected in sending a notification in seconds (default: `180`) |
 | NOTIFY_REACHED_USAGE_PERCENT      | At which percentage of usage to send the warning notification (default: `80`)                         |
-| NOTIFY_DAYS_LEFT                  | When to send warning notification about expiration (default: `3`)                                      |
+| NOTIFY_DAYS_LEFT                  | When to send warning notification about expiration (default: `3`)                                     |
 
 # API
 

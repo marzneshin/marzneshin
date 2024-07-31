@@ -14,5 +14,6 @@ export const getDefaultValues = (): HostSchemaType => {
         alpn: "",
         allowinsecure: false,
         fingerprint: "",
+        is_disabled: false,
     }
 };

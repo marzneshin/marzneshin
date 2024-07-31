@@ -3,10 +3,12 @@ import {
     Table, TableHeader, TableRow, TableBody, TableHead,
     ScrollArea, Button,
 } from "@marzneshin/components";
+import { cn } from "@marzneshin/utils";
 import {
     SidebarEntityCard,
 } from "@marzneshin/features/entity-table/components";
 import {
+    useEntityTableContext,
     useSidebarEntityTableContext
 } from "@marzneshin/features/entity-table/contexts";
 import { useTranslation } from "react-i18next";
@@ -16,8 +18,11 @@ export const SidebarEntitySelection = () => {
         sidebarEntityId,
         sidebarEntities,
         setSidebarEntityId,
-        sidebarCardProps
+        sidebarCardProps,
     } = useSidebarEntityTableContext()
+    const { table } = useEntityTableContext()
+
+    const scrollBarHeight = table.getState().pagination.pageSize <= 10 ? "max-h-[45rem]" : "max-h-full"
     const { t } = useTranslation();
 
     return (
@@ -32,7 +37,7 @@ export const SidebarEntitySelection = () => {
                             className="p-1"
                             onMouseDown={() => setSidebarEntityId(undefined)}
                         >
-                            Unselect
+                            {t('deselect')}
                         </Button>
                     </TableHead>
                 </TableRow>
@@ -43,7 +48,7 @@ export const SidebarEntitySelection = () => {
                     onValueChange={(value) => setSidebarEntityId(value === "" ? undefined : value)}
                     defaultValue={String(sidebarEntityId)}
                 >
-                    <ScrollArea className="flex flex-col justify-start p-1 gap-3 h-full max-h-[20rem]">
+                    <ScrollArea className={cn("flex flex-col justify-start p-1 gap-3 h-full", scrollBarHeight)}>
                         {sidebarEntities.map((entity: any) => (
                             <ToggleGroupItem
                                 className="px-0 w-full h-full"

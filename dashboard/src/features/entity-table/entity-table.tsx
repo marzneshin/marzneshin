@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { Button, DataTableViewOptions } from "@marzneshin/components";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
+import { ColumnDef } from "@tanstack/react-table";
 import { EntityTableContext } from "./contexts";
 import { TableFiltering, DataTablePagination, EntityDataTable } from "./components";
 import {
@@ -19,28 +20,24 @@ import {
 
 export interface EntityTableProps<T> {
     fetchEntity: ({ queryKey }: EntityQueryKeyType) => FetchEntityReturn<T>;
-    columnsFn: any;
+    columns: ColumnDef<T>[];
     filteredColumn: string;
     entityKey: string;
     rowSelection?: UseRowSelectionReturn;
     manualSorting?: boolean;
     onCreate: () => void;
-    onEdit: (entity: T) => void;
-    onOpen: (entity: T) => void;
-    onDelete: (entity: T) => void;
+    onOpen: (entity: any) => void;
 }
 
 export function EntityTable<T>({
     fetchEntity,
-    columnsFn,
+    columns,
     filteredColumn,
     rowSelection,
     entityKey,
     manualSorting = false,
     onCreate,
-    onEdit,
     onOpen,
-    onDelete,
 }: EntityTableProps<T>) {
     const { t } = useTranslation();
     const filtering = useFiltering({ column: filteredColumn });
@@ -68,7 +65,6 @@ export function EntityTable<T>({
         initialData: { entity: [], pageCount: 1 },
     });
 
-    const columns = columnsFn({ onEdit, onDelete, onOpen });
     const table = useEntityTable({
         data,
         columns,
@@ -88,14 +84,16 @@ export function EntityTable<T>({
     return (
         <EntityTableContext.Provider value={contextValue}>
             <div className="flex flex-col">
-                <div className="flex items-center py-4">
+                <div className="flex flex-col md:flex-row-reverse items-center py-4 gap-2 w-full">
+                    <div className="flex flex-row items-center w-full">
+                        <DataTableViewOptions table={table} />
+                        {onCreate && (
+                            <Button aria-label={`create-${entityKey}`} onClick={onCreate}>
+                                {t("create")}
+                            </Button>
+                        )}
+                    </div>
                     <TableFiltering />
-                    <DataTableViewOptions table={table} />
-                    {onCreate && (
-                        <Button aria-label={`create-${entityKey}`} onClick={onCreate}>
-                            {t("create")}
-                        </Button>
-                    )}
                 </div>
                 <div className="w-full rounded-md border">
                     <EntityDataTable columns={columns} onRowClick={onOpen} />

@@ -41,7 +41,7 @@ export const DashboardSidebar: FC<DashboardSidebarProps> = ({
                         <Sidebar.Body>
                             {Object.keys(sidebarItems).map((key) => (
                                 <div className="w-full" key={key}>
-                                    <Sidebar.Group>{key}</Sidebar.Group>
+                                    <Sidebar.Group className="uppercase">{key}</Sidebar.Group>
                                     {sidebarItems[key].map((item: SidebarItem) => (
                                         <Sidebar.Item
                                             variant={isCurrentRouteActive(item.to) ? "active" : "default"}
