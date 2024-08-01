@@ -33,7 +33,6 @@ from .routes import api_router
 from .tasks import (
     delete_expired_reminders,
     nodes_startup,
-    record_realtime_bandwidth,
     record_user_usages,
     reset_user_data_usage,
     review_users,
@@ -84,13 +83,6 @@ scheduler.add_job(
     review_users, "interval", seconds=30, coalesce=True, max_instances=1
 )
 scheduler.add_job(reset_user_data_usage, "interval", coalesce=True, hours=1)
-scheduler.add_job(
-    record_realtime_bandwidth,
-    "interval",
-    seconds=1,
-    coalesce=True,
-    max_instances=1,
-)
 
 if WEBHOOK_ADDRESS:
     scheduler.add_job(

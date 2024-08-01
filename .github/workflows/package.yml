@@ -17,6 +17,7 @@ on:
         description: "Release Git Ref (Which branch or tag to build?)"
         required: true
         default: "master"
+
       is-draft:
         description: 'Draft Release? (Beta only, Nightly will always be a non-draft)'
         type: boolean
@@ -40,6 +41,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          ref: ${{ github.event.inputs.git-ref }}
 
       - uses: pnpm/action-setup@v4
         name: Install pnpm
@@ -57,7 +59,7 @@ jobs:
         working-directory: ./dashboard/
 
       - name: Build Dashboard
-        run: npm run build --if-present -- --outDir 'dist' --assetsDir 'static' 
+        run: npm run build --if-present -- --outDir 'dist' --assetsDir 'static'
         working-directory: ./dashboard/
 
       - name: Set up QEMU
