@@ -11,7 +11,7 @@ from .crud import (
     get_admins,
     get_jwt_secret_key,
     get_notification_reminder,
-    assure_node_inbounds,
+    ensure_node_inbounds,
     get_system_usage,
     get_tls_certificate,
     get_user,

@@ -15,9 +15,13 @@ class MarzNodeDB:
                 users[rel[0]]["inbounds"].append(rel[3].tag)
         return list(users.values())
 
-    def store_inbounds(self, inbounds):
+    def store_backends(self, backends):
+        inbounds = [
+            inbound for backend in backends for inbound in backend.inbounds
+        ]
         with GetDB() as db:
-            crud.assure_node_inbounds(db, inbounds, self.id)
+            crud.ensure_node_backends(db, backends, self.id)
+            crud.ensure_node_inbounds(db, inbounds, self.id)
 
     def set_status(self, status: NodeStatus, message: str | None = None):
         with GetDB() as db:

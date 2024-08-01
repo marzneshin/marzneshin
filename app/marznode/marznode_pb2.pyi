@@ -1,13 +1,41 @@
 from google.protobuf.internal import containers as _containers
+from google.protobuf.internal import enum_type_wrapper as _enum_type_wrapper
 from google.protobuf import descriptor as _descriptor
 from google.protobuf import message as _message
 from typing import ClassVar as _ClassVar, Iterable as _Iterable, Mapping as _Mapping, Optional as _Optional, Union as _Union
 
 DESCRIPTOR: _descriptor.FileDescriptor
 
+class ConfigFormat(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    PLAIN: _ClassVar[ConfigFormat]
+    JSON: _ClassVar[ConfigFormat]
+    YAML: _ClassVar[ConfigFormat]
+PLAIN: ConfigFormat
+JSON: ConfigFormat
+YAML: ConfigFormat
+
 class Empty(_message.Message):
     __slots__ = ()
     def __init__(self) -> None: ...
+
+class Backend(_message.Message):
+    __slots__ = ("name", "type", "version", "inbounds")
+    NAME_FIELD_NUMBER: _ClassVar[int]
+    TYPE_FIELD_NUMBER: _ClassVar[int]
+    VERSION_FIELD_NUMBER: _ClassVar[int]
+    INBOUNDS_FIELD_NUMBER: _ClassVar[int]
+    name: str
+    type: str
+    version: str
+    inbounds: _containers.RepeatedCompositeFieldContainer[Inbound]
+    def __init__(self, name: _Optional[str] = ..., type: _Optional[str] = ..., version: _Optional[str] = ..., inbounds: _Optional[_Iterable[_Union[Inbound, _Mapping]]] = ...) -> None: ...
+
+class BackendsResponse(_message.Message):
+    __slots__ = ("backends",)
+    BACKENDS_FIELD_NUMBER: _ClassVar[int]
+    backends: _containers.RepeatedCompositeFieldContainer[Backend]
+    def __init__(self, backends: _Optional[_Iterable[_Union[Backend, _Mapping]]] = ...) -> None: ...
 
 class Inbound(_message.Message):
     __slots__ = ("tag", "config")
@@ -16,12 +44,6 @@ class Inbound(_message.Message):
     tag: str
     config: str
     def __init__(self, tag: _Optional[str] = ..., config: _Optional[str] = ...) -> None: ...
-
-class InboundsResponse(_message.Message):
-    __slots__ = ("inbounds",)
-    INBOUNDS_FIELD_NUMBER: _ClassVar[int]
-    inbounds: _containers.RepeatedCompositeFieldContainer[Inbound]
-    def __init__(self, inbounds: _Optional[_Iterable[_Union[Inbound, _Mapping]]] = ...) -> None: ...
 
 class User(_message.Message):
     __slots__ = ("id", "username", "key")
@@ -66,14 +88,26 @@ class LogLine(_message.Message):
     line: str
     def __init__(self, line: _Optional[str] = ...) -> None: ...
 
-class XrayConfig(_message.Message):
-    __slots__ = ("configuration",)
+class BackendConfig(_message.Message):
+    __slots__ = ("configuration", "config_format")
     CONFIGURATION_FIELD_NUMBER: _ClassVar[int]
+    CONFIG_FORMAT_FIELD_NUMBER: _ClassVar[int]
     configuration: str
-    def __init__(self, configuration: _Optional[str] = ...) -> None: ...
+    config_format: ConfigFormat
+    def __init__(self, configuration: _Optional[str] = ..., config_format: _Optional[_Union[ConfigFormat, str]] = ...) -> None: ...
 
-class XrayLogsRequest(_message.Message):
-    __slots__ = ("include_buffer",)
+class BackendLogsRequest(_message.Message):
+    __slots__ = ("backend_name", "include_buffer")
+    BACKEND_NAME_FIELD_NUMBER: _ClassVar[int]
     INCLUDE_BUFFER_FIELD_NUMBER: _ClassVar[int]
+    backend_name: str
     include_buffer: bool
-    def __init__(self, include_buffer: bool = ...) -> None: ...
+    def __init__(self, backend_name: _Optional[str] = ..., include_buffer: bool = ...) -> None: ...
+
+class RestartBackendRequest(_message.Message):
+    __slots__ = ("backend_name", "config")
+    BACKEND_NAME_FIELD_NUMBER: _ClassVar[int]
+    CONFIG_FIELD_NUMBER: _ClassVar[int]
+    backend_name: str
+    config: BackendConfig
+    def __init__(self, backend_name: _Optional[str] = ..., config: _Optional[_Union[BackendConfig, _Mapping]] = ...) -> None: ...

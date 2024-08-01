@@ -1,4 +1,3 @@
-import json
 import logging
 from typing import Annotated
 
@@ -98,9 +97,13 @@ def get_node(node_id: int, db: DBDep, admin: SudoAdminDep):
     return db_node
 
 
-@router.websocket("/{node_id}/logs")
+@router.websocket("/{node_id}/{backend}/logs")
 async def node_logs(
-    node_id: int, websocket: WebSocket, db: DBDep, include_buffer: bool = True
+    node_id: int,
+    backend: str,
+    websocket: WebSocket,
+    db: DBDep,
+    include_buffer: bool = True,
 ):
     token = websocket.query_params.get("token") or websocket.headers.get(
         "Authorization", ""
@@ -113,13 +116,10 @@ async def node_logs(
     if not marznode.nodes.get(node_id):
         return await websocket.close(reason="Node not found", code=4404)
 
-    # if not await marznode.nodes[node_id].is_healthy:
-    #    return await websocket.close(reason="Node is not connected", code=4400)
-
     await websocket.accept()
     try:
         async for line in marznode.nodes[node_id].get_logs(
-            include_buffer=include_buffer
+            name=backend, include_buffer=include_buffer
         ):
             try:
                 await websocket.send_text(line)
@@ -170,28 +170,33 @@ async def reconnect_node(node_id: int, db: DBDep, admin: SudoAdminDep):
     return {}
 
 
-@router.get("/{node_id}/xray_config")
-async def get_node_xray_config(node_id: int, db: DBDep, admin: SudoAdminDep):
-    if not (node := marznode.nodes.get(node_id)):
-        raise HTTPException(status_code=404, detail="Node not found")
-
-    try:
-        config = await node.get_xray_config()
-    except:
-        raise HTTPException(status_code=502, detail="Node isn't responsive")
-    else:
-        return json.loads(config)
-
-
-@router.put("/{node_id}/xray_config")
-async def alter_node_xray_config(
-    node_id: int, db: DBDep, admin: SudoAdminDep, body: Annotated[dict, Body()]
+@router.get("/{node_id}/{backend}/config")
+async def get_node_xray_config(
+    node_id: int, backend: str, db: DBDep, admin: SudoAdminDep
 ):
     if not (node := marznode.nodes.get(node_id)):
         raise HTTPException(status_code=404, detail="Node not found")
-    xray_config = json.dumps(body)
+
     try:
-        await node.restart_xray(xray_config)
+        config, config_format = await node.get_backend_config(name=backend)
+    except Exception:
+        raise HTTPException(status_code=502, detail="Node isn't responsive")
+    else:
+        return {"config": config, "format": config_format}
+
+
+@router.put("/{node_id}/{backend}/config")
+async def alter_node_xray_config(
+    node_id: int,
+    backend: str,
+    db: DBDep,
+    admin: SudoAdminDep,
+    body: Annotated[str, Body()],
+):
+    if not (node := marznode.nodes.get(node_id)):
+        raise HTTPException(status_code=404, detail="Node not found")
+    try:
+        await node.restart_backend(name=backend, config=body)
     except:
         raise HTTPException(status_code=502, detail="Node isn't responsive")
     return {}
