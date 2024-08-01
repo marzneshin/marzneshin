@@ -42,4 +42,14 @@ export const NodeSchema = z.object({
     connection_backend: z.enum(["grpclib", "grpcio"]).default("grpclib"),
 });
 
-export type NodeType = z.infer<typeof NodeSchema> & { id: number };
+export type NodeBackendType = {
+    name: string;
+    backend_type: string;
+    version: string;
+    running: boolean;
+};
+
+export type NodeType = z.infer<typeof NodeSchema> & {
+    id: number;
+    backends: NodeBackendType;
+};
