@@ -1,19 +1,23 @@
 import { useState } from "react";
-import { NodeType, useNodesSettingsMutation, useNodesSettingsQuery } from "../..";
+import {
+    type NodeType,
+    useNodesSettingsMutation,
+    useNodesSettingsQuery,
+} from "../..";
 
-export const useNodesSettings = (entity: NodeType) => {
-    const { data } = useNodesSettingsQuery(entity);
-    const [config, setConfig] = useState<any>(data)
-    const [payloadValidity, setPayloadValidity] = useState<boolean>(true)
+export const useNodesSettings = (entity: NodeType, backend: string) => {
+    const { data } = useNodesSettingsQuery(entity, backend);
+    const [config, setConfig] = useState<string>(data);
+    const [payloadValidity, setPayloadValidity] = useState<boolean>(true);
     const mutate = useNodesSettingsMutation();
 
-    const handleEditorValidation = (markers: any[]) => {
-        setPayloadValidity(!markers.length)
-    }
+    const handleEditorValidation = (markers: string[]) => {
+        setPayloadValidity(!markers.length);
+    };
 
     const handleConfigSave = () => {
-        mutate.mutate({ node: entity, config })
-    }
+        mutate.mutate({ node: entity, config });
+    };
 
     const handleConfigChange = (newConfig: string | undefined) => {
         if (newConfig) {
@@ -21,10 +25,16 @@ export const useNodesSettings = (entity: NodeType) => {
                 const parsedConfig = JSON.parse(newConfig);
                 setConfig(parsedConfig);
             } catch (error) {
-                setPayloadValidity(false)
+                setPayloadValidity(false);
             }
         }
     };
 
-    return { payloadValidity, data, handleConfigSave, handleConfigChange, handleEditorValidation }
-}
+    return {
+        payloadValidity,
+        data,
+        handleConfigSave,
+        handleConfigChange,
+        handleEditorValidation,
+    };
+};
