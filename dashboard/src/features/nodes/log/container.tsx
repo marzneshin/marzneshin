@@ -14,10 +14,11 @@ import { useTranslation } from "react-i18next";
 
 interface LogContainerProps {
     node: NodeType;
+    backend: string;
 }
 
-export const LogContainer: FC<LogContainerProps> = ({ node }) => {
-    const { logs, status, logsDiv } = useNodesLog(node);
+export const LogContainer: FC<LogContainerProps> = ({ node, backend }) => {
+    const { logs, status, logsDiv } = useNodesLog(node, backend);
     const { t } = useTranslation();
 
     return (
@@ -30,7 +31,10 @@ export const LogContainer: FC<LogContainerProps> = ({ node }) => {
                     <div className="flex flex-row gap-2 justify-center items-center">
                         <Badge
                             variant={status === "closed" ? "destructive" : "default"}
-                            className={cn("flex justify-center items-center w-full h-6 capitalize hover:text-primary-foreground", { "bg-success text-success-foreground": (status !== "closed") })}
+                            className={cn(
+                                "flex justify-center items-center w-full h-6 capitalize hover:text-primary-foreground",
+                                { "bg-success text-success-foreground": status !== "closed" },
+                            )}
                         >
                             {status}
                         </Badge>
