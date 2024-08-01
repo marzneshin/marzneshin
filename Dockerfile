@@ -8,4 +8,4 @@ COPY . /app
 
 RUN pip install --no-cache-dir -r /app/requirements.txt
 
-CMD ["make", "start"]
+CMD ["sh", "-c", "python3 main.py"]
