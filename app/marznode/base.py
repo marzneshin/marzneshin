@@ -14,7 +14,9 @@ class MarzNodeBase(ABC):
     async def get_logs(self, name: str, include_buffer: bool):
         pass
 
-    async def restart_backend(self, name: str, config: str):
+    async def restart_backend(
+        self, name: str, config: str, config_format: int
+    ):
         pass
 
     async def get_backend_config(self, name: str) -> tuple[str, str]:

@@ -25,6 +25,7 @@ from app.models.node import (
     NodeSettings,
     NodeStatus,
     NodesUsageResponse,
+    BackendConfig,
 )
 
 logger = logging.getLogger(__name__)
@@ -170,7 +171,7 @@ async def reconnect_node(node_id: int, db: DBDep, admin: SudoAdminDep):
     return {}
 
 
-@router.get("/{node_id}/{backend}/config")
+@router.get("/{node_id}/{backend}/config", response_model=BackendConfig)
 async def get_node_xray_config(
     node_id: int, backend: str, db: DBDep, admin: SudoAdminDep
 ):
@@ -191,12 +192,16 @@ async def alter_node_xray_config(
     backend: str,
     db: DBDep,
     admin: SudoAdminDep,
-    body: Annotated[str, Body()],
+    config: Annotated[BackendConfig, Body()],
 ):
     if not (node := marznode.nodes.get(node_id)):
         raise HTTPException(status_code=404, detail="Node not found")
     try:
-        await node.restart_backend(name=backend, config=body)
+        await node.restart_backend(
+            name=backend,
+            config=config.config,
+            config_format=config.format.value,
+        )
     except:
         raise HTTPException(status_code=502, detail="Node isn't responsive")
     return {}

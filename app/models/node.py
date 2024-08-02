@@ -3,6 +3,17 @@ from enum import Enum
 from pydantic import ConfigDict, BaseModel, Field
 
 
+class BackendConfigFormat(Enum):
+    PLAIN = 0
+    JSON = 1
+    YAML = 2
+
+
+class BackendConfig(BaseModel):
+    config: str
+    format: BackendConfigFormat
+
+
 class Backend(BaseModel):
     name: str
     backend_type: str

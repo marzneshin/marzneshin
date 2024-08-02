@@ -17,7 +17,6 @@ from .marznode_pb2 import (
     BackendLogsRequest,
     RestartBackendRequest,
     BackendConfig,
-    ConfigFormat,
     Backend,
 )
 from .marznode_pb2_grpc import MarzServiceStub
@@ -147,13 +146,15 @@ class MarzNodeGRPCIO(MarzNodeBase, MarzNodeDB):
         ):
             yield response.line
 
-    async def restart_backend(self, name: str, config: str):
+    async def restart_backend(
+        self, name: str, config: str, config_format: int
+    ):
         try:
             await self._stub.RestartBackend(
                 RestartBackendRequest(
                     backend_name=name,
                     config=BackendConfig(
-                        configuration=config, config_format=ConfigFormat.JSON
+                        configuration=config, config_format=config_format
                     ),
                 )
             )
