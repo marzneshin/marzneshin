@@ -1,40 +1,72 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
+import YAML from "yaml";
 import {
-  type NodeType,
-  useNodesSettingsMutation,
-  useNodesSettingsQuery,
+    type NodeType,
+    NodeBackendSettingConfigFormat,
+    useNodesSettingsMutation,
+    useNodesSettingsQuery,
 } from "../..";
 
 export const useNodesSettings = (entity: NodeType, backend: string) => {
-  const { data } = useNodesSettingsQuery(entity, backend);
-  const [config, setConfig] = useState<string>(data);
-  const [payloadValidity, setPayloadValidity] = useState<boolean>(true);
-  const mutate = useNodesSettingsMutation();
+    const { data } = useNodesSettingsQuery(entity, backend);
+    const [config, setConfig] = useState<string>(data.config);
+    const [payloadValidity, setPayloadValidity] = useState<boolean>(true);
+    const mutate = useNodesSettingsMutation();
+    const language = {
+        [NodeBackendSettingConfigFormat.PLAIN]: "text",
+        [NodeBackendSettingConfigFormat.JSON]: "json",
+        [NodeBackendSettingConfigFormat.YAML]: "yaml",
+    }[data.format];
 
-  const handleEditorValidation = (markers: any[]) => {
-    setPayloadValidity(!markers.length);
-  };
+    const configData = useMemo(() => {
+        try {
+            return {
+                [NodeBackendSettingConfigFormat.PLAIN]: data.config,
+                [NodeBackendSettingConfigFormat.JSON]: JSON.stringify(
+                    JSON.parse(data.config),
+                    null,
+                    "\t",
+                ),
+                [NodeBackendSettingConfigFormat.YAML]: YAML.stringify(
+                    YAML.parse(data.config),
+                    null,
+                    "\t",
+                ),
+            }[data.format];
+        } catch {
+            return data.config;
+        }
+    }, [data]);
 
-  const handleConfigSave = () => {
-    mutate.mutate({ node: entity, backend, config });
-  };
+    const handleEditorValidation = (markers: any[]) => {
+        setPayloadValidity(!markers.length);
+    };
 
-  const handleConfigChange = (newConfig: string | undefined) => {
-    if (newConfig) {
-      try {
-        const parsedConfig = JSON.parse(newConfig);
-        setConfig(parsedConfig);
-      } catch (error) {
-        setPayloadValidity(false);
-      }
-    }
-  };
+    const handleConfigSave = () => {
+        mutate.mutate({ node: entity, backend, config });
+    };
 
-  return {
-    payloadValidity,
-    data,
-    handleConfigSave,
-    handleConfigChange,
-    handleEditorValidation,
-  };
+    const handleConfigChange = (newConfig: string | undefined) => {
+        if (newConfig) {
+            try {
+                const parsedConfig = {
+                    [NodeBackendSettingConfigFormat.PLAIN]: newConfig,
+                    [NodeBackendSettingConfigFormat.JSON]: JSON.parse(newConfig),
+                    [NodeBackendSettingConfigFormat.YAML]: YAML.parse(newConfig),
+                }[language];
+                setConfig(parsedConfig);
+            } catch (error) {
+                setPayloadValidity(false);
+            }
+        }
+    };
+
+    return {
+        payloadValidity,
+        language,
+        config: configData,
+        handleConfigSave,
+        handleConfigChange,
+        handleEditorValidation,
+    };
 };

@@ -4,13 +4,22 @@ import { fetch } from "@marzneshin/utils";
 
 type NodesSettingsQueryKey = [string, number, string, string];
 
+export enum NodeBackendSettingConfigFormat {
+    PLAIN = 0,
+    JSON = 1,
+    YAML = 2,
+}
+
 interface NodesSettingsQuery {
     queryKey: NodesSettingsQueryKey;
 }
 
 export async function fetchNodesSettings({
     queryKey,
-}: NodesSettingsQuery): Promise<string> {
+}: NodesSettingsQuery): Promise<{
+    config: string;
+    format: NodeBackendSettingConfigFormat;
+}> {
     return fetch(`/nodes/${Number(queryKey[1])}/${queryKey[2]}/config`).then(
         (config) => {
             return config;
@@ -31,6 +40,6 @@ export const useNodesSettingsQuery = (node: NodeType, backend: string) => {
     return useQuery({
         queryKey,
         queryFn: fetchNodesSettings,
-        initialData: "",
+        initialData: { config: "", format: NodeBackendSettingConfigFormat.PLAIN },
     });
 };
