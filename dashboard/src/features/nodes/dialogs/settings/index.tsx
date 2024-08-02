@@ -37,7 +37,7 @@ export const NodesSettingsDialog: FC<NodesSettingsDialogProps> = ({
                 </h1>
                 <NodesDetailTable node={entity} />
             </div>
-            <Tabs>
+            <Tabs defaultValue={entity.backends[0].name}>
                 <TabsList>
                     {...entity.backends.map((backend: NodeBackendType) => (
                         <TabsTrigger
