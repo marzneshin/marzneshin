@@ -23,10 +23,10 @@ export const NodeBackendSetting: FC<{ node: NodeType; backend: string }> = ({
   const nodeBackend = node.backends.find((item) => item.name === backend);
   return (
     <Card>
-      <CardHeader className="hstack items-center">
+      <CardHeader className="flex flex-row items-center  gap-2 w-full">
         <CardTitle className="capitalize">{backend}</CardTitle>
         {nodeBackend?.version && (
-          <Badge className="capitalize">{nodeBackend.version}</Badge>
+          <Badge className="size-fit">v{nodeBackend.version}</Badge>
         )}
       </CardHeader>
       <CardContent className="p-2 w-full h-1/2 flex flex-col gap-2">
