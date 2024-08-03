@@ -61,7 +61,12 @@ def ensure_node_backends(db: Session, backends, node_id: int):
     for backend in old_backends:
         db.delete(backend)
     backends = [
-        Backend(name=backend.name, backend_type=backend.type, node_id=node_id)
+        Backend(
+            name=backend.name,
+            backend_type=backend.type,
+            version=backend.version,
+            node_id=node_id,
+        )
         for backend in backends
     ]
     db.add_all(backends)
