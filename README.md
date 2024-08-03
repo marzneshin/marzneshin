@@ -39,16 +39,10 @@
 ## Table of Contents
 
 - [Overview](#overview)
-    - [Features](#features)
-    - [Supported Languages](#supported-languages)
-- [Installation guide](#installation-guide)
-- [Configuration](#configuration)
-- [API](#api)
-- [Backup](#backup)
-- [Telegram Bot](#telegram-bot)
-- [Marzneshin CLI](#marzneshin-cli)
+  - [Docs](#docs)
+  - [Features](#features)
+  - [Supported Languages](#supported-languages)
 - [Marznode](#marznode)
-- [Webhook notifications](#webhook-notifications)
 - [Donation](#donation)
 - [License](#license)
 - [Contributors](#contributors)
@@ -57,14 +51,13 @@
 
 Marzneshin is a censorship circumvention tool utilizing other censorship circumvention tools.
 
-Dashboard enables access to nodes(configurations, status and stats, logs),
-hosts, users, service entities; while providing monitoring and system statistics.
-
-On the other hand, the backend manages nodes, users, users' subscriptions, etc.
-
 Marzneshin controls the [Marznodes](https://github.com/khodedawsh/marznode)
 connected to it; monitoring/disabling/enabling users on marznode instances while
 marznode manages and interacts with vpn backends (such as xray).
+
+### Docs
+
+Marzneshin documentation may be found [here](docs.marzneshin.org).
 
 ### Features
 
@@ -96,277 +89,9 @@ marznode manages and interacts with vpn backends (such as xray).
 - Kurdish (Soranî, Kurmancî)
 - Persian
 
-# Installation guide
-
-Run the following command
-
-```bash
-sudo bash -c "$(curl -sL https://github.com/khodedawsh/Marzneshin/raw/master/script.sh)" @ install
-```
-
-To install with mariadb:
-
-```bash
-sudo bash -c "$(curl -sL https://github.com/khodedawsh/Marzneshin/raw/master/script.sh)" @ install --database mariadb
-```
-
-You could also use mysql by writing mysql instead, however mariadb is **recommended**.
-Also to install the latest nightly release use the `--nightly` option.
-
-Once the installation is complete:
-
-- You'd notice the logs, which you could stop watching by pressing `Ctrl+C`; The process will continue running normally.
-- the configuration file can be found at `/etc/opt/marzneshin/.env` (refer to [configurations](#configuration) section
-  to see variables)
-- Data files will be placed at `/var/lib/marzneshin`; e.g. the sqlite database.
-- You can access the Marzneshin dashboard by opening a web browser and navigating
-  to `http://<SERVER_IP>:8000/dashboard/`
-
-Next, you need to create a sudo admin for logging into the Marzneshin dashboard by the following command
-
-```bash
-marzneshin cli admin create --sudo
-```
-
-That's it! You can login to your dashboard using these credentials
-
-To see the help message of the Marzneshin script, run the following command
-
-```bash
-marzneshin --help
-```
-
-If you are eager to run the project using the source code, check the section below
-<details markdown="1">
-<summary><h3>Manual install (advanced)</h3></summary>
-
-
-Clone this project and install the dependencies (you'd need Python >= 3.10)
-
-```bash
-git clone https://github.com/khodedawsh/Marzneshin
-cd Marzneshin/
-wget -qO- https://bootstrap.pypa.io/get-pip.py | python3 -
-python3 -m pip install -r requirements.txt
-```
-
-Alternatively, to have an isolated environment you can use [Python Virtualenv](https://pypi.org/project/virtualenv/)
-
-To install dashboard dependencies and build the dashboard:
-
-```bash
-make dashboard-deps
-make dashboard-build
-```
-
-note that you'll need pnpm and npm installed.
-
-If you want to use `marzneshin-cli`, you should link it to a file in your `$PATH`, make it executable, and install the
-auto-completion:
-
-```bash
-sudo ln -s $(pwd)/marzneshin-cli.py /usr/bin/marzneshin-cli
-sudo chmod +x /usr/bin/marzneshin-cli
-marzneshin-cli completion install
-```
-
-Now it's time to configuration
-
-Make a copy of `.env.example` file, take a look and edit it using a text editor like `nano`.
-
-You probably like to modify the admin credentials.
-
-```bash
-cp .env.example .env
-nano .env
-```
-
-> Check [configurations](#configuration) section for more information
-
-Eventually, launch the application using command below
-
-```bash
-make start
-```
-
-To launch with linux systemctl (copy marzneshin.service file to `/var/lib/marzneshin/marzneshin.service`)
-
-```
-systemctl enable /var/lib/marzneshin/marzneshin.service
-systemctl start marzneshin
-```
-
-To use with nginx
-
-```
-server {
-    listen 443 ssl http2;
-    listen [::]:443 ssl http2;
-    server_name  example.com;
-
-    ssl_certificate      /etc/letsencrypt/live/example.com/fullchain.pem;
-    ssl_certificate_key  /etc/letsencrypt/live/example.com/privkey.pem;
-
-    location ~* /(dashboard|static|locales|api|docs|redoc|openapi.json) {
-        proxy_pass http://0.0.0.0:8000;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-    }
-
-    # xray-core ws-path: /
-    # client ws-path: /marzneshin/me/2087
-    #
-    # All traffic is proxed through port 443, and send to the xray port(2087, 2088 etc.).
-    # The '/marzneshin' in location regex path can changed any characters by yourself.
-    #
-    # /${path}/${username}/${xray-port}
-    location ~* /marzneshin/.+/(.+)$ {
-        proxy_redirect off;
-        proxy_pass http://127.0.0.1:$1/;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection "upgrade";
-        proxy_set_header Host $http_host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-    }
-}
-```
-
-or
-
-```
-server {
-    listen 443 ssl http2;
-    listen [::]:443 ssl http2;
-    server_name  marzneshin.example.com;
-
-    ssl_certificate      /etc/letsencrypt/live/example.com/fullchain.pem;
-    ssl_certificate_key  /etc/letsencrypt/live/example.com/privkey.pem;
-
-    location / {
-        proxy_pass http://0.0.0.0:8000;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-    }
-}
-```
-
-By default the app will be run on `http://localhost:8000/dashboard`. You can configure it using changing
-the `UVICORN_HOST` and `UVICORN_PORT` environment variables.
-</details>
-
-# Configuration
-
-> You can set settings below using environment variables or placing them in `.env` file.
-
-| Variable                          | Description                                                                                           |
-|-----------------------------------|-------------------------------------------------------------------------------------------------------|
-| SQLALCHEMY_DATABASE_URL           | Database URL ([SQLAlchemy's docs](https://docs.sqlalchemy.org/en/20/core/engines.html#database-urls)) |
-| UVICORN_HOST                      | Bind application to this host (default: `0.0.0.0`)                                                    |
-| UVICORN_PORT                      | Bind application to this port (default: `8000`)                                                       |
-| UVICORN_UDS                       | Bind application to a UNIX domain socket                                                              |
-| UVICORN_SSL_CERTFILE              | SSL certificate file to have application on https                                                     |
-| UVICORN_SSL_KEYFILE               | SSL key file to have application on https                                                             |
-| SUBSCRIPTION_URL_PREFIX           | Prefix of subscription URLs                                                                           |
-| CUSTOM_TEMPLATES_DIRECTORY        | Customized templates directory (default: `app/templates`)                                             |
-| CLASH_SUBSCRIPTION_TEMPLATE       | The template that will be used for generating clash configs (default: `clash/default.yml`)            |
-| SUBSCRIPTION_PAGE_TEMPLATE        | The template used for generating subscription info page (default: `subscription/index.html`)          |
-| HOME_PAGE_TEMPLATE                | Decoy page template (default: `home/index.html`)                                                      |
-| TELEGRAM_API_TOKEN                | Telegram bot API token  (get token from [@botfather](https://t.me/botfather))                         |
-| TELEGRAM_ADMIN_ID                 | Numeric Telegram ID of admin (use [@userinfobot](https://t.me/userinfobot) to found your ID)          |
-| TELEGRAM_PROXY_URL                | Run Telegram Bot over proxy                                                                           |
-| JWT_ACCESS_TOKEN_EXPIRE_MINUTES   | Expire time for the Access Tokens in minutes, `0` considered as infinite (default: `1440`)            |
-| DOCS                              | Whether API documents should be available on `/docs` and `/redoc` or not (default: `False`)           |
-| DEBUG                             | Debug mode for development (default: `False`)                                                         |
-| WEBHOOK_ADDRESS                   | Webhook address to send notifications to. Webhook notifications will be sent if this value was set.   |
-| WEBHOOK_SECRET                    | Webhook secret will be sent with each request as `x-webhook-secret` in the header (default: `None`)   |
-| NUMBER_OF_RECURRENT_NOTIFICATIONS | How many times to retry if an error detected in sending a notification (default: `3`)                 |
-| RECURRENT_NOTIFICATIONS_TIMEOUT   | Timeout between each retry if an error detected in sending a notification in seconds (default: `180`) |
-| NOTIFY_REACHED_USAGE_PERCENT      | At which percentage of usage to send the warning notification (default: `80`)                         |
-| NOTIFY_DAYS_LEFT                  | When to send warning notification about expiration (default: `3`)                                     |
-
-# API
-
-Marzneshin provides a REST API that enables developers to interact with Marzneshin services programmatically. To view
-the API documentation in Swagger UI or ReDoc, set the configuration variable `DOCS=True` and navigate to the `/docs`
-and `/redoc`.
-
-# Backup
-
-It's always a good idea to backup your Marzneshin files regularly to prevent data loss in case of system failures or
-accidental deletion. Here are the steps to backup Marzneshin:
-
-1. By default, all Marzneshin important files are saved in `/var/lib/marzneshin` (Docker versions). Copy the
-   entire `/var/lib/marzneshin` directory to a backup location of your choice, such as an external hard drive or cloud
-   storage.
-2. Additionally, make sure to backup your env file, which contains your configuration variables. If you installed
-   Marzneshin using the script (recommended installation approach), the env and other configurations should be
-   inside `/etc/opt/marzneshin/` directory.
-
-By following these steps, you can ensure that you have a backup of all your Marzneshin files and data, as well as your
-configuration variables and Xray configuration, in case you need to restore them in the future. Remember to update your
-backups regularly to keep them up-to-date.
-
-# Telegram Bot
-
-Marzneshin comes with an integrated Telegram bot that can handle server management, user creation and removal, and send
-notifications. This bot can be easily enabled by following a few simple steps, and it provides a convenient way to
-interact with Marzneshin without having to log in to the server every time.
-
-To enable Telegram Bot:
-
-1. set `TELEGRAM_API_TOKEN` to your bot's API Token
-2. set `TELEGRAM_ADMIN_ID` to your Telegram account's numeric ID, you can get your ID
-   from [@userinfobot](https://t.me/userinfobot)
-
-# Marzneshin CLI
-
-Marzneshin comes with an integrated CLI named `marzneshin-cli` which allows administrators to have direct interaction
-with it.
-
-If you've installed Marzneshin using the installation script, you can access the cli commands by running
-
-```bash
-marzneshin cli [OPTIONS] COMMAND [ARGS]...
-```
-
-For more information, You can read [Marzneshin CLI's documentation](./cli/README.md).
-
 # marznode
 
 [marznode](https://github.com/khodedawsh/marznode) is the backend needed to run proxy servers.
-
-# Webhook notifications
-
-You can set a webhook address and Marzneshin will send the notifications to that address.
-
-the requests will be sent as a post request to the address provided by `WEBHOOK_ADDRESS` with `WEBHOOK_SECRET`
-as `x-webhook-secret` in the headers.
-
-Example request sent from Marzneshin:
-
-```
-Headers:
-Host: 0.0.0.0:9000
-User-Agent: python-requests/2.28.1
-Accept-Encoding: gzip, deflate
-Accept: */*
-Connection: keep-alive
-x-webhook-secret: something-very-very-secret
-Content-Length: 107
-Content-Type: application/json
-
-
-
-Body:
-{"username": "marzneshin_test_user", "action": "user_updated", "enqueued_at": 1680506457.636369, "tries": 0}
-```
-
-Different action typs
-are: `user_created`, `user_updated`, `user_deleted`, `user_limited`, `user_expired`, `user_disabled`, `user_enabled`
 
 # Donation
 
@@ -387,7 +112,7 @@ Published under [AGPL-3.0](./LICENSE).
 
 # Contributors
 
-We ❤️‍🔥 contributors! If you'd like to contribute, please check out our [Contributing Guidelines](CONTRIBUTING.md) and
+We ❤️‍🔥 contributors! If you'd like to contribute, please check out our [Contributing Guidelines](https://docs.marzneshin.org/docs/contribution-guideline) and
 feel free to submit a pull request or open an issue. We also welcome you to join
 our [Telegram](https://t.me/marzneshins) group for either support or contributing guidance.
 
