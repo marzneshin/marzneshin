@@ -39,6 +39,7 @@
 ## Table of Contents
 
 - [Overview](#overview)
+  - [Docs](#docs)
   - [Features](#features)
   - [Supported Languages](#supported-languages)
 - [Marznode](#marznode)
@@ -50,14 +51,13 @@
 
 Marzneshin is a censorship circumvention tool utilizing other censorship circumvention tools.
 
-Dashboard enables access to nodes(configurations, status and stats, logs),
-hosts, users, service entities; while providing monitoring and system statistics.
-
-On the other hand, the backend manages nodes, users, users' subscriptions, etc.
-
 Marzneshin controls the [Marznodes](https://github.com/khodedawsh/marznode)
 connected to it; monitoring/disabling/enabling users on marznode instances while
 marznode manages and interacts with vpn backends (such as xray).
+
+### Docs
+
+Marzneshin documentation may be found [here](docs.marzneshin.org).
 
 ### Features
 
