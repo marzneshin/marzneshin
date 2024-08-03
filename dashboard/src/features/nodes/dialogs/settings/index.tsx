@@ -37,11 +37,14 @@ export const NodesSettingsDialog: FC<NodesSettingsDialogProps> = ({
                 </h1>
                 <NodesDetailTable node={entity} />
             </div>
-            <Tabs defaultValue={entity.backends[0].name}>
-                <TabsList>
+            <Tabs
+                className="my-3 w-full h-full"
+                defaultValue={entity.backends[0].name}
+            >
+                <TabsList className="w-full">
                     {...entity.backends.map((backend: NodeBackendType) => (
                         <TabsTrigger
-                            className="w-full"
+                            className="capitalize w-full"
                             value={backend.name}
                             key={backend.name}
                         >
