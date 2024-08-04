@@ -26,6 +26,7 @@ from app.models.node import (
     NodeStatus,
     NodesUsageResponse,
     BackendConfig,
+    BackendStats,
 )
 
 logger = logging.getLogger(__name__)
@@ -169,6 +170,21 @@ async def reconnect_node(node_id: int, db: DBDep, admin: SudoAdminDep):
         raise HTTPException(status_code=404, detail="Node not found")
 
     return {}
+
+
+@router.get("/{node_id}/{backend}/stats", response_model=BackendStats)
+async def get_backend_stats(
+    node_id: int, backend: str, db: DBDep, admin: SudoAdminDep
+):
+    if not (node := marznode.nodes.get(node_id)):
+        raise HTTPException(status_code=404, detail="Node not found")
+
+    try:
+        stats = await node.get_backend_stats(backend)
+    except Exception:
+        raise HTTPException(502)
+    else:
+        return BackendStats(running=stats.running)
 
 
 @router.get("/{node_id}/{backend}/config", response_model=BackendConfig)

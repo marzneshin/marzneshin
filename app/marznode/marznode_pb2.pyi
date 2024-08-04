@@ -111,3 +111,9 @@ class RestartBackendRequest(_message.Message):
     backend_name: str
     config: BackendConfig
     def __init__(self, backend_name: _Optional[str] = ..., config: _Optional[_Union[BackendConfig, _Mapping]] = ...) -> None: ...
+
+class BackendStats(_message.Message):
+    __slots__ = ("running",)
+    RUNNING_FIELD_NUMBER: _ClassVar[int]
+    running: bool
+    def __init__(self, running: bool = ...) -> None: ...

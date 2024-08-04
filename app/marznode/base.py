@@ -21,3 +21,6 @@ class MarzNodeBase(ABC):
 
     async def get_backend_config(self, name: str) -> tuple[str, str]:
         pass
+
+    async def get_backend_stats(self, name: str):
+        pass

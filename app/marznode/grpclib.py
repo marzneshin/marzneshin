@@ -21,6 +21,7 @@ from .marznode_pb2 import (
     BackendLogsRequest,
     Backend,
     RestartBackendRequest,
+    BackendStats,
 )
 from ..models.node import NodeStatus
 
@@ -182,3 +183,9 @@ class MarzNodeGRPCLIB(MarzNodeBase, MarzNodeDB):
             Backend(name=name)
         )
         return response.configuration, response.config_format
+
+    async def get_backend_stats(self, name: str):
+        response: BackendStats = await self._stub.GetBackendStats(
+            Backend(name=name)
+        )
+        return response

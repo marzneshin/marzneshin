@@ -18,6 +18,7 @@ from .marznode_pb2 import (
     RestartBackendRequest,
     BackendConfig,
     Backend,
+    BackendStats,
 )
 from .marznode_pb2_grpc import MarzServiceStub
 from ..models.node import NodeStatus
@@ -169,3 +170,9 @@ class MarzNodeGRPCIO(MarzNodeBase, MarzNodeDB):
     async def get_backend_config(self, name: str = "xray"):
         response = await self._stub.FetchBackendConfig(Backend(name=name))
         return response.configuration, response.config_format
+
+    async def get_backend_stats(self, name: str):
+        response: BackendStats = await self._stub.GetBackendStats(
+            Backend(name=name)
+        )
+        return response

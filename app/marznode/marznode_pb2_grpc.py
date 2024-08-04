@@ -5,7 +5,7 @@ import warnings
 
 from app.marznode import marznode_pb2 as app_dot_marznode_dot_marznode__pb2
 
-GRPC_GENERATED_VERSION = '1.65.2'
+GRPC_GENERATED_VERSION = '1.65.4'
 GRPC_VERSION = grpc.__version__
 EXPECTED_ERROR_RELEASE = '1.66.0'
 SCHEDULED_RELEASE_DATE = 'August 6, 2024'
@@ -74,6 +74,11 @@ class MarzServiceStub(object):
                 request_serializer=app_dot_marznode_dot_marznode__pb2.BackendLogsRequest.SerializeToString,
                 response_deserializer=app_dot_marznode_dot_marznode__pb2.LogLine.FromString,
                 _registered_method=True)
+        self.GetBackendStats = channel.unary_unary(
+                '/marznode.MarzService/GetBackendStats',
+                request_serializer=app_dot_marznode_dot_marznode__pb2.Backend.SerializeToString,
+                response_deserializer=app_dot_marznode_dot_marznode__pb2.BackendStats.FromString,
+                _registered_method=True)
 
 
 class MarzServiceServicer(object):
@@ -121,6 +126,12 @@ class MarzServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def GetBackendStats(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_MarzServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -158,6 +169,11 @@ def add_MarzServiceServicer_to_server(servicer, server):
                     servicer.StreamBackendLogs,
                     request_deserializer=app_dot_marznode_dot_marznode__pb2.BackendLogsRequest.FromString,
                     response_serializer=app_dot_marznode_dot_marznode__pb2.LogLine.SerializeToString,
+            ),
+            'GetBackendStats': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetBackendStats,
+                    request_deserializer=app_dot_marznode_dot_marznode__pb2.Backend.FromString,
+                    response_serializer=app_dot_marznode_dot_marznode__pb2.BackendStats.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -349,6 +365,33 @@ class MarzService(object):
             '/marznode.MarzService/StreamBackendLogs',
             app_dot_marznode_dot_marznode__pb2.BackendLogsRequest.SerializeToString,
             app_dot_marznode_dot_marznode__pb2.LogLine.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def GetBackendStats(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/marznode.MarzService/GetBackendStats',
+            app_dot_marznode_dot_marznode__pb2.Backend.SerializeToString,
+            app_dot_marznode_dot_marznode__pb2.BackendStats.FromString,
             options,
             channel_credentials,
             insecure,

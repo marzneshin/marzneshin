@@ -68,6 +68,10 @@ message RestartBackendRequest {
   optional BackendConfig config = 2;
 }
 
+message BackendStats {
+  bool running = 1;
+}
+
 service MarzService {
   rpc SyncUsers(stream UserData) returns (Empty);
   rpc RepopulateUsers(UsersData) returns (Empty);
@@ -76,4 +80,5 @@ service MarzService {
   rpc FetchBackendConfig(Backend) returns (BackendConfig);
   rpc RestartBackend(RestartBackendRequest) returns (Empty);
   rpc StreamBackendLogs(BackendLogsRequest) returns (stream LogLine);
+  rpc GetBackendStats(Backend) returns (BackendStats);
 }

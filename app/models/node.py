@@ -14,6 +14,10 @@ class BackendConfig(BaseModel):
     format: BackendConfigFormat
 
 
+class BackendStats(BaseModel):
+    running: bool
+
+
 class Backend(BaseModel):
     name: str
     backend_type: str
