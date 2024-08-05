@@ -6,7 +6,7 @@ import {
   TabsList,
   TabsTrigger,
 } from "@marzneshin/components";
-import { type FC } from "react";
+import type { FC } from "react";
 import { useTranslation } from "react-i18next";
 import type { NodeBackendType, NodeType } from "../..";
 import { NodesDetailTable } from "../../tables/detail-table";
