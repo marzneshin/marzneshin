@@ -28,6 +28,15 @@ export const NodeBackendSetting: FC<{ node: NodeType; backend: string }> = ({
         {nodeBackend?.version && (
           <Badge className="size-fit">v{nodeBackend.version}</Badge>
         )}
+        {nodeBackend?.running ? (
+          <Badge variant="positive" className="size-fit">
+            {t("running")}
+          </Badge>
+        ) : (
+          <Badge variant="destructive" className="size-fit">
+            {t("down")}
+          </Badge>
+        )}
       </CardHeader>
       <CardContent className="p-2 w-full h-1/2 flex flex-col gap-2">
         <Tabs className="my-3 w-full h-full" defaultValue="logs">
