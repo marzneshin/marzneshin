@@ -17,6 +17,7 @@ export * from "./logo";
 export * from "./awaiting";
 export * from "./boolean-pill";
 export * from "./info-table";
+export * from "./json-editor";
 export * from "./skeletons";
 export * from "./no-propogation-button";
 export * from "./form-fields";
