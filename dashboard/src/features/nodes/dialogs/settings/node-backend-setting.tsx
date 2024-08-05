@@ -12,7 +12,7 @@ import {
 import { NodeConfigEditor } from "./node-config-editor";
 import { LogContainer } from "../../log";
 import { useTranslation } from "react-i18next";
-import type { NodeType } from "../..";
+import { type NodeType, useBackendStatsQuery } from "../..";
 import type { FC } from "react";
 
 export const NodeBackendSetting: FC<{ node: NodeType; backend: string }> = ({
@@ -21,6 +21,7 @@ export const NodeBackendSetting: FC<{ node: NodeType; backend: string }> = ({
 }) => {
   const { t } = useTranslation();
   const nodeBackend = node.backends.find((item) => item.name === backend);
+  const { data: backendStats } = useBackendStatsQuery(node, backend);
   return (
     <Card>
       <CardHeader className="flex flex-row items-center  gap-2 w-full">
@@ -28,7 +29,11 @@ export const NodeBackendSetting: FC<{ node: NodeType; backend: string }> = ({
         {nodeBackend?.version && (
           <Badge className="size-fit">v{nodeBackend.version}</Badge>
         )}
-        {nodeBackend?.running ? (
+        {backendStats === null ? (
+          <Badge variant="disabled" className="size-fit">
+            {t("unkown")}
+          </Badge>
+        ) : backendStats.running ? (
           <Badge variant="positive" className="size-fit">
             {t("running")}
           </Badge>
