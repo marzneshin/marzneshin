@@ -8,7 +8,6 @@ import {
 } from "@marzneshin/components";
 import type { NodeType } from "..";
 import { useNodesLog } from "..";
-import { cn } from "@marzneshin/utils";
 import type { FC } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -28,11 +27,8 @@ export const LogContainer: FC<LogContainerProps> = ({ node, backend }) => {
           <p className="capitalize font-header">{`${backend} ${t("logs")}`}</p>
           <div className="flex flex-row gap-2 justify-center items-center">
             <Badge
-              variant={status === "closed" ? "destructive" : "default"}
-              className={cn(
-                "flex justify-center items-center w-full h-6 capitalize hover:text-primary-foreground",
-                { "bg-success text-success-foreground": status !== "closed" },
-              )}
+              className="capitalize"
+              variant={status === "closed" ? "destructive" : "positive"}
             >
               {status}
             </Badge>
