@@ -327,7 +327,7 @@ def get_users_count(
     expired: bool | None = None,
     data_limit_reached: bool | None = None,
 ):
-    query = db.query(User.id)
+    query = db.query(User.id).filter(User.removed == False)
     if admin:
         query = query.filter(User.admin_id == admin.id)
     if is_active:
