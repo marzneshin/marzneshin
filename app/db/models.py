@@ -274,6 +274,18 @@ class User(Base):
         return self.admin.username
 
 
+class Backend(Base):
+    __tablename__ = "backends"
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String(64), nullable=False)
+    node_id = Column(Integer, ForeignKey("nodes.id"), index=True)
+    node = relationship("Node", back_populates="backends")
+    backend_type = Column(String(32), nullable=False)
+    version = Column(String(32))
+    running = Column(Boolean, default=True, nullable=False)
+
+
 class Inbound(Base):
     __tablename__ = "inbounds"
     __table_args__ = (UniqueConstraint("node_id", "tag"),)
@@ -374,6 +386,9 @@ class Node(Base):
     xray_version = Column(String(32))
     inbounds = relationship(
         "Inbound", back_populates="node", cascade="all, delete"
+    )
+    backends = relationship(
+        "Backend", back_populates="node", cascade="all, delete"
     )
     status = Column(
         Enum(NodeStatus), nullable=False, default=NodeStatus.unhealthy

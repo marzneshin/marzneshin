@@ -14,8 +14,11 @@ from .marznode_pb2 import (
     Empty,
     User,
     Inbound,
-    XrayLogsRequest,
-    XrayConfig,
+    BackendLogsRequest,
+    RestartBackendRequest,
+    BackendConfig,
+    Backend,
+    BackendStats,
 )
 from .marznode_pb2_grpc import MarzServiceStub
 from ..models.node import NodeStatus
@@ -125,26 +128,37 @@ class MarzNodeGRPCIO(MarzNodeBase, MarzNodeDB):
         response = await self._stub.FetchUsersStats(Empty())
         return response.users_stats
 
-    async def _fetch_inbounds(self) -> list:
-        response = await self._stub.FetchInbounds(Empty())
-        return response.inbounds
+    async def _fetch_backends(self) -> list:
+        response = await self._stub.FetchBackends(Empty())
+        return response.backends
 
     async def _sync(self):
-        inbounds = await self._fetch_inbounds()
-        self.store_inbounds(inbounds)
+        backends = await self._fetch_backends()
+        self.store_backends(backends)
         users = self.list_users()
         await self._repopulate_users(users)
         self.synced = True
 
-    async def get_logs(self, include_buffer=True):
-        async for response in self._stub.StreamXrayLogs(
-            XrayLogsRequest(include_buffer=include_buffer)
+    async def get_logs(self, name: str = "xray", include_buffer=True):
+        async for response in self._stub.StreamBackendLogs(
+            BackendLogsRequest(
+                backend_name=name, include_buffer=include_buffer
+            )
         ):
             yield response.line
 
-    async def restart_xray(self, config: str):
+    async def restart_backend(
+        self, name: str, config: str, config_format: int
+    ):
         try:
-            await self._stub.RestartXray(XrayConfig(configuration=config))
+            await self._stub.RestartBackend(
+                RestartBackendRequest(
+                    backend_name=name,
+                    config=BackendConfig(
+                        configuration=config, config_format=config_format
+                    ),
+                )
+            )
             await self._sync()
         except RpcError:
             self.synced = False
@@ -153,6 +167,12 @@ class MarzNodeGRPCIO(MarzNodeBase, MarzNodeDB):
         else:
             self.set_status(NodeStatus.healthy)
 
-    async def get_xray_config(self):
-        response = await self._stub.FetchXrayConfig(Empty())
-        return response.configuration
+    async def get_backend_config(self, name: str = "xray"):
+        response = await self._stub.FetchBackendConfig(Backend(name=name))
+        return response.configuration, response.config_format
+
+    async def get_backend_stats(self, name: str):
+        response: BackendStats = await self._stub.GetBackendStats(
+            Backend(name=name)
+        )
+        return response

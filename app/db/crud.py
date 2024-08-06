@@ -21,6 +21,7 @@ from app.db.models import (
     Inbound,
     System,
     User,
+    Backend,
 )
 from app.models.admin import AdminCreate, AdminPartialModify
 from app.models.node import (
@@ -55,7 +56,24 @@ def add_default_hosts(db: Session, inbounds: List[Inbound]):
     db.commit()
 
 
-def assure_node_inbounds(db: Session, inbounds: List[Inbound], node_id: int):
+def ensure_node_backends(db: Session, backends, node_id: int):
+    old_backends = db.query(Backend).where(Backend.node_id == node_id)
+    for backend in old_backends:
+        db.delete(backend)
+    backends = [
+        Backend(
+            name=backend.name,
+            backend_type=backend.type,
+            version=backend.version,
+            node_id=node_id,
+        )
+        for backend in backends
+    ]
+    db.add_all(backends)
+    db.flush()
+
+
+def ensure_node_inbounds(db: Session, inbounds: List[Inbound], node_id: int):
     current_tags = [
         i[0]
         for i in db.execute(
@@ -67,10 +85,10 @@ def assure_node_inbounds(db: Session, inbounds: List[Inbound], node_id: int):
     for tag in current_tags:
         if tag not in updated_tags:
             tag_deletions.add(tag)
-    db_inbounds = db.query(Inbound).where(
+    removals = db.query(Inbound).where(
         and_(Inbound.node_id == node_id, Inbound.tag.in_(tag_deletions))
     )
-    for i in db_inbounds:
+    for i in removals:
         db.delete(i)
 
     for inb in inbounds:

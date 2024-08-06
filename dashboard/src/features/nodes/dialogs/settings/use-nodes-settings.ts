@@ -1,30 +1,61 @@
 import { useState } from "react";
-import { NodeType, useNodesSettingsMutation, useNodesSettingsQuery } from "../..";
+import YAML from "yaml";
+import {
+  type NodeType,
+  NodeBackendSettingConfigFormat,
+  useNodesSettingsMutation,
+  useNodesSettingsQuery,
+} from "../..";
 
-export const useNodesSettings = (entity: NodeType) => {
-    const { data } = useNodesSettingsQuery(entity);
-    const [config, setConfig] = useState<any>(data)
-    const [payloadValidity, setPayloadValidity] = useState<boolean>(true)
-    const mutate = useNodesSettingsMutation();
+const parseConfig = (data: {
+  config: string;
+  format: NodeBackendSettingConfigFormat;
+}) => {
+  return {
+    [NodeBackendSettingConfigFormat.PLAIN]: () => data.config,
+    [NodeBackendSettingConfigFormat.JSON]: () =>
+      JSON.stringify(JSON.parse(data.config), null, "\t"),
+    [NodeBackendSettingConfigFormat.YAML]: () =>
+      YAML.stringify(YAML.parse(data.config), null, "\t"),
+  }[data.format]();
+};
 
-    const handleEditorValidation = (markers: any[]) => {
-        setPayloadValidity(!markers.length)
+export const useNodesSettings = (entity: NodeType, backend: string) => {
+  const { data } = useNodesSettingsQuery(entity, backend);
+  const [config, setConfig] = useState<string>(data.config);
+  const [payloadValidity, setPayloadValidity] = useState<boolean>(true);
+  const mutate = useNodesSettingsMutation();
+  const language = {
+    [NodeBackendSettingConfigFormat.PLAIN]: "text",
+    [NodeBackendSettingConfigFormat.JSON]: "json",
+    [NodeBackendSettingConfigFormat.YAML]: "yaml",
+  }[data.format];
+
+  const handleEditorValidation = (markers: any[]) => {
+    setPayloadValidity(!markers.length);
+  };
+
+  const handleConfigSave = () => {
+    mutate.mutate({ node: entity, backend, config, format: data.format });
+  };
+
+  const handleConfigChange = (newConfig: string | undefined) => {
+    if (newConfig) {
+      try {
+        setConfig(parseConfig({ config: newConfig, format: data.format }));
+        setPayloadValidity(true);
+      } catch (error) {
+        setPayloadValidity(false);
+      }
     }
+  };
 
-    const handleConfigSave = () => {
-        mutate.mutate({ node: entity, config })
-    }
-
-    const handleConfigChange = (newConfig: string | undefined) => {
-        if (newConfig) {
-            try {
-                const parsedConfig = JSON.parse(newConfig);
-                setConfig(parsedConfig);
-            } catch (error) {
-                setPayloadValidity(false)
-            }
-        }
-    };
-
-    return { payloadValidity, data, handleConfigSave, handleConfigChange, handleEditorValidation }
-}
+  return {
+    payloadValidity,
+    language,
+    config: parseConfig(data),
+    handleConfigSave,
+    handleConfigChange,
+    handleEditorValidation,
+  };
+};

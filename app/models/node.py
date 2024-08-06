@@ -3,6 +3,28 @@ from enum import Enum
 from pydantic import ConfigDict, BaseModel, Field
 
 
+class BackendConfigFormat(Enum):
+    PLAIN = 0
+    JSON = 1
+    YAML = 2
+
+
+class BackendConfig(BaseModel):
+    config: str
+    format: BackendConfigFormat
+
+
+class BackendStats(BaseModel):
+    running: bool
+
+
+class Backend(BaseModel):
+    name: str
+    backend_type: str
+    version: str | None
+    running: bool
+
+
 class NodeStatus(str, Enum):
     healthy = "healthy"
     unhealthy = "unhealthy"
@@ -70,6 +92,7 @@ class NodeResponse(Node):
     message: str | None = None
     model_config = ConfigDict(from_attributes=True)
     inbound_ids: list[int] | None = None
+    backends: list[Backend]
 
 
 class NodeUsageResponse(BaseModel):

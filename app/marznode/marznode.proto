@@ -4,13 +4,26 @@ package marznode;
 
 message Empty {}
 
+enum ConfigFormat {
+  PLAIN = 0;
+  JSON = 1;
+  YAML = 2;
+}
+
+message Backend {
+  string name = 1;
+  optional string type = 2;
+  optional string version = 3;
+  repeated Inbound inbounds = 4;
+}
+
+message BackendsResponse {
+  repeated Backend backends = 1;
+}
+
 message Inbound {
   string tag = 1;
   optional string config = 2;
-}
-
-message InboundsResponse {
-  repeated Inbound inbounds = 1;
 }
 
 message User {
@@ -40,20 +53,32 @@ message LogLine {
   string line = 1;
 }
 
-message XrayConfig {
+message BackendConfig {
   string configuration = 1;
+  ConfigFormat config_format = 2;
 }
 
-message XrayLogsRequest {
-  bool include_buffer = 1;
+message BackendLogsRequest {
+  string backend_name = 1;
+  bool include_buffer = 2;
+}
+
+message RestartBackendRequest {
+  string backend_name = 1;
+  optional BackendConfig config = 2;
+}
+
+message BackendStats {
+  bool running = 1;
 }
 
 service MarzService {
   rpc SyncUsers(stream UserData) returns (Empty);
   rpc RepopulateUsers(UsersData) returns (Empty);
-  rpc FetchInbounds(Empty) returns (InboundsResponse);
+  rpc FetchBackends(Empty) returns (BackendsResponse);
   rpc FetchUsersStats(Empty) returns (UsersStats);
-  rpc FetchXrayConfig(Empty) returns (XrayConfig);
-  rpc RestartXray(XrayConfig) returns (InboundsResponse);
-  rpc StreamXrayLogs(XrayLogsRequest) returns(stream LogLine);
+  rpc FetchBackendConfig(Backend) returns (BackendConfig);
+  rpc RestartBackend(RestartBackendRequest) returns (Empty);
+  rpc StreamBackendLogs(BackendLogsRequest) returns (stream LogLine);
+  rpc GetBackendStats(Backend) returns (BackendStats);
 }
