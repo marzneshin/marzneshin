@@ -1,10 +1,21 @@
-import { FC, useEffect, useState } from 'react';
-import { format } from 'date-fns';
-import { CalendarIcon } from '@radix-ui/react-icons';
-import { cn } from '@marzneshin/utils';
-import { useFormContext, FieldValues } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
-import { Popover, PopoverTrigger, FormControl, Button, Calendar, PopoverContent, FormLabel, FormItem, FormField, FormMessage } from '@marzneshin/components';
+import { type FC, useEffect, useState } from "react";
+import { format } from "date-fns";
+import { CalendarIcon } from "@radix-ui/react-icons";
+import { cn } from "@marzneshin/utils";
+import { useFormContext, type FieldValues } from "react-hook-form";
+import { useTranslation } from "react-i18next";
+import {
+    Popover,
+    PopoverTrigger,
+    FormControl,
+    Button,
+    Calendar,
+    PopoverContent,
+    FormLabel,
+    FormItem,
+    FormField,
+    FormMessage,
+} from "@marzneshin/components";
 
 interface DateFieldProps {
     name: keyof FieldValues;
@@ -20,13 +31,19 @@ function parseISODate(isoDateString: string | undefined): Date | undefined {
 export const DateField: FC<DateFieldProps> = ({ name, label }) => {
     const { t } = useTranslation();
     const form = useFormContext();
-    const [selectedDate, setSelectedDate] = useState<Date | undefined>(parseISODate(form.getValues(name)));
+    const [selectedDate, setSelectedDate] = useState<Date | undefined>(
+        parseISODate(form.getValues(name)),
+    );
 
     useEffect(() => {
         const newValue = selectedDate?.toISOString().slice(0, -5);
         const prevValue = form.getValues(name);
         if (newValue !== prevValue) {
-            form.setValue(name, newValue, { shouldValidate: true, shouldTouch: true });
+            form.setValue(name, newValue, {
+                shouldValidate: true,
+                shouldTouch: true,
+                shouldDirty: true,
+            });
         }
     }, [form, name, selectedDate]);
 
@@ -44,11 +61,11 @@ export const DateField: FC<DateFieldProps> = ({ name, label }) => {
                                     variant={"outline"}
                                     className={cn(
                                         "w-full pl-3 text-left font-normal",
-                                        !field.value && "text-muted-foreground"
+                                        !field.value && "text-muted-foreground",
                                     )}
                                 >
                                     {field.value ? (
-                                        format(field.value + 'Z', "PPP")
+                                        format(field.value + "Z", "PPP")
                                     ) : (
                                         <span>Pick a date</span>
                                     )}
@@ -64,9 +81,7 @@ export const DateField: FC<DateFieldProps> = ({ name, label }) => {
                                 onSelect={(date) => {
                                     setSelectedDate(date);
                                 }}
-                                disabled={(date) =>
-                                    date < new Date()
-                                }
+                                disabled={(date) => date < new Date()}
                                 initialFocus
                             />
                         </PopoverContent>

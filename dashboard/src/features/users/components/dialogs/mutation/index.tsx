@@ -16,11 +16,12 @@ import {
     useUsersCreationMutation,
     useUsersUpdateMutation,
     UserSchema,
-    UsernameField, type UserMutationType
+    UsernameField,
+    type UserMutationType,
 } from "@marzneshin/features/users";
 import { ServicesField } from "@marzneshin/features/services";
 import { NoteField } from "./fields";
-import { MutationDialogProps, useMutationDialog } from "@marzneshin/hooks";
+import { type MutationDialogProps, useMutationDialog } from "@marzneshin/hooks";
 import { DataLimitFields, ExpirationMethodFields } from "./sections";
 
 export const UsersMutationDialog: FC<MutationDialogProps<UserMutationType>> = ({
@@ -60,7 +61,7 @@ export const UsersMutationDialog: FC<MutationDialogProps<UserMutationType>> = ({
                         </DialogTitle>
                     </DialogHeader>
                     <Form {...form}>
-                        <form onSubmit={handleSubmit} >
+                        <form onSubmit={handleSubmit}>
                             <div className="flex-col grid-cols-2 gap-2 sm:flex md:grid h-full">
                                 <div className="space-y-3">
                                     <UsernameField disabled={!!entity?.username} />
