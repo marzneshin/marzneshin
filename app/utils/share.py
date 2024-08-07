@@ -5,7 +5,7 @@ import secrets
 from collections import defaultdict
 from datetime import datetime as dt, timedelta
 from importlib import resources
-from typing import Literal, Union, List
+from typing import Literal, Union, List, Type
 from uuid import UUID
 
 from jdatetime import date as jd
@@ -16,6 +16,7 @@ from v2share import (
     ClashMetaConfig,
     XrayConfig,
 )
+from v2share.base import BaseConfig
 from v2share.links import LinksConfig
 
 from app.config.env import (
@@ -41,7 +42,7 @@ ACTIVITY_EMOJIS = {
     False: "❌",
 }
 
-subscription_handlers = {
+subscription_handlers: dict[str, Type[BaseConfig]] = {
     "links": LinksConfig,
     "xray": XrayConfig,
     "clash-meta": ClashMetaConfig,
@@ -117,11 +118,8 @@ def generate_subscription(
             format_variables,
         )
 
-    if shuffle:
-        random.shuffle(configs)
-
     subscription_handler.add_proxies(configs)
-    config = subscription_handler.render()
+    config = subscription_handler.render(sort=True, shuffle=shuffle)
 
     return (
         config if not as_base64 else base64.b64encode(config.encode()).decode()
@@ -285,6 +283,7 @@ def generate_user_configs(
                     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.3"
                 },
                 shadowsocks_method="chacha20-ietf-poly1305",
+                weight=host.weight,
             )
             if host.fragment:
                 data.fragment = True
