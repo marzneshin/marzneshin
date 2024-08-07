@@ -1,7 +1,7 @@
 import Editor from "@monaco-editor/react";
 import { useTheme } from "@marzneshin/features/theme-switch";
 import { useNodesSettings } from "./use-nodes-settings";
-import { Button } from "@marzneshin/components";
+import { Button, Awaiting } from "@marzneshin/components";
 import { useTranslation } from "react-i18next";
 import type { NodeType } from "../..";
 
@@ -15,6 +15,7 @@ export const NodeConfigEditor = ({
     payloadValidity,
     language,
     config,
+    isFetching,
     handleConfigSave,
     handleConfigChange,
     handleEditorValidation,
@@ -22,14 +23,19 @@ export const NodeConfigEditor = ({
 
   return (
     <>
-      <Editor
-        height="50vh"
-        className="rounded-sm border"
-        defaultLanguage={language}
-        theme={theme === "dark" ? "vs-dark" : "github"}
-        defaultValue={config}
-        onChange={handleConfigChange}
-        onValidate={handleEditorValidation}
+      <Awaiting
+        isFetching={isFetching}
+        Component={
+          <Editor
+            height="50vh"
+            className="rounded-sm border"
+            defaultLanguage={language}
+            theme={theme === "dark" ? "vs-dark" : "github"}
+            defaultValue={config}
+            onChange={handleConfigChange}
+            onValidate={handleEditorValidation}
+          />
+        }
       />
       <Button
         className="w-full"

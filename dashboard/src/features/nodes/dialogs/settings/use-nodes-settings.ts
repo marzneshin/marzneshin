@@ -21,7 +21,7 @@ const parseConfig = (data: {
 };
 
 export const useNodesSettings = (entity: NodeType, backend: string) => {
-  const { data } = useNodesSettingsQuery(entity, backend);
+  const { data, isFetching } = useNodesSettingsQuery(entity, backend);
   const [config, setConfig] = useState<string>(data.config);
   const [payloadValidity, setPayloadValidity] = useState<boolean>(true);
   const mutate = useNodesSettingsMutation();
@@ -53,6 +53,7 @@ export const useNodesSettings = (entity: NodeType, backend: string) => {
   return {
     payloadValidity,
     language,
+    isFetching,
     config: parseConfig(data),
     handleConfigSave,
     handleConfigChange,
