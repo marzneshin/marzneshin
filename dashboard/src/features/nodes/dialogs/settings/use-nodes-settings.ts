@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import YAML from "yaml";
 import {
   type NodeType,
@@ -14,22 +14,29 @@ const parseConfig = (data: {
   return {
     [NodeBackendSettingConfigFormat.PLAIN]: () => data.config,
     [NodeBackendSettingConfigFormat.JSON]: () =>
-      JSON.stringify(JSON.parse(data.config), null, "\t"),
+      JSON.stringify(JSON.parse(data.config), null, "    "),
     [NodeBackendSettingConfigFormat.YAML]: () =>
-      YAML.stringify(YAML.parse(data.config), null, "\t"),
+      YAML.stringify(YAML.parse(data.config), null, "    "),
   }[data.format]();
 };
 
-export const useNodesSettings = (entity: NodeType, backend: string) => {
-  const { data } = useNodesSettingsQuery(entity, backend);
-  const [config, setConfig] = useState<string>(data.config);
-  const [payloadValidity, setPayloadValidity] = useState<boolean>(true);
-  const mutate = useNodesSettingsMutation();
-  const language = {
+const parseLanguage = (format: NodeBackendSettingConfigFormat) =>
+  ({
     [NodeBackendSettingConfigFormat.PLAIN]: "text",
     [NodeBackendSettingConfigFormat.JSON]: "json",
     [NodeBackendSettingConfigFormat.YAML]: "yaml",
-  }[data.format];
+  })[format];
+
+export const useNodesSettings = (entity: NodeType, backend: string) => {
+  const { data, isFetching } = useNodesSettingsQuery(entity, backend);
+  const [config, setConfig] = useState<string>(data.config);
+  const [payloadValidity, setPayloadValidity] = useState<boolean>(true);
+  const mutate = useNodesSettingsMutation();
+  const language = parseLanguage(data.format);
+
+  useEffect(() => {
+    if (!isFetching) setConfig(parseConfig(data));
+  }, [isFetching, data]);
 
   const handleEditorValidation = (markers: any[]) => {
     setPayloadValidity(!markers.length);
@@ -53,6 +60,7 @@ export const useNodesSettings = (entity: NodeType, backend: string) => {
   return {
     payloadValidity,
     language,
+    isFetching,
     config: parseConfig(data),
     handleConfigSave,
     handleConfigChange,
