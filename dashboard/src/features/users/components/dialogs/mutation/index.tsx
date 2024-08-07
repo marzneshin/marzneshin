@@ -29,12 +29,17 @@ export const UsersMutationDialog: FC<MutationDialogProps<UserMutationType>> = ({
     onClose,
 }) => {
     const { t } = useTranslation();
-    const defaultValue = useMemo(() => ({
-        service_ids: [],
-        username: "",
-        data_limit_reset_strategy: "no_reset",
-        note: "",
-    }), [])
+    const defaultValue = useMemo(
+        () => ({
+            service_ids: [],
+            username: "",
+            data_limit_reset_strategy: "no_reset",
+            note: "",
+            expire_date: "",
+            expire_strategy: "fixed_date",
+        }),
+        [],
+    );
 
     const { open, onOpenChange, form, handleSubmit } = useMutationDialog({
         entity,
