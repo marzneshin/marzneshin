@@ -16,11 +16,12 @@ import {
     useUsersCreationMutation,
     useUsersUpdateMutation,
     UserSchema,
-    UsernameField, type UserMutationType
+    UsernameField,
+    type UserMutationType,
 } from "@marzneshin/features/users";
 import { ServicesField } from "@marzneshin/features/services";
 import { NoteField } from "./fields";
-import { MutationDialogProps, useMutationDialog } from "@marzneshin/hooks";
+import { type MutationDialogProps, useMutationDialog } from "@marzneshin/hooks";
 import { DataLimitFields, ExpirationMethodFields } from "./sections";
 
 export const UsersMutationDialog: FC<MutationDialogProps<UserMutationType>> = ({
@@ -28,12 +29,17 @@ export const UsersMutationDialog: FC<MutationDialogProps<UserMutationType>> = ({
     onClose,
 }) => {
     const { t } = useTranslation();
-    const defaultValue = useMemo(() => ({
-        service_ids: [],
-        username: "",
-        data_limit_reset_strategy: "no_reset",
-        note: "",
-    }), [])
+    const defaultValue = useMemo(
+        () => ({
+            service_ids: [],
+            username: "",
+            data_limit_reset_strategy: "no_reset",
+            note: "",
+            expire_date: "",
+            expire_strategy: "fixed_date",
+        }),
+        [],
+    );
 
     const { open, onOpenChange, form, handleSubmit } = useMutationDialog({
         entity,
@@ -60,7 +66,7 @@ export const UsersMutationDialog: FC<MutationDialogProps<UserMutationType>> = ({
                         </DialogTitle>
                     </DialogHeader>
                     <Form {...form}>
-                        <form onSubmit={handleSubmit} >
+                        <form onSubmit={handleSubmit}>
                             <div className="flex-col grid-cols-2 gap-2 sm:flex md:grid h-full">
                                 <div className="space-y-3">
                                     <UsernameField disabled={!!entity?.username} />
