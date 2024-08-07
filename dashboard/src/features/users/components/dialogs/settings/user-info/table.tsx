@@ -84,6 +84,7 @@ export const UserInfoTable: FC<UserProp> = ({ user: entity }) => {
                         <DateTableRow
                             label={t("page.users.online_at")}
                             date={entity.online_at}
+                            withTime
                         />
                         <TableRowWithCell label={t("note")} value={entity.note} />
                     </TableBody>
