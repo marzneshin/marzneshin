@@ -348,6 +348,7 @@ class InboundHost(Base):
     inbound = relationship("Inbound", back_populates="hosts")
     allowinsecure = Column(Boolean, default=False)
     is_disabled = Column(Boolean, default=False)
+    weight = Column(Integer, default=1, nullable=False, server_default="1")
 
 
 class System(Base):

@@ -74,6 +74,7 @@
   "owner": "Owner",
   "running": "Running",
   "down": "Down",
+  "weight": "Weight",
   "support-us": {
     "title": "Support Us",
     "desc": "Marzneshin is free and open-source software (FOSS), join us and show your support by donating.",
