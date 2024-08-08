@@ -31,6 +31,7 @@ import {
     MuxField,
     FragmentField,
     PathField,
+    WeightField,
     SecurityFields,
 } from "./fields";
 import { useDialog, MutationDialogProps } from "@marzneshin/hooks";
@@ -108,6 +109,7 @@ export const HostsMutationDialog: FC<HostMutationDialogProps> = ({
                                         <div className="flex flex-row gap-2 items-start">
                                             <HostField />
                                             <PathField />
+                                            <WeightField />
                                         </div>
                                         <FragmentField />
                                         <MuxField />
