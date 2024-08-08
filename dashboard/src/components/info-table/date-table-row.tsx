@@ -9,7 +9,8 @@ export const DateTableRow: FC<{
 }> = ({ label, date, withTime = false }) => {
     let formattedDate = "";
     if (date && isValid(new Date(date))) {
-        formattedDate = format(new Date(date), withTime ? "Ppp" : "P");
-    }        
+        const utcDate = new Date(date);
+        formattedDate = format(new Date(utcDate.toLocaleString()), withTime ? "Ppp" : "P");
+    }
     return <TableRowWithCell label={label} value={formattedDate} />;
 };
