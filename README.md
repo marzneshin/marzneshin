@@ -57,7 +57,7 @@ marznode manages and interacts with vpn backends (such as xray).
 
 ### Docs
 
-Marzneshin documentation may be found [here](docs.marzneshin.org).
+Marzneshin documentation may be found [here](https://docs.marzneshin.org).
 
 ### Features
 
