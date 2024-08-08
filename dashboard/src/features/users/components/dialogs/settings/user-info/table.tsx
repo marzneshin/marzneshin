@@ -7,6 +7,7 @@ import {
     TableBody,
     TableRowWithCell,
     DateTableRow,
+    Badge
 } from "@marzneshin/components";
 import type { FC } from "react";
 import {
@@ -84,11 +85,18 @@ export const UserInfoTable: FC<UserProp> = ({ user: entity }) => {
                             label={t("page.users.used_traffic")}
                             value={<UserUsedTraffic user={entity} />}
                         />
-                        <DateTableRow
-                            label={t("page.users.online_at")}
-                            date={entity.online_at}
-                            withTime
-                        />
+                        {entity.online_at ? (
+                            <DateTableRow
+                                label={t("page.users.online_at")}
+                                date={entity.online_at}
+                                withTime
+                            />
+                        ) : (
+                            <TableRowWithCell
+                                label={t("page.users.online_at")}
+                                value={<Badge>{t("page.users.no_use")}</Badge>}
+                            />
+                        )}
                         <DateTableRow
                             label={t("page.users.created_at")}
                             date={entity.created_at}
