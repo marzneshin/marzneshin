@@ -23,5 +23,5 @@ aiohttp==3.9.4
 xxhash==3.4.1
 grpcio==1.65.2
 psycopg==3.1.18
-v2share==0.1.0b14
+v2share==0.1.0b16
 PyJWT~=2.8.0
