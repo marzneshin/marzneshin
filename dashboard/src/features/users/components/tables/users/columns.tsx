@@ -15,8 +15,10 @@ import {
     NoPropogationButton,
 } from "@marzneshin/components";
 import { LinkIcon } from "lucide-react";
+import { Badge } from "@marzneshin/components";
 import { getSubscriptionLink } from "@marzneshin/utils";
 import type { ColumnActions, ColumnDefWithSudoRole } from "@marzneshin/features/entity-table";
+import { format } from "date-fns";
 
 export const columns = (actions: ColumnActions<UserType>): ColumnDefWithSudoRole<UserType>[] => [
     {
@@ -29,7 +31,7 @@ export const columns = (actions: ColumnActions<UserType>): ColumnDefWithSudoRole
                 <OnlineStatus user={row.original} /> {row.original.username}
             </div>
         ),
-    }, 
+    },
     {
         accessorKey: "activated",
         enableSorting: false,
@@ -82,6 +84,16 @@ export const columns = (actions: ColumnActions<UserType>): ColumnDefWithSudoRole
             />
         ),
         cell: ({ row }) => <UserExpirationValue user={row.original} />,
+    },
+    {
+        accessorKey: "online_at",
+        header: ({ column }) => (
+            <DataTableColumnHeader
+                title={i18n.t("page.users.online_at")}
+                column={column}
+            />
+        ),
+        cell: ({ row }) => row.original.online_at ? format(new Date(row.original.online_at), "Ppp") : <Badge>{i18n.t("page.users.no_use")}</Badge>,
     },
     {
         id: "actions",
