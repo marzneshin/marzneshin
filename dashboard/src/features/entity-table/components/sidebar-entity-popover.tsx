@@ -25,7 +25,7 @@ export const SidebarEntityTablePopover: FC<SidebarEntityTablePopoverProps> = ({
                 {buttonChild}
             </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-80 max-h-100 p-0">
+        <PopoverContent className="w-80 p-0">
             <SidebarEntitySelection />
         </PopoverContent>
     </Popover>
