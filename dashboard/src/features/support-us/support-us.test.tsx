@@ -11,10 +11,12 @@ vi.mock('./use-support-us', () => ({
 const useSupportUs = originalUseSupportUs as unknown as ReturnType<typeof vi.fn>;
 
 describe('SupportUs Component', () => {
+    const donationLink = "https://localhost.com/donation";
+
     it('renders the SupportUs component when localStorage is true', () => {
         useSupportUs.mockReturnValue([true, vi.fn()]);
 
-        render(<SupportUs variant="local-storage" />);
+        render(<SupportUs donationLink={donationLink} variant="local-storage" />);
 
         expect(screen.getByText(/support-us.title/i)).toBeInTheDocument();
         expect(screen.getByText(/support-us.desc/i)).toBeInTheDocument();
@@ -24,7 +26,7 @@ describe('SupportUs Component', () => {
     it('does not render the SupportUs component when localStorage is false', () => {
         useSupportUs.mockReturnValue([false, vi.fn()]);
 
-        render(<SupportUs variant="status" />);
+        render(<SupportUs donationLink={donationLink} variant="status" />);
 
         expect(screen.queryByText(/support-us.title/i)).not.toBeInTheDocument();
     });
@@ -33,7 +35,7 @@ describe('SupportUs Component', () => {
         const setSupportUsOpen = vi.fn();
         useSupportUs.mockReturnValue([true, setSupportUsOpen]);
 
-        render(<SupportUs variant="local-storage" />);
+        render(<SupportUs donationLink={donationLink} variant="local-storage" />);
 
         const closeButton = screen.getByRole('button', { name: /Close/i });
         fireEvent.mouseDown(closeButton);
@@ -42,7 +44,7 @@ describe('SupportUs Component', () => {
     });
 
     it('renders the SupportUs component in view mode without close button', () => {
-        render(<SupportUs variant="view" />);
+        render(<SupportUs donationLink={donationLink} variant="view" />);
 
         expect(screen.getByText(/support-us.title/i)).toBeInTheDocument();
         expect(screen.queryByRole('button', { name: /Close/i })).not.toBeInTheDocument();
@@ -51,9 +53,9 @@ describe('SupportUs Component', () => {
     it('redirects to the donation link when the donation button is clicked', () => {
         useSupportUs.mockReturnValue([true, vi.fn()]);
 
-        render(<SupportUs variant="local-storage" />);
+        render(<SupportUs donationLink={donationLink} variant="local-storage" />);
 
-        const donationLink = screen.getByRole('link', { name: /support-us.donate/i });
-        expect(donationLink).toHaveAttribute('href', 'https://github.com/khodedawsh/marzneshin#donation');
+        const donationLinkButton = screen.getByRole('link', { name: /support-us.donate/i });
+        expect(donationLinkButton).toHaveAttribute('href', donationLink);
     });
 });
