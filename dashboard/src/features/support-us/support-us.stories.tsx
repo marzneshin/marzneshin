@@ -11,7 +11,7 @@ const meta: Meta<typeof SupportUs> = {
 export default meta;
 
 type Story = StoryObj<typeof SupportUs>;
-
+const donationLink = "https://localhost.com/donation";
 
 /**
  * This variation does not provide X button to close the card.
@@ -19,7 +19,8 @@ type Story = StoryObj<typeof SupportUs>;
 export const View: Story = {
     args: {
         open: true,
-        variant: "view"
+        variant: "view",
+        donationLink
     }
 }
 
@@ -31,7 +32,9 @@ export const View: Story = {
 export const LocalStorage: Story = {
     args: {
         open: true,
-        variant: "local-storage"
+        variant: "local-storage",
+        donationLink
+
     }
 }
 
@@ -43,7 +46,8 @@ export const LocalStorage: Story = {
 export const Status: Story = {
     args: {
         open: true,
-        variant: "status"
+        variant: "status",
+        donationLink
     }
 }
 
@@ -55,7 +59,7 @@ Status.play = async ({ canvasElement }) => {
 
     // Check the Donation link
     const donationLink = canvas.getByRole('link', { name: /donate/i });
-    await expect(donationLink).toHaveAttribute('href', 'https://github.com/khodedawsh/marzneshin#donation');
+    await expect(donationLink).toHaveAttribute('href', donationLink);
 
     // Simulate closing the support card
     const closeButton = canvas.getByRole('button', { name: /Close/i });
