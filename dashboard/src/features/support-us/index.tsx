@@ -22,6 +22,7 @@ export const SupportUs: FC<SupportUsProps> = ({ open = true, variant = "status",
         />
     ) : (
         <SupportUsCard
+            variant={variant}
             className={className}
             donationLink={donationLink}
             setSupportUsOpen={setSupportUsOpen}
