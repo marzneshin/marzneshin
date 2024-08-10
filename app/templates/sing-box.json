@@ -8,7 +8,7 @@
       {
         "tag": "dns-remote",
         "address": "1.1.1.1",
-        "detour": "Green Zone"
+        "detour": "Internet"
       },
       {
         "tag": "dns-local",
@@ -66,7 +66,7 @@
   "outbounds": [
     {
       "type": "selector",
-      "tag": "Connection",
+      "tag": "Internet",
       "interrupt_exist_connections": true,
       "outbounds": null
     },
@@ -216,7 +216,7 @@
         "update_interval": "1480h0m0s"
       }
     ],
-    "final": "Green Zone",
+    "final": "Internet",
     "auto_detect_interface": true,
     "override_android_vpn": true
   },
