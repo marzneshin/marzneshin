@@ -10,7 +10,7 @@ body:
     attributes:
       value: |
         **Thanks :heart: for taking the time to fill out this bug report!**
-        We kindly ask that you search to see if an issue [already exists](https://github.com/khodedawsh/marzneshin/issues?q=is%3Aissue+sort%3Acreated-desc+) for the bug you encountered.
+        We kindly ask that you search to see if an issue [already exists](https://github.com/marzneshin/marzneshin/issues?q=is%3Aissue+sort%3Acreated-desc+) for the bug you encountered.
 
   - type: textarea
     attributes:
