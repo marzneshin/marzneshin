@@ -5,11 +5,9 @@ import {
 import { useIsCurrentRoute } from "@marzneshin/hooks";
 import type { FC } from "react";
 import { sidebarItems as sidebarItemsSudoAdmin, sidebarItemsNonSudoAdmin } from ".";
-import { cn } from "@marzneshin/utils";
+import { projectInfo, cn } from "@marzneshin/utils";
 import { useAuth } from "@marzneshin/features/auth";
-import {
-    SupportUs,
-} from "@marzneshin/features/support-us";
+import { SupportUs } from "@marzneshin/features/support-us";
 
 interface DashboardSidebarProps {
     collapsed: boolean;
@@ -57,9 +55,9 @@ export const DashboardSidebar: FC<DashboardSidebarProps> = ({
                         </Sidebar.Body>
                         <Sidebar.Footer>
                             {collapsed ?
-                                <SupportUs variant="view" structure="popover" />
+                                <SupportUs variant="view" donationLink={projectInfo.donationLink} structure="popover" />
                                 :
-                                <SupportUs variant="local-storage" structure="card" />
+                                <SupportUs variant="local-storage" donationLink={projectInfo.donationLink} structure="card" />
                             }
                         </Sidebar.Footer>
                     </div>
