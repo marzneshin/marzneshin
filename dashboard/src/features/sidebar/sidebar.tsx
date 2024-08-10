@@ -5,12 +5,9 @@ import {
 import { useIsCurrentRoute } from "@marzneshin/hooks";
 import type { FC } from "react";
 import { sidebarItems as sidebarItemsSudoAdmin, sidebarItemsNonSudoAdmin } from ".";
-import { cn } from "@marzneshin/utils";
+import { projectInfo, cn } from "@marzneshin/utils";
 import { useAuth } from "@marzneshin/features/auth";
-import {
-    SupportUs,
-} from "@marzneshin/features/support-us";
-import { projectInfo } from "@marzneshin/utils";
+import { SupportUs } from "@marzneshin/features/support-us";
 
 interface DashboardSidebarProps {
     collapsed: boolean;
