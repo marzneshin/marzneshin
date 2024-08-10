@@ -32,7 +32,7 @@ export const SettingsDialog: FC<SettingsDialogProps & PropsWithChildren> = ({
         <SheetHeader>
           <SheetTitle>{t("settings")}</SheetTitle>
         </SheetHeader>
-        <ScrollArea className="flex flex-col gap-4 h-full max-h-[40rem]">
+        <ScrollArea className="flex flex-col gap-4 h-[calc(100vh-100px)] max-h-full">
           {children}
         </ScrollArea>
       </SheetContent>
