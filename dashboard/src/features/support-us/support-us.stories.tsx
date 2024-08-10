@@ -58,8 +58,8 @@ Status.play = async ({ canvasElement }) => {
     await expect(canvas.getByText(/Support Us/i)).toBeInTheDocument();
 
     // Check the Donation link
-    const donationLink = canvas.getByRole('link', { name: /donate/i });
-    await expect(donationLink).toHaveAttribute('href', donationLink);
+    const donationLinkButton = canvas.getByRole('link', { name: /donate/i });
+    await expect(donationLinkButton).toHaveAttribute('href', donationLink);
 
     // Simulate closing the support card
     const closeButton = canvas.getByRole('button', { name: /Close/i });
