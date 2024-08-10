@@ -2,7 +2,7 @@
 
 SERVICE_NAME="marzneshin"
 SERVICE_DESCRIPTION="Marzneshin Service"
-SERVICE_DOCUMENTATION="https://github.com/khodedawsh/marzneshin"
+SERVICE_DOCUMENTATION="https://docs.marzneshin.org"
 MAIN_PY_PATH="$PWD/main.py"
 SERVICE_FILE="/etc/systemd/system/$SERVICE_NAME.service"
 
