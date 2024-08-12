@@ -105,6 +105,7 @@ export const UserInfoTable: FC<UserProp> = ({ user: entity }) => {
                         <DateTableRow
                             label={t("page.users.traffic_reset_at")}
                             date={entity.traffic_reset_at}
+                            withTime
                         />
                         <TableRowWithCell
                             label={t("page.users.lifetime_used_traffic")}
@@ -113,7 +114,7 @@ export const UserInfoTable: FC<UserProp> = ({ user: entity }) => {
                         {entity.online_at ? (
                             <TableRowWithCell
                                 label={t("page.users.online_at")}
-                                value={formatDistanceToNow(entity.online_at + "z") + " ago"}
+                                value={formatDistanceToNow(new Date(entity.online_at + "Z")) + " ago"}
                             />
                         ) : (
                             <TableRowWithCell
