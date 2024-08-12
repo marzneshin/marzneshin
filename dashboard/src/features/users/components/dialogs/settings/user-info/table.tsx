@@ -108,7 +108,7 @@ export const UserInfoTable: FC<UserProp> = ({ user: entity }) => {
                         />
                         <TableRowWithCell
                             label={t("page.users.lifetime_used_traffic")}
-                            value={lifetimeUsedTrafficByte[0]}
+                            value={`${lifetimeUsedTrafficByte[0]} ${lifetimeUsedTrafficByte[1]}`}
                         />
                         {entity.online_at ? (
                             <TableRowWithCell
