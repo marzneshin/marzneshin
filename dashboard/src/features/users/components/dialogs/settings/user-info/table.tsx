@@ -1,5 +1,6 @@
 import {
     Card,
+    Button,
     CardContent,
     CardHeader,
     CardTitle,
@@ -10,25 +11,41 @@ import {
     Badge
 } from "@marzneshin/components";
 import type { FC } from "react";
+import { UserStatusEnableButton } from "./user-status-enable-button";
 import {
     type UserProp,
     UserEnabledPill,
     UserUsedTraffic,
     UserActivatedPill,
+    useUserUsageResetCmd,
     UserDataLimitReachedPill,
     UserExpiredPill,
 } from "@marzneshin/features/users";
 import { useTranslation } from "react-i18next";
 import { formatDistanceToNow } from "date-fns";
+import { format } from '@chbphone55/pretty-bytes';
+import { TimerReset } from "lucide-react";
 
 export const UserInfoTable: FC<UserProp> = ({ user: entity }) => {
     const { t } = useTranslation();
     const expireDate = entity.expire_date ? new Date(entity.expire_date) : null;
+    const { mutate: resetUsage } = useUserUsageResetCmd();
+    const lifetimeUsedTrafficByte = format(entity.lifetime_used_traffic);
 
     return (
         <Card>
             <CardHeader className="flex flex-row justify-between items-center w-full">
                 <CardTitle>{t("user_info")}</CardTitle>
+                <div className="hstack justify-center items-center gap-2">
+                    <Button
+                        className="rounded-2xl"
+                        onClick={() => resetUsage(entity)}
+                    >
+                        <TimerReset className="mr-2" />
+                        <span>{t("page.users.reset_usage")}</span>
+                    </Button>
+                    <UserStatusEnableButton user={entity} />
+                </div>
             </CardHeader>
             <CardContent>
                 <Table>
