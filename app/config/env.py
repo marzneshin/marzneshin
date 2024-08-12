@@ -64,6 +64,7 @@ CLASH_SUBSCRIPTION_TEMPLATE = config(
 
 WEBHOOK_ADDRESS = config("WEBHOOK_ADDRESS", default=None)
 WEBHOOK_SECRET = config("WEBHOOK_SECRET", default=None)
+REVERSIBLE_KEY = config("REVERSIBLE_KEY", cast=bool, default=False)
 
 # recurrent notifications
 
