@@ -35,7 +35,10 @@ export const NodesSettingsDialog: FC<NodesSettingsDialogProps> = ({
         <NodesDetailTable node={entity} />
       </div>
       {entity.backends.length === 0 ? (
-        <AlertCard desc={t('page.nodes.no-backend-alert.desc')} title={t('page.nodes.no-backend-alert.title')} />
+        <AlertCard
+          desc={t('page.nodes.settings.no-backend-alert.desc')}
+          title={t('page.nodes.no-backend-alert.title')}
+        />
       ) : (
         <Tabs
           className="my-3 w-full h-full"
