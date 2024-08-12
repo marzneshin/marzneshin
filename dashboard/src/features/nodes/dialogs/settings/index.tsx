@@ -5,6 +5,7 @@ import {
   TabsContent,
   TabsList,
   TabsTrigger,
+  AlertCard,
 } from "@marzneshin/components";
 import type { FC } from "react";
 import { useTranslation } from "react-i18next";
@@ -33,31 +34,35 @@ export const NodesSettingsDialog: FC<NodesSettingsDialogProps> = ({
         </h1>
         <NodesDetailTable node={entity} />
       </div>
-      <Tabs
-        className="my-3 w-full h-full"
-        defaultValue={entity.backends[0].name}
-      >
-        <TabsList className="w-full">
+      {entity.backends.length === 0 ? (
+        <AlertCard desc={t('page.nodes.no-backend-alert.desc')} title={t('page.nodes.no-backend-alert.title')} />
+      ) : (
+        <Tabs
+          className="my-3 w-full h-full"
+          defaultValue={entity.backends[0].name}
+        >
+          <TabsList className="w-full">
+            {...entity.backends.map((backend: NodeBackendType) => (
+              <TabsTrigger
+                className="capitalize w-full"
+                value={backend.name}
+                key={backend.name}
+              >
+                {backend.name}
+              </TabsTrigger>
+            ))}
+          </TabsList>
           {...entity.backends.map((backend: NodeBackendType) => (
-            <TabsTrigger
-              className="capitalize w-full"
+            <TabsContent
+              className="w-full"
               value={backend.name}
               key={backend.name}
             >
-              {backend.name}
-            </TabsTrigger>
+              <NodeBackendSetting node={entity} backend={backend.name} />
+            </TabsContent>
           ))}
-        </TabsList>
-        {...entity.backends.map((backend: NodeBackendType) => (
-          <TabsContent
-            className="w-full"
-            value={backend.name}
-            key={backend.name}
-          >
-            <NodeBackendSetting node={entity} backend={backend.name} />
-          </TabsContent>
-        ))}
-      </Tabs>
+        </Tabs>
+      )}
     </SettingsDialog>
   );
 };
