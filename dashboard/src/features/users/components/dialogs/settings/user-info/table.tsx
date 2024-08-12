@@ -125,6 +125,7 @@ export const UserInfoTable: FC<UserProp> = ({ user: entity }) => {
                         <DateTableRow
                             label={t("page.users.sub_updated_at")}
                             date={entity.sub_updated_at}
+                            withTime
                         />
                         <TableRowWithCell
                             label={t("page.users.sub_last_user_agent")}
