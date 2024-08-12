@@ -11,6 +11,7 @@ export interface UserType {
     lifetime_used_traffic: number;
     used_traffic: number;
     sub_updated_at?: Date | string;
+    traffic_reset_at?: Date | string;
     sub_last_user_agent?: string;
     enabled: boolean;
     activated: boolean;
