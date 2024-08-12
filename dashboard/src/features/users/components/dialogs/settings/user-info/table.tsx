@@ -98,10 +98,13 @@ export const UserInfoTable: FC<UserProp> = ({ user: entity }) => {
                                 ),
                             }[entity.expire_strategy]
                         }
-
                         <TableRowWithCell
                             label={t("page.users.used_traffic")}
                             value={<UserUsedTraffic user={entity} />}
+                        />
+                        <DateTableRow
+                            label={t("page.users.traffic_reset_at")}
+                            date={entity.traffic_reset_at}
                         />
                         <TableRowWithCell
                             label={t("page.users.lifetime_used_traffic")}
