@@ -113,7 +113,7 @@ export const UserInfoTable: FC<UserProp> = ({ user: entity }) => {
                         {entity.online_at ? (
                             <TableRowWithCell
                                 label={t("page.users.online_at")}
-                                value={formatDistanceToNow(entity.online_at)}
+                                value={formatDistanceToNow(entity.online_at) + " ago"}
                             />
                         ) : (
                             <TableRowWithCell
