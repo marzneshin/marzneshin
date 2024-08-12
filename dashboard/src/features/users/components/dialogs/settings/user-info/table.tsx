@@ -19,6 +19,7 @@ import {
     UserExpiredPill,
 } from "@marzneshin/features/users";
 import { useTranslation } from "react-i18next";
+import { formatDistanceToNow } from "date-fns";
 
 export const UserInfoTable: FC<UserProp> = ({ user: entity }) => {
     const { t } = useTranslation();
@@ -86,10 +87,9 @@ export const UserInfoTable: FC<UserProp> = ({ user: entity }) => {
                             value={<UserUsedTraffic user={entity} />}
                         />
                         {entity.online_at ? (
-                            <DateTableRow
+                            <TableRowWithCell
                                 label={t("page.users.online_at")}
-                                date={entity.online_at}
-                                withTime
+                                value={formatDistanceToNow(entity.online_at)}
                             />
                         ) : (
                             <TableRowWithCell
