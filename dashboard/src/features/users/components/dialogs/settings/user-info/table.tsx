@@ -104,7 +104,7 @@ export const UserInfoTable: FC<UserProp> = ({ user: entity }) => {
                         />
                         <DateTableRow
                             label={t("page.users.traffic_reset_at")}
-                            date={entity.traffic_reset_at + "z"}
+                            date={entity.traffic_reset_at}
                         />
                         <TableRowWithCell
                             label={t("page.users.lifetime_used_traffic")}
@@ -123,7 +123,7 @@ export const UserInfoTable: FC<UserProp> = ({ user: entity }) => {
                         )}
                         <DateTableRow
                             label={t("page.users.sub_updated_at")}
-                            date={entity.sub_updated_at + "z"}
+                            date={entity.sub_updated_at}
                         />
                         <TableRowWithCell
                             label={t("page.users.sub_last_user_agent")}
@@ -131,7 +131,8 @@ export const UserInfoTable: FC<UserProp> = ({ user: entity }) => {
                         />
                         <DateTableRow
                             label={t("page.users.created_at")}
-                            date={entity.created_at + "z"}
+                            date={entity.created_at}
+                            withTime
                         />
                         <TableRowWithCell label={t("note")} value={entity.note} />
                     </TableBody>
