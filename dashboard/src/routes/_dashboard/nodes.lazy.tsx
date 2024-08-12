@@ -1,7 +1,5 @@
 import {
-    Alert,
-    AlertDescription,
-    AlertTitle,
+    AlertCard,
     Card,
     CardContent,
     CardFooter,
@@ -12,7 +10,6 @@ import {
 } from '@marzneshin/components';
 import { NodesTable } from '@marzneshin/features/nodes';
 import { Link, createFileRoute, Outlet } from '@tanstack/react-router'
-import { Info } from 'lucide-react';
 import { type FC, Suspense } from 'react';
 import { useTranslation } from 'react-i18next';
 import { SudoRoute } from "@marzneshin/features/sudo-routes";
@@ -34,14 +31,15 @@ export const NodesPage: FC = () => {
                     </Suspense>
                 </CardContent>
                 <CardFooter>
-                    <Alert>
-                        <Info className="mr-2" />
-                        <AlertTitle className="font-semibold text-primary">{t('page.nodes.certificate-alert.title')}</AlertTitle>
-                        <AlertDescription>
-                            {t('page.nodes.certificate-alert.desc')}
-                            <Link className="m-1 font-semibold text-secondary-foreground" to="/settings">{t('page.nodes.certificate-alert.click')}</Link>
-                        </AlertDescription>
-                    </Alert>
+                    <AlertCard
+                        title={t('page.nodes.certificate-alert.title')}
+                        desc={
+                            <>
+                                {t('page.nodes.certificate-alert.desc')}
+                                <Link className="m-1 font-semibold text-secondary-foreground" to="/settings">{t('page.nodes.certificate-alert.click')}</Link>
+                            </>
+                        }
+                    />
                 </CardFooter>
             </Card >
         </Page>
