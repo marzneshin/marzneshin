@@ -86,6 +86,10 @@ export const UserInfoTable: FC<UserProp> = ({ user: entity }) => {
                             label={t("page.users.used_traffic")}
                             value={<UserUsedTraffic user={entity} />}
                         />
+                        <TableRowWithCell
+                            label={t("page.users.lifetime_used_traffic")}
+                            value={lifetimeUsedTrafficByte[0]}
+                        />
                         {entity.online_at ? (
                             <TableRowWithCell
                                 label={t("page.users.online_at")}
@@ -97,6 +101,14 @@ export const UserInfoTable: FC<UserProp> = ({ user: entity }) => {
                                 value={<Badge>{t("page.users.no_use")}</Badge>}
                             />
                         )}
+                        <DateTableRow
+                            label={t("page.users.sub_updated_at")}
+                            date={entity.sub_updated_at}
+                        />
+                        <TableRowWithCell
+                            label={t("page.users.sub_last_user_agent")}
+                            value={entity.sub_last_user_agent}
+                        />
                         <DateTableRow
                             label={t("page.users.created_at")}
                             date={entity.created_at}
