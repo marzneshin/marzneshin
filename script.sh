@@ -8,6 +8,8 @@ DATA_DIR="/var/lib/$APP_NAME"
 NODE_DATA_DIR="/var/lib/$NODE_NAME"
 COMPOSE_FILE="$CONFIG_DIR/docker-compose.yml"
 
+FETCH_REPO="marzneshin/marzneshin"
+SCRIPT_URL="https://github.com/$FETCH_REPO/raw/master/script.sh"
 
 colorized_echo() {
     local color=$1
@@ -117,8 +119,6 @@ install_docker() {
 }
 
 install_marzneshin_script() {
-    FETCH_REPO="khodedawsh/marzneshin"
-    SCRIPT_URL="https://github.com/$FETCH_REPO/raw/master/script.sh"
     colorized_echo blue "Installing marzneshin script"
     curl -sSL $SCRIPT_URL | install -m 755 /dev/stdin /usr/local/bin/marzneshin
     colorized_echo green "marzneshin script installed successfully"
@@ -126,7 +126,7 @@ install_marzneshin_script() {
 
 install_marzneshin() {
     # Fetch releases
-    FILES_URL_PREFIX="https://raw.githubusercontent.com/khodedawsh/marzneshin/master"
+    FILES_URL_PREFIX="https://raw.githubusercontent.com/marzneshin/marzneshin/master"
 	COMPOSE_FILES_URL="https://raw.githubusercontent.com/marzneshin/marzneshin-deploy/master"
  	database=$1
   	nightly=$2
@@ -151,7 +151,7 @@ install_marzneshin() {
 
 install_marznode_xray_config() {
     mkdir -p "$NODE_DATA_DIR"
-    curl -sL "https://raw.githubusercontent.com/khodedawsh/marznode/master/xray_config.json" -o "$NODE_DATA_DIR/xray_config.json"
+    curl -sL "https://raw.githubusercontent.com/marzneshin/marznode/master/xray_config.json" -o "$NODE_DATA_DIR/xray_config.json"
     colorized_echo green "Sample xray config downloaded for marznode"
 }
 
@@ -219,8 +219,6 @@ marzneshin_cli() {
 
 
 update_marzneshin_script() {
-    FETCH_REPO="khodedawsh/marzneshin"
-    SCRIPT_URL="https://github.com/$FETCH_REPO/raw/master/script.sh"
     colorized_echo blue "Updating marzneshin script"
     curl -sSL $SCRIPT_URL | install -m 755 /dev/stdin /usr/local/bin/marzneshin
     colorized_echo green "marzneshin script updated successfully"

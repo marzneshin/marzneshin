@@ -6,18 +6,18 @@
 
 <br/>
 <p align="center">
-    <a href="https://github.com/khodedawsh/Marzneshin/actions/workflows/dashboard-ci.yml">
-        <img src="https://github.com/khodedawsh/Marzneshin/actions/workflows/dashboard-ci.yml/badge.svg" />
+    <a href="https://github.com/marzneshin/marzneshin/actions/workflows/dashboard-ci.yml">
+        <img src="https://github.com/marzneshin/marzneshin/actions/workflows/dashboard-ci.yml/badge.svg" />
     </a>
-    <a href="https://github.com/khodedawsh/Marzneshin/actions/workflows/package.yml" target="_blank">
-        <img src="https://github.com/khodedawsh/Marzneshin/actions/workflows/package.yml/badge.svg" />
+    <a href="https://github.com/marzneshin/marzneshin/actions/workflows/package.yml" target="_blank">
+        <img src="https://github.com/marzneshin/marzneshin/actions/workflows/package.yml/badge.svg" />
     </a>
     <a href="https://hub.docker.com/r/dawsh/marzneshin" target="_blank">
         <img src="https://img.shields.io/docker/pulls/dawsh/marzneshin?style=flat-square&logo=docker" />
     </a>
     <br>
     <a href="#">
-        <img src="https://img.shields.io/github/license/khodedawsh/marzneshin?style=flat-square" />
+        <img src="https://img.shields.io/github/license/marzneshin/marzneshin?style=flat-square" />
     </a>
     <a href="https://t.me/marzneshins" target="_blank">
         <img src="https://img.shields.io/badge/telegram-group-blue?style=flat-square&logo=telegram" />
@@ -26,13 +26,13 @@
         <img src="https://img.shields.io/badge/twitter-commiunity-blue?style=flat-square&logo=twitter" />
     </a>
     <a href="#">
-        <img src="https://img.shields.io/github/stars/khodedawsh/marzneshin?style=social" />
+        <img src="https://img.shields.io/github/stars/marzneshin/marzneshin?style=social" />
     </a>
 </p>
 
 <p align="center">
-  <a href="https://github.com/khodedawsh/marzneshin" target="_blank" rel="noopener noreferrer" >
-    <img src="https://github.com/khodedawsh/marzneshin/raw/master/docs/assets/Desktop-full.png" alt="screenshots" width="600" height="auto">
+  <a href="https://github.com/marzneshin/marzneshin" target="_blank" rel="noopener noreferrer" >
+    <img src="https://github.com/marzneshin/marzneshin/raw/master/docs/assets/Desktop-full.png" alt="screenshots" width="600" height="auto">
   </a>
 </p>
 
@@ -51,7 +51,7 @@
 
 Marzneshin is a censorship circumvention tool utilizing other censorship circumvention tools.
 
-Marzneshin controls the [Marznodes](https://github.com/khodedawsh/marznode)
+Marzneshin controls the [Marznodes](https://github.com/marzneshin/marznode)
 connected to it; monitoring/disabling/enabling users on marznode instances while
 marznode manages and interacts with vpn backends (such as xray).
 
@@ -73,7 +73,7 @@ Marzneshin documentation may be found [here](https://docs.marzneshin.org).
 - Automated **Share link** and **QRcode** generator
 - System, nodes, traffic statistics, users monitoring
 - Integrated **Command Line Interface (CLI)**
-- [**Multi-admin** support](https://github.com/khodedawsh/marzneshin/issues/73) (WIP)
+- [**Multi-admin** support](https://github.com/marzneshin/marzneshin/issues/73) (WIP)
 - Marzneshin is decoupled from VPN backends
 - Resilient and fault tolerant node management
 
@@ -91,7 +91,7 @@ Marzneshin documentation may be found [here](https://docs.marzneshin.org).
 
 # marznode
 
-[marznode](https://github.com/khodedawsh/marznode) is the backend needed to run proxy servers.
+[marznode](https://github.com/marzneshin/marznode) is the backend needed to run proxy servers.
 
 # Donation
 
@@ -116,14 +116,14 @@ We ❤️‍🔥 contributors! If you'd like to contribute, please check out our
 feel free to submit a pull request or open an issue. We also welcome you to join
 our [Telegram](https://t.me/marzneshins) group for either support or contributing guidance.
 
-Check [open issues](https://github.com/khodedawsh/marzneshin/issues) to help the progress of this project.
+Check [open issues](https://github.com/marzneshin/marzneshin/issues) to help the progress of this project.
 
 <p align="center">
 Thanks to all contributors who have helped Marzneshin:
 </p>
 <p align="center">
-<a href="https://github.com/khodedawsh/marzneshin/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=khodedawsh/marzneshin" />
+<a href="https://github.com/marzneshin/marzneshin/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=marzneshin/marzneshin" />
 </a>
 </p>
 <p align="center">
