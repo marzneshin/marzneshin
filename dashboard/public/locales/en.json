@@ -121,6 +121,10 @@
     },
     "nodes": {
       "settings": {
+        "no-backend-alert": {
+          "title": "No backend is configured for this node",
+          "desc": "Please take required measures and configure a backend for this node."
+        },
         "title": "Nodes Settings",
         "detail": "Details",
         "log-container": {
