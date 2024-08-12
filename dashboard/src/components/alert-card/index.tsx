@@ -5,7 +5,7 @@ import {
     AlertTitle,
 } from '@marzneshin/components';
 
-export const AlertCard = ({ title, desc }: { title: string, desc: string }) => {
+export const AlertCard = ({ title, desc }: { title: string | JSX.Element, desc: string | JSX.Element }) => {
     return (
         <Alert>
             <ExclamationTriangleIcon className="mr-2" />
