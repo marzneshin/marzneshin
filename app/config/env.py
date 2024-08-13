@@ -1,5 +1,6 @@
 from decouple import config
 from dotenv import load_dotenv
+from enum import Enum
 
 load_dotenv()
 
@@ -64,6 +65,18 @@ CLASH_SUBSCRIPTION_TEMPLATE = config(
 
 WEBHOOK_ADDRESS = config("WEBHOOK_ADDRESS", default=None)
 WEBHOOK_SECRET = config("WEBHOOK_SECRET", default=None)
+
+
+class AuthAlgorithm(Enum):
+    PLAIN = "plain"
+    XXH128 = "xxh128"
+
+
+AUTH_GENERATION_ALGORITHM = config(
+    "AUTH_GENERATION_ALGORITHM",
+    cast=AuthAlgorithm,
+    default=AuthAlgorithm.XXH128,
+)
 
 # recurrent notifications
 
