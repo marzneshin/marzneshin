@@ -2,6 +2,7 @@ import xxhash
 import uuid
 from app.config.env import AuthAlgorithm, AUTH_GENERATION_ALGORITHM
 
+
 def gen_uuid(key: str) -> str:
     if AUTH_GENERATION_ALGORITHM == AuthAlgorithm.PLAIN:
         return str(uuid.UUID(key))
