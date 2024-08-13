@@ -1,5 +1,6 @@
 from decouple import config
 from dotenv import load_dotenv
+from enum import Enum
 
 load_dotenv()
 
