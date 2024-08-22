@@ -49,8 +49,8 @@ export function EntityTable<T>({
         pageIndex,
         pageSize,
         filtering.columnFilters,
-        sorting.sorting[0]?.id ? sorting.sorting[0].id : "created_at",
-        sorting.sorting[0]?.desc,
+        sorting.sorting[0] ? sorting.sorting[0].id : "created_at",
+        sorting.sorting[0] ? sorting.sorting[0]?.desc : true,
     ];
     const query: QueryKey = [
         entityKey,
