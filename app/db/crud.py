@@ -457,7 +457,6 @@ def update_user(
 
 
 def reset_user_data_usage(db: Session, dbuser: User):
-    dbuser.lifetime_used_traffic += dbuser.used_traffic
     dbuser.traffic_reset_at = datetime.utcnow()
 
     dbuser.used_traffic = 0
