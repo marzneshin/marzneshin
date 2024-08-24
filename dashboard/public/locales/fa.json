@@ -267,7 +267,7 @@
     "create": {
       "error": "خطا در حذف {{name}}",
       "success": {
-        "title": "{{name}} با موفقیت حذف شد",
+        "title": "{{name}} با موفقیت افزوده شد",
         "desc": ""
       }
     },

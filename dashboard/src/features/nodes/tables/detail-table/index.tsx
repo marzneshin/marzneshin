@@ -25,7 +25,7 @@ export const NodesDetailTable: FC<NodesDetailTableProps> = ({ node }) => {
                 </TableRow>
                 <TableRow>
                     <TableHead >
-                        {t('Address')}
+                        {t('address')}
                     </TableHead>
                     <TableCell >
                         {node.address}:{node.port}
