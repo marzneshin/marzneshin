@@ -2,6 +2,7 @@ export * from './table'
 export * from './data-table'
 export * from './pagination'
 export * from './column-header'
+export * from "./column-header-combo-filter";
 export * from './table-view-option'
 export * from './actions-cell'
 export * from "./table-filtering";

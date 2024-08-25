@@ -1,77 +1,101 @@
+import * as React from "react"
 
-import {
-    CaretSortIcon,
-    CheckIcon,
-} from "@radix-ui/react-icons"
-import { Column } from "@tanstack/react-table"
-
+import { useScreenBreakpoint } from "@marzneshin/hooks";
 import {
     Button,
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
     Command,
     CommandEmpty,
     CommandGroup,
     CommandInput,
     CommandItem,
+    CommandList,
+    Drawer,
+    DrawerContent,
+    DrawerTrigger,
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
 } from "@marzneshin/components"
-import { cn } from "@marzneshin/utils"
 
-interface DataTableColumnHeaderProps<TData, TValue>
+interface DataTableColumnHeaderFilterOptionProps
     extends React.HTMLAttributes<HTMLDivElement> {
-    column: Column<TData, TValue>
     title: string
+    options: string[]
 }
 
-export function DataTableColumnHeaderComboFilter<TData, TValue>({
-    column,
-    title,
-    className,
-    entityList,
-}: DataTableColumnHeaderProps<TData, TValue>) {
+export function DataTableColumnHeaderFilterOption({
+    title, options
+}: DataTableColumnHeaderFilterOptionProps) {
+
+    const [open, setOpen] = React.useState(false)
+    const isDesktop = useScreenBreakpoint("md");
+    const [selectedOption, setSelectedOption] = React.useState<string | null>(
+        null
+    )
+
+    if (isDesktop) {
+        return (
+            <Popover open={open} onOpenChange={setOpen}>
+                <PopoverTrigger asChild>
+                    <Button variant="ghost" size="sm" className="data-[state=open]:bg-accent w-fit justify-start">
+                        {selectedOption ? selectedOption : title}
+                    </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-[200px] p-0" align="start">
+                    <ComboFilterOptionList setOpen={setOpen} setSelectedOption={setSelectedOption} options={options} />
+                </PopoverContent>
+            </Popover>
+        )
+    }
 
     return (
-        <Popover open={open} onOpenChange={setOpen}>
-            <PopoverTrigger asChild>
-                <Button
-                    variant="outline"
-                    role="combobox"
-                    aria-expanded={open}
-                    className="w-[200px] justify-between"
-                >
-                    {value
-                        ? frameworks.find((framework) => framework.value === value)?.label
-                        : "Select framework..."}
-                    <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+        <Drawer open={open} onOpenChange={setOpen}>
+            <DrawerTrigger asChild>
+                <Button variant="ghost" size="sm" className="data-[state=open]:bg-accent w-fit justify-start">
+                    {selectedOption ? selectedOption : title}
                 </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-[200px] p-0">
-                <Command>
-                    <CommandInput placeholder="Search framework..." className="h-9" />
-                    <CommandEmpty>No framework found.</CommandEmpty>
-                    <CommandGroup>
-                        {entityList.map((entity) => (
-                            <CommandItem
-                                key={}
-                                value={framework.value}
-                                onSelect={(currentValue) => {
-                                    setValue(currentValue === value ? "" : currentValue)
-                                    setOpen(false)
-                                }}
-                            >
-                                {framework.label}
-                                <CheckIcon
-                                    className={cn(
-                                        "ml-auto h-4 w-4",
-                                        value === framework.value ? "opacity-100" : "opacity-0"
-                                    )}
-                                />
-                            </CommandItem>
-                        ))}
-                    </CommandGroup>
-                </Command>
-            </PopoverContent>
-        </Popover>
+            </DrawerTrigger>
+            <DrawerContent>
+                <div className="mt-4 border-t">
+                    <ComboFilterOptionList setOpen={setOpen} setSelectedOption={setSelectedOption} options={options} />
+                </div>
+            </DrawerContent>
+        </Drawer>
+    )
+}
+
+interface ComboFilterOptionListProps {
+    setOpen: (open: boolean) => void
+    setSelectedOption: (option: string | null) => void
+    options: string[]
+}
+
+// TODO: tokenize for i18n
+function ComboFilterOptionList({
+    setOpen,
+    setSelectedOption,
+    options,
+}: ComboFilterOptionListProps) {
+    return (
+        <Command>
+            <CommandInput placeholder="Filter status..." />
+            <CommandList>
+                <CommandEmpty>No results found.</CommandEmpty>
+                <CommandGroup>
+                    {options.map((option) => (
+                        <CommandItem
+                            key={option}
+                            value={option}
+                            onSelect={(value) => {
+                                setSelectedOption(value)
+                                setOpen(false)
+                            }}
+                        >
+                            {option}
+                        </CommandItem>
+                    ))}
+                </CommandGroup>
+            </CommandList>
+        </Command>
     )
 }
