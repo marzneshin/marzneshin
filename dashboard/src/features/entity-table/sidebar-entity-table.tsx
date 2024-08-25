@@ -1,4 +1,5 @@
-import { Button, DataTableViewOptions, ResizableHandle, ResizablePanel, ResizablePanelGroup, HStack } from "@marzneshin/components";
+import { Button, ResizableHandle, ResizablePanel, ResizablePanelGroup, HStack } from "@marzneshin/components";
+import { DataTableViewOptions } from "./components";
 import { Server } from "lucide-react";
 import { EntityTableContext, SidebarEntityTableContext } from "./contexts";
 import {

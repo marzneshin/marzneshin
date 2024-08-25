@@ -6,17 +6,20 @@ import {
     UserExpireStrategyPill,
     UserExpirationValue
 } from "@marzneshin/features/users";
-import { DataTableColumnHeader } from "@marzneshin/components/data-table/column-header";
 import i18n from "@marzneshin/features/i18n";
 import {
     CopyToClipboardButton,
-    DataTableActionsCell,
     buttonVariants,
     NoPropogationButton,
 } from "@marzneshin/components";
 import { LinkIcon } from "lucide-react";
 import { getSubscriptionLink } from "@marzneshin/utils";
-import type { ColumnActions, ColumnDefWithSudoRole } from "@marzneshin/features/entity-table";
+import {
+    DataTableColumnHeader,
+    DataTableColumnHeaderFilterOption,
+    DataTableActionsCell,
+    type ColumnActions, type ColumnDefWithSudoRole
+} from "@marzneshin/features/entity-table";
 
 export const columns = (actions: ColumnActions<UserType>): ColumnDefWithSudoRole<UserType>[] => [
     {

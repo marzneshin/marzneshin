@@ -4,10 +4,12 @@ import {
     AdminEnabledPill,
     AdminPermissionPill,
 } from "@marzneshin/features/admins";
-import { DataTableColumnHeader } from "@marzneshin/components/data-table/column-header";
-import i18n from "@marzneshin/features/i18n";
 import {
     DataTableActionsCell,
+    DataTableColumnHeader
+} from "@marzneshin/features/entity-table"
+import i18n from "@marzneshin/features/i18n";
+import {
     NoPropogationButton,
 } from "@marzneshin/components";
 import {

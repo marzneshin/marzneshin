@@ -1,5 +1,7 @@
 import { ColumnDef } from "@tanstack/react-table"
-import { DataTableColumnHeader } from "@marzneshin/components/data-table/column-header"
+import {
+    DataTableColumnHeader
+} from "@marzneshin/features/entity-table"
 import i18n from "@marzneshin/features/i18n"
 import { Checkbox } from "@marzneshin/components"
 import { ServiceType } from "@marzneshin/features/services"

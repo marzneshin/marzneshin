@@ -2,7 +2,6 @@ export * from "./ui";
 export * from "./settings-dialog";
 export * from "./header";
 export * from "./sidebar";
-export * from "./data-table";
 export * from "./delete-confirmation-dialog";
 export * from "./nav-dir";
 export * from "./header";
