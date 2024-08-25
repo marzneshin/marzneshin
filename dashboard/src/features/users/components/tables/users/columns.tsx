@@ -6,6 +6,7 @@ import {
     UserExpireStrategyPill,
     UserExpirationValue
 } from "@marzneshin/features/users";
+import { useAdminsQuery } from "@marzneshin/features/admins";
 import i18n from "@marzneshin/features/i18n";
 import {
     CopyToClipboardButton,
@@ -48,12 +49,7 @@ export const columns = (actions: ColumnActions<UserType>): ColumnDefWithSudoRole
         accessorKey: "owner_username",
         enableSorting: false,
         sudoVisibleOnly: true,
-        header: ({ column }) => (
-            <DataTableColumnHeader
-                title={i18n.t("owner")}
-                column={column}
-            />
-        ),
+        header: () => <AdminsColumnsHeaderOptionFilter />,
     },
     {
         accessorKey: "used_traffic",
@@ -107,3 +103,12 @@ export const columns = (actions: ColumnActions<UserType>): ColumnDefWithSudoRole
         )
     }
 ];
+function AdminsColumnsHeaderOptionFilter() {
+    const { data } = useAdminsQuery({ page: 1, size: 100 });
+    return (
+        <DataTableColumnHeaderFilterOption
+            title={i18n.t("owner")}
+            options={data.entity.map((admin) => admin.username)} />
+    );
+}
+

@@ -1,32 +1,33 @@
 import * as React from "react"
-
+import { type Column } from "@tanstack/react-table";
+import { useEntityTableContext } from "../contexts";
 import { useScreenBreakpoint } from "@marzneshin/hooks";
 import {
     Button,
+    Drawer,
     Command,
+    Popover,
     CommandEmpty,
     CommandGroup,
     CommandInput,
     CommandItem,
     CommandList,
-    Drawer,
     DrawerContent,
     DrawerTrigger,
-    Popover,
     PopoverContent,
     PopoverTrigger,
 } from "@marzneshin/components"
 
-interface DataTableColumnHeaderFilterOptionProps
+interface DataTableColumnHeaderFilterOptionProps<TData, TValue>
     extends React.HTMLAttributes<HTMLDivElement> {
     title: string
     options: string[]
+    column: Column<TData, TValue>
 }
 
-export function DataTableColumnHeaderFilterOption({
-    title, options
-}: DataTableColumnHeaderFilterOptionProps) {
-
+export function DataTableColumnHeaderFilterOption<TData, TValue>(
+    { title, column, options }: DataTableColumnHeaderFilterOptionProps<TData, TValue>
+) {
     const [open, setOpen] = React.useState(false)
     const isDesktop = useScreenBreakpoint("md");
     const [selectedOption, setSelectedOption] = React.useState<string | null>(
@@ -42,7 +43,7 @@ export function DataTableColumnHeaderFilterOption({
                     </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-[200px] p-0" align="start">
-                    <ComboFilterOptionList setOpen={setOpen} setSelectedOption={setSelectedOption} options={options} />
+                    <ComboFilterOptionList setOpen={setOpen} columnName={column.id} setSelectedOption={setSelectedOption} options={options} />
                 </PopoverContent>
             </Popover>
         )
@@ -57,7 +58,7 @@ export function DataTableColumnHeaderFilterOption({
             </DrawerTrigger>
             <DrawerContent>
                 <div className="mt-4 border-t">
-                    <ComboFilterOptionList setOpen={setOpen} setSelectedOption={setSelectedOption} options={options} />
+                    <ComboFilterOptionList setOpen={setOpen} columnName={column.id} setSelectedOption={setSelectedOption} options={options} />
                 </div>
             </DrawerContent>
         </Drawer>
@@ -67,15 +68,19 @@ export function DataTableColumnHeaderFilterOption({
 interface ComboFilterOptionListProps {
     setOpen: (open: boolean) => void
     setSelectedOption: (option: string | null) => void
+    columnName: string
     options: string[]
 }
 
 // TODO: tokenize for i18n
+// TODO: Deselection
 function ComboFilterOptionList({
     setOpen,
     setSelectedOption,
     options,
+    columnName,
 }: ComboFilterOptionListProps) {
+    const { filters } = useEntityTableContext();
     return (
         <Command>
             <CommandInput placeholder="Filter status..." />
@@ -89,6 +94,7 @@ function ComboFilterOptionList({
                             onSelect={(value) => {
                                 setSelectedOption(value)
                                 setOpen(false)
+                                filters.setColumnsFilter({ ...filters.columnsFilter, [columnName]: value })
                             }}
                         >
                             {option}
