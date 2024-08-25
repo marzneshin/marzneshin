@@ -34,7 +34,7 @@ export const AdminsTable: FC = () => {
             fetchEntity={fetchAdmins}
             manualSorting={false}
             columns={columns}
-            filteredColumn="username"
+            primaryFilter="username"
             entityKey={AdminsQueryFetchKey}
             onCreate={() => navigate({ to: "/admins/create" })}
             onOpen={onOpen}

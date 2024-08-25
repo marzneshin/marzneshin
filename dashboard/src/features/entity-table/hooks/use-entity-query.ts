@@ -1,33 +1,40 @@
-import { z } from "zod";
 
-const UseEntityQueryPropsSchema = z.object({
-    page: z.number().gte(1),
-    size: z.number().gte(1).lte(100),
-    search: z.string().optional()
-})
+interface PaginatedEntityQueryProps {
+    page: number;
+    size: number;
+}
 
-export interface SortableEntitySortQueryProps {
+export type FilteredEntityType = {
+    [key: string]: string | undefined;
+}
+
+export interface SortedEntityQueryProps {
     sortBy: string
     desc: boolean
 }
 
-export type UseEntityQueryProps = z.infer<typeof UseEntityQueryPropsSchema & SortableEntitySortQueryProps>
+interface FiltersEntityQueryProps {
+    filters: FilteredEntityType;
+}
+
+export type UseEntityQueryProps = FiltersEntityQueryProps & PaginatedEntityQueryProps & SortedEntityQueryProps
+
+export type EntityName = string;
+export type EntityId = number | string | undefined;
+export type PrimaryFilter = string;
 
 export type QueryKey =
-    [string, number, number, string]
-export type SortableQueryKey =
-    [string, number, number, string, string, boolean]
+    [EntityName, PaginatedEntityQueryProps, PrimaryFilter, SortedEntityQueryProps, FiltersEntityQueryProps]
+
 export type SidebarQueryKey =
-    [string, number | string | undefined, string, number, number, string]
-export type SortableSidebarQueryKey =
-    [string, number | string | undefined, string, number, number, string, string, boolean]
+    [EntityName, EntityId, EntityName, PaginatedEntityQueryProps, PrimaryFilter, SortedEntityQueryProps, FiltersEntityQueryProps]
 
 export interface QueryKeyType<QT> {
     queryKey: QT
 }
 
-export type EntityQueryKeyType = QueryKeyType<SortableQueryKey | QueryKey>
-export type EntitySidebarQueryKeyType = QueryKeyType<SortableSidebarQueryKey | SidebarQueryKey>
+export type EntityQueryKeyType = QueryKeyType<QueryKey>
+export type EntitySidebarQueryKeyType = QueryKeyType<SidebarQueryKey>
 
 interface FetchEntityResult<T> {
     pageCount: number

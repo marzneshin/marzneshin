@@ -2,12 +2,11 @@ import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
 import {
-    useFiltering,
+    usePrimaryFiltering,
     usePagination,
     useEntityTable,
     useVisibility,
     useSorting,
-    type SortableSidebarQueryKey,
     type EntitySidebarQueryKeyType,
     type FetchEntityReturn,
     type SidebarQueryKey,
@@ -42,7 +41,6 @@ export const useSidebarEntityTable = <T, S>({
     filteredColumn,
     rowSelection,
     entityKey,
-    manualSorting = false,
     onCreate,
     onEdit,
     onOpen,
@@ -54,35 +52,31 @@ export const useSidebarEntityTable = <T, S>({
     secondaryEntityKey,
 }: UseSidebarEntityTableParams<T, S>) => {
     const { t } = useTranslation();
-    const filtering = useFiltering({ column: filteredColumn });
+    const filtering = usePrimaryFiltering({ column: filteredColumn });
     const sorting = useSorting();
     const visibility = useVisibility();
     const desktop = useScreenBreakpoint("md");
     const { onPaginationChange, pageIndex, pageSize } = usePagination();
 
-    const sortedQuery: SortableSidebarQueryKey = [
-        entityKey,
-        sidebarEntityId,
-        secondaryEntityKey,
-        pageIndex,
-        pageSize,
-        filtering.columnFilters,
-        sorting.sorting[0]?.id ? sorting.sorting[0].id : "created_at",
-        sorting.sorting[0]?.desc,
-    ];
-
     const query: SidebarQueryKey = [
         entityKey,
         sidebarEntityId,
         secondaryEntityKey,
-        pageIndex,
-        pageSize,
+        {
+            page: pageIndex,
+            size: pageSize,
+        },
         filtering.columnFilters,
+        {
+            sortBy: sorting.sorting[0]?.id ? sorting.sorting[0].id : "created_at",
+            desc: sorting.sorting[0]?.desc
+        },
+        { filters: {} }
     ];
 
     const { data, isFetching } = useQuery({
         queryFn: fetchEntity,
-        queryKey: manualSorting ? sortedQuery : query,
+        queryKey: query,
         initialData: { entity: [], pageCount: 1 },
     });
 

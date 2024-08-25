@@ -8,11 +8,16 @@ import {
 } from "@marzneshin/features/entity-table";
 
 export async function fetchAdmins({ queryKey }: EntityQueryKeyType): FetchEntityReturn<AdminType> {
+    const pagination = queryKey[1];
+    const primaryFilter = queryKey[2];
+    const filters = queryKey[4].filters;
     return fetch(`/admins`, {
         query: {
-            page: queryKey[1],
-            size: queryKey[2],
-            username: queryKey[3],
+            ...pagination,
+            ...filters,
+            username: primaryFilter,
+            descending: queryKey[3].desc,
+            order_by: queryKey[3].sortBy,
         }
     }).then((result) => {
         return {
@@ -22,13 +27,13 @@ export async function fetchAdmins({ queryKey }: EntityQueryKeyType): FetchEntity
     });
 }
 
-export const AdminsQueryFetchKey = "users";
+export const AdminsQueryFetchKey = "admins";
 
 export const useAdminsQuery = ({
-    page, size, search = ""
+    page, size, sortBy = "created_at", desc = false, filters = {}
 }: UseEntityQueryProps) => {
     return useQuery({
-        queryKey: [AdminsQueryFetchKey, page, size, search],
+        queryKey: [AdminsQueryFetchKey, { page, size }, filters?.username ?? "", { sortBy, desc }, { filters }],
         queryFn: fetchAdmins,
         initialData: { entity: [], pageCount: 0 }
     })

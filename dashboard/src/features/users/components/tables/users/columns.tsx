@@ -21,6 +21,7 @@ import {
     DataTableActionsCell,
     type ColumnActions, type ColumnDefWithSudoRole
 } from "@marzneshin/features/entity-table";
+import { type Column } from "@tanstack/react-table";
 
 export const columns = (actions: ColumnActions<UserType>): ColumnDefWithSudoRole<UserType>[] => [
     {
@@ -49,7 +50,7 @@ export const columns = (actions: ColumnActions<UserType>): ColumnDefWithSudoRole
         accessorKey: "owner_username",
         enableSorting: false,
         sudoVisibleOnly: true,
-        header: () => <AdminsColumnsHeaderOptionFilter />,
+        header: ({ column }) => <AdminsColumnsHeaderOptionFilter column={column} />,
     },
     {
         accessorKey: "used_traffic",
@@ -103,12 +104,15 @@ export const columns = (actions: ColumnActions<UserType>): ColumnDefWithSudoRole
         )
     }
 ];
-function AdminsColumnsHeaderOptionFilter() {
-    const { data } = useAdminsQuery({ page: 1, size: 100 });
+
+function AdminsColumnsHeaderOptionFilter<TData>({ column }: { column: Column<TData, unknown> }) {
+    const { data } = useAdminsQuery({ page: 1, size: 100, filters: {} });
     return (
         <DataTableColumnHeaderFilterOption
             title={i18n.t("owner")}
-            options={data.entity.map((admin) => admin.username)} />
+            column={column}
+            options={data.entity.map((admin) => admin.username)}
+        />
     );
 }
 
