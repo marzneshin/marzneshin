@@ -37,7 +37,7 @@ export const NodesTable: FC = () => {
         <EntityTable
             fetchEntity={fetchNodes}
             columns={columns}
-            filteredColumn="name"
+            primaryFilter="name"
             entityKey="nodes"
             onCreate={() => navigate({ to: "/nodes/create" })}
             onOpen={onOpen}

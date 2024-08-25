@@ -5,18 +5,18 @@ import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
 import { EntityTableContext } from "./contexts";
-import { TableFiltering, DataTablePagination, EntityDataTable } from "./components";
+import { TableSearch, DataTablePagination, EntityDataTable } from "./components";
 import {
     type UseRowSelectionReturn,
-    useFiltering,
+    usePrimaryFiltering,
     usePagination,
     type FetchEntityReturn,
     useEntityTable,
     useVisibility,
     useSorting,
-    type SortableQueryKey,
     type QueryKey,
     type EntityQueryKeyType,
+    useFilters,
 } from "./hooks";
 
 export interface EntityTableProps<T> {
@@ -25,7 +25,6 @@ export interface EntityTableProps<T> {
     filteredColumn: string;
     entityKey: string;
     rowSelection?: UseRowSelectionReturn;
-    manualSorting?: boolean;
     onCreate: () => void;
     onOpen: (entity: any) => void;
 }
@@ -36,33 +35,32 @@ export function EntityTable<T>({
     filteredColumn,
     rowSelection,
     entityKey,
-    manualSorting = false,
     onCreate,
     onOpen,
 }: EntityTableProps<T>) {
     const { t } = useTranslation();
-    const filtering = useFiltering({ column: filteredColumn });
+    const primaryFilter = usePrimaryFiltering({ column: filteredColumn });
+    const filters = useFilters();
     const sorting = useSorting();
     const visibility = useVisibility();
     const { onPaginationChange, pageIndex, pageSize } = usePagination();
-    const sortedQuery: SortableQueryKey = [
-        entityKey,
-        pageIndex,
-        pageSize,
-        filtering.columnFilters,
-        sorting.sorting[0]?.id ? sorting.sorting[0].id : "created_at",
-        sorting.sorting[0]?.desc,
-    ];
     const query: QueryKey = [
         entityKey,
-        pageIndex,
-        pageSize,
-        filtering.columnFilters,
+        {
+            page: pageIndex,
+            size: pageSize,
+        },
+        primaryFilter.columnFilters,
+        {
+            sortBy: sorting.sorting[0]?.id ? sorting.sorting[0].id : "created_at",
+            desc: sorting.sorting[0]?.desc
+        },
+        { filters: filters.columnsFilter }
     ];
 
     const { data, isFetching } = useQuery({
         queryFn: fetchEntity,
-        queryKey: manualSorting ? sortedQuery : query,
+        queryKey: query,
         initialData: { entity: [], pageCount: 1 },
     });
 
@@ -78,8 +76,8 @@ export function EntityTable<T>({
     });
 
     const contextValue = useMemo(
-        () => ({ table, data: data.entity, filtering, isLoading: isFetching }),
-        [table, data.entity, filtering, isFetching],
+        () => ({ table, data: data.entity, primaryFilter, filters, isLoading: isFetching }),
+        [table, data.entity, filters, primaryFilter, isFetching],
     );
 
     return (
@@ -94,7 +92,7 @@ export function EntityTable<T>({
                             </Button>
                         )}
                     </div>
-                    <TableFiltering />
+                    <TableSearch />
                 </div>
                 <div className="w-full rounded-md border">
                     <EntityDataTable columns={columns} onRowClick={onOpen} />

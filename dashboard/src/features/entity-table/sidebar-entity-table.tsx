@@ -4,7 +4,7 @@ import { Server } from "lucide-react";
 import { EntityTableContext, SidebarEntityTableContext } from "./contexts";
 import {
     SidebarEntityCardSectionsProps,
-    TableFiltering,
+    TableSearch,
     DataTablePagination,
     EntityDataTable,
     SidebarEntityTablePopover,
@@ -70,7 +70,7 @@ export function SidebarEntityTable<T, S>(props: SidebarEntityTableProps<T, S>) {
                                 </Button>
                             )}
                         </div>
-                        <TableFiltering />
+                        <TableSearch />
                     </div>
                     <div className="w-full rounded-md border">
                         <ResizablePanelGroup direction="horizontal">
