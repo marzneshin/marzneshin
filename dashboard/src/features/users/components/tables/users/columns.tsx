@@ -105,7 +105,7 @@ export const columns = (actions: ColumnActions<UserType>): ColumnDefWithSudoRole
     }
 ];
 
-function AdminsColumnsHeaderOptionFilter<TData>({ column }: { column: Column<TData, unknown> }) {
+function AdminsColumnsHeaderOptionFilter<TData, TValue>({ column }: { column: Column<TData, TValue> }) {
     const { data } = useAdminsQuery({ page: 1, size: 100, filters: {} });
     return (
         <DataTableColumnHeaderFilterOption
