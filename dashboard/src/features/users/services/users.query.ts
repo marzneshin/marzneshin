@@ -4,7 +4,6 @@ import { UserType } from "../types";
 import {
     FetchEntityReturn,
     UseEntityQueryProps,
-    SortedEntityQueryProps,
     EntityQueryKeyType
 } from "@marzneshin/features/entity-table";
 
