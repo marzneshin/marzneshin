@@ -37,6 +37,13 @@ interface SidebarEntityTableProps<T, S> {
     onDelete: (entity: T) => void;
 }
 
+function MainTable<T, S>(columns: any, props: SidebarEntityTableProps<T, S>) {
+    return <div className="flex flex-col justify-between size-full">
+        <EntityDataTable columns={columns} onRowClick={props.onOpen} />
+        <DataTablePagination />
+    </div>;
+}
+
 export function SidebarEntityTable<T, S>(props: SidebarEntityTableProps<T, S>) {
     const { t } = useTranslation();
     const {
@@ -73,21 +80,23 @@ export function SidebarEntityTable<T, S>(props: SidebarEntityTableProps<T, S>) {
                         <TableSearch />
                     </div>
                     <div className="w-full rounded-md border">
-                        <ResizablePanelGroup direction="horizontal">
-                            <ResizablePanel minSize={20} maxSize={desktop ? 40 : 0}>
-                                <SidebarEntitySelection />
-                            </ResizablePanel>
-                            <ResizableHandle withHandle={desktop} />
-                            <ResizablePanel >
-                                <div className="flex flex-col justify-between size-full">
-                                    <EntityDataTable columns={columns} onRowClick={props.onOpen} />
-                                    <DataTablePagination />
-                                </div>
-                            </ResizablePanel>
-                        </ResizablePanelGroup>
+                        {desktop ? (
+                            <ResizablePanelGroup direction="horizontal">
+                                <ResizablePanel minSize={20} maxSize={desktop ? 40 : 0}>
+                                    <SidebarEntitySelection />
+                                </ResizablePanel>
+                                <ResizableHandle withHandle={desktop} />
+                                <ResizablePanel >
+                                    <MainTable columns={columns} props={props} />
+                                </ResizablePanel>
+                            </ResizablePanelGroup>
+                        ) : (
+                            <MainTable columns={columns} props={props} />
+                        )}
                     </div>
                 </div>
             </SidebarEntityTableContext.Provider>
         </EntityTableContext.Provider>
     );
 }
+
