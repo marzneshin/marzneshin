@@ -7,6 +7,7 @@ import {
     useEntityTable,
     useVisibility,
     useSorting,
+    useFilters,
     type EntitySidebarQueryKeyType,
     type FetchEntityReturn,
     type SidebarQueryKey,
@@ -52,7 +53,8 @@ export const useSidebarEntityTable = <T, S>({
     secondaryEntityKey,
 }: UseSidebarEntityTableParams<T, S>) => {
     const { t } = useTranslation();
-    const filtering = usePrimaryFiltering({ column: filteredColumn });
+    const primaryFilter = usePrimaryFiltering({ column: filteredColumn });
+    const filters = useFilters();
     const sorting = useSorting();
     const visibility = useVisibility();
     const desktop = useScreenBreakpoint("md");
@@ -66,12 +68,12 @@ export const useSidebarEntityTable = <T, S>({
             page: pageIndex,
             size: pageSize,
         },
-        filtering.columnFilters,
+        primaryFilter.columnFilters,
         {
             sortBy: sorting.sorting[0]?.id ? sorting.sorting[0].id : "created_at",
             desc: sorting.sorting[0]?.desc
         },
-        { filters: {} }
+        { filters: filters.columnsFilter }
     ];
 
     const { data, isFetching } = useQuery({
@@ -93,13 +95,8 @@ export const useSidebarEntityTable = <T, S>({
     });
 
     const entityTableContextValue = useMemo(
-        () => ({
-            table,
-            data: data.entity,
-            filtering,
-            isLoading: isFetching,
-        }),
-        [table, data.entity, filtering, isFetching],
+        () => ({ table, data: data.entity, primaryFilter, filters, isLoading: isFetching }),
+        [table, data.entity, filters, primaryFilter, isFetching],
     );
 
     const sidebarEntityTableContextValue = useMemo(
