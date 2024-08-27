@@ -17,6 +17,7 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@marzneshin/components"
+import { FilterX } from "lucide-react";
 
 interface DataTableColumnHeaderFilterOptionProps<TData, TValue>
     extends React.HTMLAttributes<HTMLDivElement> {
@@ -38,8 +39,18 @@ export function DataTableColumnHeaderFilterOption<TData, TValue>(
         return (
             <Popover open={open} onOpenChange={setOpen}>
                 <PopoverTrigger asChild>
-                    <Button variant="ghost" size="sm" className="data-[state=open]:bg-accent w-fit justify-start">
+                    <Button variant="ghost" size="sm" className="data-[state=open]:bg-accent justify-start">
                         {selectedOption ? selectedOption : title}
+                        {selectedOption &&
+                            <Button
+                                variant="ghost"
+                                onMouseDown={() => setSelectedOption(null)}
+                                size="sm"
+                                className="hover:bg-destructive/30 p-2 ml-1"
+                            >
+                                <FilterX className="size-4" />
+                            </Button>
+                        }
                     </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-[200px] p-0" align="start">
@@ -73,7 +84,6 @@ interface ComboFilterOptionListProps {
 }
 
 // TODO: tokenize for i18n
-// TODO: Deselection
 function ComboFilterOptionList({
     setOpen,
     setSelectedOption,
