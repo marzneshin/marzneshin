@@ -13,14 +13,11 @@ import {
     SelectValue,
 } from "@marzneshin/components";
 import { useTranslation } from "react-i18next";
-import {
-    useEntityTableContext
-} from "@marzneshin/features/entity-table/contexts";
 import { useEffect } from "react";
+import { Table } from "@tanstack/react-table"
 
-export function DataTablePagination() {
+export function DataTablePagination<TData>({ table }: { table: Table<TData> }) {
     const { t } = useTranslation();
-    const { table } = useEntityTableContext();
 
     useEffect(() => {
         if (table.getState().pagination.pageIndex === 1) table.setPageIndex(2);

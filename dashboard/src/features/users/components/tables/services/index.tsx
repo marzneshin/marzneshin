@@ -1,6 +1,6 @@
 import { type FC, useCallback, useEffect, useState } from "react";
-import { } from "@marzneshin/features/inbounds";
-import { Button, DataTable } from "@marzneshin/components";
+import { Button } from "@marzneshin/components";
+import { DataTable } from "@marzneshin/features/entity-table";
 import { columns } from "./columns";
 import {
     type UserType,

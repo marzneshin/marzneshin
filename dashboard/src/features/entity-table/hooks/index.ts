@@ -1,3 +1,4 @@
+export * from './use-primary-filtering'
 export * from './use-filtering'
 export * from './use-pagination'
 export * from './use-dialog'

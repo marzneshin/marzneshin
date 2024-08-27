@@ -9,9 +9,18 @@ import type {
 export async function fetchNodes({
     queryKey,
 }: EntityQueryKeyType): Promise<{ entity: NodeType[]; pageCount: number }> {
-    return fetch(
-        `/nodes?page=${queryKey[1]}&size=${queryKey[2]}&name=${queryKey[3]}`,
-    ).then((result) => {
+    const pagination = queryKey[1];
+    const primaryFilter = queryKey[2];
+    const filters = queryKey[4].filters;
+    return fetch(`/nodes`, {
+        query: {
+            ...pagination,
+            ...filters,
+            name: primaryFilter,
+            descending: queryKey[3].desc,
+            order_by: queryKey[3].sortBy,
+        }
+    }).then((result) => {
         return {
             entity: result.items,
             pageCount: result.pages,
@@ -21,9 +30,11 @@ export async function fetchNodes({
 
 export const NodesQueryFetchKey = "nodes";
 
-export const useNodesQuery = ({ page, size, search }: UseEntityQueryProps) => {
+export const useNodesQuery = ({
+    page, size, sortBy = "created_at", desc = false, filters = {}
+}: UseEntityQueryProps) => {
     return useQuery({
-        queryKey: [NodesQueryFetchKey, page, size, search ? search : ""],
+        queryKey: [NodesQueryFetchKey, { page, size }, filters?.username ?? "", { sortBy, desc }, { filters }],
         queryFn: fetchNodes,
         initialData: { entity: [], pageCount: 0 },
     });

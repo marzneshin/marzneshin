@@ -36,9 +36,8 @@ export const UsersTable: FC = () => {
     return (
         <EntityTable
             fetchEntity={fetchUsers}
-            manualSorting={true}
             columns={isSudo() ? columns : noneSudoColumns}
-            filteredColumn="username"
+            primaryFilter="username"
             entityKey={UsersQueryFetchKey}
             onCreate={() => navigate({ to: "/users/create" })}
             onOpen={onOpen}

@@ -4,20 +4,22 @@ import { UserType } from "../types";
 import {
     FetchEntityReturn,
     UseEntityQueryProps,
-    SortableEntitySortQueryProps,
     EntityQueryKeyType
 } from "@marzneshin/features/entity-table";
 
 export type SortUserBy = "username" | "used_traffic" | "data_limit" | "expire_date" | "created_at"
 
 export async function fetchUsers({ queryKey }: EntityQueryKeyType): FetchEntityReturn<UserType> {
+    const pagination = queryKey[1];
+    const primaryFilter = queryKey[2];
+    const filters = queryKey[4].filters;
     return fetch(`/users`, {
         query: {
-            page: queryKey[1],
-            size: queryKey[2],
-            username: queryKey[3],
-            descending: queryKey[5],
-            order_by: queryKey[4]
+            ...pagination,
+            ...filters,
+            username: primaryFilter,
+            descending: queryKey[3].desc,
+            order_by: queryKey[3].sortBy,
         }
     }).then((result) => {
         return {
@@ -30,10 +32,10 @@ export async function fetchUsers({ queryKey }: EntityQueryKeyType): FetchEntityR
 export const UsersQueryFetchKey = "users";
 
 export const useUsersQuery = ({
-    page, size, search = "", sortBy = "created_at", desc = false
-}: UseEntityQueryProps & SortableEntitySortQueryProps) => {
+    page, size, sortBy = "created_at", desc = false, filters = {}
+}: UseEntityQueryProps) => {
     return useQuery({
-        queryKey: [UsersQueryFetchKey, page, size, search, sortBy, desc],
+        queryKey: [UsersQueryFetchKey, { page, size }, filters?.username ?? "", { sortBy, desc }, { filters }],
         queryFn: fetchUsers,
         initialData: { entity: [], pageCount: 0 }
     })

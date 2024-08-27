@@ -1,11 +1,12 @@
 import { createContext, useContext } from "react";
-import { UseFilteringReturn } from "../hooks";
+import { UseFiltersReturn, UsePrimaryFilterReturn } from "../hooks";
 import { Table } from "@tanstack/react-table";
 
 interface EntityTableContextProps<TData> {
     table: Table<TData>
     data: TData[]
-    filtering: UseFilteringReturn
+    primaryFilter: UsePrimaryFilterReturn
+    filters: UseFiltersReturn
     isLoading: boolean
 }
 

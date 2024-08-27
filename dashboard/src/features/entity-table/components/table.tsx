@@ -76,11 +76,21 @@ export function EntityDataTable<TData, TValue>({
         <>
             {Array.from({ length: 5 }).map((_, rowIndex) => (
                 <TableRow key={`skeleton-row-${rowIndex}`} className="w-full">
-                    {columns.map((column, cellIndex) => (
-                        <TableCell key={`${column.cell}-skeleton-cell-${rowIndex}-${cellIndex}`} className="h-12">
-                            <Skeleton className="w-full h-full" />
-                        </TableCell>
-                    ))}
+                    <TableCell className="h-12">
+                        <Skeleton className="w-full h-full" />
+                    </TableCell>
+                    <TableCell className="h-12">
+                        <Skeleton className="w-full h-full" />
+                    </TableCell>
+                    <TableCell className="h-12">
+                        <Skeleton className="w-full h-full" />
+                    </TableCell>
+                    <TableCell className="h-12">
+                        <Skeleton className="w-full h-full" />
+                    </TableCell>
+                    <TableCell className="h-12">
+                        <Skeleton className="w-full h-full" />
+                    </TableCell>
                 </TableRow>
             ))}
         </>

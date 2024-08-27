@@ -1,12 +1,14 @@
 import { ColumnDef } from "@tanstack/react-table"
 import { NodesStatusBadge, NodeType, NodesStatus } from "@marzneshin/features/nodes"
-import { DataTableColumnHeader } from "@marzneshin/components/data-table/column-header"
+import {
+    DataTableActionsCell,
+    DataTableColumnHeader
+} from "@marzneshin/features/entity-table"
 import i18n from "@marzneshin/features/i18n"
 import {
     type ColumnActions
 } from "@marzneshin/features/entity-table";
 import {
-    DataTableActionsCell,
     NoPropogationButton,
 } from "@marzneshin/components"
 

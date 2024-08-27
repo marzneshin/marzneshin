@@ -1,9 +1,11 @@
-import { Button, DataTableViewOptions, ResizableHandle, ResizablePanel, ResizablePanelGroup, HStack } from "@marzneshin/components";
+import { Button, ResizableHandle, ResizablePanel, ResizablePanelGroup, HStack } from "@marzneshin/components";
+import { Table } from "@tanstack/react-table"
+import { DataTableViewOptions } from "./components";
 import { Server } from "lucide-react";
 import { EntityTableContext, SidebarEntityTableContext } from "./contexts";
 import {
     SidebarEntityCardSectionsProps,
-    TableFiltering,
+    TableSearch,
     DataTablePagination,
     EntityDataTable,
     SidebarEntityTablePopover,
@@ -34,6 +36,13 @@ interface SidebarEntityTableProps<T, S> {
     onEdit: (entity: T) => void;
     onOpen: (entity: T) => void;
     onDelete: (entity: T) => void;
+}
+
+function MainTable<T, S>({ table, columns, props }: { table: Table<T>, columns: any, props: SidebarEntityTableProps<T, S> }) {
+    return <div className="flex flex-col justify-between size-full">
+        <EntityDataTable columns={columns} onRowClick={props.onOpen} />
+        <DataTablePagination table={table} />
+    </div>;
 }
 
 export function SidebarEntityTable<T, S>(props: SidebarEntityTableProps<T, S>) {
@@ -69,24 +78,26 @@ export function SidebarEntityTable<T, S>(props: SidebarEntityTableProps<T, S>) {
                                 </Button>
                             )}
                         </div>
-                        <TableFiltering />
+                        <TableSearch />
                     </div>
                     <div className="w-full rounded-md border">
-                        <ResizablePanelGroup direction="horizontal">
-                            <ResizablePanel minSize={20} maxSize={desktop ? 40 : 0}>
-                                <SidebarEntitySelection />
-                            </ResizablePanel>
-                            <ResizableHandle withHandle={desktop} />
-                            <ResizablePanel >
-                                <div className="flex flex-col justify-between size-full">
-                                    <EntityDataTable columns={columns} onRowClick={props.onOpen} />
-                                    <DataTablePagination />
-                                </div>
-                            </ResizablePanel>
-                        </ResizablePanelGroup>
+                        {desktop ? (
+                            <ResizablePanelGroup direction="horizontal">
+                                <ResizablePanel minSize={20} maxSize={40}>
+                                    <SidebarEntitySelection />
+                                </ResizablePanel>
+                                <ResizableHandle withHandle={desktop} />
+                                <ResizablePanel >
+                                    <MainTable table={table} columns={columns} props={props} />
+                                </ResizablePanel>
+                            </ResizablePanelGroup>
+                        ) : (
+                            <MainTable table={table} columns={columns} props={props} />
+                        )}
                     </div>
                 </div>
             </SidebarEntityTableContext.Provider>
         </EntityTableContext.Provider>
     );
 }
+

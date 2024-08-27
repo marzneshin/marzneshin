@@ -1,6 +1,6 @@
 
 import { FC } from "react";
-import { DataTable } from "@marzneshin/components";
+import { DataTable } from "@marzneshin/features/entity-table";
 import { columns } from "./columns";
 import { useUsersServiceQuery, type ServiceType } from "@marzneshin/features/services";
 

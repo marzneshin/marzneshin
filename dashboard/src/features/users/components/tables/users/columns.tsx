@@ -6,17 +6,22 @@ import {
     UserExpireStrategyPill,
     UserExpirationValue
 } from "@marzneshin/features/users";
-import { DataTableColumnHeader } from "@marzneshin/components/data-table/column-header";
+import { useAdminsQuery } from "@marzneshin/features/admins";
 import i18n from "@marzneshin/features/i18n";
 import {
     CopyToClipboardButton,
-    DataTableActionsCell,
     buttonVariants,
     NoPropogationButton,
 } from "@marzneshin/components";
 import { LinkIcon } from "lucide-react";
 import { getSubscriptionLink } from "@marzneshin/utils";
-import type { ColumnActions, ColumnDefWithSudoRole } from "@marzneshin/features/entity-table";
+import {
+    DataTableColumnHeader,
+    DataTableColumnHeaderFilterOption,
+    DataTableActionsCell,
+    type ColumnActions, type ColumnDefWithSudoRole
+} from "@marzneshin/features/entity-table";
+import { type Column } from "@tanstack/react-table";
 
 export const columns = (actions: ColumnActions<UserType>): ColumnDefWithSudoRole<UserType>[] => [
     {
@@ -45,12 +50,7 @@ export const columns = (actions: ColumnActions<UserType>): ColumnDefWithSudoRole
         accessorKey: "owner_username",
         enableSorting: false,
         sudoVisibleOnly: true,
-        header: ({ column }) => (
-            <DataTableColumnHeader
-                title={i18n.t("owner")}
-                column={column}
-            />
-        ),
+        header: ({ column }) => <AdminsColumnsHeaderOptionFilter column={column} />,
     },
     {
         accessorKey: "used_traffic",
@@ -104,3 +104,15 @@ export const columns = (actions: ColumnActions<UserType>): ColumnDefWithSudoRole
         )
     }
 ];
+
+function AdminsColumnsHeaderOptionFilter<TData, TValue>({ column }: { column: Column<TData, TValue> }) {
+    const { data } = useAdminsQuery({ page: 1, size: 100, filters: {} });
+    return (
+        <DataTableColumnHeaderFilterOption
+            title={i18n.t("owner")}
+            column={column}
+            options={data.entity.map((admin) => admin.username)}
+        />
+    );
+}
+

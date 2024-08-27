@@ -31,7 +31,7 @@ export const NodeBackendSetting: FC<{ node: NodeType; backend: string }> = ({
         )}
         {backendStats === null ? (
           <Badge variant="disabled" className="size-fit">
-            {t("unkown")}
+            {t("unknown")}
           </Badge>
         ) : backendStats.running ? (
           <Badge variant="positive" className="size-fit">

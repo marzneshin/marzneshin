@@ -6,16 +6,16 @@ import {
 } from "@marzneshin/features/entity-table/contexts";
 import { useTranslation } from "react-i18next";
 
-interface TableFilteringProps { }
+interface TableSearchProps { }
 
-export const TableFiltering: FC<TableFilteringProps> = () => {
-    const { filtering } = useEntityTableContext()
+export const TableSearch: FC<TableSearchProps> = () => {
+    const { primaryFilter } = useEntityTableContext()
     const { t } = useTranslation()
     return (
         <Input
-            placeholder={t('table.filter-placeholder', { name: filtering.column })}
-            value={filtering.columnFilters}
-            onChange={(e) => filtering.setColumnFilters(e.target.value)}
+            placeholder={t('table.filter-placeholder', { name: primaryFilter.column })}
+            value={primaryFilter.columnFilters}
+            onChange={(e) => primaryFilter.setColumnFilters(e.target.value)}
             className=" w-full md:w-[20rem]"
         />
     );

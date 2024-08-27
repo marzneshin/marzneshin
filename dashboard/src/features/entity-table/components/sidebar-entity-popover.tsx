@@ -19,6 +19,7 @@ export const SidebarEntityTablePopover: FC<SidebarEntityTablePopoverProps> = ({
     <Popover>
         <PopoverTrigger asChild>
             <Button
+                size="sm"
                 variant="outline"
                 className="mr-1 lg:flex"
             >

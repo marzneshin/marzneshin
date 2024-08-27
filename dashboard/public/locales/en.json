@@ -365,6 +365,7 @@
     "desc": "This action cannot be undone."
   },
   "table": {
+    "no-result-found": "No results found.",
     "row-per-page": "Rows per page",
     "no-result": "No result",
     "selected": "Selected",

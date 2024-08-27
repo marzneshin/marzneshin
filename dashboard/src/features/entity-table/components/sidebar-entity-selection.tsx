@@ -50,7 +50,7 @@ export const SidebarEntitySelection = () => {
                     onValueChange={(value) => setSidebarEntityId(value === "" ? undefined : value)}
                     defaultValue={String(sidebarEntityId)}
                 >
-                    <ScrollArea className={cn("flex flex-col justify-start p-1 gap-3 h-full", scrollBarHeight)}>
+                    <ScrollArea className={cn("flex flex-col justify-start p-1 gap-3 h-full w-full", scrollBarHeight)}>
                         {sidebarEntities.map((entity: any) => (
                             <ToggleGroupItem
                                 className="px-0 w-full h-full"

@@ -8,10 +8,16 @@ import {
 import { useQuery } from "@tanstack/react-query";
 
 export async function fetchServices({ queryKey }: EntityQueryKeyType): FetchEntityReturn<ServiceType> {
+    const pagination = queryKey[1];
+    const primaryFilter = queryKey[2];
+    const filters = queryKey[4].filters;
     return fetch(`/services`, {
         query: {
-            page: queryKey[1],
-            size: queryKey[2]
+            ...pagination,
+            ...filters,
+            name: primaryFilter,
+            descending: queryKey[3].desc,
+            order_by: queryKey[3].sortBy,
         }
     }).then((result) => {
         const services: ServiceType[] = result.items;
@@ -24,9 +30,11 @@ export async function fetchServices({ queryKey }: EntityQueryKeyType): FetchEnti
 
 export const ServicesQueryFetchKey = "services";
 
-export const useServicesQuery = ({ page, size, search = "" }: UseEntityQueryProps) => {
+export const useServicesQuery = ({
+    page, size, sortBy = "created_at", desc = false, filters = {}
+}: UseEntityQueryProps) => {
     return useQuery({
-        queryKey: [ServicesQueryFetchKey, page, size, search],
+        queryKey: [ServicesQueryFetchKey, { page, size }, filters?.username ?? "", { sortBy, desc }, { filters }],
         queryFn: fetchServices,
         initialData: { entity: [], pageCount: 0 }
     })
