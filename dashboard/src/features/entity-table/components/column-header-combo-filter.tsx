@@ -52,7 +52,7 @@ export function DataTableColumnHeaderFilterOption<TData, TValue>(
                                 variant="ghost"
                                 onMouseDown={handleClearingFilter}
                                 size="sm"
-                                className="hover:bg-destructive/30 p-2 ml-1"
+                                className="hover:text-destructive/90 p-2 ml-1"
                             >
                                 <FilterX className="size-4" />
                             </Button>
