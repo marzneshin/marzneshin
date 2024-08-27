@@ -1,7 +1,7 @@
 import {
     EntityDataTable,
     DataTablePagination,
-    TableFiltering,
+    TableSearch,
 } from "../components";
 import { EntityTable } from "../entity-table";
 import React from "react";
@@ -11,7 +11,7 @@ import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { columnsFnBasicEntityTable } from "./columns-fns";
 import { fetchEntity, fetchEntityLoading } from "./fetch-entities";
 
-const TableFilteringComponent = TableFiltering as React.FC<unknown>;
+const TableSearchComponent = TableSearch as React.FC<unknown>;
 const DataTablePaginationComponent = DataTablePagination as React.FC<unknown>;
 const EntityDataTableComponent = EntityDataTable as React.FC<unknown>;
 
@@ -27,7 +27,7 @@ const meta: Meta<typeof EntityTable> = {
     )],
     tags: ["autodocs"],
     subcomponents: {
-        TableFilteringComponent,
+        TableSearchComponent,
         DataTablePaginationComponent,
         EntityDataTableComponent
     }
@@ -46,7 +46,7 @@ export const BasicEntityTable: Story = {
     args: {
         fetchEntity: fetchEntity,
         columns: columnsFnBasicEntityTable({ onEdit, onDelete, onOpen }),
-        filteredColumn: "name",
+        primaryFilter: "name",
         entityKey: "entities",
         onCreate: () => alert("Create entity"),
         onOpen: onOpen,
@@ -57,7 +57,7 @@ export const LoadingEntityTable: Story = {
     args: {
         fetchEntity: fetchEntityLoading,
         columns: columnsFnBasicEntityTable({ onEdit, onDelete, onOpen }),
-        filteredColumn: "name",
+        primaryFilter: "name",
         entityKey: "entities",
         onCreate: () => alert("Create entity"),
         onOpen: onOpen,

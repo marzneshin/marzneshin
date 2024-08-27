@@ -4,17 +4,19 @@ import {
     AdminEnabledPill,
     AdminPermissionPill,
 } from "@marzneshin/features/admins";
-import { DataTableColumnHeader } from "@marzneshin/components/data-table/column-header";
-import i18n from "@marzneshin/features/i18n";
 import {
     DataTableActionsCell,
+    DataTableColumnHeader
+} from "@marzneshin/features/entity-table"
+import i18n from "@marzneshin/features/i18n";
+import {
     NoPropogationButton,
 } from "@marzneshin/components";
 import {
     type ColumnActions
 } from "@marzneshin/features/entity-table";
 
-export const columns = (actions: ColumnActions<AdminType>): ColumnDef<AdminType>[] => [
+export const columns = (actions: ColumnActions<AdminType>): ColumnDef<AdminType, any>[] => [
     {
         accessorKey: "username",
         header: ({ column }) => (
@@ -44,12 +46,10 @@ export const columns = (actions: ColumnActions<AdminType>): ColumnDef<AdminType>
     },
     {
         id: "actions",
-        cell: ({ row }) => {
-            return (
-                <NoPropogationButton row={row} actions={actions}>
-                    <DataTableActionsCell {...actions} row={row} />
-                </NoPropogationButton>
-            );
-        },
+        cell: ({ row }) => (
+            <NoPropogationButton row={row} actions={actions}>
+                <DataTableActionsCell {...actions} row={row} />
+            </NoPropogationButton>
+        ),
     }
 ];

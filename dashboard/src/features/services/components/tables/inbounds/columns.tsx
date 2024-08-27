@@ -1,7 +1,9 @@
 
 import { ColumnDef } from "@tanstack/react-table"
 import { InboundType } from "@marzneshin/features/inbounds"
-import { DataTableColumnHeader } from "@marzneshin/components/data-table/column-header"
+import {
+    DataTableColumnHeader
+} from "@marzneshin/features/entity-table"
 import i18n from "@marzneshin/features/i18n"
 import { Badge, Checkbox } from "@marzneshin/components"
 
