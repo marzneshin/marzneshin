@@ -16,7 +16,7 @@ export async function fetchNodes({
         query: {
             ...pagination,
             ...filters,
-            username: primaryFilter,
+            name: primaryFilter,
             descending: queryKey[3].desc,
             order_by: queryKey[3].sortBy,
         }
