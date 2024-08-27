@@ -82,7 +82,7 @@ export function SidebarEntityTable<T, S>(props: SidebarEntityTableProps<T, S>) {
                     <div className="w-full rounded-md border">
                         {desktop ? (
                             <ResizablePanelGroup direction="horizontal">
-                                <ResizablePanel minSize={20} maxSize={desktop ? 40 : 0}>
+                                <ResizablePanel minSize={20} maxSize={40}>
                                     <SidebarEntitySelection />
                                 </ResizablePanel>
                                 <ResizableHandle withHandle={desktop} />
