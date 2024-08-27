@@ -52,8 +52,8 @@ export function EntityTable<T>({
         },
         columnPrimaryFilter.columnFilters,
         {
-            sortBy: sorting.sorting[0]?.id ? sorting.sorting[0].id : "created_at",
-            desc: sorting.sorting[0]?.desc
+            sortBy: sorting.sorting[0]?.id || "created_at",
+            desc: sorting.sorting[0]?.desc || true,
         },
         { filters: filters.columnsFilter }
     ];
