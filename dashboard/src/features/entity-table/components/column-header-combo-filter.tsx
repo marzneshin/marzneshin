@@ -34,6 +34,12 @@ export function DataTableColumnHeaderFilterOption<TData, TValue>(
     const [selectedOption, setSelectedOption] = React.useState<string | null>(
         null
     )
+    const { filters } = useEntityTableContext();
+
+    function handleClearingFilter() {
+        filters.setColumnsFilter({ ...filters.columnsFilter, [column.id]: undefined });
+        setSelectedOption(null);
+    }
 
     if (isDesktop) {
         return (
@@ -44,7 +50,7 @@ export function DataTableColumnHeaderFilterOption<TData, TValue>(
                         {selectedOption &&
                             <Button
                                 variant="ghost"
-                                onMouseDown={() => setSelectedOption(null)}
+                                onMouseDown={handleClearingFilter}
                                 size="sm"
                                 className="hover:bg-destructive/30 p-2 ml-1"
                             >
