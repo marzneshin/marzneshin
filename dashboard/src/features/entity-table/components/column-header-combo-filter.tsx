@@ -93,7 +93,7 @@ function ComboFilterOptionList({
     const { filters } = useEntityTableContext();
     return (
         <Command>
-            <CommandInput placeholder="Filter status..." />
+            <CommandInput className="border-0 focus:ring-0" placeholder="Filter status..." />
             <CommandList>
                 <CommandEmpty>No results found.</CommandEmpty>
                 <CommandGroup>
