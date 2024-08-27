@@ -2,6 +2,7 @@ import * as React from "react"
 import { type Column } from "@tanstack/react-table";
 import { useEntityTableContext } from "../contexts";
 import { useScreenBreakpoint } from "@marzneshin/hooks";
+import { useTranslation } from "react-i18next";
 import {
     Button,
     Drawer,
@@ -96,6 +97,7 @@ function ComboFilterOptionList({
     columnName,
 }: ComboFilterOptionListProps) {
     const { filters } = useEntityTableContext();
+    const { t } = useTranslation();
     return (
         <Command>
             <CommandInput className="border-0 focus:ring-0" placeholder="Filters..." />
