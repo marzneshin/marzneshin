@@ -89,7 +89,6 @@ interface ComboFilterOptionListProps {
     options: string[]
 }
 
-// TODO: tokenize for i18n
 function ComboFilterOptionList({
     setOpen,
     setSelectedOption,
@@ -99,9 +98,9 @@ function ComboFilterOptionList({
     const { filters } = useEntityTableContext();
     return (
         <Command>
-            <CommandInput className="border-0 focus:ring-0" placeholder="Filter status..." />
+            <CommandInput className="border-0 focus:ring-0" placeholder="Filters..." />
             <CommandList>
-                <CommandEmpty>No results found.</CommandEmpty>
+                <CommandEmpty>{t("table.no-result-found")}</CommandEmpty>
                 <CommandGroup>
                     {options.map((option) => (
                         <CommandItem
