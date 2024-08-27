@@ -1,4 +1,5 @@
 import type { FC } from "react";
+import { ColumnDef } from "@tanstack/react-table";
 import { fetchAdmins, AdminType, AdminsQueryFetchKey } from "@marzneshin/features/admins";
 import { columns as columnsFn } from "./columns";
 import { EntityTable } from "@marzneshin/features/entity-table";
@@ -32,8 +33,7 @@ export const AdminsTable: FC = () => {
     return (
         <EntityTable
             fetchEntity={fetchAdmins}
-            manualSorting={false}
-            columns={columns}
+            columns={columns as ColumnDef<unknown>[]}
             primaryFilter="username"
             entityKey={AdminsQueryFetchKey}
             onCreate={() => navigate({ to: "/admins/create" })}

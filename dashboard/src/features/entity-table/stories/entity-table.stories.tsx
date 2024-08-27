@@ -46,7 +46,7 @@ export const BasicEntityTable: Story = {
     args: {
         fetchEntity: fetchEntity,
         columns: columnsFnBasicEntityTable({ onEdit, onDelete, onOpen }),
-        filteredColumn: "name",
+        primaryFilter: "name",
         entityKey: "entities",
         onCreate: () => alert("Create entity"),
         onOpen: onOpen,
@@ -57,7 +57,7 @@ export const LoadingEntityTable: Story = {
     args: {
         fetchEntity: fetchEntityLoading,
         columns: columnsFnBasicEntityTable({ onEdit, onDelete, onOpen }),
-        filteredColumn: "name",
+        primaryFilter: "name",
         entityKey: "entities",
         onCreate: () => alert("Create entity"),
         onOpen: onOpen,

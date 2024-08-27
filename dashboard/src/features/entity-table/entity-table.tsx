@@ -22,7 +22,7 @@ import {
 export interface EntityTableProps<T> {
     fetchEntity: ({ queryKey }: EntityQueryKeyType) => FetchEntityReturn<T>;
     columns: ColumnDef<T>[];
-    filteredColumn: string;
+    primaryFilter: string;
     entityKey: string;
     rowSelection?: UseRowSelectionReturn;
     onCreate: () => void;
@@ -32,14 +32,14 @@ export interface EntityTableProps<T> {
 export function EntityTable<T>({
     fetchEntity,
     columns,
-    filteredColumn,
+    primaryFilter,
     rowSelection,
     entityKey,
     onCreate,
     onOpen,
 }: EntityTableProps<T>) {
     const { t } = useTranslation();
-    const primaryFilter = usePrimaryFiltering({ column: filteredColumn });
+    const columnPrimaryFilter = usePrimaryFiltering({ column: primaryFilter });
     const filters = useFilters();
     const sorting = useSorting();
     const visibility = useVisibility();
@@ -50,7 +50,7 @@ export function EntityTable<T>({
             page: pageIndex,
             size: pageSize,
         },
-        primaryFilter.columnFilters,
+        columnPrimaryFilter.columnFilters,
         {
             sortBy: sorting.sorting[0]?.id ? sorting.sorting[0].id : "created_at",
             desc: sorting.sorting[0]?.desc
@@ -76,8 +76,8 @@ export function EntityTable<T>({
     });
 
     const contextValue = useMemo(
-        () => ({ table, data: data.entity, primaryFilter, filters, isLoading: isFetching }),
-        [table, data.entity, filters, primaryFilter, isFetching],
+        () => ({ table, data: data.entity, primaryFilter: columnPrimaryFilter, filters, isLoading: isFetching }),
+        [table, data.entity, filters, columnPrimaryFilter, isFetching],
     );
 
     return (

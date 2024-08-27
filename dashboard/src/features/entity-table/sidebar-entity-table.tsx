@@ -88,11 +88,11 @@ export function SidebarEntityTable<T, S>(props: SidebarEntityTableProps<T, S>) {
                                 </ResizablePanel>
                                 <ResizableHandle withHandle={desktop} />
                                 <ResizablePanel >
-                                    <MainTable columns={columns} props={props} />
+                                    <MainTable table={table} columns={columns} props={props} />
                                 </ResizablePanel>
                             </ResizablePanelGroup>
                         ) : (
-                            <MainTable columns={columns} props={props} />
+                            <MainTable table={table} columns={columns} props={props} />
                         )}
                     </div>
                 </div>
