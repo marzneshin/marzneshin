@@ -96,7 +96,7 @@ export function EntityTable<T>({
                 </div>
                 <div className="w-full rounded-md border">
                     <EntityDataTable columns={columns} onRowClick={onOpen} />
-                    <DataTablePagination />
+                    <DataTablePagination table={table} />
                 </div>
             </div>
         </EntityTableContext.Provider>

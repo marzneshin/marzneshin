@@ -1,4 +1,5 @@
 import { Button, ResizableHandle, ResizablePanel, ResizablePanelGroup, HStack } from "@marzneshin/components";
+import { Table } from "@tanstack/react-table"
 import { DataTableViewOptions } from "./components";
 import { Server } from "lucide-react";
 import { EntityTableContext, SidebarEntityTableContext } from "./contexts";
@@ -37,10 +38,10 @@ interface SidebarEntityTableProps<T, S> {
     onDelete: (entity: T) => void;
 }
 
-function MainTable<T, S>(columns: any, props: SidebarEntityTableProps<T, S>) {
+function MainTable<T, S>({ table, columns, props }: { table: Table<T>, columns: any, props: SidebarEntityTableProps<T, S> }) {
     return <div className="flex flex-col justify-between size-full">
         <EntityDataTable columns={columns} onRowClick={props.onOpen} />
-        <DataTablePagination />
+        <DataTablePagination table={table} />
     </div>;
 }
 

@@ -25,7 +25,7 @@ import {
 } from "@marzneshin/components"
 
 import { useTranslation } from "react-i18next"
-import { DataTablePagination } from "./pagination"
+import { DataTablePagination } from "./table-pagination"
 import { useState } from "react"
 import { DataTableViewOptions } from "./table-view-option"
 
