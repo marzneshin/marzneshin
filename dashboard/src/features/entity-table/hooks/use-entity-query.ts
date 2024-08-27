@@ -17,7 +17,7 @@ interface FiltersEntityQueryProps {
     filters: FilteredEntityType;
 }
 
-export type UseEntityQueryProps = FiltersEntityQueryProps & PaginatedEntityQueryProps & SortedEntityQueryProps
+export type UseEntityQueryProps = Partial<FiltersEntityQueryProps> & PaginatedEntityQueryProps & Partial<SortedEntityQueryProps>
 
 export type EntityName = string;
 export type EntityId = number | string | undefined;
