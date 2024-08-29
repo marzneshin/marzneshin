@@ -1,6 +1,6 @@
 alembic==1.13.1
 APScheduler==3.10.4
-cryptography==42.0.4
+cryptography==42.0.8
 fastapi==0.111.1
 fastapi-pagination==0.12.21
 grpclib==0.4.7
