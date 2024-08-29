@@ -25,7 +25,7 @@ export const GithubRepo: FC<GithubRepoProps> = ({ variant = "full", stargazers_c
             <Card>
                 <a href={projectInfo.github} target="_blank">
                     <CardContent className="hstack size-fit p-0 gap-2 items-center">
-                        <GithubIcon className="size-fit" />
+                        <GithubIcon className="size-6" />
                         {variant === "full" ? (
                             <div className="vstack items-start">
                                 <CardTitle className="font-mono text-xs hstack justify-between w-full">
