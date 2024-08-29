@@ -7,7 +7,7 @@ grpclib==0.4.7
 jdatetime==4.1.1
 Jinja2==3.1.4
 passlib==1.7.4
-protobuf==4.25.2
+protobuf==4.25.4
 pydantic==2.7.1
 PyMySQL==1.1.1
 pyOpenSSL==24.0.0
