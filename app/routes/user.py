@@ -324,7 +324,7 @@ async def reset_user_data_usage(
     """
     Reset user data usage
     """
-    was_active = db_user.status
+    was_active = db_user.is_active
     db_user = crud.reset_user_data_usage(db, db_user)
 
     if db_user.is_active and not was_active:
