@@ -24,3 +24,4 @@ grpcio==1.65.4
 psycopg==3.1.18
 v2share==0.1.0b18
 PyJWT~=2.8.0
+aiogram==3.12.0
