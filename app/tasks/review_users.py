@@ -12,6 +12,8 @@ from app.models.user import (
     UserResponse,
     UserExpireStrategy,
 )
+from app.models.notification import UserNotif
+from app.notification import notify
 
 if TYPE_CHECKING:
     pass
@@ -31,6 +33,13 @@ async def review_users():
             db.commit()
             db.refresh(user)
 
+            asyncio.ensure_future(
+                notify(
+                    action=UserNotif.Action.user_disabled,
+                    user=UserResponse.model_validate(user)
+                    )
+            )
+            
             logger.info(
                 "User `%s` activation state changed to `%s`",
                 user.username,
