@@ -28,7 +28,6 @@ from app.models.user import (
     UserResponse,
     UserUsagesResponse,
 )
-from app.utils import report
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/users", tags=["User"])
@@ -136,9 +135,7 @@ async def add_user(new_user: UserCreate, db: DBDep, admin: AdminDep):
 
     user = UserResponse.model_validate(db_user)
     marznode.operations.update_user(user=db_user)
-    asyncio.ensure_future(
-        report.user_created(user=user, user_id=db_user.id, by=admin)
-    )
+    
     logger.info("New user `%s` added", db_user.username)
     return user
 
@@ -188,10 +185,6 @@ async def delete_expired(
 
     for db_user in expired_users:
         crud.remove_user(db, db_user)
-
-        asyncio.ensure_future(
-            report.user_deleted(username=db_user.username, by=admin)
-        )
 
         logger.info("User `%s` removed", db_user.username)
 
@@ -246,23 +239,9 @@ async def modify_user(
         db_user.activated = db_user.is_active
         db.commit()
 
-    asyncio.ensure_future(
-        report.user_updated(
-            user=UserResponse.model_validate(db_user), by=admin
-        )
-    )
-
     logger.info("User `%s` modified", db_user.username)
 
     if active_before != active_after:
-        asyncio.ensure_future(
-            report.status_change(
-                username=db_user.username,
-                activation=db_user.activated,
-                user=UserResponse.model_validate(db_user),
-                by=admin,
-            )
-        )
 
         logger.info(
             "User `%s` activation changed from `%s` to `%s`",
@@ -289,9 +268,6 @@ async def remove_user(
     crud.remove_user(db, db_user)
     db.flush()
 
-    asyncio.ensure_future(
-        report.user_deleted(username=db_user.username, by=admin)
-    )
     logger.info("User %s deleted", db_user.username)
     return {}
 
@@ -333,7 +309,7 @@ async def reset_user_data_usage(
         db.commit()
 
     user = UserResponse.model_validate(db_user)
-    asyncio.ensure_future(report.user_data_usage_reset(user=user, by=admin))
+    
 
     logger.info("User `%s`'s usage was reset", db_user.username)
 
@@ -406,9 +382,6 @@ async def revoke_user_subscription(
         marznode.operations.update_user(db_user, remove=True)
         marznode.operations.update_user(db_user)
     user = UserResponse.model_validate(db_user)
-    asyncio.ensure_future(
-        report.user_subscription_revoked(user=user, by=admin)
-    )
 
     logger.info("User %s subscription revoked", db_user.username)
 
