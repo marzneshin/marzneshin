@@ -12,7 +12,6 @@ from app.models.user import (
     UserResponse,
     UserExpireStrategy,
 )
-from app.utils import report
 
 if TYPE_CHECKING:
     pass
@@ -31,13 +30,6 @@ async def review_users():
             user.activated = False
             db.commit()
             db.refresh(user)
-            asyncio.ensure_future(
-                report.status_change(
-                    user.username,
-                    user.status,
-                    UserResponse.model_validate(user),
-                )
-            )
 
             logger.info(
                 "User `%s` activation state changed to `%s`",
@@ -70,11 +62,4 @@ async def review_users():
             user.expire_strategy = UserExpireStrategy.FIXED_DATE
             db.commit()
             db.refresh(user)
-            asyncio.ensure_future(
-                report.status_change(
-                    user.username,
-                    user.status,
-                    UserResponse.model_validate(user),
-                )
-            )
             logger.info("on hold user `%s` has been activated", user.username)
