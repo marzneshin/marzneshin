@@ -1,15 +1,10 @@
-from collections import deque
 from datetime import datetime as dt
 from enum import Enum
 
 from pydantic import BaseModel
 
-from app.config.env import WEBHOOK_ADDRESS
 from app.models.admin import Admin
 from app.models.user import UserResponse
-
-queue = deque()
-
 
 class Notification(BaseModel):
     class Type(str, Enum):
@@ -97,8 +92,3 @@ class UserSubscriptionRevoked(UserNotification):
     action: Notification.Type = Notification.Type.subscription_revoked
     by: Admin
     user: UserResponse
-
-
-async def notify(message: Notification) -> None:
-    if WEBHOOK_ADDRESS:
-        queue.append(message)
