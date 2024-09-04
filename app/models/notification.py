@@ -10,6 +10,7 @@ from app.models.user import UserResponse
 class UserStatus(str,Enum):
     ENABLED = "enabled"
     DISABLED = "disabled"
+    ACTIVATED = "activated"
     EXPIRED = "expired"
     LIMITED = "limited"
 
@@ -23,6 +24,7 @@ class UserNotif(Notification):
     class Action(str, Enum):
         user_created = "user_created"
         user_updated = "user_updated"
+        user_activated = "user_activated"
         user_deleted = "user_deleted"
         user_enabled = "user_enabled"
         user_disabled = "user_disabled"
@@ -42,6 +44,11 @@ class UserUpdated(UserNotif):
     by: Admin
     user: UserResponse
 
+class UserActivated(UserNotif):
+    action: UserNotif.Action = UserNotif.Action.user_enabled
+    by: Admin = None
+    user: UserResponse
+    user_status: UserStatus = Field(default=UserStatus.ACTIVATED)
 
 class UserDeleted(UserNotif):
     action: UserNotif.Action = UserNotif.Action.user_deleted
@@ -61,7 +68,9 @@ class UserDisabled(UserNotif):
     user_status: UserStatus = Field(default=UserStatus.DISABLED)
     
     def set_status(self):
-        if self.user.expired :
+        if self.by :
+           self.user_status = UserStatus.DISABLED
+        elif self.user.expired :
             self.user_status = UserStatus.EXPIRED
         elif self.user.data_limit_reached:
             self.user_status = UserStatus.LIMITED

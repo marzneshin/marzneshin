@@ -65,7 +65,8 @@ def create_text(notif: Notification) -> str:
     A = UserNotif.Action
     
     _status = {
-        "active": "✅ <b>#Activated</b>",
+        "activated" : "✅ <b>#Activated</b>",
+        "enabled": "☑️ <b>#Enabled</b>",
         "disabled": "❌ <b>#Disabled</b>",
         "limited": "🪫 <b>#Limited</b>",
         "expired": "🕔 <b>#Expired</b>",
@@ -90,13 +91,13 @@ def create_text(notif: Notification) -> str:
     data = {
         'username': html.quote(notif.user.username),
         'data_limit': readable_size(notif.user.data_limit) if notif.user.data_limit else 'Unlimited',
-        'remaining_traffic' : readable_size(notif.user.data_limit-notif.user.used_traffic) if notif.user.data_limit else 'Unlimited',
+        'remaining_traffic' : readable_size(max(notif.user.data_limit-notif.user.used_traffic,0)) if notif.user.data_limit else 'Unlimited',
         'usage_percent' : getattr(notif,'used_percent',None),
         'expire_date': notif.user.expire_date.strftime("%H:%M:%S %Y-%m-%d") if notif.user.expire_date else 'Never',
         'remaining_days' : getattr(notif,'days_left',None),
         'status' : _status.get(status.value if status else None,None),
         'services': "" if not notif.user.service_ids else ", ".join([str(s) for s in notif.user.service_ids]),
-        'by': html.quote(notif.by.username),
+        'by': html.quote(notif.by.username) if notif.by else None,
     }
 
     formatted_message = text.format_map(data)
