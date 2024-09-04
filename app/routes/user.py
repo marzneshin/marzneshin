@@ -352,11 +352,14 @@ async def enable_user(
     """
     if db_user.enabled:
         raise HTTPException(409, "User is already enabled")
-    db_user.enabled = True
-    db_user.activated = True
-    db.commit()
 
-    marznode.operations.update_user(db_user)
+    db_user.enabled = True
+
+    if db_user.is_active:
+        db_user.activated = True
+        marznode.operations.update_user(db_user)
+
+    db.commit()
 
     user = UserResponse.model_validate(db_user)
 
