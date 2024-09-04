@@ -31,3 +31,4 @@ uvicorn==0.30.4
 rich==13.7.1
 python-multipart==0.0.12
 httptools==0.6.4
+aiogram==3.12.0
