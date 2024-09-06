@@ -42,7 +42,7 @@ const Rows: FC<Readonly<DataTableProps<any, any>>> = ({
     const { table } = useEntityTableContext();
     const { t } = useTranslation();
 
-    return (table.getRowModel().rows.length ? (
+    return (table.getRowModel().rows?.length ? (
         table.getRowModel().rows.map(row => (
             <TableRow
                 key={row.id}
@@ -66,35 +66,35 @@ const Rows: FC<Readonly<DataTableProps<any, any>>> = ({
     ))
 };
 
+const Loading = () => (
+    <>
+        {Array.from({ length: 5 }).map((_, rowIndex) => (
+            <TableRow key={`skeleton-row-${rowIndex}`} className="w-full">
+                <TableCell className="h-12">
+                    <Skeleton className="w-full h-full" />
+                </TableCell>
+                <TableCell className="h-12">
+                    <Skeleton className="w-full h-full" />
+                </TableCell>
+                <TableCell className="h-12">
+                    <Skeleton className="w-full h-full" />
+                </TableCell>
+                <TableCell className="h-12">
+                    <Skeleton className="w-full h-full" />
+                </TableCell>
+                <TableCell className="h-12">
+                    <Skeleton className="w-full h-full" />
+                </TableCell>
+            </TableRow>
+        ))}
+    </>
+);
+
 export function EntityDataTable<TData, TValue>({
     columns,
     onRowClick,
 }: Readonly<DataTableProps<TData, TValue>>) {
     const { isLoading } = useEntityTableContext();
-
-    const Loading = () => (
-        <>
-            {Array.from({ length: 5 }).map((_, rowIndex) => (
-                <TableRow key={`skeleton-row-${rowIndex}`} className="w-full">
-                    <TableCell className="h-12">
-                        <Skeleton className="w-full h-full" />
-                    </TableCell>
-                    <TableCell className="h-12">
-                        <Skeleton className="w-full h-full" />
-                    </TableCell>
-                    <TableCell className="h-12">
-                        <Skeleton className="w-full h-full" />
-                    </TableCell>
-                    <TableCell className="h-12">
-                        <Skeleton className="w-full h-full" />
-                    </TableCell>
-                    <TableCell className="h-12">
-                        <Skeleton className="w-full h-full" />
-                    </TableCell>
-                </TableRow>
-            ))}
-        </>
-    );
 
     return (
         <Table className="w-full">
