@@ -25,8 +25,8 @@ export interface EntityTableProps<T> {
     primaryFilter: string;
     entityKey: string;
     rowSelection?: UseRowSelectionReturn;
-    onCreate: () => void;
-    onOpen: (entity: any) => void;
+    onCreate?: () => void;
+    onOpen?: (entity: any) => void;
 }
 
 export function EntityTable<T>({
@@ -61,7 +61,7 @@ export function EntityTable<T>({
     const { data, isFetching } = useQuery({
         queryFn: fetchEntity,
         queryKey: query,
-        initialData: { entity: [], pageCount: 1 },
+        initialData: { entities: [], pageCount: 1 },
     });
 
     const table = useEntityTable({
@@ -76,8 +76,8 @@ export function EntityTable<T>({
     });
 
     const contextValue = useMemo(
-        () => ({ table, data: data.entity, primaryFilter: columnPrimaryFilter, filters, isLoading: isFetching }),
-        [table, data.entity, filters, columnPrimaryFilter, isFetching],
+        () => ({ table, data: data.entities, primaryFilter: columnPrimaryFilter, filters, isLoading: isFetching }),
+        [table, data.entities, filters, columnPrimaryFilter, isFetching],
     );
 
     return (

@@ -18,7 +18,7 @@ import type {
 interface UseEntityTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
     data: {
-        entity: TData[];
+        entities: TData[];
         pageCount: number;
     };
     sorting: UseSortingReturn;
@@ -42,7 +42,7 @@ export const useEntityTable = <TData, TValue>({
     onPaginationChange,
 }: UseEntityTableProps<TData, TValue>) =>
     useReactTable({
-        data: data.entity,
+        data: data.entities,
         columns,
         manualPagination: true,
         manualSorting,

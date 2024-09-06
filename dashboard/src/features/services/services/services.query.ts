@@ -22,7 +22,7 @@ export async function fetchServices({ queryKey }: EntityQueryKeyType): FetchEnti
     }).then((result) => {
         const services: ServiceType[] = result.items;
         return {
-            entity: services,
+            entities: services,
             pageCount: result.pages
         };
     });
@@ -36,6 +36,6 @@ export const useServicesQuery = ({
     return useQuery({
         queryKey: [ServicesQueryFetchKey, { page, size }, filters?.username ?? "", { sortBy, desc }, { filters }],
         queryFn: fetchServices,
-        initialData: { entity: [], pageCount: 0 }
+        initialData: { entities: [], pageCount: 0 }
     })
 }

@@ -21,7 +21,7 @@ export async function fetchHosts({ queryKey }: EntitySidebarQueryKeyType): Fetch
         }
     }).then((result) => {
         return {
-            entity: result.items,
+            entities: result.items,
             pageCount: result.pages
         };
     });
@@ -35,6 +35,6 @@ export const useHostsQuery = ({
     return useQuery({
         queryKey: ["inbounds", inboundId, HostsQueryFetchKey, { page, size }, filters?.username ?? "", { sortBy, desc }, { filters }],
         queryFn: fetchHosts,
-        initialData: { entity: [], pageCount: 0 }
+        initialData: { entities: [], pageCount: 0 }
     })
 }

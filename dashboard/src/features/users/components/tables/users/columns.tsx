@@ -111,7 +111,7 @@ function AdminsColumnsHeaderOptionFilter<TData, TValue>({ column }: { column: Co
         <DataTableColumnHeaderFilterOption
             title={i18n.t("owner")}
             column={column}
-            options={data.entity.map((admin) => admin.username)}
+            options={data.entities.map((admin) => admin.username)}
         />
     );
 }

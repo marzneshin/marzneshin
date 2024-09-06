@@ -73,7 +73,7 @@ export const fetchEntityLoading = async (): FetchEntityReturn<Entity> => {
     return new Promise((resolve) => {
         setTimeout(() => {
             resolve({
-                entity: [{ id: 40, name: "Diyar Latif", createdAt: "2026-04-13" }],
+                entities: [{ id: 40, name: "Diyar Latif", createdAt: "2026-04-13" }],
                 pageCount: 1,
             });
         }, 24 * 60 * 60 * 1000);

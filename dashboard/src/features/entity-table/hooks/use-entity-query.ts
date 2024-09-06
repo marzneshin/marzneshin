@@ -38,7 +38,7 @@ export type EntitySidebarQueryKeyType = QueryKeyType<SidebarQueryKey>
 
 interface FetchEntityResult<T> {
     pageCount: number
-    entity: T[]
+    entities: T[]
 }
 
 export type FetchEntityReturn<T> = Promise<FetchEntityResult<T>>
