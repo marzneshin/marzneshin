@@ -1,70 +1,58 @@
-import { useQuery } from "@tanstack/react-query";
+import { useEffect, useMemo, useCallback } from "react";
+import { Button } from "@marzneshin/components";
 import { DataTableViewOptions } from "./components";
+import { useTranslation } from "react-i18next";
+import { useQuery } from "@tanstack/react-query";
+import { RowSelectionState, ColumnDef } from "@tanstack/react-table";
 import { EntityTableContext } from "./contexts";
+import { TableSearch, DataTablePagination, EntityDataTable } from "./components";
 import {
-    TableSearch,
-    DataTablePagination,
-    EntityDataTable,
-} from "./components";
-import {
+    type UseRowSelectionReturn,
     usePrimaryFiltering,
     usePagination,
+    type FetchEntityReturn,
     useEntityTable,
     useVisibility,
     useSorting,
-    useFilters,
     type QueryKey,
-    type UseRowSelectionReturn,
-    type FetchEntityReturn,
     type EntityQueryKeyType,
+    useFilters,
 } from "./hooks";
-import { ColumnDef, RowSelectionState } from "@tanstack/react-table";
-import { useMemo, useEffect } from "react";
 
-type EntityId = number;
-type EntityIds = number[];
-
-interface SelectableEntityTableProps<T> {
+export interface SelectableEntityTableProps<T> {
     fetchEntity: ({ queryKey }: EntityQueryKeyType) => FetchEntityReturn<T>;
     columns: ColumnDef<T>[];
     primaryFilter: string;
     entityKey: string;
     rowSelection: UseRowSelectionReturn;
-    parentEntity: Record<string, any>,
-    parentEntityRelationName: string,
-    setSelectedEntities: (s: EntityIds) => void
-    rowIdentifier: keyof T;
+    entitySelection: {
+        selectedEntity: number[];
+        setSelectedEntity: (s: number[]) => void;
+    }
+    existingEntityIds: number[];
+    onCreate?: () => void;
+    onOpen?: (entity: any) => void;
 }
-
-function getSelectedIdentifiers<T>(
-    data: T[],
-    selectedRow: Record<number, boolean>,
-    rowIdentifier: keyof T
-) {
-    return data
-        .filter((_, index) => selectedRow[index])
-        .map((row) => row[rowIdentifier]);
-}
-
 
 export function SelectableEntityTable<T>({
     fetchEntity,
     columns,
     primaryFilter,
     rowSelection,
+    entitySelection,
     entityKey,
-    parentEntity,
-    setSelectedEntities,
-    parentEntityRelationName,
-    rowIdentifier
+    existingEntityIds,
+    onCreate,
+    onOpen,
 }: SelectableEntityTableProps<T>) {
+    const { t } = useTranslation();
     const columnPrimaryFilter = usePrimaryFiltering({ column: primaryFilter });
     const filters = useFilters();
-    const { setSelectedRow, selectedRow } = rowSelection;
     const sorting = useSorting();
     const visibility = useVisibility();
+    const { selectedRow, setSelectedRow } = rowSelection;
+    const { selectedEntity, setSelectedEntity } = entitySelection;
     const { onPaginationChange, pageIndex, pageSize } = usePagination();
-
     const query: QueryKey = [
         entityKey,
         {
@@ -85,22 +73,6 @@ export function SelectableEntityTable<T>({
         initialData: { entities: [], pageCount: 1 },
     });
 
-    useEffect(() => {
-        setSelectedRow((prevSelected: RowSelectionState) => {
-            const updatedSelected: RowSelectionState = prevSelected;
-            const entitiesList: number[] = parentEntity[parentEntityRelationName];
-            for (const rowId of entitiesList) {
-                for (const [i, fetchedRow] of data.entities.entries()) {
-                    if (fetchedRow[rowIdentifier] === rowId) {
-                        updatedSelected[i] = true;
-                    }
-                }
-            }
-            return updatedSelected;
-        });
-        setSelectedEntities(getSelectedIdentifiers(entitiesList, selectedRow, rowIdentifier));
-    }, [data.entities, parentEntity, selectedRow, setSelectedEntities, setSelectedRow, parentEntityRelationName, rowIdentifier]);
-
     const table = useEntityTable({
         data,
         columns,
@@ -112,27 +84,46 @@ export function SelectableEntityTable<T>({
         onPaginationChange,
     });
 
+
+    useEffect(() => {
+        const selectedInboundIds = Object.keys(selectedRow)
+            .filter(key => data.entities[Number(key)])
+            .map(id => data.entities[id].id);
+
+        for (const id of selectedInboundIds) {
+            const index = data.entities.findIndex(fetchedEntity => fetchedEntity.id === id);
+            if (index !== -1) {
+                const selectedId = data.entities[index].id;
+                setSelectedEntity([...new Set([...selectedEntity, selectedId])])
+            }
+        }
+    }, [data, setSelectedEntity, setSelectedRow, existingEntityIds, selectedRow]);
+
+
     const contextValue = useMemo(
         () => ({ table, data: data.entities, primaryFilter: columnPrimaryFilter, filters, isLoading: isFetching }),
         [table, data.entities, filters, columnPrimaryFilter, isFetching],
     );
+
     return (
         <EntityTableContext.Provider value={contextValue}>
             <div className="flex flex-col">
                 <div className="flex flex-col md:flex-row-reverse items-center py-4 gap-2 w-full">
-                    <div className="flex flex-row justify-center items-center w-full">
+                    <div className="flex flex-row items-center w-full">
                         <DataTableViewOptions table={table} />
+                        {onCreate && (
+                            <Button aria-label={`create-${entityKey}`} onClick={onCreate}>
+                                {t("create")}
+                            </Button>
+                        )}
                     </div>
                     <TableSearch />
                 </div>
                 <div className="w-full rounded-md border">
-                    <div className="flex flex-col justify-between size-full">
-                        <EntityDataTable columns={columns} />
-                        <DataTablePagination table={table} />
-                    </div>
+                    <EntityDataTable columns={columns} onRowClick={onOpen} />
+                    <DataTablePagination table={table} />
                 </div>
             </div>
         </EntityTableContext.Provider>
     );
 }
-

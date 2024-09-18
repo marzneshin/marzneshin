@@ -1,25 +1,25 @@
 import { useQuery } from "@tanstack/react-query";
 import { fetch } from "@marzneshin/utils";
 import { UserType } from "@marzneshin/features/users";
+import type {
+    DoubleEntityQueryKeyType,
+    UseEntityQueryProps,
+    FetchEntityReturn
+} from "@marzneshin/features/entity-table";
 
-interface FetchServiceUsersType {
-    queryKey: [string, number, number, number]
-}
-
-interface UseServiceUsersQueryProps {
+interface UseServiceUsersQueryProps extends UseEntityQueryProps {
     serviceId: number;
-    page?: number;
-    size?: number;
 }
 
-export async function fetchServiceUsers({ queryKey }: FetchServiceUsersType): Promise<UserType[]> {
+export async function fetchServiceUsers({ queryKey }: DoubleEntityQueryKeyType): FetchEntityReturn<UserType> {
+    const pagination = queryKey[2];
     return fetch(`/services/${queryKey[1]}/users`, {
-        query: {
-            page: queryKey[2],
-            size: queryKey[3]
-        }
+        query: pagination,
     }).then((result) => {
-        return result.items;
+        return {
+            entities: result.items,
+            pageCount: result.pages,
+        };
     });
 }
 
@@ -29,8 +29,8 @@ export const useUsersServiceQuery = ({
     serviceId, page = 1, size = 50
 }: UseServiceUsersQueryProps) => {
     return useQuery({
-        queryKey: [ServicesQueryFetchKey, serviceId, page, size],
+        queryKey: [ServicesQueryFetchKey, serviceId, { page, size }],
         queryFn: fetchServiceUsers,
-        initialData: []
+        initialData: { entities: [], pageCount: 0 },
     })
 }
