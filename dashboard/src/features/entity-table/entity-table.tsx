@@ -7,24 +7,24 @@ import { ColumnDef } from "@tanstack/react-table";
 import { EntityTableContext } from "./contexts";
 import { TableSearch, DataTablePagination, EntityDataTable } from "./components";
 import {
-    type UseRowSelectionReturn,
     usePrimaryFiltering,
     usePagination,
-    type FetchEntityReturn,
     useEntityTable,
     useVisibility,
     useSorting,
+    type UseRowSelectionReturn,
+    type FetchEntityReturn,
     type QueryKey,
     type EntityQueryKeyType,
     useFilters,
 } from "./hooks";
 
 export interface EntityTableProps<T> {
-    fetchEntity: ({ queryKey }: EntityQueryKeyType) => FetchEntityReturn<T>;
     columns: ColumnDef<T>[];
     primaryFilter: string;
     entityKey: string;
     rowSelection?: UseRowSelectionReturn;
+    fetchEntity: ({ queryKey }: EntityQueryKeyType) => FetchEntityReturn<T>;
     onCreate?: () => void;
     onOpen?: (entity: any) => void;
 }
@@ -44,6 +44,7 @@ export function EntityTable<T>({
     const sorting = useSorting();
     const visibility = useVisibility();
     const { onPaginationChange, pageIndex, pageSize } = usePagination();
+
     const query: QueryKey = [
         entityKey,
         {
