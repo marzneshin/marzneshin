@@ -5,7 +5,7 @@ import {
 import {
     AdminsMutationDialog,
     useRouterAdminContext,
-} from "@marzneshin/features/admins";
+} from "@marzneshin/modules/admins";
 
 const AdminEdit = () => {
     const value = useRouterAdminContext()

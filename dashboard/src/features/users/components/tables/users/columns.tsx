@@ -6,7 +6,7 @@ import {
     UserExpireStrategyPill,
     UserExpirationValue
 } from "@marzneshin/features/users";
-import { useAdminsQuery } from "@marzneshin/features/admins";
+import { useAdminsQuery } from "@marzneshin/modules/admins";
 import i18n from "@marzneshin/features/i18n";
 import {
     CopyToClipboardButton,

@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { fetch } from "@marzneshin/utils";
-import { AdminType } from "@marzneshin/features/admins";
+import { AdminType } from "@marzneshin/modules/admins";
 import {
     FetchEntityReturn,
     UseEntityQueryProps,

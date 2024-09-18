@@ -1,5 +1,4 @@
 import {
-  // Button,
   Tabs,
   TabsContent,
   TabsList,
@@ -9,7 +8,7 @@ import {
   SettingsDialogProps,
   SettingsDialog,
 } from "@marzneshin/components";
-import { type AdminType } from "@marzneshin/features/admins";
+import { type AdminType } from "@marzneshin/modules/admins";
 import { type FC } from "react";
 import { AdminInfoTable } from "./admin-info";
 import { useTranslation } from "react-i18next";
