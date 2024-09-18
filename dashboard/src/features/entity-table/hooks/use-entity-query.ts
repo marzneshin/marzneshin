@@ -1,5 +1,5 @@
 
-interface PaginatedEntityQueryProps {
+export interface PaginatedEntityQueryProps {
     page: number;
     size: number;
 }
@@ -25,6 +25,8 @@ export type PrimaryFilter = string;
 
 export type QueryKey =
     [EntityName, PaginatedEntityQueryProps, PrimaryFilter, SortedEntityQueryProps, FiltersEntityQueryProps]
+export type DoubleEntityQueryKey =
+    [EntityName, EntityId, PaginatedEntityQueryProps, PrimaryFilter, SortedEntityQueryProps, FiltersEntityQueryProps]
 
 export type SidebarQueryKey =
     [EntityName, EntityId, EntityName, PaginatedEntityQueryProps, PrimaryFilter, SortedEntityQueryProps, FiltersEntityQueryProps]
@@ -34,6 +36,7 @@ export interface QueryKeyType<QT> {
 }
 
 export type EntityQueryKeyType = QueryKeyType<QueryKey>
+export type DoubleEntityQueryKeyType = QueryKeyType<DoubleEntityQueryKey>
 export type EntitySidebarQueryKeyType = QueryKeyType<SidebarQueryKey>
 
 interface FetchEntityResult<T> {
