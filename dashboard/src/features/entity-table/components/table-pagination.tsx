@@ -13,15 +13,10 @@ import {
     SelectValue,
 } from "@marzneshin/components";
 import { useTranslation } from "react-i18next";
-import { useEffect } from "react";
 import { Table } from "@tanstack/react-table"
 
 export function DataTablePagination<TData>({ table }: { table: Table<TData> }) {
     const { t } = useTranslation();
-
-    useEffect(() => {
-        if (table.getState().pagination.pageIndex === 1) table.setPageIndex(2);
-    }, [table]);
 
     return (
         <div className="flex justify-between items-center p-2 w-full">
@@ -68,10 +63,12 @@ export function DataTablePagination<TData>({ table }: { table: Table<TData> }) {
                         </SelectContent>
                     </Select>
                 </div>
-                <div className="flex justify-center items-center text-sm font-medium w-[100px]">
-                    Page {table.getState().pagination.pageIndex + 1} of{" "}
-                    {table.getPageCount() - 1}
-                </div>
+                {(table.getPageCount() - 1) !== 0 &&
+                    <div className="flex justify-center items-center text-sm font-medium w-[100px]">
+                        Page {table.getState().pagination.pageIndex + 1} of{" "}
+                        {table.getPageCount() - 1}
+                    </div>
+                }
                 <div className="flex items-center space-x-2">
                     <Button
                         variant="outline"

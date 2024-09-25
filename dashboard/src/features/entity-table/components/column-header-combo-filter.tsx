@@ -36,12 +36,17 @@ export function DataTableColumnHeaderFilterOption<TData, TValue>(
     const [selectedOption, setSelectedOption] = React.useState<string | null>(
         null
     )
-    const { filters } = useEntityTableContext();
+    const { filters, table } = useEntityTableContext();
 
     function handleClearingFilter() {
         filters.setColumnsFilter({ ...filters.columnsFilter, [column.id]: undefined });
         setSelectedOption(null);
     }
+
+    React.useEffect(() => {
+        // if (table.getState().pagination.pageIndex !== 1)
+        table.setPageIndex(1);
+    }, [table, selectedOption])
 
     if (isDesktop) {
         return (
