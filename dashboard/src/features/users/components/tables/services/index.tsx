@@ -40,7 +40,7 @@ export const UserServicesTable: FC<UserServicesTableProps> = ({ user }) => {
                 entitySelection={{ selectedEntity: selectedService, setSelectedEntity: setSelectedService }}
             />
 
-            <Button onClick={handleApply} disabled={selectedService.length < 1}>
+            <Button onClick={handleApply} disabled={selectedService.length === 0}>
                 {t("apply")}
             </Button>
         </div>

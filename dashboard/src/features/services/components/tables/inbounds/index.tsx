@@ -20,6 +20,7 @@ export const ServiceInboundsTable: FC<ServiceInboundsTableProps> = ({
     const { t } = useTranslation();
 
     const handleApply = useCallback(() => {
+        console.log(selectedInbound)
         updateService({ id: service.id, name: service.name, inbound_ids: selectedInbound });
     }, [selectedInbound, service, updateService]);
 
