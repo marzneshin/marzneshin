@@ -44,9 +44,8 @@ export function DataTableColumnHeaderFilterOption<TData, TValue>(
     }
 
     React.useEffect(() => {
-        if (table.getState().pagination.pageIndex === 1) table.setPageIndex(2);
-        else table.setPageIndex(1);
-    }, [table, selectedOption])
+        table.setPageIndex(1);
+    }, [filters, selectedOption])
 
     if (isDesktop) {
         return (
