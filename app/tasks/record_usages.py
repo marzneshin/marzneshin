@@ -158,7 +158,8 @@ async def record_user_usages():
     with GetDB() as db:
         stmt = update(User).values(
             used_traffic=User.used_traffic + bindparam("value"),
-            lifetime_used_traffic=User.used_traffic + bindparam("value"),
+            lifetime_used_traffic=User.lifetime_used_traffic
+            + bindparam("value"),
             online_at=datetime.utcnow(),
         )
 
