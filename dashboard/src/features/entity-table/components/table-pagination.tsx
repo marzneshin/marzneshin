@@ -13,15 +13,10 @@ import {
     SelectValue,
 } from "@marzneshin/components";
 import { useTranslation } from "react-i18next";
-import { useEffect } from "react";
 import { Table } from "@tanstack/react-table"
 
 export function DataTablePagination<TData>({ table }: { table: Table<TData> }) {
     const { t } = useTranslation();
-
-    useEffect(() => {
-        if (table.getState().pagination.pageIndex === 1) table.setPageIndex(2);
-    }, [table]);
 
     return (
         <div className="flex justify-between items-center p-2 w-full">
