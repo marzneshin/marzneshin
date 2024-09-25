@@ -30,8 +30,6 @@ export interface SelectableEntityTableProps<T extends { id: number }> {
         setSelectedEntity: (s: number[]) => void;
     }
     existingEntityIds: number[];
-    onCreate?: () => void;
-    onOpen?: (entity: any) => void;
 }
 
 export function SelectableEntityTable<T extends { id: number }>({
@@ -42,8 +40,6 @@ export function SelectableEntityTable<T extends { id: number }>({
     entitySelection,
     entityKey,
     existingEntityIds,
-    onCreate,
-    onOpen,
 }: SelectableEntityTableProps<T>) {
     const { t } = useTranslation();
     const columnPrimaryFilter = usePrimaryFiltering({ column: primaryFilter });
@@ -125,16 +121,11 @@ export function SelectableEntityTable<T extends { id: number }>({
                 <div className="flex flex-col md:flex-row-reverse items-center py-4 gap-2 w-full">
                     <div className="flex flex-row items-center w-full">
                         <DataTableViewOptions table={table} />
-                        {onCreate && (
-                            <Button aria-label={`create-${entityKey}`} onClick={onCreate}>
-                                {t("create")}
-                            </Button>
-                        )}
                     </div>
                     <TableSearch />
                 </div>
                 <div className="w-full rounded-md border">
-                    <EntityDataTable columns={columns} onRowClick={onOpen} />
+                    <EntityDataTable columns={columns} />
                     <DataTablePagination table={table} />
                 </div>
             </div>
