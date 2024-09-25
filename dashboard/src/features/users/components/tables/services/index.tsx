@@ -7,7 +7,7 @@ import {
     useUsersUpdateMutation,
 } from "@marzneshin/features/users";
 import { useTranslation } from "react-i18next";
-import { fetchServices } from "@marzneshin/features/services";
+import { fetchUserServices } from "@marzneshin/features/services";
 
 interface UserServicesTableProps {
     user: UserType;
@@ -31,11 +31,13 @@ export const UserServicesTable: FC<UserServicesTableProps> = ({ user }) => {
     return (
         <div className="flex flex-col gap-4">
             <SelectableEntityTable
-                fetchEntity={fetchServices}
+                fetchEntity={fetchUserServices}
                 columns={columns}
                 primaryFilter="name"
                 existingEntityIds={user.service_ids}
                 entityKey="services"
+                parentEntityKey="users"
+                parentEntityId={user.username}
                 rowSelection={{ selectedRow: selectedRow, setSelectedRow: setSelectedRow }}
                 entitySelection={{ selectedEntity: selectedService, setSelectedEntity: setSelectedService }}
             />

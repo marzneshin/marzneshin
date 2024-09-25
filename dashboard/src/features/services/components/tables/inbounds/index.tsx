@@ -1,9 +1,8 @@
 import { type FC, useCallback, useState } from "react";
-import { fetchInbounds } from "@marzneshin/features/inbounds";
 import { Button } from "@marzneshin/components";
 import { SelectableEntityTable, useRowSelection } from "@marzneshin/features/entity-table";
 import { columns } from "./columns";
-import { type ServiceType, useServicesUpdateMutation } from "@marzneshin/features/services";
+import { type ServiceType, useServicesUpdateMutation, fetchSelectableServiceInbounds } from "@marzneshin/features/services";
 import { useTranslation } from "react-i18next";
 
 interface ServiceInboundsTableProps {
@@ -31,8 +30,10 @@ export const ServiceInboundsTable: FC<ServiceInboundsTableProps> = ({
             <SelectableEntityTable
                 columns={columns}
                 entityKey="inbounds"
+                parentEntityKey="services"
+                parentEntityId={service.id}
                 existingEntityIds={service.inbound_ids}
-                fetchEntity={fetchInbounds}
+                fetchEntity={fetchSelectableServiceInbounds}
                 primaryFilter="tag"
                 rowSelection={{ selectedRow: selectedRow, setSelectedRow: setSelectedRow }}
                 entitySelection={{ selectedEntity: selectedInbound, setSelectedEntity: setSelectedInbound }}

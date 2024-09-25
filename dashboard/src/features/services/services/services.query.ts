@@ -2,6 +2,7 @@ import { fetch } from "@marzneshin/utils";
 import { ServiceType } from "../types";
 import {
     EntityQueryKeyType,
+    SelectableEntityQueryKeyType,
     FetchEntityReturn,
     UseEntityQueryProps
 } from "@marzneshin/features/entity-table";
@@ -27,6 +28,28 @@ export async function fetchServices({ queryKey }: EntityQueryKeyType): FetchEnti
         };
     });
 }
+
+export async function fetchUserServices({ queryKey }: SelectableEntityQueryKeyType): FetchEntityReturn<ServiceType> {
+    const pagination = queryKey[3];
+    const primaryFilter = queryKey[4];
+    const filters = queryKey[6].filters;
+    return fetch(`/services`, {
+        query: {
+            ...pagination,
+            ...filters,
+            name: primaryFilter,
+            descending: queryKey[5].desc,
+            order_by: queryKey[5].sortBy,
+        }
+    }).then((result) => {
+        const services: ServiceType[] = result.items;
+        return {
+            entities: services,
+            pageCount: result.pages
+        };
+    });
+}
+
 
 export const ServicesQueryFetchKey = "services";
 

@@ -13,8 +13,12 @@ interface UseServiceUsersQueryProps extends UseEntityQueryProps {
 
 export async function fetchServiceUsers({ queryKey }: DoubleEntityQueryKeyType): FetchEntityReturn<UserType> {
     const pagination = queryKey[2];
+    const primaryFilter = queryKey[3];
     return fetch(`/services/${queryKey[1]}/users`, {
-        query: pagination,
+        query: {
+            ...pagination,
+            username: primaryFilter,
+        }
     }).then((result) => {
         return {
             entities: result.items,

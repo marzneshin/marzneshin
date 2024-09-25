@@ -12,15 +12,17 @@ import {
     useEntityTable,
     useVisibility,
     useSorting,
-    type QueryKey,
-    type EntityQueryKeyType,
+    type SelectableQueryKey,
+    type SelectableEntityQueryKeyType,
     useFilters,
 } from "./hooks";
 
 export interface SelectableEntityTableProps<T extends { id: number }> {
-    fetchEntity: ({ queryKey }: EntityQueryKeyType) => FetchEntityReturn<T>;
+    fetchEntity: ({ queryKey }: SelectableEntityQueryKeyType) => FetchEntityReturn<T>;
     columns: ColumnDef<T>[];
     primaryFilter: string;
+    parentEntityKey: string;
+    parentEntityId: string | number;
     entityKey: string;
     rowSelection: UseRowSelectionReturn;
     entitySelection: {
@@ -37,6 +39,8 @@ export function SelectableEntityTable<T extends { id: number }>({
     rowSelection,
     entitySelection,
     entityKey,
+    parentEntityKey,
+    parentEntityId,
     existingEntityIds,
 }: SelectableEntityTableProps<T>) {
     const columnPrimaryFilter = usePrimaryFiltering({ column: primaryFilter });
@@ -46,7 +50,9 @@ export function SelectableEntityTable<T extends { id: number }>({
     const { selectedRow, setSelectedRow } = rowSelection;
     const { setSelectedEntity } = entitySelection;
     const { onPaginationChange, pageIndex, pageSize } = usePagination();
-    const query: QueryKey = [
+    const query: SelectableQueryKey = [
+        parentEntityKey,
+        parentEntityId,
         entityKey,
         {
             page: pageIndex,
