@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useCallback } from "react";
+import { useEffect, useMemo } from "react";
 import { Button } from "@marzneshin/components";
 import { DataTableViewOptions } from "./components";
 import { useTranslation } from "react-i18next";
@@ -19,7 +19,7 @@ import {
     useFilters,
 } from "./hooks";
 
-export interface SelectableEntityTableProps<T> {
+export interface SelectableEntityTableProps<T extends { id: number }> {
     fetchEntity: ({ queryKey }: EntityQueryKeyType) => FetchEntityReturn<T>;
     columns: ColumnDef<T>[];
     primaryFilter: string;
@@ -34,7 +34,7 @@ export interface SelectableEntityTableProps<T> {
     onOpen?: (entity: any) => void;
 }
 
-export function SelectableEntityTable<T>({
+export function SelectableEntityTable<T extends { id: number }>({
     fetchEntity,
     columns,
     primaryFilter,
@@ -84,11 +84,25 @@ export function SelectableEntityTable<T>({
         onPaginationChange,
     });
 
+    useEffect(() => {
+        setSelectedRow((selected) => {
+            const updatedSelected: RowSelectionState = { ...selected };
+            for (const [, fetchedEntity] of data.entities.entries()) {
+                if (existingEntityIds.includes(fetchedEntity.id)) {
+                    updatedSelected[fetchedEntity.id] = true;
+                } else {
+                    updatedSelected[fetchedEntity.id] = false;
+                }
+            }
+            return updatedSelected;
+        });
+
+    }, [data, setSelectedRow, existingEntityIds]);
 
     useEffect(() => {
         const selectedInboundIds = Object.keys(selectedRow)
             .filter(key => data.entities[Number(key)])
-            .map(id => data.entities[id].id);
+            .map((id: number) => data.entities[String(id)].id);
 
         for (const id of selectedInboundIds) {
             const index = data.entities.findIndex(fetchedEntity => fetchedEntity.id === id);
@@ -97,7 +111,7 @@ export function SelectableEntityTable<T>({
                 setSelectedEntity([...new Set([...selectedEntity, selectedId])])
             }
         }
-    }, [data, setSelectedEntity, setSelectedRow, existingEntityIds, selectedRow]);
+    }, [data, setSelectedEntity, selectedEntity, setSelectedRow, existingEntityIds, selectedRow]);
 
 
     const contextValue = useMemo(

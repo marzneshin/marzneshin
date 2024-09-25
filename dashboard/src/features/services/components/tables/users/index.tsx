@@ -15,7 +15,7 @@ export const ServicesUsersTable: FC<ServicesUsersTableProps> = ({ service }) => 
             columns={columns}
             entityId={service.id}
             fetchEntity={fetchServiceUsers}
-            primaryFilter='username'
+            primaryFilter="username"
             entityKey='services'
         />
     )

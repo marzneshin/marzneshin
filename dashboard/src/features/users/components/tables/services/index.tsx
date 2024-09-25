@@ -15,30 +15,32 @@ interface UserServicesTableProps {
 
 export const UserServicesTable: FC<UserServicesTableProps> = ({ user }) => {
     const { mutate: updateUser } = useUsersUpdateMutation();
-    const rowSelection = useRowSelection({});
-    const [selectedService, setSelectedService] = useState<number[]>([]);
+    const { selectedRow, setSelectedRow } =
+        useRowSelection(
+            Object.fromEntries(
+                user.service_ids.map(entityId => [String(entityId), true])
+            )
+        );
+    const [selectedService, setSelectedService] = useState<number[]>(user.service_ids);
     const { t } = useTranslation();
 
     const handleApply = useCallback(() => {
         updateUser({ ...user, service_ids: selectedService });
     }, [selectedService, user, updateUser]);
 
-    const disabled = Object.keys(rowSelection.selectedRow).length < 1;
-
     return (
         <div className="flex flex-col gap-4">
             <SelectableEntityTable
                 fetchEntity={fetchServices}
                 columns={columns}
-                filteredColumn="name"
-                parentEntity={user}
-                rowIdentifier="id"
-                rowSelection={rowSelection}
-                parentEntityRelationName="service_ids"
-                setSelectedEntities={setSelectedService}
+                primaryFilter="name"
+                existingEntityIds={user.service_ids}
+                entityKey="services"
+                rowSelection={{ selectedRow: selectedRow, setSelectedRow: setSelectedRow }}
+                entitySelection={{ selectedEntity: selectedService, setSelectedEntity: setSelectedService }}
             />
 
-            <Button onClick={handleApply} disabled={disabled}>
+            <Button onClick={handleApply} disabled={selectedService.length < 1}>
                 {t("apply")}
             </Button>
         </div>

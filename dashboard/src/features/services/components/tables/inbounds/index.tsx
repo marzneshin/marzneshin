@@ -1,7 +1,7 @@
 import { type FC, useCallback, useState } from "react";
 import { fetchInbounds } from "@marzneshin/features/inbounds";
 import { Button } from "@marzneshin/components";
-import { SelectableEntityTable } from "@marzneshin/features/entity-table";
+import { SelectableEntityTable, useRowSelection } from "@marzneshin/features/entity-table";
 import { columns } from "./columns";
 import { type ServiceType, useServicesUpdateMutation } from "@marzneshin/features/services";
 import { useTranslation } from "react-i18next";
@@ -14,10 +14,9 @@ export const ServiceInboundsTable: FC<ServiceInboundsTableProps> = ({
     service,
 }) => {
     const { mutate: updateService } = useServicesUpdateMutation();
-    const [selectedRow, setSelectedRow] = useState<{
-        [key: number]: boolean;
-    }>(Object.fromEntries(service.inbound_ids.map(entityId => [String(entityId), true])));
-    const [selectedInbound, setSelectedInbound] = useState<number[]>([]);
+    const { selectedRow, setSelectedRow } =
+        useRowSelection(Object.fromEntries(service.inbound_ids.map(entityId => [String(entityId), true])));
+    const [selectedInbound, setSelectedInbound] = useState<number[]>(service.inbound_ids);
     const { t } = useTranslation();
 
     const handleApply = useCallback(() => {
