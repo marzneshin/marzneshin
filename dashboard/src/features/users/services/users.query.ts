@@ -15,7 +15,8 @@ export async function fetchUsers({ queryKey }: EntityQueryKeyType): FetchEntityR
     const filters = queryKey[4].filters;
     return fetch(`/users`, {
         query: {
-            ...pagination,
+            page: pagination.page === 0 ? 1 : pagination.page,
+            size: pagination.size,
             ...filters,
             username: primaryFilter,
             descending: queryKey[3].desc,

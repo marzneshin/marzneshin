@@ -21,7 +21,6 @@ export function DataTablePagination<TData>({ table }: { table: Table<TData> }) {
 
     useEffect(() => {
         if (table.getState().pagination.pageIndex === 1) table.setPageIndex(2);
-        if (table.getState().pagination.pageIndex === 0) table.setPageIndex(1);
     }, [table]);
 
     return (
