@@ -3,7 +3,6 @@ import { fetch } from "@marzneshin/utils";
 import { InboundType } from "@marzneshin/features/inbounds";
 import {
     FetchEntityReturn,
-    UseEntityQueryProps,
     SelectableEntityQueryKeyType
 } from "@marzneshin/features/entity-table";
 
