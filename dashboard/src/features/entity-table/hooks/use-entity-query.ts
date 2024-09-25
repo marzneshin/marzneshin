@@ -26,7 +26,7 @@ export type PrimaryFilter = string;
 export type QueryKey =
     [EntityName, PaginatedEntityQueryProps, PrimaryFilter, SortedEntityQueryProps, FiltersEntityQueryProps]
 export type DoubleEntityQueryKey =
-    [EntityName, EntityId, PaginatedEntityQueryProps, PrimaryFilter, SortedEntityQueryProps, FiltersEntityQueryProps]
+    [EntityName, EntityId, PaginatedEntityQueryProps, PrimaryFilter?, SortedEntityQueryProps?, FiltersEntityQueryProps?]
 
 export type SidebarQueryKey =
     [EntityName, EntityId, EntityName, PaginatedEntityQueryProps, PrimaryFilter, SortedEntityQueryProps, FiltersEntityQueryProps]

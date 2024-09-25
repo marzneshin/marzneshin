@@ -64,7 +64,7 @@ export const fetchEntity = async ({ queryKey }: { queryKey: any }) => {
     const paginatedEntities = filteredEntities.slice(startIndex, endIndex);
 
     return {
-        entity: paginatedEntities,
+        entities: paginatedEntities,
         pageCount: Math.ceil(filteredEntities.length / pageSize),
     };
 }
