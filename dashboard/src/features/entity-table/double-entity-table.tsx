@@ -15,7 +15,7 @@ import {
     type UseRowSelectionReturn,
     type FetchEntityReturn,
     type DoubleEntityQueryKey,
-    type EntityQueryKeyType,
+    type DoubleEntityQueryKeyType,
     useFilters,
 } from "./hooks";
 
@@ -25,7 +25,7 @@ export interface DoubleEntityTableProps<T> {
     entityKey: string;
     entityId: number;
     rowSelection?: UseRowSelectionReturn;
-    fetchEntity: ({ queryKey }: EntityQueryKeyType) => FetchEntityReturn<T>;
+    fetchEntity: ({ queryKey }: DoubleEntityQueryKeyType) => FetchEntityReturn<T>;
     onCreate?: () => void;
     onOpen?: (entity: any) => void;
 }
