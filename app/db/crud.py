@@ -41,7 +41,6 @@ from app.models.user import (
     UserStatus,
     UserExpireStrategy,
     UserNodeUsageSeries,
-    UserUsage,
     UserUsageSeriesResponse,
 )
 
@@ -318,7 +317,7 @@ def get_user_usages(
     start: datetime,
     end: datetime,
 ) -> UserUsageSeriesResponse:
-
+    start = start.replace(minute=0, second=0, microsecond=0)
     cond = and_(
         NodeUserUsage.user_id == db_user.id,
         NodeUserUsage.created_at >= start,
@@ -338,10 +337,7 @@ def get_user_usages(
         current = start
         while current <= end:
             node_usages.usages.append(
-                UserUsage(
-                    usage_date=current,
-                    used_traffic=rows.get(current.timestamp()) or 0,
-                )
+                (int(current.timestamp()), rows.get(current.timestamp()) or 0)
             )
             current += timedelta(hours=1)
         result.node_usages.append(node_usages)

@@ -140,7 +140,7 @@ class UserUsage(BaseModel):
 class UserNodeUsageSeries(BaseModel):
     node_id: int | None = None
     node_name: str
-    usages: list[UserUsage]
+    usages: list[tuple[int, int]]  # list[UserUsage]
 
 
 class UserUsageSeriesResponse(BaseModel):
