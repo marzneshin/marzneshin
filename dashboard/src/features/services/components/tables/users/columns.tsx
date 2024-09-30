@@ -4,7 +4,6 @@ import i18n from "@marzneshin/features/i18n"
 import {
     UserType,
     UserActivatedPill,
-    UserEnabledPill,
     UserUsedTraffic,
     UserExpirationValue,
     userTrafficSortingFn,
@@ -24,16 +23,6 @@ export const columns: ColumnDef<UserType>[] = [
             />
         ),
         cell: ({ row }) => <UserActivatedPill user={row.original} />,
-    },
-    {
-        accessorKey: "enabled",
-        header: ({ column }) => (
-            <DataTableColumnHeader
-                title={i18n.t("enabled")}
-                column={column}
-            />
-        ),
-        cell: ({ row }) => <UserEnabledPill user={row.original} />,
     },
     {
         accessorKey: "used_traffic",
