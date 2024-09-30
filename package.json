@@ -1,6 +1,0 @@
-{
-	"dependencies": {
-		"use-debounce": "^10.0.3",
-		"yaml": "^2.5.0"
-	}
-}
