@@ -19,9 +19,5 @@ export const userQueryOptions = ({ username }: { username: string }) => {
 };
 
 export const useUserQuery = ({ username }: { username: string }) => {
-    return useQuery({
-        queryKey: [UserQueryFetchKey, username],
-        queryFn: fetchUser,
-        initialData: null,
-    });
+    return useQuery(userQueryOptions({ username }));
 };

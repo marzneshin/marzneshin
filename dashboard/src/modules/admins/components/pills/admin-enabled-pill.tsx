@@ -1,7 +1,7 @@
 import { type FC } from "react";
 import { BooleanPill } from "@marzneshin/components";
 import { useTranslation } from "react-i18next";
-import { AdminProp } from "@marzneshin/features/admins";
+import { AdminProp } from "@marzneshin/modules/admins";
 
 export const AdminEnabledPill: FC<AdminProp> = ({ admin }) => {
     const { t } = useTranslation();

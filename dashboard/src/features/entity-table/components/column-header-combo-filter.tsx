@@ -36,17 +36,13 @@ export function DataTableColumnHeaderFilterOption<TData, TValue>(
     const [selectedOption, setSelectedOption] = React.useState<string | null>(
         null
     )
-    const { filters, table } = useEntityTableContext();
+    const { filters, table: { setPageIndex } } = useEntityTableContext();
 
     function handleClearingFilter() {
         filters.setColumnsFilter({ ...filters.columnsFilter, [column.id]: undefined });
         setSelectedOption(null);
+        setPageIndex(1);
     }
-
-    React.useEffect(() => {
-        // if (table.getState().pagination.pageIndex !== 1)
-        table.setPageIndex(1);
-    }, [table, selectedOption])
 
     if (isDesktop) {
         return (
@@ -69,7 +65,7 @@ export function DataTableColumnHeaderFilterOption<TData, TValue>(
                     </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-[200px] p-0" align="start">
-                    <ComboFilterOptionList setOpen={setOpen} columnName={column.id} setSelectedOption={setSelectedOption} options={options} />
+                    <ComboFilterOptionList setOpen={setOpen} columnName={column.id} setSelectedOption={(value) => { setSelectedOption(value); setPageIndex(1); }} options={options} />
                 </PopoverContent>
             </Popover>
         )

@@ -1,4 +1,4 @@
-import { AdminType, AdminMutationType, AdminsQueryFetchKey } from "@marzneshin/features/admins";
+import { AdminType, AdminMutationType, AdminsQueryFetchKey } from "@marzneshin/modules/admins";
 import { useMutation } from "@tanstack/react-query";
 import { fetch, queryClient } from "@marzneshin/utils";
 import { toast } from "sonner";

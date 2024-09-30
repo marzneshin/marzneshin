@@ -6,7 +6,7 @@ import {
     AdminsQueryFetchKey,
     AdminMutationType,
     AdminType
-} from "@marzneshin/features/admins";
+} from "@marzneshin/modules/admins";
 
 export async function updateAdmin(admin: AdminMutationType): Promise<AdminType> {
     return fetch(`/admins/${admin.username}`, { method: 'put', body: admin }).then((admin) => {

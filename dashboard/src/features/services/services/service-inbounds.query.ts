@@ -1,6 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { fetch } from "@marzneshin/utils";
 import { InboundType } from "@marzneshin/features/inbounds";
+import {
+    FetchEntityReturn,
+    SelectableEntityQueryKeyType
+} from "@marzneshin/features/entity-table";
 
 interface FetchServiceInboundsType {
     queryKey: [string, number, number, number]
@@ -23,6 +27,27 @@ export async function fetchServiceInbounds({
     }).then((result) => {
         return result.items;
     });
+}
+
+
+export async function fetchSelectableServiceInbounds({ queryKey }: SelectableEntityQueryKeyType): FetchEntityReturn<InboundType> {
+    const pagination = queryKey[3];
+    const primaryFilter = queryKey[4];
+    const filters = queryKey[6].filters;
+    return fetch(`/inbounds`, {
+        query: {
+            ...pagination,
+            ...filters,
+            tag: primaryFilter,
+            descending: queryKey[5].desc,
+            order_by: queryKey[5].sortBy,
+        }
+    }).then((result) => {
+        return {
+            entities: result.items,
+            pageCount: result.pages
+        };
+    })
 }
 
 const ServicesQueryFetchKey = "services";

@@ -61,7 +61,7 @@ export const InboundCard = ({
 };
 
 export const InboundsField = () => {
-    const { data: inbounds } = useInboundsQuery();
+    const { data } = useInboundsQuery({ page: 1, size: 100 });
     const form = useFormContext();
     const { t } = useTranslation();
 
@@ -73,7 +73,7 @@ export const InboundsField = () => {
                 <FormItem>
                     <FormLabel>{t("inbounds")}</FormLabel>
                     <ScrollArea className="flex flex-col justify-start  h-full max-h-[20rem]">
-                        {inbounds.map((inbound) => (
+                        {data.entities.map((inbound) => (
                             <FormField
                                 key={inbound.id}
                                 control={form.control}

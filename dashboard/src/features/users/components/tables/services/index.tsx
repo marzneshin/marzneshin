@@ -1,62 +1,48 @@
-import { type FC, useCallback, useEffect, useState } from "react";
+import { type FC, useCallback, useState } from "react";
 import { Button } from "@marzneshin/components";
-import { DataTable } from "@marzneshin/features/entity-table";
+import { SelectableEntityTable, useRowSelection } from "@marzneshin/features/entity-table";
 import { columns } from "./columns";
 import {
     type UserType,
     useUsersUpdateMutation,
 } from "@marzneshin/features/users";
 import { useTranslation } from "react-i18next";
-import type { RowSelectionState } from "@tanstack/react-table";
-import { useServicesQuery } from "@marzneshin/features/services";
+import { fetchUserServices } from "@marzneshin/features/services";
 
 interface UserServicesTableProps {
     user: UserType;
 }
 
-// TODO: #322 Implement pagination for row selectable with appliedable action table
 export const UserServicesTable: FC<UserServicesTableProps> = ({ user }) => {
     const { mutate: updateUser } = useUsersUpdateMutation();
-    const { data } = useServicesQuery({ page: 1, size: 100 });
-    const [selectedService, setSelectedService] = useState<{
-        [key: number]: boolean;
-    }>({});
+    const { selectedRow, setSelectedRow } =
+        useRowSelection(
+            Object.fromEntries(
+                user.service_ids.map(entityId => [String(entityId), true])
+            )
+        );
+    const [selectedService, setSelectedService] = useState<number[]>(user.service_ids);
     const { t } = useTranslation();
 
-    useEffect(() => {
-        setSelectedService((prevSelected) => {
-            const updatedSelected: RowSelectionState = { ...prevSelected };
-            for (const serviceId of user.service_ids) {
-                for (const [i, fetchedService] of data.entity.entries()) {
-                    if (fetchedService.id === serviceId) {
-                        updatedSelected[i] = true;
-                    }
-                }
-            }
-            return updatedSelected;
-        });
-    }, [data, user.service_ids]);
-
     const handleApply = useCallback(() => {
-        const selectedServiceIds = Object.keys(selectedService)
-            .filter((key) => selectedService[Number.parseInt(key)])
-            .map((key) => data.entity[Number.parseInt(key)].id);
-        updateUser({ ...user, service_ids: selectedServiceIds });
-    }, [data, selectedService, user, updateUser]);
-
-    const disabled = Object.keys(selectedService).length < 1;
+        updateUser({ ...user, service_ids: selectedService });
+    }, [selectedService, user, updateUser]);
 
     return (
         <div className="flex flex-col gap-4">
-            <DataTable
+            <SelectableEntityTable
+                fetchEntity={fetchUserServices}
                 columns={columns}
-                data={data.entity}
-                filteredColumn="name"
-                selectedRow={selectedService}
-                setSelectedRow={setSelectedService}
+                primaryFilter="name"
+                existingEntityIds={user.service_ids}
+                entityKey="services"
+                parentEntityKey="users"
+                parentEntityId={user.username}
+                rowSelection={{ selectedRow: selectedRow, setSelectedRow: setSelectedRow }}
+                entitySelection={{ selectedEntity: selectedService, setSelectedEntity: setSelectedService }}
             />
 
-            <Button onClick={handleApply} disabled={disabled}>
+            <Button onClick={handleApply} disabled={selectedService.length === 0}>
                 {t("apply")}
             </Button>
         </div>

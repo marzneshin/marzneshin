@@ -14,30 +14,32 @@ import {
     useSorting,
     type UseRowSelectionReturn,
     type FetchEntityReturn,
-    type QueryKey,
-    type EntityQueryKeyType,
+    type DoubleEntityQueryKey,
+    type DoubleEntityQueryKeyType,
     useFilters,
 } from "./hooks";
 
-export interface EntityTableProps<T> {
+export interface DoubleEntityTableProps<T> {
     columns: ColumnDef<T>[];
     primaryFilter: string;
     entityKey: string;
+    entityId: number;
     rowSelection?: UseRowSelectionReturn;
-    fetchEntity: ({ queryKey }: EntityQueryKeyType) => FetchEntityReturn<T>;
+    fetchEntity: ({ queryKey }: DoubleEntityQueryKeyType) => FetchEntityReturn<T>;
     onCreate?: () => void;
     onOpen?: (entity: any) => void;
 }
 
-export function EntityTable<T>({
+export function DoubleEntityTable<T>({
     fetchEntity,
     columns,
     primaryFilter,
     rowSelection,
     entityKey,
+    entityId,
     onCreate,
     onOpen,
-}: EntityTableProps<T>) {
+}: DoubleEntityTableProps<T>) {
     const { t } = useTranslation();
     const columnPrimaryFilter = usePrimaryFiltering({ column: primaryFilter });
     const filters = useFilters();
@@ -45,8 +47,9 @@ export function EntityTable<T>({
     const visibility = useVisibility();
     const { onPaginationChange, pageIndex, pageSize } = usePagination();
 
-    const query: QueryKey = [
+    const query: DoubleEntityQueryKey = [
         entityKey,
+        entityId,
         {
             page: pageIndex,
             size: pageSize,

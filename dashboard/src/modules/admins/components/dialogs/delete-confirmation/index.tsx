@@ -3,7 +3,7 @@ import { type FC, useEffect } from "react";
 import {
     type AdminType,
     useAdminsDeletionMutation,
-} from "@marzneshin/features/admins";
+} from "@marzneshin/modules/admins";
 
 interface AdminsDeleteConfirmationDialogProps {
     onOpenChange: (state: boolean) => void;
