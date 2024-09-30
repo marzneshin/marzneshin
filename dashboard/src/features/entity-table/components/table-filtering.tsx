@@ -1,5 +1,4 @@
-
-import { type FC } from "react";
+import { type FC, useEffect, useState } from "react";
 import { Input } from "@marzneshin/components";
 import {
     useEntityTableContext
@@ -11,16 +10,24 @@ interface TableSearchProps { }
 
 export const TableSearch: FC<TableSearchProps> = () => {
     const { primaryFilter } = useEntityTableContext()
+    const [keyword, setKeyword] = useState(primaryFilter.columnFilters)
+
     const setColumnFilters = useDebouncedCallback(
         primaryFilter.setColumnFilters,
-        5000
+        500
     );
+
+    useEffect(() => {
+        setColumnFilters(keyword);
+    }, [keyword, setColumnFilters])
+
     const { t } = useTranslation()
+
     return (
         <Input
             placeholder={t('table.filter-placeholder', { name: primaryFilter.column })}
-            value={primaryFilter.columnFilters}
-            onChange={(e) => setColumnFilters(e.target.value)}
+            value={keyword}
+            onChange={(e) => setKeyword(e.target.value)}
             className=" w-full md:w-[20rem]"
         />
     );
