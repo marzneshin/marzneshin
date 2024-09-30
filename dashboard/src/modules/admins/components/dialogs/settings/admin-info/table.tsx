@@ -12,7 +12,7 @@ import {
     type AdminProp,
     AdminEnabledPill,
     AdminPermissionPill
-} from "@marzneshin/features/admins";
+} from "@marzneshin/modules/admins";
 import { useTranslation } from "react-i18next";
 import { format } from '@chbphone55/pretty-bytes';
 

@@ -1,21 +1,22 @@
 
 import { FC } from "react";
-import { DataTable } from "@marzneshin/features/entity-table";
+import { DoubleEntityTable } from "@marzneshin/features/entity-table";
 import { columns } from "./columns";
-import { useUsersServiceQuery, type ServiceType } from "@marzneshin/features/services";
+import { fetchServiceUsers, type ServiceType } from "@marzneshin/features/services";
 
 interface ServicesUsersTableProps {
     service: ServiceType
 }
 
 export const ServicesUsersTable: FC<ServicesUsersTableProps> = ({ service }) => {
-    const { data } = useUsersServiceQuery({ serviceId: service.id });
 
     return (
-        <DataTable
+        <DoubleEntityTable
             columns={columns}
-            data={data}
-            filteredColumn='username'
+            entityId={service.id}
+            fetchEntity={fetchServiceUsers}
+            primaryFilter="username"
+            entityKey='services'
         />
     )
 }

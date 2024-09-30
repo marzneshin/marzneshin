@@ -1,51 +1,58 @@
-import { useMemo } from "react";
-import { Button } from "@marzneshin/components";
+import { useEffect, useMemo } from "react";
 import { DataTableViewOptions } from "./components";
-import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
-import { ColumnDef } from "@tanstack/react-table";
+import { RowSelectionState, ColumnDef } from "@tanstack/react-table";
 import { EntityTableContext } from "./contexts";
 import { TableSearch, DataTablePagination, EntityDataTable } from "./components";
 import {
+    type UseRowSelectionReturn,
     usePrimaryFiltering,
     usePagination,
+    type FetchEntityReturn,
     useEntityTable,
     useVisibility,
     useSorting,
-    type UseRowSelectionReturn,
-    type FetchEntityReturn,
-    type QueryKey,
-    type EntityQueryKeyType,
+    type SelectableQueryKey,
+    type SelectableEntityQueryKeyType,
     useFilters,
 } from "./hooks";
 
-export interface EntityTableProps<T> {
+export interface SelectableEntityTableProps<T extends { id: number }> {
+    fetchEntity: ({ queryKey }: SelectableEntityQueryKeyType) => FetchEntityReturn<T>;
     columns: ColumnDef<T>[];
     primaryFilter: string;
+    parentEntityKey: string;
+    parentEntityId: string | number;
     entityKey: string;
-    rowSelection?: UseRowSelectionReturn;
-    fetchEntity: ({ queryKey }: EntityQueryKeyType) => FetchEntityReturn<T>;
-    onCreate?: () => void;
-    onOpen?: (entity: any) => void;
+    rowSelection: UseRowSelectionReturn;
+    entitySelection: {
+        selectedEntity: number[];
+        setSelectedEntity: (s: number[]) => void;
+    }
+    existingEntityIds: number[];
 }
 
-export function EntityTable<T>({
+export function SelectableEntityTable<T extends { id: number }>({
     fetchEntity,
     columns,
     primaryFilter,
     rowSelection,
+    entitySelection,
     entityKey,
-    onCreate,
-    onOpen,
-}: EntityTableProps<T>) {
-    const { t } = useTranslation();
+    parentEntityKey,
+    parentEntityId,
+    existingEntityIds,
+}: SelectableEntityTableProps<T>) {
     const columnPrimaryFilter = usePrimaryFiltering({ column: primaryFilter });
     const filters = useFilters();
     const sorting = useSorting();
     const visibility = useVisibility();
+    const { selectedRow, setSelectedRow } = rowSelection;
+    const { setSelectedEntity } = entitySelection;
     const { onPaginationChange, pageIndex, pageSize } = usePagination();
-
-    const query: QueryKey = [
+    const query: SelectableQueryKey = [
+        parentEntityKey,
+        parentEntityId,
         entityKey,
         {
             page: pageIndex,
@@ -76,6 +83,32 @@ export function EntityTable<T>({
         onPaginationChange,
     });
 
+    useEffect(() => {
+        setSelectedRow((selected) => {
+            const updatedSelected: RowSelectionState = { ...selected };
+            for (const [i, fetchedEntity] of data.entities.entries()) {
+                if (existingEntityIds.includes(fetchedEntity.id)) {
+                    updatedSelected[i] = true;
+                } else {
+                    updatedSelected[i] = false;
+                }
+            }
+            return updatedSelected;
+        });
+
+    }, [data, setSelectedRow, existingEntityIds]);
+
+    useEffect(() => {
+        const selectedRowId = Object.keys(selectedRow).filter(key => selectedRow[key] === true).map(Number);
+
+        setSelectedEntity(
+            selectedRowId
+                .map(id => data.entities[id]?.id)
+                .filter(id => id !== null && id !== undefined)
+        );
+    }, [data, setSelectedEntity, setSelectedRow, existingEntityIds, selectedRow]);
+
+
     const contextValue = useMemo(
         () => ({ table, data: data.entities, primaryFilter: columnPrimaryFilter, filters, isLoading: isFetching }),
         [table, data.entities, filters, columnPrimaryFilter, isFetching],
@@ -87,16 +120,11 @@ export function EntityTable<T>({
                 <div className="flex flex-col md:flex-row-reverse items-center py-4 gap-2 w-full">
                     <div className="flex flex-row items-center w-full">
                         <DataTableViewOptions table={table} />
-                        {onCreate && (
-                            <Button aria-label={`create-${entityKey}`} onClick={onCreate}>
-                                {t("create")}
-                            </Button>
-                        )}
                     </div>
                     <TableSearch />
                 </div>
                 <div className="w-full rounded-md border">
-                    <EntityDataTable columns={columns} onRowClick={onOpen} />
+                    <EntityDataTable columns={columns} />
                     <DataTablePagination table={table} />
                 </div>
             </div>

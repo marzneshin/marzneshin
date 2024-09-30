@@ -8,7 +8,7 @@ import {
 } from '@marzneshin/components';
 import { SudoRoute } from '@marzneshin/features/sudo-routes'
 import { createFileRoute, Outlet } from '@tanstack/react-router'
-import { AdminsTable } from '@marzneshin/features/admins'
+import { AdminsTable } from '@marzneshin/modules/admins'
 import { type FC, Suspense } from 'react';
 import { useTranslation } from 'react-i18next';
 

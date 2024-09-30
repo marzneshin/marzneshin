@@ -4,15 +4,16 @@ import { fetch } from "@marzneshin/utils";
 import type {
     EntityQueryKeyType,
     UseEntityQueryProps,
+    FetchEntityReturn
 } from "@marzneshin/features/entity-table";
 
 export async function fetchNodes({
     queryKey,
-}: EntityQueryKeyType): Promise<{ entity: NodeType[]; pageCount: number }> {
+}: EntityQueryKeyType): FetchEntityReturn<NodeType> {
     const pagination = queryKey[1];
     const primaryFilter = queryKey[2];
     const filters = queryKey[4].filters;
-    return fetch(`/nodes`, {
+    return fetch('/nodes', {
         query: {
             ...pagination,
             ...filters,
@@ -22,7 +23,7 @@ export async function fetchNodes({
         }
     }).then((result) => {
         return {
-            entity: result.items,
+            entities: result.items,
             pageCount: result.pages,
         };
     });
@@ -36,6 +37,6 @@ export const useNodesQuery = ({
     return useQuery({
         queryKey: [NodesQueryFetchKey, { page, size }, filters?.username ?? "", { sortBy, desc }, { filters }],
         queryFn: fetchNodes,
-        initialData: { entity: [], pageCount: 0 },
+        initialData: { entities: [], pageCount: 0 },
     });
 };

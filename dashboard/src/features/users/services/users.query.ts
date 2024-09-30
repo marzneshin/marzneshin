@@ -24,7 +24,7 @@ export async function fetchUsers({ queryKey }: EntityQueryKeyType): FetchEntityR
         }
     }).then((result) => {
         return {
-            entity: result.items,
+            entities: result.items,
             pageCount: result.pages
         };
     });
@@ -38,6 +38,6 @@ export const useUsersQuery = ({
     return useQuery({
         queryKey: [UsersQueryFetchKey, { page, size }, filters?.username ?? "", { sortBy, desc }, { filters }],
         queryFn: fetchUsers,
-        initialData: { entity: [], pageCount: 0 }
+        initialData: { entities: [], pageCount: 0 }
     })
 }

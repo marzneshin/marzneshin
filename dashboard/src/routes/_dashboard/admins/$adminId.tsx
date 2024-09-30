@@ -7,7 +7,7 @@ import { queryClient } from "@marzneshin/utils";
 import {
     RouterAdminContext,
     adminQueryOptions,
-} from "@marzneshin/features/admins";
+} from "@marzneshin/modules/admins";
 import { Suspense, useMemo } from "react";
 import {
     AlertDialog,

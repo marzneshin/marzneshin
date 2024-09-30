@@ -5,7 +5,7 @@ import {
 import {
     AdminsDeleteConfirmationDialog,
     useRouterAdminContext,
-} from "@marzneshin/features/admins";
+} from "@marzneshin/modules/admins";
 import { useDialog } from "@marzneshin/hooks";
 
 const AdminDelete = () => {

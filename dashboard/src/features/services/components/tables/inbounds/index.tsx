@@ -1,11 +1,9 @@
-import { type FC, useCallback, useEffect, useState } from "react";
-import { useInboundsQuery } from "@marzneshin/features/inbounds";
+import { type FC, useCallback, useState } from "react";
 import { Button } from "@marzneshin/components";
-import { DataTable } from "@marzneshin/features/entity-table";
+import { SelectableEntityTable, useRowSelection } from "@marzneshin/features/entity-table";
 import { columns } from "./columns";
-import { type ServiceType, useServicesUpdateMutation } from "@marzneshin/features/services";
+import { type ServiceType, useServicesUpdateMutation, fetchSelectableServiceInbounds } from "@marzneshin/features/services";
 import { useTranslation } from "react-i18next";
-import type { RowSelectionState } from "@tanstack/react-table";
 
 interface ServiceInboundsTableProps {
     service: ServiceType;
@@ -15,43 +13,30 @@ export const ServiceInboundsTable: FC<ServiceInboundsTableProps> = ({
     service,
 }) => {
     const { mutate: updateService } = useServicesUpdateMutation();
-    const { data } = useInboundsQuery();
-    const [selectedInbound, setSelectedInbound] = useState<{
-        [key: number]: boolean;
-    }>({});
+    const { selectedRow, setSelectedRow } =
+        useRowSelection(Object.fromEntries(service.inbound_ids.map(entityId => [String(entityId), true])));
+    const [selectedInbound, setSelectedInbound] = useState<number[]>(service.inbound_ids);
     const { t } = useTranslation();
 
-    useEffect(() => {
-        setSelectedInbound((prevSelected) => {
-            const updatedSelected: RowSelectionState = { ...prevSelected };
-            for (const inboundId of service.inbound_ids) {
-                for (const [i, fetchedInbound] of data.entries()) {
-                    if (fetchedInbound.id === inboundId) {
-                        updatedSelected[i] = true;
-                    }
-                }
-            }
-            return updatedSelected;
-        });
-    }, [data, service.inbound_ids]);
-
     const handleApply = useCallback(() => {
-        const selectedInboundIds = Object.keys(selectedInbound)
-            .filter((key) => selectedInbound[Number.parseInt(key)])
-            .map((key) => data[Number.parseInt(key)].id);
-        updateService({ ...service, inbound_ids: selectedInboundIds });
-    }, [data, selectedInbound, service, updateService]);
+        console.log(selectedInbound)
+        updateService({ id: service.id, name: service.name, inbound_ids: selectedInbound });
+    }, [selectedInbound, service, updateService]);
 
-    const disabled = Object.keys(selectedInbound).length < 1;
+    const disabled = Object.keys(selectedRow).length < 1;
 
     return (
         <div className="flex flex-col gap-4">
-            <DataTable
+            <SelectableEntityTable
                 columns={columns}
-                data={data}
-                filteredColumn="tag"
-                selectedRow={selectedInbound}
-                setSelectedRow={setSelectedInbound}
+                entityKey="inbounds"
+                parentEntityKey="services"
+                parentEntityId={service.id}
+                existingEntityIds={service.inbound_ids}
+                fetchEntity={fetchSelectableServiceInbounds}
+                primaryFilter="tag"
+                rowSelection={{ selectedRow: selectedRow, setSelectedRow: setSelectedRow }}
+                entitySelection={{ selectedEntity: selectedInbound, setSelectedEntity: setSelectedInbound }}
             />
 
             <Button onClick={handleApply} disabled={disabled}>

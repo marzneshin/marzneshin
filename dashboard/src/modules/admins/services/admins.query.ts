@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { fetch } from "@marzneshin/utils";
-import { AdminType } from "@marzneshin/features/admins";
+import { AdminType } from "@marzneshin/modules/admins";
 import {
     FetchEntityReturn,
     UseEntityQueryProps,
@@ -21,7 +21,7 @@ export async function fetchAdmins({ queryKey }: EntityQueryKeyType): FetchEntity
         }
     }).then((result) => {
         return {
-            entity: result.items,
+            entities: result.items,
             pageCount: result.pages
         };
     });
@@ -35,6 +35,6 @@ export const useAdminsQuery = ({
     return useQuery({
         queryKey: [AdminsQueryFetchKey, { page, size }, filters?.username ?? "", { sortBy, desc }, { filters }],
         queryFn: fetchAdmins,
-        initialData: { entity: [], pageCount: 0 }
+        initialData: { entities: [], pageCount: 0 }
     })
 }

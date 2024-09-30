@@ -5,7 +5,6 @@ import {
     RowSelectionState,
     SortingState,
     VisibilityState,
-    flexRender,
     getCoreRowModel,
     getFilteredRowModel,
     getPaginationRowModel,
@@ -15,19 +14,14 @@ import {
 
 import {
     Button,
-    Input,
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
 } from "@marzneshin/components"
 
 import { useTranslation } from "react-i18next"
 import { DataTablePagination } from "./table-pagination"
 import { useState } from "react"
 import { DataTableViewOptions } from "./table-view-option"
+import { TableSearch } from "./table-filtering"
+import { EntityDataTable } from "./table";
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -44,7 +38,6 @@ export function DataTable<TData, TValue>({
     data,
     onCreate,
     onOpen,
-    filteredColumn,
     selectedRow,
     setSelectedRow,
 }: DataTableProps<TData, TValue>) {
@@ -76,61 +69,12 @@ export function DataTable<TData, TValue>({
     return (
         <div>
             <div className="flex items-center py-4">
-                <Input
-                    placeholder={t('table.filter-placeholder', { name: filteredColumn })}
-                    value={(table.getColumn(filteredColumn)?.getFilterValue() as string) ?? ""}
-                    onChange={(event) =>
-                        table.getColumn(filteredColumn)?.setFilterValue(event.target.value)
-                    }
-                    className="max-w-sm"
-                />
+                <TableSearch />
                 <DataTableViewOptions table={table} />
                 {onCreate && (<Button onClick={onCreate}>{t('create')}</Button>)}
             </div>
             <div className="rounded-md border">
-                <Table>
-                    <TableHeader>
-                        {table.getHeaderGroups().map((headerGroup) => (
-                            <TableRow key={headerGroup.id}>
-                                {headerGroup.headers.map((header) => {
-                                    return (
-                                        <TableHead key={header.id}>
-                                            {header.isPlaceholder
-                                                ? null
-                                                : flexRender(
-                                                    header.column.columnDef.header,
-                                                    header.getContext()
-                                                )}
-                                        </TableHead>
-                                    )
-                                })}
-                            </TableRow>
-                        ))}
-                    </TableHeader>
-                    <TableBody>
-                        {table.getRowModel().rows?.length ? (
-                            table.getRowModel().rows.map((row) => (
-                                <TableRow
-                                    key={row.id}
-                                    data-state={row.getIsSelected() && "selected"}
-                                    onClick={() => onOpen !== undefined && onOpen(row.original)}
-                                >
-                                    {row.getVisibleCells().map((cell) => (
-                                        <TableCell key={cell.id}>
-                                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                        </TableCell>
-                                    ))}
-                                </TableRow>
-                            ))
-                        ) : (
-                            <TableRow>
-                                <TableCell colSpan={columns.length} className="h-24 text-center">
-                                    {t('table.no-result')}
-                                </TableCell>
-                            </TableRow>
-                        )}
-                    </TableBody>
-                </Table>
+                <EntityDataTable columns={columns} onRowClick={onOpen} />
                 <DataTablePagination table={table} />
             </div>
         </div>

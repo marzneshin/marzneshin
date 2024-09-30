@@ -123,9 +123,9 @@ export const ServicesField: FC = () => {
                     <Awaiting
                         isFetching={isFetching}
                         Skeleton={<ServiceSkeletons />}
-                        isNotFound={data.entity.length === 0}
+                        isNotFound={data.entities.length === 0}
                         NotFound={<ServicesAlert />}
-                        Component={<ServicesList services={data.entity} />}
+                        Component={<ServicesList services={data.entities} />}
                     />
                 </FormItem>
             )}

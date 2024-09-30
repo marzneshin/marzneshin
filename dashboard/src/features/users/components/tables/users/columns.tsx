@@ -6,7 +6,7 @@ import {
     UserExpireStrategyPill,
     UserExpirationValue
 } from "@marzneshin/features/users";
-import { useAdminsQuery } from "@marzneshin/features/admins";
+import { useAdminsQuery } from "@marzneshin/modules/admins";
 import i18n from "@marzneshin/features/i18n";
 import {
     CopyToClipboardButton,
@@ -111,7 +111,7 @@ function AdminsColumnsHeaderOptionFilter<TData, TValue>({ column }: { column: Co
         <DataTableColumnHeaderFilterOption
             title={i18n.t("owner")}
             column={column}
-            options={data.entity.map((admin) => admin.username)}
+            options={data.entities.map((admin) => admin.username)}
         />
     );
 }

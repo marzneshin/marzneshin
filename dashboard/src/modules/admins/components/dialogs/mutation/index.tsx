@@ -16,7 +16,7 @@ import {
     AdminEditSchema,
     AdminCreateSchema,
     AdminType,
-} from "@marzneshin/features/admins";
+} from "@marzneshin/modules/admins";
 import { ServicesField } from "@marzneshin/features/services";
 import { UsernameField } from "@marzneshin/features/users";
 import {

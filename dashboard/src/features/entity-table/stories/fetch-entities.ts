@@ -64,7 +64,7 @@ export const fetchEntity = async ({ queryKey }: { queryKey: any }) => {
     const paginatedEntities = filteredEntities.slice(startIndex, endIndex);
 
     return {
-        entity: paginatedEntities,
+        entities: paginatedEntities,
         pageCount: Math.ceil(filteredEntities.length / pageSize),
     };
 }
@@ -73,7 +73,7 @@ export const fetchEntityLoading = async (): FetchEntityReturn<Entity> => {
     return new Promise((resolve) => {
         setTimeout(() => {
             resolve({
-                entity: [{ id: 40, name: "Diyar Latif", createdAt: "2026-04-13" }],
+                entities: [{ id: 40, name: "Diyar Latif", createdAt: "2026-04-13" }],
                 pageCount: 1,
             });
         }, 24 * 60 * 60 * 1000);

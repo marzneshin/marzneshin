@@ -6,8 +6,8 @@ import { ServicesQueryFetchKey } from "./services.query";
 import { ServiceMutationType } from "../types";
 
 
-export async function updateService(node: ServiceMutationType): Promise<ServiceMutationType> {
-    return fetch(`/services/${node.id}`, { method: 'put', body: node }).then((service) => {
+export async function updateService(service: ServiceMutationType): Promise<ServiceMutationType> {
+    return fetch(`/services/${service.id}`, { method: 'put', body: service }).then((service) => {
         return service;
     });
 }
