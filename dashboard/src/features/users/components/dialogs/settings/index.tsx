@@ -20,6 +20,9 @@ import {
     QRCodeSection,
     UserInfoTable,
 } from "./user-info";
+import {
+    NodesUsageChart,
+} from "./nodes-usage";
 
 interface UsersSettingsDialogProps extends SettingsDialogProps {
     entity: UserType | null;
@@ -53,6 +56,9 @@ export const UsersSettingsDialog: FC<UsersSettingsDialogProps> = ({
                                     <TabsTrigger className="w-full" value="subscription">
                                         {t("subscription")}
                                     </TabsTrigger>
+                                    <TabsTrigger className="w-full" value="nodes-usage">
+                                        {t("nodes-usage")}
+                                    </TabsTrigger>
                                 </TabsList>
                                 <TabsContent
                                     value="info"
@@ -66,6 +72,9 @@ export const UsersSettingsDialog: FC<UsersSettingsDialogProps> = ({
                                 <TabsContent value="subscription">
                                     <QRCodeSection entity={entity} />
                                     <SubscriptionActions entity={entity} />
+                                </TabsContent>
+                                <TabsContent value="nodes-usage">
+                                    <NodesUsageChart />
                                 </TabsContent>
                             </Tabs>
                         </ScrollArea>
