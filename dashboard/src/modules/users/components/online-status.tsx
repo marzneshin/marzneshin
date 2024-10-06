@@ -1,7 +1,7 @@
 import { FC } from "react"
 import { useTranslation } from "react-i18next"
-import { cn, isUserOnline } from "@marzneshin/utils"
-import { UserType } from ".."
+import { cn } from "@marzneshin/utils"
+import { UserType, isUserOnline } from "@marzneshin/modules/users"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@marzneshin/components"
 import { Circle } from "lucide-react"
 
