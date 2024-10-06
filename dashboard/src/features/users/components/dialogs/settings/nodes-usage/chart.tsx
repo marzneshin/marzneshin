@@ -1,11 +1,8 @@
-import { TrendingUp } from "lucide-react"
-import { Area, AreaChart, CartesianGrid, XAxis, BarChart, Bar } from "recharts"
-
+import { Area, AreaChart, CartesianGrid, XAxis } from "recharts"
 import {
     Card,
     CardContent,
     CardDescription,
-    CardFooter,
     CardHeader,
     CardTitle,
     ChartConfig,
@@ -13,12 +10,6 @@ import {
     ChartTooltip,
     ChartTooltipContent,
 } from "@marzneshin/components"
-
-"use client"
-
-import * as React from "react"
-
-export const description = "An interactive bar chart"
 
 const chartData = [
     { month: "January", desktop: 186, mobile: 80 },
@@ -44,10 +35,6 @@ const chartConfig = {
 } satisfies ChartConfig
 
 export function NodesUsageChart() {
-    const [activeChart, setActiveChart] =
-        React.useState<keyof typeof chartConfig>("desktop")
-
-
     return (
         <Card>
             <CardHeader className="flex flex-col items-stretch space-y-0 border-b p-0 sm:flex-row">
