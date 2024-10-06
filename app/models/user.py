@@ -57,6 +57,7 @@ class User(BaseModel):
     note: Annotated[str, Field(max_length=500)] | None = None
     sub_updated_at: datetime | None = Field(None)
     sub_last_user_agent: str | None = Field(None)
+    sub_revoked_at: datetime | None = Field(None)
     online_at: datetime | None = Field(None)
 
     model_config = ConfigDict(from_attributes=True)
@@ -126,6 +127,7 @@ class UserResponse(User):
     created_at: datetime
     service_ids: list[int]
     subscription_url: str
+    sub_revoked_at: datetime | None
     owner_username: str
     traffic_reset_at: datetime | None
 
