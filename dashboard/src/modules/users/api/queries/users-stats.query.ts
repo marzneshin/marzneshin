@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { fetch } from "@marzneshin/utils";
-import { UsersQueryFetchKey } from ".";
+import { UsersQueryFetchKey } from "../..";
 
 export interface UsersStatsResponse {
     total: number;
