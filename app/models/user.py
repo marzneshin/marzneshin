@@ -59,7 +59,7 @@ class User(BaseModel):
     sub_last_user_agent: str | None = Field(None)
     sub_revoked_at: datetime | None = Field(None)
     online_at: datetime | None = Field(None)
-
+    created_at: datetime | None = Field(None)
     model_config = ConfigDict(from_attributes=True)
 
 
@@ -76,6 +76,8 @@ class UserCreate(User):
                 "data_limit": 0,
                 "data_limit_reset_strategy": "no_reset",
                 "note": "",
+                "created_at": None,
+                "sub_revoked_at": None
             }
         }
     )
@@ -130,6 +132,7 @@ class UserResponse(User):
     sub_revoked_at: datetime | None
     owner_username: str
     traffic_reset_at: datetime | None
+    created_at: datetime
 
     model_config = ConfigDict(from_attributes=True)
 

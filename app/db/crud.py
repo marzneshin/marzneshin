@@ -397,6 +397,8 @@ def create_user(
         admin=admin,
         data_limit_reset_strategy=user.data_limit_reset_strategy,
         note=user.note,
+        created_at=user.created_at or datetime.utcnow(),
+        sub_revoked_at=user.sub_revoked_at
     )
     db.add(dbuser)
     db.commit()
