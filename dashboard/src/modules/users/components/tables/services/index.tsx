@@ -8,6 +8,7 @@ import {
 } from "@marzneshin/modules/users";
 import { useTranslation } from "react-i18next";
 import { fetchUserServices } from "@marzneshin/features/services";
+import { useState, useCallback, FC } from "react";
 
 interface UserServicesTableProps {
     user: UserType;
