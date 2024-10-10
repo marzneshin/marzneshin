@@ -11,6 +11,7 @@ import {
 } from "@marzneshin/components";
 import {
     UserServicesTable,
+    UserNodesUsageWidget,
     type UserType,
 } from "@marzneshin/modules/users";
 import { type FC } from "react";
@@ -20,9 +21,6 @@ import {
     QRCodeSection,
     UserInfoTable,
 } from "./user-info";
-import {
-    NodesUsageChart,
-} from "./nodes-usage";
 
 interface UsersSettingsDialogProps extends SettingsDialogProps {
     entity: UserType | null;
@@ -74,7 +72,7 @@ export const UsersSettingsDialog: FC<UsersSettingsDialogProps> = ({
                                     <SubscriptionActions entity={entity} />
                                 </TabsContent>
                                 <TabsContent value="nodes-usage">
-                                    <NodesUsageChart />
+                                    <UserNodesUsageWidget user={entity} />
                                 </TabsContent>
                             </Tabs>
                         </ScrollArea>
