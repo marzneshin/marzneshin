@@ -9,8 +9,12 @@ DASHBOARD_PATH = config("DASHBOARD_PATH", default="/dashboard/")
 SQLALCHEMY_DATABASE_URL = config(
     "SQLALCHEMY_DATABASE_URL", default="sqlite:///db.sqlite3"
 )
-SQLALCHEMY_DATABASE_POOL_SIZE = config('SQLALCHEMY_DATABASE_POOL_SIZE', default=10, cast=int)
-SQLALCHEMY_DATABASE_MAX_OVERFLOW = config('SQLALCHEMY_DATABASE_MAX_OVERFLOW', default=30, cast=int)
+SQLALCHEMY_DATABASE_POOL_SIZE = config(
+    "SQLALCHEMY_DATABASE_POOL_SIZE", default=10, cast=int
+)
+SQLALCHEMY_DATABASE_MAX_OVERFLOW = config(
+    "SQLALCHEMY_DATABASE_MAX_OVERFLOW", default=30, cast=int
+)
 
 UVICORN_HOST = config("UVICORN_HOST", default="0.0.0.0")
 UVICORN_PORT = config("UVICORN_PORT", cast=int, default=8000)

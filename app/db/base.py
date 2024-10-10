@@ -3,10 +3,10 @@ from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 from app.config.env import (
-    SQLALCHEMY_DATABASE_URL, 
+    SQLALCHEMY_DATABASE_URL,
     SQLALCHEMY_DATABASE_POOL_SIZE,
-    SQLALCHEMY_DATABASE_MAX_OVERFLOW
-    )
+    SQLALCHEMY_DATABASE_MAX_OVERFLOW,
+)
 
 IS_SQLITE = SQLALCHEMY_DATABASE_URL.startswith("sqlite")
 
