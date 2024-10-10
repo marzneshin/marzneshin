@@ -36,10 +36,10 @@ async def review_users():
             asyncio.ensure_future(
                 notify(
                     action=UserNotif.Action.user_disabled,
-                    user=UserResponse.model_validate(user)
-                    )
+                    user=UserResponse.model_validate(user),
+                )
             )
-            
+
             logger.info(
                 "User `%s` activation state changed to `%s`",
                 user.username,

@@ -7,5 +7,5 @@ __all__ = [
     "nodes_startup",
     "record_user_usages",
     "reset_user_data_usage",
-    "review_users"
+    "review_users",
 ]
