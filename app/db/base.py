@@ -4,8 +4,8 @@ from sqlalchemy.orm import sessionmaker
 
 from app.config.env import (
     SQLALCHEMY_DATABASE_URL, 
-    SQLALCHEMY_DATABASE_POOL_SIZE,
-    SQLALCHEMY_DATABASE_MAX_OVERFLOW
+    SQLALCHEMY_CONNECTION_POOL_SIZE,
+    SQLALCHEMY_CONNECTION_MAX_OVERFLOW
     )
 
 IS_SQLITE = SQLALCHEMY_DATABASE_URL.startswith("sqlite")
@@ -19,8 +19,8 @@ if IS_SQLITE:
 else:
     engine = create_engine(
         SQLALCHEMY_DATABASE_URL,
-        pool_size=SQLALCHEMY_DATABASE_POOL_SIZE,
-        max_overflow=SQLALCHEMY_DATABASE_MAX_OVERFLOW,
+        pool_size=SQLALCHEMY_CONNECTION_POOL_SIZE,
+        max_overflow=SQLALCHEMY_CONNECTION_MAX_OVERFLOW,
         pool_recycle=3600,
         pool_timeout=10,
     )
