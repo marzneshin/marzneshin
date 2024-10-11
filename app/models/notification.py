@@ -2,7 +2,7 @@ from typing import Optional
 from datetime import datetime as dt
 from enum import Enum
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 from app.models.admin import Admin
 from app.models.user import UserResponse
@@ -33,20 +33,20 @@ class UserNotif(Notification):
 
 class UserCreated(UserNotif):
     action: UserNotif.Action = UserNotif.Action.user_created
-    by: Admin
     user: UserResponse
+    by: Admin
 
 
 class UserUpdated(UserNotif):
     action: UserNotif.Action = UserNotif.Action.user_updated
-    by: Admin
     user: UserResponse
+    by: Admin
 
 
 class UserActivated(UserNotif):
     action: UserNotif.Action = UserNotif.Action.user_activated
-    by: Admin = None
     user: UserResponse
+    by: Optional[Admin] = None
 
 
 class UserDeleted(UserNotif):
@@ -57,26 +57,26 @@ class UserDeleted(UserNotif):
 
 class UserEnabled(UserNotif):
     action: UserNotif.Action = UserNotif.Action.user_enabled
-    by: Admin = None
     user: UserResponse
+    by: Optional[Admin] = None
 
 
 class UserDisabled(UserNotif):
     action: UserNotif.Action = UserNotif.Action.user_disabled
-    by: Optional[Admin] = None
     user: UserResponse
+    by: Optional[Admin] = None
 
 
 class UserDataUsageReset(UserNotif):
     action: UserNotif.Action = UserNotif.Action.data_usage_reset
-    by: Admin
     user: UserResponse
+    by: Optional[Admin] = None
 
 
 class UserSubscriptionRevoked(UserNotif):
     action: UserNotif.Action = UserNotif.Action.subscription_revoked
-    by: Admin
     user: UserResponse
+    by: Admin
 
 
 class ReachedUsagePercent(UserNotif):
