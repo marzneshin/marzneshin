@@ -24,20 +24,20 @@ def create_text(notif: Notification) -> str:
     texts: Dict[UserNotif.Action, str] = {
         A.user_created: "🆕 <b>#Created</b>\n➖➖➖➖➖➖➖➖➖\n<b>Username :</b> <code>{username}</code>\n<b>Traffic Limit :</b> <code>{data_limit}</code>\n<b>Expire Date :</b> <code>{expire_date}</code>\n<b>Services :</b> <code>{services}</code>\n➖➖➖➖➖➖➖➖➖\n<b>Belongs To :</b> <code>{owner_username}</code>\n<b>By :</b> <b>#{by}</b>",
         A.user_updated: "✏️ <b>#Modified</b>\n➖➖➖➖➖➖➖➖➖\n<b>Username :</b> <code>{username}</code>\n<b>Traffic Limit :</b> <code>{data_limit}</code>\n<b>Expire Date :</b> <code>{expire_date}</code>\n<b>Services :</b> <code>{services}</code>\n➖➖➖➖➖➖➖➖➖\n<b>Belongs To :</b> <code>{owner_username}</code>\n<b>By :</b> <b>#{by}</b>",
-        A.user_activated: "✅ <b>#Activated</b>\n➖➖➖➖➖➖➖➖➖\n<b>Username</b> : <code>{username}</code>",
+        A.user_activated: "✅ <b>#Activated</b>\n➖➖➖➖➖➖➖➖➖\n<b>Username</b> : <code>{username}</code>\n<b>Belongs To :</b> <code>{owner_username}</code>",
         A.user_deleted: "🗑 <b>#Deleted</b>\n➖➖➖➖➖➖➖➖➖\n<b>Username</b> : <code>{username}</code>\n➖➖➖➖➖➖➖➖➖\n<b>Belongs To :</b> <code>{owner_username}</code>\n<b>By :</b> <b>#{by}</b>",
         A.user_enabled: "☑️ <b>#Enabled</b>\n➖➖➖➖➖➖➖➖➖\n<b>Username</b> : <code>{username}</code>\n➖➖➖➖➖➖➖➖➖\n<b>Belongs To :</b> <code>{owner_username}</code>\n<b>By :</b> <b>#{by}</b>",
         A.user_disabled: "",
         A.data_usage_reset: "🔁 <b>#Reset</b>\n➖➖➖➖➖➖➖➖➖\n<b>Username</b> : <code>{username}</code>\n➖➖➖➖➖➖➖➖➖\n<b>By</b> : <b>#{by}</b>",
         A.subscription_revoked: "🔁 <b>#Revoked</b>\n➖➖➖➖➖➖➖➖➖\n<b>Username</b> : <code>{username}</code>\n➖➖➖➖➖➖➖➖➖\n<b>By</b> : <b>#{by}</b>",
-        A.reached_usage_percent: "⚠️<b>#DataLimitWarning</b>\n➖➖➖➖➖➖➖➖➖\n<b>Username</b> : <code>{username}</code>\n<b>Used Percent</b> : <code>{usage_percent}</code>\n<b>Remaining Traffic</b> : <code>{remaining_traffic}</code>",
-        A.reached_days_left: "⚠️<b>#ExpirationWarning</b>\n➖➖➖➖➖➖➖➖➖\n<b>Username</b> : <code>{username}</code>\n<b>Remaining Days</b> : <code>{remaining_days}</code>",
+        A.reached_usage_percent: "⚠️<b>#DataLimitWarning</b>\n➖➖➖➖➖➖➖➖➖\n<b>Username</b> : <code>{username}</code>\n<b>Used Percent</b> : <code>{usage_percent}</code>\n<b>Remaining Traffic</b> : <code>{remaining_traffic}</code>\n➖➖➖➖➖➖➖➖➖\n<b>Belongs To :</b> <code>{owner_username}</code>",
+        A.reached_days_left: "⚠️<b>#ExpirationWarning</b>\n➖➖➖➖➖➖➖➖➖\n<b>Username</b> : <code>{username}</code>\n<b>Remaining Days</b> : <code>{remaining_days}</code>\n➖➖➖➖➖➖➖➖➖\n<b>Belongs To :</b> <code>{owner_username}</code>",
     }
 
     if notif.action == A.user_disabled:
         if data["status"] == UserStatus.DISABLED and not notif.user.enabled:
             texts[A.user_disabled] = (
-                "❌ <b>#Disabled</b>\n➖➖➖➖➖➖➖➖➖\n<b>Username</b> : <code>{username}</code>\n<b>Belongs To :</b> <code>{owner_username}</code>\n<b>By :</b> <b>#{by}</b>"
+                "❌ <b>#Disabled</b>\n➖➖➖➖➖➖➖➖➖\n<b>Username</b> : <code>{username}</code>\n➖➖➖➖➖➖➖➖➖\n<b>Belongs To :</b> <code>{owner_username}</code>\n<b>By :</b> <b>#{by}</b>"
             )
         elif data["status"] == UserStatus.DISABLED:
             texts[A.user_disabled] = (
@@ -45,11 +45,11 @@ def create_text(notif: Notification) -> str:
             )
         elif data["status"] == UserStatus.LIMITED:
             texts[A.user_disabled] = (
-                "🪫 <b>#Limited</b>\n➖➖➖➖➖➖➖➖➖\n<b>Username</b> : <code>{username}</code>"
+                "🪫 <b>#Limited</b>\n➖➖➖➖➖➖➖➖➖\n<b>Username</b> : <code>{username}</code>\n<b>Belongs To :</b> <code>{owner_username}</code>"
             )
         elif data["status"] == UserStatus.EXPIRED:
             texts[A.user_disabled] = (
-                "🕔 <b>#Expired</b>\n➖➖➖➖➖➖➖➖➖\n<b>Username</b> : <code>{username}</code>"
+                "🕔 <b>#Expired</b>\n➖➖➖➖➖➖➖➖➖\n<b>Username</b> : <code>{username}</code>\n<b>Belongs To :</b> <code>{owner_username}</code>"
             )
 
     text = texts.get(notif.action)
