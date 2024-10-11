@@ -60,7 +60,11 @@ def create_text(notif: Notification) -> str:
 
 def prepare_data(notif: Notification) -> dict:
     user = UserResponse.model_validate(notif.user)
-    by: Optional[Admin] = Admin.model_validate(notif.by) if notif.by else None
+    by: Optional[Admin] = (
+        Admin.model_validate(notif.by)
+        if hasattr(notif, "by") and notif.by
+        else None
+    )
 
     data = {
         "username": html.quote(user.username),
@@ -74,7 +78,7 @@ def prepare_data(notif: Notification) -> dict:
             else "Unlimited"
         ),
         "usage_percent": (
-            f"{min((user.used_traffic / user.data_limit) * 100, 100):.2f}%"
+            f"{round(min((user.used_traffic / user.data_limit) * 100, 100))}%"
             if user.data_limit > 0
             else "0%"
         ),
