@@ -206,9 +206,9 @@ def setup_format_variables(extra_data: dict) -> dict:
     return format_variables
 
 
-def parse_port(port_string: str) -> int:
-    if len(port_range := port_string.split("-")) > 1:
-        return random.randint(*list(map(int, port_range[:2])))
+def parse_port(port_string: str) -> int: 
+    if len(port_range := port_string.split("-")) > 1: 
+        return secrets.randbelow(int(port_range[1]) - int(port_range[0]) + 1) + int(port_range[0])
     return int(port_string)
 
 
