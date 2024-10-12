@@ -1,4 +1,4 @@
-"""change port input type from
+"""change host port type to string
 
 Revision ID: 913fdb91beeb
 Revises: 1992c49c5990
@@ -7,10 +7,7 @@ Create Date: 2024-10-12 04:59:01.544686
 """
 
 from alembic import op
-import sqlalchemy as sa
 from sqlalchemy import inspect, text
-from alembic.context import get_context
-
 
 # revision identifiers, used by Alembic.
 revision = "913fdb91beeb"
@@ -63,20 +60,6 @@ def upgrade():
             safe_execute(
                 text("ALTER TABLE hosts MODIFY COLUMN address VARCHAR(1024)")
             )
-    elif db_type == "sqlite":
-        with op.batch_alter_table("hosts", recreate="always") as batch_op:
-            if column_exists("hosts", "port"):
-                batch_op.alter_column(
-                    "port",
-                    existing_type=sa.INTEGER(),
-                    type_=sa.String(length=256),
-                )
-            if column_exists("hosts", "address"):
-                batch_op.alter_column(
-                    "address",
-                    existing_type=sa.String(length=256),
-                    type_=sa.String(length=1024),
-                )
     else:
         print(f"Unsupported database type: {db_type}")
 
@@ -104,19 +87,5 @@ def downgrade():
             safe_execute(
                 text("ALTER TABLE hosts MODIFY COLUMN address VARCHAR(256)")
             )
-    elif db_type == "sqlite":
-        with op.batch_alter_table("hosts", recreate="always") as batch_op:
-            if column_exists("hosts", "port"):
-                batch_op.alter_column(
-                    "port",
-                    existing_type=sa.String(length=256),
-                    type_=sa.INTEGER(),
-                )
-            if column_exists("hosts", "address"):
-                batch_op.alter_column(
-                    "address",
-                    existing_type=sa.String(length=1024),
-                    type_=sa.String(length=256),
-                )
     else:
         print(f"Unsupported database type: {db_type}")
