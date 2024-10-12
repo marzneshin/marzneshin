@@ -90,6 +90,19 @@ class InboundHost(BaseModel):
 
         return v
 
+    @field_validator("port")
+    @classmethod
+    def validate_port(cls, v: str) -> str:
+        if v is not None:
+            for port_range in v.split(","):
+                ports = port_range.split("-")
+                if not (0 < len(ports) < 3):
+                    raise ValueError("Invalid port pattern")
+                for port in ports:
+                    if not int(port) < 65536:
+                        raise ValueError("invalid port specified in the range")
+        return v
+
     @field_validator("alpn", mode="before")
     @classmethod
     def validate_alpn(cls, v):
