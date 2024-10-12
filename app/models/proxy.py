@@ -101,6 +101,12 @@ class InboundHost(BaseModel):
                 for port in ports:
                     if not int(port) < 65536:
                         raise ValueError("invalid port specified in the range")
+                if len(ports) == 2:
+                    if int(ports[0]) > int(ports[1]):
+                        raise ValueError(
+                            "The first port must be less than or equal to the second port"
+                        )
+
         return v
 
     @field_validator("alpn", mode="before")
