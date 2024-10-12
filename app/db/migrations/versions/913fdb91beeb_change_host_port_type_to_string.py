@@ -60,8 +60,6 @@ def upgrade():
             safe_execute(
                 text("ALTER TABLE hosts MODIFY COLUMN address VARCHAR(1024)")
             )
-    else:
-        print(f"Unsupported database type: {db_type}")
 
 
 def downgrade():
@@ -87,5 +85,3 @@ def downgrade():
             safe_execute(
                 text("ALTER TABLE hosts MODIFY COLUMN address VARCHAR(256)")
             )
-    else:
-        print(f"Unsupported database type: {db_type}")
