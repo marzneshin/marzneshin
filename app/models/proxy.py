@@ -99,7 +99,7 @@ class InboundHost(BaseModel):
                 if not (0 < len(ports) < 3):
                     raise ValueError("Invalid port pattern")
                 for port in ports:
-                    if not int(port) < 65536:
+                    if not int(port) < 65535:
                         raise ValueError("invalid port specified in the range")
                 if len(ports) == 2:
                     if int(ports[0]) > int(ports[1]):
