@@ -66,7 +66,7 @@ class FragmentSettings(BaseModel):
 class InboundHost(BaseModel):
     remark: str
     address: str
-    port: int | None = Field(None)
+    port: str | None = Field(None)
     sni: str | None = Field(None)
     host: str | None = Field(None)
     path: str | None = Field(None)
