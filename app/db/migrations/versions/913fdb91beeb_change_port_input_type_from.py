@@ -24,10 +24,12 @@ def get_db_type():
     inspector = inspect(conn)
     return inspector.engine.name
 
+
 def column_exists(table, column):
     conn = op.get_bind()
     insp = inspect(conn)
-    return column in [c['name'] for c in insp.get_columns(table)]
+    return column in [c["name"] for c in insp.get_columns(table)]
+
 
 def safe_execute(statement):
     try:
@@ -35,46 +37,86 @@ def safe_execute(statement):
     except Exception as e:
         print(f"Warning: {e}")
 
+
 def upgrade():
     db_type = get_db_type()
-    
-    if db_type == 'postgresql':
-        if column_exists('hosts', 'port'):
-            safe_execute(text("ALTER TABLE hosts ALTER COLUMN port TYPE VARCHAR(256) USING port::varchar"))
-        if column_exists('hosts', 'address'):
-            safe_execute(text("ALTER TABLE hosts ALTER COLUMN address TYPE VARCHAR(1024)"))
-    elif db_type in ['mysql', 'mariadb']:
-        if column_exists('hosts', 'port'):
-            safe_execute(text("ALTER TABLE hosts MODIFY COLUMN port VARCHAR(256)"))
-        if column_exists('hosts', 'address'):
-            safe_execute(text("ALTER TABLE hosts MODIFY COLUMN address VARCHAR(1024)"))
-    elif db_type == 'sqlite':
-        with op.batch_alter_table('hosts', recreate='always') as batch_op:
-            if column_exists('hosts', 'port'):
-                batch_op.alter_column('port', existing_type=sa.INTEGER(), type_=sa.String(length=256))
-            if column_exists('hosts', 'address'):
-                batch_op.alter_column('address', existing_type=sa.String(length=256), type_=sa.String(length=1024))
+
+    if db_type == "postgresql":
+        if column_exists("hosts", "port"):
+            safe_execute(
+                text(
+                    "ALTER TABLE hosts ALTER COLUMN port TYPE VARCHAR(256) USING port::varchar"
+                )
+            )
+        if column_exists("hosts", "address"):
+            safe_execute(
+                text(
+                    "ALTER TABLE hosts ALTER COLUMN address TYPE VARCHAR(1024)"
+                )
+            )
+    elif db_type in ["mysql", "mariadb"]:
+        if column_exists("hosts", "port"):
+            safe_execute(
+                text("ALTER TABLE hosts MODIFY COLUMN port VARCHAR(256)")
+            )
+        if column_exists("hosts", "address"):
+            safe_execute(
+                text("ALTER TABLE hosts MODIFY COLUMN address VARCHAR(1024)")
+            )
+    elif db_type == "sqlite":
+        with op.batch_alter_table("hosts", recreate="always") as batch_op:
+            if column_exists("hosts", "port"):
+                batch_op.alter_column(
+                    "port",
+                    existing_type=sa.INTEGER(),
+                    type_=sa.String(length=256),
+                )
+            if column_exists("hosts", "address"):
+                batch_op.alter_column(
+                    "address",
+                    existing_type=sa.String(length=256),
+                    type_=sa.String(length=1024),
+                )
     else:
         print(f"Unsupported database type: {db_type}")
 
+
 def downgrade():
     db_type = get_db_type()
-    
-    if db_type == 'postgresql':
-        if column_exists('hosts', 'port'):
-            safe_execute(text("ALTER TABLE hosts ALTER COLUMN port TYPE INTEGER USING port::integer"))
-        if column_exists('hosts', 'address'):
-            safe_execute(text("ALTER TABLE hosts ALTER COLUMN address TYPE VARCHAR(256)"))
-    elif db_type in ['mysql', 'mariadb']:
-        if column_exists('hosts', 'port'):
+
+    if db_type == "postgresql":
+        if column_exists("hosts", "port"):
+            safe_execute(
+                text(
+                    "ALTER TABLE hosts ALTER COLUMN port TYPE INTEGER USING port::integer"
+                )
+            )
+        if column_exists("hosts", "address"):
+            safe_execute(
+                text(
+                    "ALTER TABLE hosts ALTER COLUMN address TYPE VARCHAR(256)"
+                )
+            )
+    elif db_type in ["mysql", "mariadb"]:
+        if column_exists("hosts", "port"):
             safe_execute(text("ALTER TABLE hosts MODIFY COLUMN port INTEGER"))
-        if column_exists('hosts', 'address'):
-            safe_execute(text("ALTER TABLE hosts MODIFY COLUMN address VARCHAR(256)"))
-    elif db_type == 'sqlite':
-        with op.batch_alter_table('hosts', recreate='always') as batch_op:
-            if column_exists('hosts', 'port'):
-                batch_op.alter_column('port', existing_type=sa.String(length=256), type_=sa.INTEGER())
-            if column_exists('hosts', 'address'):
-                batch_op.alter_column('address', existing_type=sa.String(length=1024), type_=sa.String(length=256))
+        if column_exists("hosts", "address"):
+            safe_execute(
+                text("ALTER TABLE hosts MODIFY COLUMN address VARCHAR(256)")
+            )
+    elif db_type == "sqlite":
+        with op.batch_alter_table("hosts", recreate="always") as batch_op:
+            if column_exists("hosts", "port"):
+                batch_op.alter_column(
+                    "port",
+                    existing_type=sa.String(length=256),
+                    type_=sa.INTEGER(),
+                )
+            if column_exists("hosts", "address"):
+                batch_op.alter_column(
+                    "address",
+                    existing_type=sa.String(length=1024),
+                    type_=sa.String(length=256),
+                )
     else:
         print(f"Unsupported database type: {db_type}")

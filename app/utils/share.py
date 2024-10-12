@@ -206,6 +206,13 @@ def setup_format_variables(extra_data: dict) -> dict:
     return format_variables
 
 
+def parse_port(port_string):
+    if ":" in port_string:
+        start, end = map(int, port_string.split(":"))
+        return random.randint(start, end)
+    return int(port_string)
+
+
 def generate_user_configs(
     inbounds: list,
     key: str,
@@ -250,6 +257,19 @@ def generate_user_configs(
             else:
                 req_host = ""
 
+            host_ports = host.port.split(",") if host.port else []
+            req_port_list = host_ports or inbound.get("port", [])
+            if req_port_list:
+                req_port = parse_port(random.choice(req_port_list)).replace(
+                    "*", salt
+                )
+            else:
+                req_port = 1
+
+            req_address = random.choice(host.address.split(",")).replace(
+                "*", salt
+            )
+
             host_tls = (
                 None
                 if host.security == InboundHostSecurity.inbound_default
@@ -258,8 +278,8 @@ def generate_user_configs(
             data = V2Data(
                 protocol.value,
                 host.remark.format_map(format_variables),
-                host.address.format_map(format_variables),
-                host.port or inbound["port"],
+                address=req_address.format_map(format_variables),
+                port=req_port,
                 transport_type=inbound.get("network"),
                 sni=sni,
                 host=req_host,
