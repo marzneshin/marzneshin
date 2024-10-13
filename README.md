@@ -56,7 +56,7 @@ marznode manages and interacts with vpn backends (such as xray).
 
 <p align="left">
   <a href="https://docs.marzneshin.org" target="_blank" rel="noopener noreferrer">
-    <img src="docs/assets/document-button.png" alt="screenshots" width="175" height="auto">
+    <img src="docs/assets/document-button.png" alt="screenshots" width="200" height="auto">
   </a>
 </p>
 
