@@ -68,7 +68,7 @@ class UserCreate(User):
         json_schema_extra={
             "example": {
                 "username": "user1234",
-                "services": [1, 2, 3],
+                "service_ids": [1, 2, 3],
                 "expire_strategy": "start_on_first_use",
                 "usage_duration": 86400 * 14,
                 "activation_deadline": "2024-11-03T20:30:00",
