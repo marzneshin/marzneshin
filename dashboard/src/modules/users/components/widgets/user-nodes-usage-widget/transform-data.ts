@@ -12,15 +12,15 @@ export function transformData(initialData: UserNodeUsagesResponse): ChartData {
     const nodeDataMap: { [date: string]: ChartDataEntry } = {};
 
     initialData.node_usages.forEach(node => {
-        node.usages.forEach(usage => {
-            const timestamp = usage[0] * 1000;
+        node.usages.forEach(usageData => {
+            const [timestamp, usage] = usageData;
             const date = new Date(timestamp);
-            const formattedDate = date.toISOString().split('T')[0];
+            const formattedDate = date.toISOString();
 
             if (!nodeDataMap[formattedDate]) {
                 nodeDataMap[formattedDate] = { datetime: formattedDate };
             }
-            nodeDataMap[formattedDate][node.node_name] = usage[1];
+            nodeDataMap[formattedDate][node.node_name] = usage;
         });
     });
 
