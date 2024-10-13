@@ -41,7 +41,7 @@ interface HostMutationDialogProps extends MutationDialogProps<HostType> {
 }
 
 const transformFormValue = (values: HostType) => {
-    const port = values.port === "" ? null : values.port;
+    const port = values.port === "" ? null : String(values.port);
     const alpn = values.alpn === "none" ? "" : values.alpn;
     const fingerprint = values.fingerprint === "none" ? "" : values.fingerprint;
     return { ...values, alpn, fingerprint, port };
