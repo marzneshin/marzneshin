@@ -61,6 +61,35 @@ class User(BaseModel):
 
     model_config = ConfigDict(from_attributes=True)
 
+    @model_validator(mode="after")
+    def validate_expiry(self):
+        if self.expire_strategy == UserExpireStrategy.START_ON_FIRST_USE:
+            if not self.usage_duration:
+                raise ValueError(
+                    "User expire_strategy cannot be start_on_first_use without a valid usage_duration."
+                )
+
+            # Set expire_date to None if expire_strategy is START_ON_FIRST_USE
+            self.expire_date = None
+
+        elif self.expire_strategy == UserExpireStrategy.FIXED_DATE:
+            if not self.expire_date:
+                raise ValueError(
+                    "User expire_strategy cannot be fixed_date without a valid expire date."
+                )
+
+            # Set usage_duration and activation_deadline to None if expire_strategy is START_ON_FIRST_USE
+            self.usage_duration = None
+            self.activation_deadline = None
+
+        elif self.expire_strategy == UserExpireStrategy.NEVER:
+            # Set expire_date, usage_duration and activation_deadline to None if expire_strategy is NEVER
+            self.expire_date = None
+            self.usage_duration = None
+            self.activation_deadline = None
+
+        return self
+
 
 class UserCreate(User):
     service_ids: list[int] = Field([])
@@ -78,22 +107,6 @@ class UserCreate(User):
             }
         }
     )
-
-    @model_validator(mode="after")
-    def validate_expiry(self):
-        if self.expire_strategy == UserExpireStrategy.START_ON_FIRST_USE:
-            if not self.usage_duration:
-                raise ValueError(
-                    "User expire_strategy can not be start_on_first_use without a valid usage_duration."
-                )
-        elif (
-            self.expire_strategy == UserExpireStrategy.FIXED_DATE
-            and not self.expire_date
-        ):
-            raise ValueError(
-                "User expire_strategy can not be fixed_date without a valid expire date."
-            )
-        return self
 
 
 class UserModify(UserCreate):

@@ -423,6 +423,16 @@ def update_user(
     if modify.expire_strategy is not None:
         dbuser.expire_strategy = modify.expire_strategy or None
 
+        if modify.expire_strategy == UserExpireStrategy.FIXED_DATE:
+            dbuser.usage_duration = None
+            dbuser.activation_deadline = None
+        elif modify.expire_strategy == UserExpireStrategy.START_ON_FIRST_USE:
+            dbuser.expire_date = None
+        elif modify.expire_strategy == UserExpireStrategy.NEVER:
+            dbuser.expire_date = None
+            dbuser.usage_duration = None
+            dbuser.activation_deadline = None
+
     if modify.expire_date is not None:
         dbuser.expire_date = modify.expire_date or None
 
