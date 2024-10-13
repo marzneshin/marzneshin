@@ -39,10 +39,9 @@
 ## Table of Contents
 
 - [Overview](#overview)
-  - [Docs](#docs)
-  - [Features](#features)
-  - [Supported Languages](#supported-languages)
-- [Marznode](#marznode)
+    - [Features](#features)
+    - [Supported Languages](#supported-languages)
+- [marznode](#marznode)
 - [Donation](#donation)
 - [License](#license)
 - [Contributors](#contributors)
@@ -55,9 +54,11 @@ Marzneshin controls the [Marznodes](https://github.com/marzneshin/marznode)
 connected to it; monitoring/disabling/enabling users on marznode instances while
 marznode manages and interacts with vpn backends (such as xray).
 
-### Docs
-
-Marzneshin documentation may be found [here](https://docs.marzneshin.org).
+<p align="left">
+  <a href="https://docs.marzneshin.org" target="_blank" rel="noopener noreferrer">
+    <img src="docs/assets/document-button.png" alt="screenshots" width="175" height="auto">
+  </a>
+</p>
 
 ### Features
 
