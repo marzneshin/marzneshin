@@ -195,6 +195,12 @@
       "usage_duration": "Usage Duration",
       "activation_deadline": "Activation Deadline",
       "settings": {
+        "nodes-usage": {
+          "last-days": "Last {{count}} days",
+          "last-months": "Last {{count}} months",
+          "title": "User Nodes Usage",
+          "desc": "The amount of user usage of each nodes in time."
+        },
         "subscription_link": {
           "copied": "Subscription Link Copied",
           "copy": "Subscription Link",

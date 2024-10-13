@@ -2,20 +2,19 @@ import { FC } from 'react';
 import { transformData } from "./transform-data";
 import { useTranslation } from 'react-i18next';
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
     SectionWidget,
     ChartContainer,
     ChartTooltip,
     ChartTooltipContent,
     ChartConfig,
 } from "@marzneshin/components";
-import { UserType, useUserNodeUsagesQuery } from "@marzneshin/modules/users";
+import { UserType, UserNodeUsagesResponse, useUserNodeUsagesQuery } from "@marzneshin/modules/users";
+import mockData from "./mock-data.json";
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts"
 import { useState } from "react";
+import { SelectDateView } from "./select-date-view";
+import { interpolateColors } from "@marzneshin/utils";
+import { interpolateRainbow } from "d3";
 
 export interface NodesUsage {
     datetime: Date;
@@ -25,20 +24,6 @@ export interface NodesUsage {
 interface UserNodesUsageWidgetProps {
     user: UserType;
 }
-
-const chartConfig = {
-    views: {
-        label: "Page Views",
-    },
-    desktop: {
-        label: "Desktop",
-        color: "hsl(var(--chart-1))",
-    },
-    mobile: {
-        label: "Mobile",
-        color: "hsl(var(--chart-3))",
-    },
-} satisfies ChartConfig;
 
 type ChartDateInterval = '90d' | '30d' | '7d';
 
@@ -59,44 +44,44 @@ function useStartEndDateFromNow(timeRange: ChartDateInterval) {
 }
 
 
+const chartConfig = (nodesUsage: UserNodeUsagesResponse) => {
+    const numberOfNodes = nodesUsage.node_usages.length;
+    const config: Record<string, any> = {
+        views: {
+            label: "Page Views",
+        }
+    }
+    const colorRangeInfo = {
+        colorStart: 0,
+        colorEnd: 1,
+        useEndAsStart: false,
+    };
+    const colors = interpolateColors(numberOfNodes, interpolateRainbow, colorRangeInfo);
+    nodesUsage.node_usages.forEach((node, i) => {
+        config[node.node_name] = { label: node.node_name, color: colors[i] };
+    })
+    return config satisfies ChartConfig;
+}
+
 export const UserNodesUsageWidget: FC<UserNodesUsageWidgetProps> = ({
     user,
 }) => {
     const { t } = useTranslation();
     const [timeRange, setTimeRange] = useState("90d")
-    const { start, end } = useStartEndDateFromNow(timeRange as ChartDateInterval);
-    const { data, isLoading } = useUserNodeUsagesQuery({ username: user.username, start, end })
-    const chartData = transformData(data);
+    // const { start, end } = useStartEndDateFromNow(timeRange as ChartDateInterval);
+    // const { data, isLoading } = useUserNodeUsagesQuery({ username: user.username, start, end })
+    const chartData = transformData(mockData);
+    const config = chartConfig(mockData);
 
     return (
         <SectionWidget
-            title="User Nodes Usage"
-            description="The amount of user usage of each nodes in time."
-            footer={
-                <Select value={timeRange} onValueChange={setTimeRange}>
-                    <SelectTrigger
-                        className="w-[160px] rounded-lg sm:ml-auto"
-                        aria-label="Select a value"
-                    >
-                        <SelectValue placeholder="Last 3 months" />
-                    </SelectTrigger>
-                    <SelectContent className="rounded-xl">
-                        <SelectItem value="90d" className="rounded-lg">
-                            Last 3 months
-                        </SelectItem>
-                        <SelectItem value="30d" className="rounded-lg">
-                            Last 30 days
-                        </SelectItem>
-                        <SelectItem value="7d" className="rounded-lg">
-                            Last 7 days
-                        </SelectItem>
-                    </SelectContent>
-                </Select>
-            }
+            title={t("page.users.settings.nodes-usage.title")}
+            description={t("page.users.settings.nodes-usage.desc")}
+            footer={<SelectDateView timeRange={timeRange} setTimeRange={setTimeRange} />}
         >
             <ChartContainer
                 className="aspect-auto h-[250px] w-full"
-                config={chartConfig}>
+                config={config}>
                 <AreaChart
                     accessibilityLayer
                     data={chartData}
@@ -107,37 +92,56 @@ export const UserNodesUsageWidget: FC<UserNodesUsageWidgetProps> = ({
                 >
                     <CartesianGrid vertical={false} />
                     <XAxis
-                        dataKey="month"
+                        dataKey="datetime"
                         tickLine={false}
                         axisLine={false}
                         tickMargin={8}
-                        tickFormatter={(value) => value.slice(0, 3)}
+                        tickFormatter={(value) => {
+                            const date = new Date(value)
+                            return date.toLocaleDateString("en-US", {
+                                month: "short",
+                                day: "numeric",
+                            })
+                        }}
                     />
-                    <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
+                    <ChartTooltip
+                        cursor={false}
+                        content={
+                            <ChartTooltipContent
+                                labelFormatter={(value) => {
+                                    return new Date(value).toLocaleDateString("en-US", {
+                                        month: "short",
+                                        day: "numeric",
+                                        year: "numeric",
+                                    })
+                                }}
+                            />
+                        }
+                    />
                     <defs>
-                        {data.node_usages.map(node => {
-                            return <linearGradient id={node.node_name} x1="0" y1="0" x2="0" y2="1">
+                        {mockData.node_usages.map(node =>
+                            <linearGradient id={node.node_name} x1="0" y1="0" x2="0" y2="1">
                                 <stop
                                     offset="5%"
-                                    stopColor="var(--color-desktop)"
+                                    stopColor={config[node.node_name].color}
                                     stopOpacity={0.8}
                                 />
                                 <stop
                                     offset="95%"
-                                    stopColor="var(--color-desktop)"
+                                    stopColor={config[node.node_name].color}
                                     stopOpacity={0.1}
                                 />
                             </linearGradient>
-                        })}
+                        )}
                     </defs>
-                    {data.node_usages.map(node =>
+                    {mockData.node_usages.map(node =>
                         <Area
-                            dataKey="mobile"
+                            dataKey={node.node_name}
                             type="natural"
                             fill={`url(#${node.node_name})`}
                             fillOpacity={0.4}
-                            stroke="var(--color-mobile)"
                             stackId="a"
+                            stroke={config[node.node_name].color}
                         />
                     )}
                 </AreaChart>
