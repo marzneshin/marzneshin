@@ -43,6 +43,10 @@ export const useUserNodeUsagesQuery = ({ username, start, end }: UserNodeUsagesQ
     return useQuery({
         queryKey: [UsersQueryFetchKey, username, { start, end }],
         queryFn: fetchUserNodeUsages,
+        refetchInterval: 1000 * 60 * 60,
+        staleTime: 1000 * 60 * 60,
+        refetchOnWindowFocus: false,
+        refetchOnReconnect: false,
         initialData: UserNodeUsagesDefault
     })
 }
