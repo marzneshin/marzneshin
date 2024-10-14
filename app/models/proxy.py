@@ -98,14 +98,12 @@ class InboundHost(BaseModel):
                 ports = port_range.split("-")
                 if not (0 < len(ports) < 3):
                     raise ValueError("Invalid port pattern")
-                for port in ports:
-                    if not int(port) < 65535:
-                        raise ValueError("invalid port specified in the range")
-                if len(ports) == 2:
-                    if int(ports[0]) > int(ports[1]):
-                        raise ValueError(
-                            "The first port must be less than or equal to the second port"
-                        )
+                if any(int(port) > 65535 for port in ports):
+                    raise ValueError("invalid port specified in the range")
+                if len(ports) == 2 and int(ports[0]) > int(ports[1]):
+                    raise ValueError(
+                        "The first port must be less than or equal to the second port"
+                    )
 
         return v
 
