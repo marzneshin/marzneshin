@@ -1,13 +1,13 @@
 import { UserNodeUsagesResponse } from "@marzneshin/modules/users";
 
-type ChartDataEntry = {
+export type ChartDataEntry = {
     datetime: string;
     [key: string]: number | string;
 };
 
-type ChartData = ChartDataEntry[];
+export type ChartData = ChartDataEntry[];
 
-export function transformData(initialData: UserNodeUsagesResponse): ChartData {
+export function useTransformData(initialData: UserNodeUsagesResponse): ChartData {
     const chartData: ChartData = [];
     const nodeDataMap: { [date: string]: ChartDataEntry } = {};
 
@@ -27,6 +27,5 @@ export function transformData(initialData: UserNodeUsagesResponse): ChartData {
     for (const date in nodeDataMap) {
         chartData.push(nodeDataMap[date]);
     }
-    console.log(chartData);
     return chartData;
 }
