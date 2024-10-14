@@ -13,6 +13,7 @@ import { useState } from "react";
 import { SelectDateView } from "./select-date-view";
 import { UserNodesUsageWidgetProps } from "./types";
 import { useChartConfig, useTransformData } from "./hooks";
+import { format as formatByte } from '@chbphone55/pretty-bytes';
 
 
 export const UserNodesUsageWidget: FC<UserNodesUsageWidgetProps> = ({
@@ -43,6 +44,15 @@ export const UserNodesUsageWidget: FC<UserNodesUsageWidgetProps> = ({
                     }}
                 >
                     <CartesianGrid vertical={false} />
+                    <YAxis
+                        tickLine={false}
+                        axisLine={false}
+                        tickMargin={8}
+                        tickFormatter={(value) => {
+                            const [amount, metric] = formatByte(value)
+                            return `${amount} ${metric}`
+                        }}
+                    />
                     <XAxis
                         dataKey="datetime"
                         tickLine={false}
@@ -50,16 +60,18 @@ export const UserNodesUsageWidget: FC<UserNodesUsageWidgetProps> = ({
                         tickMargin={8}
                         tickFormatter={(value) => {
                             const date = new Date(value)
-                            return date.toLocaleDateString("en-US", {
-                                month: "short",
+                            const format = timeRange === "90d" ? {
                                 day: "numeric",
-                            })
+                                month: "short"
+                            } : ((timeRange === "30d") ? { day: "numeric" } : { day: "numeric", hour: "numeric" })
+                            return date.toLocaleDateString("en-US", format)
                         }}
                     />
                     <ChartTooltip
                         cursor={false}
                         content={
                             <ChartTooltipContent
+                                indicator='line'
                                 labelFormatter={(value) => {
                                     return new Date(value).toLocaleDateString("en-US", {
                                         month: "short",
@@ -90,9 +102,9 @@ export const UserNodesUsageWidget: FC<UserNodesUsageWidgetProps> = ({
                         <Area
                             dataKey={node.node_name}
                             type="natural"
-                            fill={`url(#${node.node_name})`}
+                            fill={config[node.node_name].color}
                             fillOpacity={0.4}
-                            stackId="a"
+                            stackId={node.node_id}
                             stroke={config[node.node_name].color}
                         />
                     )}
