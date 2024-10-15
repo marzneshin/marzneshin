@@ -66,7 +66,7 @@ export const UserNodesUsageWidget: FC<UserNodesUsageWidgetProps> = ({
                                 tickMargin={8}
                                 tickFormatter={(value) => {
                                     const date = new Date(value);
-                                    const format: Intl.DateTimeFormatOptions = {
+                                    const format = {
                                         "90d": {
                                             day: "numeric",
                                             month: "short",
@@ -82,10 +82,10 @@ export const UserNodesUsageWidget: FC<UserNodesUsageWidgetProps> = ({
                                         }
                                     }[timeRange as ChartDateInterval];
                                     if (timeRange === "1d") {
-                                        return date.toLocaleTimeString("en-US", format);
+                                        return date.toLocaleTimeString("en-US", format as Intl.DateTimeFormatOptions);
                                     }
 
-                                    return date.toLocaleDateString("en-US", format);
+                                    return date.toLocaleDateString("en-US", format as Intl.DateTimeFormatOptions);
                                 }}
                             />
                             <ChartTooltip
