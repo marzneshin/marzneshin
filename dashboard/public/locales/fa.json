@@ -191,9 +191,9 @@
       "on_hold_timeout": "انقضا",
       "settings": {
         "nodes-usage": {
-          "last-days": "روز گذشته {{count}} طی",
-          "last-months": "ماه گذشته {{count}} طی",
-          "last-hours": "ساعت گذشته {{count}} طی",
+          "last-days": "طی {{count}} روز گذشته",
+          "last-months": "طی {{count}} ماه گذشته",
+          "last-hours": "طی {{count}} ساعت گذشته",
           "title": "مصرف از نود ها",
           "desc": "میزان مصرف کاربر از هر یک از نودها در طول زمان مشخص."
         },
