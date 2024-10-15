@@ -93,7 +93,8 @@
         "update-interval": "Update Interval",
         "add-rule": "Add Rule",
         "reset-local-changes": "Reset Changes",
-        "title": "Subscription Settings",
+        "title": "Subscription",
+        "description": "Manage and customize subscription settings with configurable rules and update options.",
         "subscription-title": "Subscription Rules",
         "subscription-desc": "Add your subscription rules in order of priority.",
         "alert": {
@@ -194,7 +195,15 @@
       "revoke_subscription": "Revoke Subscription",
       "usage_duration": "Usage Duration",
       "activation_deadline": "Activation Deadline",
+      "nodes-usage": "Nodes Usage",
       "settings": {
+        "nodes-usage": {
+          "last-days": "Last {{count}} days",
+          "last-months": "Last {{count}} months",
+          "last-hours": "Last {{count}} hours",
+          "title": "User Nodes Usage",
+          "desc": "The amount of user usage of each nodes in time."
+        },
         "subscription_link": {
           "copied": "Subscription Link Copied",
           "copy": "Subscription Link",

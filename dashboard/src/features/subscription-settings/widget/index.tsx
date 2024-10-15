@@ -8,15 +8,9 @@ export const SubscriptionSettingsWidget = () => {
     const { t } = useTranslation()
     return (
         <SectionWidget
-            title={
-                <div className="space-y-1">
-                    <h4>
-                        {t("page.settings.subscription-settings.title")}
-                    </h4>
-                </div>
-            }
-        >
-            <SubscriptionRulesForm />
-        </SectionWidget>
+            title={t("page.settings.subscription-settings.title")}
+            description={t("page.settings.subscription-settings.description")}
+            content={<SubscriptionRulesForm />}
+        />
     )
 }
