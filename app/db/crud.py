@@ -331,10 +331,14 @@ def get_user_usages(
             v.created_at.replace(tzinfo=timezone.utc).timestamp()
         ] = v.used_traffic
 
+    node_ids = list(usages.keys())
+    nodes = db.query(Node).where(Node.id.in_(node_ids))
+    node_id_names = {node.id: node.name for node in nodes}
+
     result = UserUsageSeriesResponse(username=db_user.username, node_usages=[])
     for node_id, rows in usages.items():
         node_usages = UserNodeUsageSeries(
-            node_id=node_id, node_name=str(node_id), usages=[]
+            node_id=node_id, node_name=node_id_names[node_id], usages=[]
         )
         current = start.astimezone(timezone.utc).replace(
             minute=0, second=0, microsecond=0
