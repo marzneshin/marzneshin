@@ -3,7 +3,7 @@ import {
 } from "@marzneshin/components";
 import { UserNodeUsagesResponse } from "@marzneshin/modules/users";
 import { interpolateColors } from "@marzneshin/utils";
-import { interpolateRainbow } from "d3";
+import { interpolateRdBu } from "d3";
 
 export const useChartConfig = (nodesUsage: UserNodeUsagesResponse) => {
     const numberOfNodes = nodesUsage.node_usages.length;
@@ -17,7 +17,7 @@ export const useChartConfig = (nodesUsage: UserNodeUsagesResponse) => {
         colorEnd: 1,
         useEndAsStart: false,
     };
-    const colors = interpolateColors(numberOfNodes, interpolateRainbow, colorRangeInfo);
+    const colors = interpolateColors(numberOfNodes, interpolateRdBu, colorRangeInfo);
     nodesUsage.node_usages.forEach((node, i) => {
         config[node.node_name] = { label: node.node_name, color: colors[i] };
     })
