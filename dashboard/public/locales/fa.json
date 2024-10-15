@@ -176,9 +176,9 @@
       "nodes-usage": "مصرف از نودها",
       "settings": {
         "nodes-usage": {
-          "last-days": "روز ها {{count}} آخرین",
-          "last-months": "ماه ها {{count}} آخرین",
-          "last-hours": "ساعت ها {{count}} آخرین",
+          "last-days": "روز  {{count}} آخرین",
+          "last-months": "ماه  {{count}} آخرین",
+          "last-hours": "ساعت  {{count}} آخرین",
           "title": "مصرف کاربر از نود ها",
           "desc": "میزان مصرف کاربر از نود ها در زمان مشخص ."
         },
