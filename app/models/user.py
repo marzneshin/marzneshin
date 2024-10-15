@@ -133,11 +133,6 @@ class UserResponse(User):
     model_config = ConfigDict(from_attributes=True)
 
 
-class UserUsage(BaseModel):
-    used_traffic: int
-    usage_date: datetime
-
-
 class UserNodeUsageSeries(BaseModel):
     node_id: int | None = None
     node_name: str

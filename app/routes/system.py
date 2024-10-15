@@ -3,10 +3,21 @@ from fastapi import APIRouter
 from app.db import crud
 from app.db.models import Admin as DBAdmin, User, Settings
 from app.db.models import Node
-from app.dependencies import DBDep, AdminDep, SudoAdminDep
+from app.dependencies import (
+    DBDep,
+    AdminDep,
+    SudoAdminDep,
+    EndDateDep,
+    StartDateDep,
+)
 from app.models.node import NodeStatus
 from app.models.settings import SubscriptionSettings, TelegramSettings
-from app.models.system import UsersStats, NodesStats, AdminsStats
+from app.models.system import (
+    UsersStats,
+    NodesStats,
+    AdminsStats,
+    TrafficUsageSeries,
+)
 from app.models.user import UserExpireStrategy
 
 router = APIRouter(tags=["System"], prefix="/system")
@@ -58,6 +69,13 @@ def get_nodes_stats(db: DBDep, admin: SudoAdminDep):
         .filter(Node.status == NodeStatus.unhealthy)
         .count(),
     )
+
+
+@router.get("/stats/traffic", response_model=TrafficUsageSeries)
+def get_total_traffic_stats(
+    db: DBDep, admin: AdminDep, start_date: StartDateDep, end_date: EndDateDep
+):
+    return crud.get_total_usages(db, admin, start_date, end_date)
 
 
 @router.get("/stats/users", response_model=UsersStats)
