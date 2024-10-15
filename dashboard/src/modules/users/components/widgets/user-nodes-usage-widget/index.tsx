@@ -22,7 +22,7 @@ export const UserNodesUsageWidget: FC<UserNodesUsageWidgetProps> = ({
     user,
 }) => {
     const { t } = useTranslation();
-    const [timeRange, setTimeRange] = useState("90d")
+    const [timeRange, setTimeRange] = useState("7d")
     const { start, end } = useFromNowInterval(timeRange as ChartDateInterval);
     const { data, isPending } = useUserNodeUsagesQuery({ username: user.username, start, end })
     const chartData = useTransformData(data);
