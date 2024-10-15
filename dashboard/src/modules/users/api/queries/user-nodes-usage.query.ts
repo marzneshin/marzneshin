@@ -2,12 +2,12 @@ import { useQuery } from "@tanstack/react-query";
 import { fetch } from "@marzneshin/utils";
 import { UsersQueryFetchKey } from "../..";
 
-type UsageMetric = [number, number];
+type UsageMetric = number[];
 
 interface NodeUsage {
     node_id: number;
     node_name: string;
-    usages: UsageMetric[];
+    usages: Array<UsageMetric>;
 }
 
 export interface UserNodeUsagesResponse {
@@ -43,10 +43,7 @@ export const useUserNodeUsagesQuery = ({ username, start, end }: UserNodeUsagesQ
     return useQuery({
         queryKey: [UsersQueryFetchKey, username, { start, end }],
         queryFn: fetchUserNodeUsages,
-        refetchInterval: 1000 * 60 * 60,
-        staleTime: 1000 * 60 * 60,
-        refetchOnWindowFocus: false,
-        refetchOnReconnect: false,
+        refetchInterval: 1000 * 60 * 60, // 60min refresh
         initialData: UserNodeUsagesDefault
     })
 }
