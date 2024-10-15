@@ -55,7 +55,7 @@ export const UsersSettingsDialog: FC<UsersSettingsDialogProps> = ({
                                         {t("subscription")}
                                     </TabsTrigger>
                                     <TabsTrigger className="w-full" value="nodes-usage">
-                                        {t("nodes-usage")}
+                                        {t("page.users.nodes-usage")}
                                     </TabsTrigger>
                                 </TabsList>
                                 <TabsContent

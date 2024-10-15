@@ -195,6 +195,7 @@
       "revoke_subscription": "Revoke Subscription",
       "usage_duration": "Usage Duration",
       "activation_deadline": "Activation Deadline",
+      "nodes-usage": "Nodes Usage",
       "settings": {
         "nodes-usage": {
           "last-days": "Last {{count}} days",
