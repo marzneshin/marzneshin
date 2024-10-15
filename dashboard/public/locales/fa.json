@@ -174,14 +174,6 @@
       "usage_duration": "مدت استفاده",
       "activation_deadline": "انقضای تعلیق",
       "nodes-usage": "مصرف از نودها",
-      "settings": {
-        "nodes-usage": {
-          "last-days": "روز گذشته {{count}} طی",
-          "last-months": "ماه گذشته {{count}} طی",
-          "last-hours": "ساعت گذشته {{count}} طی",
-          "title": "مصرف کاربر از نود ها",
-          "desc": "میزان مصرف کاربر از هر یک از نودها در طول زمان مشخص."
-        },
       "data_limit_reached": "به محدودیت دیتا رسیده",
       "note-placeholder": "یادداشتی در مورد کاربر",
       "data_limit": "محدودیت حجم",
@@ -198,6 +190,12 @@
       "on_hold_expire_duration": "مدت زمان",
       "on_hold_timeout": "انقضا",
       "settings": {
+        "nodes-usage": {
+          "last-days": "روز گذشته {{count}} طی",
+          "last-months": "ماه گذشته {{count}} طی",
+          "last-hours": "ساعت گذشته {{count}} طی",
+          "title": "مصرف کاربر از نود ها",
+          "desc": "میزان مصرف کاربر از هر یک از نودها در طول زمان مشخص."
         "subscription_link": {
           "copied": "لینک اشتراک کپی شد",
           "copy": "کپی لینک اشتراک",
