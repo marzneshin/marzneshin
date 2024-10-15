@@ -14,7 +14,7 @@ export function useTransformData(initialData: UserNodeUsagesResponse): ChartData
     initialData.node_usages.forEach(node => {
         node.usages.forEach(usageData => {
             const [timestamp, usage] = usageData;
-            const date = new Date(timestamp);
+            const date = new Date(timestamp * 1000);
             const formattedDate = date.toISOString();
 
             if (!nodeDataMap[formattedDate]) {
