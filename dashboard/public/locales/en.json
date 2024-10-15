@@ -93,7 +93,8 @@
         "update-interval": "Update Interval",
         "add-rule": "Add Rule",
         "reset-local-changes": "Reset Changes",
-        "title": "Subscription Settings",
+        "title": "Subscription",
+        "description": "Manage and customize subscription settings with configurable rules and update options.",
         "subscription-title": "Subscription Rules",
         "subscription-desc": "Add your subscription rules in order of priority.",
         "alert": {
