@@ -98,6 +98,7 @@ export const UserNodesUsageWidget: FC<UserNodesUsageWidgetProps> = ({
                                                 month: "short",
                                                 day: "numeric",
                                                 year: "numeric",
+                                                hour: "numeric"
                                             })
                                         }}
                                         valueFormatter={(value) => {
