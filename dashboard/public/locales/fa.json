@@ -176,11 +176,11 @@
       "nodes-usage": "مصرف از نودها",
       "settings": {
         "nodes-usage": {
-          "last-days": "روز  {{count}} آخرین",
-          "last-months": "ماه  {{count}} آخرین",
-          "last-hours": "ساعت  {{count}} آخرین",
+          "last-days": "روز {{count}} طی",
+          "last-months": "ماه {{count}} طی",
+          "last-hours": "ساعت {{count}} طی",
           "title": "مصرف کاربر از نود ها",
-          "desc": "میزان مصرف کاربر از نود ها در زمان مشخص ."
+          "desc": "میزان مصرف کاربر از نود ها طی زمان مشخص ."
         },
       "data_limit_reached": "به محدودیت دیتا رسیده",
       "note-placeholder": "یادداشتی در مورد کاربر",
