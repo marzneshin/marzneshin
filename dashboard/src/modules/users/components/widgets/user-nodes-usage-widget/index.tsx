@@ -32,18 +32,19 @@ export const UserNodesUsageWidget: FC<UserNodesUsageWidgetProps> = ({
         <Awaiting
             Component={
                 <SectionWidget
-                    title={t("page.users.settings.nodes-usage.title")}
+                    title={<div className="hstack justify-between w-full">{t("page.users.settings.nodes-usage.title")} <SelectDateView timeRange={timeRange} setTimeRange={setTimeRange} /></div>}
                     description={t("page.users.settings.nodes-usage.desc")}
-                    footer={<SelectDateView timeRange={timeRange} setTimeRange={setTimeRange} />}
                 >
+
                     <ChartContainer
-                        className="aspect-auto h-[250px] w-full"
+                        className="aspect-auto h-[320px] w-full"
                         config={config}>
                         <AreaChart
                             accessibilityLayer
                             data={chartData}
                             margin={{
-                                left: 12,
+                                left: 13,
+                                top: 13,
                                 right: 12,
                             }}
                         >
