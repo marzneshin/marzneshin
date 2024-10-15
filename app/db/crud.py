@@ -374,42 +374,13 @@ def get_users_count(
 
 def create_user(
     db: Session,
-    user: UserCreate,
+    users: Union[UserCreate, List[UserCreate]],
     admin: Admin = None,
     allowed_services: list | None = None,
 ):
-    service_ids = (
-        [sid for sid in user.service_ids if sid in allowed_services]
-        if allowed_services is not None
-        else user.service_ids
-    )
-    dbuser = User(
-        username=user.username,
-        key=user.key,
-        expire_strategy=user.expire_strategy,
-        expire_date=user.expire_date,
-        usage_duration=user.usage_duration,
-        activation_deadline=user.activation_deadline,
-        services=db.query(Service)
-        .filter(Service.id.in_(service_ids))
-        .all(),  # user.services,
-        data_limit=(user.data_limit or None),
-        admin=admin,
-        data_limit_reset_strategy=user.data_limit_reset_strategy,
-        note=user.note,
-    )
-    db.add(dbuser)
-    db.commit()
-    db.refresh(dbuser)
-    return dbuser
+    if not isinstance(users, list):
+        users = [users]
 
-
-def create_users(
-    db: Session,
-    users: list[UserCreate],
-    admin: Admin = None,
-    allowed_services: list | None = None,
-):
     db_users = []
     for user in users:
         service_ids = (
@@ -436,7 +407,10 @@ def create_users(
         db_users.append(dbuser)
 
     db.commit()
-    return db_users
+    for dbuser in db_users:
+        db.refresh(dbuser)
+
+    return db_users[0] if len(db_users) == 1 else db_users
 
 
 def remove_user(db: Session, dbuser: User):

@@ -157,7 +157,7 @@ async def add_bulk_users(
     """
 
     try:
-        created_users = crud.create_users(
+        created_users = crud.create_user(
             db,
             new_users,
             admin=crud.get_admin(db, admin.username),
