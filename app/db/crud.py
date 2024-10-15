@@ -404,6 +404,41 @@ def create_user(
     return dbuser
 
 
+def create_users(
+    db: Session,
+    users: list[UserCreate],
+    admin: Admin = None,
+    allowed_services: list | None = None,
+):
+    db_users = []
+    for user in users:
+        service_ids = (
+            [sid for sid in user.service_ids if sid in allowed_services]
+            if allowed_services is not None
+            else user.service_ids
+        )
+        dbuser = User(
+            username=user.username,
+            key=user.key,
+            expire_strategy=user.expire_strategy,
+            expire_date=user.expire_date,
+            usage_duration=user.usage_duration,
+            activation_deadline=user.activation_deadline,
+            services=db.query(Service)
+            .filter(Service.id.in_(service_ids))
+            .all(),
+            data_limit=(user.data_limit or None),
+            admin=admin,
+            data_limit_reset_strategy=user.data_limit_reset_strategy,
+            note=user.note,
+        )
+        db.add(dbuser)
+        db_users.append(dbuser)
+
+    db.commit()
+    return db_users
+
+
 def remove_user(db: Session, dbuser: User):
     dbuser.removed = True
     dbuser.activated = False
@@ -509,6 +544,15 @@ def set_owner(db: Session, dbuser: User, admin: Admin):
     db.commit()
     db.refresh(dbuser)
     return dbuser
+
+
+def bulk_set_owner(db: Session, users: List[User], admin: Admin):
+    for user in users:
+        user.admin = admin
+    db.commit()
+    for user in users:
+        db.refresh(user)
+    return users
 
 
 def get_system_usage(db: Session):
