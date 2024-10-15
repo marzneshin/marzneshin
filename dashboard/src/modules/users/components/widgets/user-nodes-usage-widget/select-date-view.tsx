@@ -21,14 +21,17 @@ export const SelectDateView = (
                 <SelectValue placeholder="Last 3 months" />
             </SelectTrigger>
             <SelectContent className="rounded-xl">
-                <SelectItem value="90d" className="rounded-lg">
-                    {t('page.users.settings.nodes-usage.last-months', { count: 3 })}
+                <SelectItem value="1d" className="rounded-lg">
+                    {t('page.users.settings.nodes-usage.last-hours', { count: 24 })}
+                </SelectItem>
+                <SelectItem value="7d" className="rounded-lg">
+                    {t('page.users.settings.nodes-usage.last-days', { count: 7 })}
                 </SelectItem>
                 <SelectItem value="30d" className="rounded-lg">
                     {t('page.users.settings.nodes-usage.last-days', { count: 30 })}
                 </SelectItem>
-                <SelectItem value="7d" className="rounded-lg">
-                    {t('page.users.settings.nodes-usage.last-days', { count: 7 })}
+                <SelectItem value="90d" className="rounded-lg">
+                    {t('page.users.settings.nodes-usage.last-months', { count: 3 })}
                 </SelectItem>
             </SelectContent>
         </Select>

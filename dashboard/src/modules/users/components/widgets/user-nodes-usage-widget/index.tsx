@@ -22,7 +22,7 @@ export const UserNodesUsageWidget: FC<UserNodesUsageWidgetProps> = ({
     user,
 }) => {
     const { t } = useTranslation();
-    const [timeRange, setTimeRange] = useState("7d")
+    const [timeRange, setTimeRange] = useState("1d")
     const { start, end } = useFromNowInterval(timeRange as ChartDateInterval);
     const { data, isPending } = useUserNodeUsagesQuery({ username: user.username, start, end })
     const chartData = useTransformData(data);
@@ -66,15 +66,25 @@ export const UserNodesUsageWidget: FC<UserNodesUsageWidgetProps> = ({
                                 tickMargin={8}
                                 tickFormatter={(value) => {
                                     const date = new Date(value);
-                                    const format: Intl.DateTimeFormatOptions = timeRange === "90d" ? {
-                                        day: "numeric",
-                                        month: "short",
-                                    } : (timeRange === "30d" ? {
-                                        day: "numeric",
-                                    } : {
-                                        day: "numeric",
-                                        hour: "numeric",
-                                    });
+                                    const format: Intl.DateTimeFormatOptions = {
+                                        "90d": {
+                                            day: "numeric",
+                                            month: "short",
+                                        }, "30d": {
+                                            day: "numeric",
+                                        }, "7d": {
+                                            day: "numeric",
+                                            hour: "numeric",
+                                        },
+                                        "1d": {
+                                            minute: "numeric",
+                                            hour: "numeric",
+                                        }
+                                    }[timeRange as ChartDateInterval];
+                                    if (timeRange === "1d") {
+                                        return date.toLocaleTimeString("en-US", format);
+                                    }
+
                                     return date.toLocaleDateString("en-US", format);
                                 }}
                             />
