@@ -89,9 +89,9 @@
         "update-interval": "بازه آپدیت",
         "add-rule": "افزودن قانون",
         "reset-local-changes": "بازنشانی",
-        "title": "تنظیمات اشتراک",
+        "title": "اشتراک",
         "subscription-title": "قوانین اشتراک",
-        "subscription-desc": "قوانین اشتراک خود را به ترتیب اولویت تنظیم کنید.",
+        "subscription-desc": "تنظیمات اشتراک را با قوانین قابل تنظیم و گزینه‌های به‌روزرسانی، مدیریت و شخصی‌سازی کنید.",
         "alert": {
           "title": "قانونی وجود ندارد",
           "desc": "هیچ قانونی برای اشتراک تنظیم نشده"
@@ -173,6 +173,7 @@
       "on_first_use": "از اولین استفاده",
       "usage_duration": "مدت استفاده",
       "activation_deadline": "انقضای تعلیق",
+      "nodes-usage": "مصرف از نودها",
       "data_limit_reached": "به محدودیت دیتا رسیده",
       "note-placeholder": "یادداشتی در مورد کاربر",
       "data_limit": "محدودیت حجم",
@@ -189,6 +190,12 @@
       "on_hold_expire_duration": "مدت زمان",
       "on_hold_timeout": "انقضا",
       "settings": {
+        "nodes-usage": {
+          "last-days": "روز گذشته {{count}} طی",
+          "last-months": "ماه گذشته {{count}} طی",
+          "last-hours": "ساعت گذشته {{count}} طی",
+          "title": "مصرف از نود ها",
+          "desc": "میزان مصرف کاربر از هر یک از نودها در طول زمان مشخص.",
         "subscription_link": {
           "copied": "لینک اشتراک کپی شد",
           "copy": "کپی لینک اشتراک",

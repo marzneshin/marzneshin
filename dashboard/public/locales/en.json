@@ -202,7 +202,7 @@
           "last-months": "Last {{count}} months",
           "last-hours": "Last {{count}} hours",
           "title": "User Nodes Usage",
-          "desc": "The amount of user usage of each nodes in time."
+          "desc": "The amount of user usage on each node in time."
         },
         "subscription_link": {
           "copied": "Subscription Link Copied",
