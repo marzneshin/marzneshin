@@ -1,7 +1,7 @@
 import json
 import secrets
 from collections import defaultdict
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from enum import Enum
 from types import NoneType
 from typing import List, Optional, Tuple, Union
@@ -327,21 +327,25 @@ def get_user_usages(
     usages = defaultdict(dict)
 
     for v in db.query(NodeUserUsage).filter(cond):
-        usages[v.node_id][v.created_at.timestamp()] = v.used_traffic
+        usages[v.node_id][
+            v.created_at.replace(tzinfo=timezone.utc).timestamp()
+        ] = v.used_traffic
 
     result = UserUsageSeriesResponse(username=db_user.username, node_usages=[])
     for node_id, rows in usages.items():
         node_usages = UserNodeUsageSeries(
             node_id=node_id, node_name=str(node_id), usages=[]
         )
-        current = start
+        current = start.astimezone(timezone.utc).replace(
+            minute=0, second=0, microsecond=0
+        )
+
         while current <= end:
             node_usages.usages.append(
                 (int(current.timestamp()), rows.get(current.timestamp()) or 0)
             )
             current += timedelta(hours=1)
         result.node_usages.append(node_usages)
-
     return result
 
 
