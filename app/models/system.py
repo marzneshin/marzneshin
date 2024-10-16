@@ -38,3 +38,7 @@ class NodesStats(BaseModel):
     total: int
     healthy: int
     unhealthy: int
+
+
+class TrafficUsageSeries(BaseModel):
+    usages: list[tuple[int, int]]

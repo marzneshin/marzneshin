@@ -81,6 +81,12 @@
     "donate": "Donate"
   },
   "page": {
+    "home": {
+      "total-traffics": {
+        "title": "Total System Traffic",
+        "desc": "Traffics combined from all nodes"
+      }
+    },
     "settings": {
       "subscription-settings": {
         "template-on-acceptance": "Template on Acceptance",

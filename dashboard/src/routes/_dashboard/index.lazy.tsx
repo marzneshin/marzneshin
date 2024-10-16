@@ -7,6 +7,7 @@ import {
     Page,
 } from '@marzneshin/components';
 import { UsersStatsWidget, useUsersStatsQuery } from '@marzneshin/modules/users';
+import { TotalTrafficsWidget } from '@marzneshin/features/total-traffic-widget';
 import { useTranslation } from 'react-i18next';
 import { FC } from 'react';
 
@@ -22,7 +23,10 @@ export const DashboardPage: FC = () => {
                         {t('home')}
                     </CardTitle>
                 </CardHeader>
-                <CardContent className="md:flex">
+                <CardContent className="flex md:grid grid-cols-4 gap-4 w-full">
+                    <div className="col-span-3">
+                        <TotalTrafficsWidget />
+                    </div>
                     <UsersStatsWidget {...stats} />
                 </CardContent>
             </Card>
