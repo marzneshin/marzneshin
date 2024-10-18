@@ -6,7 +6,7 @@ from enum import Enum
 from types import NoneType
 from typing import List, Optional, Tuple, Union
 
-from sqlalchemy import and_, delete, update, select
+from sqlalchemy import and_, delete, update, select, func
 from sqlalchemy.orm import Session
 
 from app.db.models import (
@@ -316,20 +316,31 @@ def get_total_usages(
     db: Session, admin: Admin, start: datetime, end: datetime
 ):
     usages = defaultdict(int)
-    for v in (
-        db.query(NodeUserUsage)
-        .join(User, NodeUserUsage.user_id == User.id)
-        .join(Admin, User.admin_id == Admin.id)
+
+    query = (
+        db.query(
+            NodeUserUsage.created_at, func.sum(NodeUserUsage.used_traffic)
+        )
+        .group_by(NodeUserUsage.created_at)
         .filter(
             and_(
-                Admin.id == admin.id,
                 NodeUserUsage.created_at >= start,
                 NodeUserUsage.created_at <= end,
             )
         )
-    ):
-        usages[v.created_at.replace(tzinfo=timezone.utc).timestamp()] = (
-            v.used_traffic
+    )
+
+    if not admin.is_sudo:
+        query = (
+            query.filter(
+                Admin.id == admin.id,
+            )
+            .join(User, NodeUserUsage.user_id == User.id)
+            .join(Admin, User.admin_id == Admin.id)
+        )
+    for created_at, used_traffic in query.all():
+        usages[created_at.replace(tzinfo=timezone.utc).timestamp()] += int(
+            used_traffic
         )
 
     result = TrafficUsageSeries(usages=[])
