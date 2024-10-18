@@ -12,12 +12,17 @@ export const DashboardPage: FC = () => {
     const { data } = useUsersStatsQuery()
 
     return (
-        <Page className="flex md:grid flex-col grid-cols-5 gap-4 w-full" title={t('home')}>
-            <div className="col-span-3">
-                <TotalTrafficsWidget />
-            </div>
-            <div className="col-span-2">
-                <UsersStatsWidget {...data} />
+        <Page className="flex flex-col gap-4 w-full" title={t('home')}>
+            <div className={`grid grid-cols-1 md:grid-cols-12 gap-4`}>
+                <div className={data.total !== 0 ? "md:col-span-8" : "md:col-span-12"}>
+                    <TotalTrafficsWidget />
+                </div>
+
+                {data.total !== 0 && (
+                    <div className="md:col-span-4">
+                        <UsersStatsWidget {...data} />
+                    </div>
+                )}
             </div>
         </Page>
     )
