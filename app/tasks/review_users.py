@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING
 
 from app import marznode
 from app.db import (
-    GetDB,
+    get_db_session,
     get_users,
 )
 from app.models.user import (
@@ -23,14 +23,14 @@ logger = logging.getLogger(__name__)
 
 async def review_users():
     now = datetime.utcnow()
-    with GetDB() as db:
-        for user in get_users(db, activated=True, is_active=False):
+    async for db in get_db_session():
+        for user in await get_users(db, activated=True, is_active=False):
             """looking for expired/to be limited users who are still active"""
 
             marznode.operations.update_user(user, remove=True)
             user.activated = False
-            db.commit()
-            db.refresh(user)
+            await db.commit()
+            await db.refresh(user)
             asyncio.ensure_future(
                 report.status_change(
                     user.username,
@@ -45,7 +45,7 @@ async def review_users():
                 str(user.activated),
             )
 
-        for user in get_users(
+        for user in await get_users(
             db,
             expire_strategy=UserExpireStrategy.START_ON_FIRST_USE,
             is_active=True,
@@ -68,8 +68,8 @@ async def review_users():
                 seconds=user.usage_duration
             )
             user.expire_strategy = UserExpireStrategy.FIXED_DATE
-            db.commit()
-            db.refresh(user)
+            await db.commit()
+            await db.refresh(user)
             asyncio.ensure_future(
                 report.status_change(
                     user.username,

@@ -25,7 +25,7 @@ from app.config.env import (
     CLASH_SUBSCRIPTION_TEMPLATE,
     SUBSCRIPTION_PAGE_TEMPLATE,
 )
-from app.db import GetDB, crud
+from app.db import get_db_session, crud
 from app.models.proxy import (
     InboundHostSecurity,
 )
@@ -61,10 +61,10 @@ handlers_templates = {
 }
 
 
-def generate_subscription_template(
+async def generate_subscription_template(
     db_user, subscription_settings: SubscriptionSettings
 ):
-    links = generate_subscription(
+    links = await generate_subscription(
         user=db_user,
         config_format="links",
         use_placeholder=not db_user.is_active
@@ -78,7 +78,7 @@ def generate_subscription_template(
     )
 
 
-def generate_subscription(
+async def generate_subscription(
     user: "UserResponse",
     config_format: Literal["links", "xray", "clash-meta", "clash", "sing-box"],
     as_base64: bool = False,
@@ -112,7 +112,7 @@ def generate_subscription(
         configs = [placeholder_config]
 
     else:
-        configs = generate_user_configs(
+        configs = await generate_user_configs(
             user.inbounds,
             user.key,
             format_variables,
@@ -206,12 +206,11 @@ def setup_format_variables(extra_data: dict) -> dict:
     return format_variables
 
 
-def generate_user_configs(
+async def generate_user_configs(
     inbounds: list,
     key: str,
     format_variables: dict,
 ) -> Union[List, str]:
-
     salt = secrets.token_hex(8)
     configs = []
 
@@ -230,8 +229,8 @@ def generate_user_configs(
         format_variables.update(
             {"TRANSPORT": inbound.get("network", "<missing>")}
         )
-        with GetDB() as db:
-            hosts = crud.get_inbound_hosts(db, inb_id)
+        async for db in get_db_session():
+            hosts = await crud.get_inbound_hosts(db, inb_id)
 
         for host in hosts:
             if host.is_disabled:

@@ -7,7 +7,7 @@ from app.config import get_secret_key
 from app.config.env import JWT_ACCESS_TOKEN_EXPIRE_MINUTES
 
 
-def create_admin_token(username: str, is_sudo=False) -> str:
+async def create_admin_token(username: str, is_sudo=False) -> str:
     data = {
         "sub": username,
         "access": "sudo" if is_sudo else "admin",
@@ -18,13 +18,15 @@ def create_admin_token(username: str, is_sudo=False) -> str:
             minutes=JWT_ACCESS_TOKEN_EXPIRE_MINUTES
         )
         data["exp"] = expire
-    encoded_jwt = jwt.encode(data, get_secret_key(), algorithm="HS256")
+    encoded_jwt = jwt.encode(data, await get_secret_key(), algorithm="HS256")
     return encoded_jwt
 
 
-def get_admin_payload(token: str) -> Union[dict, None]:
+async def get_admin_payload(token: str) -> Union[dict, None]:
     try:
-        payload = jwt.decode(token, get_secret_key(), algorithms=["HS256"])
+        payload = jwt.decode(
+            token, await get_secret_key(), algorithms=["HS256"]
+        )
     except jwt.InvalidTokenError:
         return
 

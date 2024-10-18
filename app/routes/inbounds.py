@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, Query
 from fastapi import HTTPException
 from fastapi_pagination.ext.sqlalchemy import paginate
 from fastapi_pagination.links import Page
+import sqlalchemy as sa
 
 from app.db import crud
 from app.db.models import InboundHost as DBInboundHost, Inbound as DBInbound
@@ -16,28 +17,28 @@ router = APIRouter(
 
 
 @router.get("", response_model=Page[Inbound])
-def get_inbounds(db: DBDep, tag: str = Query(None)):
+async def get_inbounds(db: DBDep, tag: str = Query(None)):
     """
     Get all inbounds
     """
-    query = db.query(DBInbound)
+    query = sa.select(DBInbound)
     if tag:
         query = query.filter(DBInbound.tag.ilike(f"%{tag}%"))
 
-    return paginate(db, query)
+    return await paginate(db, query)
 
 
 @router.get("/hosts", response_model=Page[InboundHostResponse])
-def get_hosts(db: DBDep):
-    return paginate(db.query(DBInboundHost))
+async def get_hosts(db: DBDep):
+    return await paginate(db, sa.select(DBInboundHost))
 
 
 @router.get("/hosts/{id}", response_model=InboundHostResponse)
-def get_host(id: int, db: DBDep):
+async def get_host(id: int, db: DBDep):
     """
     Get a host
     """
-    host = crud.get_host(db, id)
+    host = await crud.get_host(db, id)
     if not host:
         raise HTTPException(status_code=404, detail=HOST_NOT_FOUND_ERROR_MSG)
 
@@ -45,38 +46,38 @@ def get_host(id: int, db: DBDep):
 
 
 @router.put("/hosts/{id}", response_model=InboundHostResponse)
-def update_host(id: int, host: InboundHost, db: DBDep):
+async def update_host(id: int, host: InboundHost, db: DBDep):
     """
     Modify a host
     """
 
-    db_host = crud.get_host(db, id)
+    db_host = await crud.get_host(db, id)
     if not db_host:
         raise HTTPException(status_code=404, detail=HOST_NOT_FOUND_ERROR_MSG)
 
-    return crud.update_host(db, db_host, host)
+    return await crud.update_host(db, db_host, host)
 
 
 @router.delete("/hosts/{id}")
-def delete_host(id: int, db: DBDep):
+async def delete_host(id: int, db: DBDep):
     """
     Remove a host
     """
-    db_host = crud.get_host(db, id)
+    db_host = await crud.get_host(db, id)
     if not db_host:
         raise HTTPException(status_code=404, detail=HOST_NOT_FOUND_ERROR_MSG)
 
-    db.delete(db_host)
-    db.commit()
+    await db.delete(db_host)
+    await db.commit()
     return {}
 
 
 @router.get("/{id}", response_model=Inbound)
-def get_inbound(id: int, db: DBDep):
+async def get_inbound(id: int, db: DBDep):
     """
     Get a specific inbound
     """
-    inbound = crud.get_inbound(db, id)
+    inbound = await crud.get_inbound(db, id)
     if not inbound:
         raise HTTPException(status_code=404, detail="Inbound not found")
 
@@ -84,26 +85,26 @@ def get_inbound(id: int, db: DBDep):
 
 
 @router.get("/{id}/hosts", response_model=Page[InboundHostResponse])
-def get_inbound_hosts(id: int, db: DBDep):
+async def get_inbound_hosts(id: int, db: DBDep):
     """
     Get hosts of a specific inbound
     """
-    inbound = crud.get_inbound(db, id)
+    inbound = await crud.get_inbound(db, id)
     if not inbound:
         raise HTTPException(status_code=404, detail="Inbound not found")
 
-    return paginate(
-        db, db.query(DBInboundHost).filter(DBInboundHost.inbound_id == id)
+    return await paginate(
+        db, sa.select(DBInboundHost).filter(DBInboundHost.inbound_id == id)
     )
 
 
 @router.post("/{id}/hosts", response_model=InboundHostResponse)
-def create_host(id: int, host: InboundHost, db: DBDep):
+async def create_host(id: int, host: InboundHost, db: DBDep):
     """
     Add a host to the inbound
     """
-    inbound = crud.get_inbound(db, id)
+    inbound = await crud.get_inbound(db, id)
     if not inbound:
         raise HTTPException(status_code=404, detail="Inbound not found")
 
-    return crud.add_host(db, inbound, host)
+    return await crud.add_host(db, inbound, host)

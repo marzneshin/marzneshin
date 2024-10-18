@@ -67,13 +67,12 @@ class Admin(Base):
     id = Column(Integer, primary_key=True)
     username = Column(String(32), unique=True, index=True)
     hashed_password = Column(String(128))
-    users = relationship("User", back_populates="admin")
     services = relationship(
         "Service",
         secondary=admins_services,
         back_populates="admins",
-        lazy="joined",
-    )
+        lazy="selectin",
+    )  # README ok and used | many to many
     enabled = Column(
         Boolean,
         nullable=False,
@@ -99,7 +98,7 @@ class Admin(Base):
         String(256),
         nullable=False,
         default="",
-        server_default=sqlalchemy.sql.text(""),
+        server_default="",
     )
 
     @property
@@ -121,14 +120,23 @@ class Service(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(64))
     admins = relationship(
-        "Admin", secondary=admins_services, back_populates="services"
-    )
+        "Admin",
+        secondary=admins_services,
+        back_populates="services",
+        lazy="selectin",
+    )  # README ok | many to many
     users = relationship(
-        "User", secondary=users_services, back_populates="services"
-    )
+        "User",
+        secondary=users_services,
+        back_populates="services",
+        lazy="selectin",
+    )  # README ok | many to many
     inbounds = relationship(
-        "Inbound", secondary=inbounds_services, back_populates="services"
-    )
+        "Inbound",
+        secondary=inbounds_services,
+        back_populates="services",
+        lazy="selectin",
+    )  # README ok | many to many
 
     @property
     def inbound_ids(self):
@@ -162,30 +170,21 @@ class User(Base):
         "Service",
         secondary=users_services,
         back_populates="users",
-        lazy="joined",
-    )
+        lazy="selectin",
+    )  # README ok and used | many to many
     inbounds = relationship(
         "Inbound",
         secondary="join(users_services, inbounds_services, inbounds_services.c.service_id == users_services.c.service_id)"
         ".join(Inbound, Inbound.id == inbounds_services.c.inbound_id)",
         viewonly=True,
         distinct_target_key=True,
-    )
+        lazy="selectin",
+    )  # README ok and used | many to many
     used_traffic = Column(BigInteger, default=0)
     lifetime_used_traffic = Column(
-        BigInteger, default=0, server_default="0", nullable=False
+        BigInteger, default=0, server_default=text("0"), nullable=False
     )
     traffic_reset_at = Column(DateTime)
-    node_usages = relationship(
-        "NodeUserUsage",
-        back_populates="user",
-        cascade="all,delete,delete-orphan",
-    )
-    notification_reminders = relationship(
-        "NotificationReminder",
-        back_populates="user",
-        cascade="all,delete,delete-orphan",
-    )
     data_limit = Column(BigInteger)
     data_limit_reset_strategy = Column(
         Enum(UserDataUsageResetStrategy),
@@ -203,7 +202,9 @@ class User(Base):
     usage_duration = Column(BigInteger)
     activation_deadline = Column(DateTime)
     admin_id = Column(Integer, ForeignKey("admins.id"))
-    admin = relationship("Admin", back_populates="users")
+    admin = relationship(
+        "Admin", lazy="joined"
+    )  # README ok and used | many to one
     sub_updated_at = Column(DateTime)
     sub_last_user_agent = Column(String(512))
     sub_revoked_at = Column(DateTime)
@@ -281,7 +282,6 @@ class Backend(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(64), nullable=False)
     node_id = Column(Integer, ForeignKey("nodes.id"), index=True)
-    node = relationship("Node", back_populates="backends")
     backend_type = Column(String(32), nullable=False)
     version = Column(String(32))
     running = Column(Boolean, default=True, nullable=False)
@@ -296,15 +296,21 @@ class Inbound(Base):
     tag = Column(String(256), nullable=False)
     config = Column(String(512), nullable=False)
     node_id = Column(Integer, ForeignKey("nodes.id"), index=True)
-    node = relationship("Node", back_populates="inbounds")
+    node = relationship(
+        "Node", back_populates="inbounds", lazy="joined"
+    )  # README ok and used | many to one
     services = relationship(
-        "Service", secondary=inbounds_services, back_populates="inbounds"
-    )
+        "Service",
+        secondary=inbounds_services,
+        back_populates="inbounds",
+        lazy="selectin",
+    )  # README ok and used | many to many
     hosts = relationship(
         "InboundHost",
         back_populates="inbound",
         cascade="all, delete, delete-orphan",
-    )
+        lazy="selectin",
+    )  # README ok and used | one to many
 
     @property
     def service_ids(self):
@@ -346,10 +352,14 @@ class InboundHost(Base):
     fragment = Column(JSON())
 
     inbound_id = Column(Integer, ForeignKey("inbounds.id"), nullable=False)
-    inbound = relationship("Inbound", back_populates="hosts")
+    inbound = relationship(
+        "Inbound", back_populates="hosts", lazy="joined"
+    )  # README ok and used | many to one
     allowinsecure = Column(Boolean, default=False)
     is_disabled = Column(Boolean, default=False)
-    weight = Column(Integer, default=1, nullable=False, server_default="1")
+    weight = Column(
+        Integer, default=1, nullable=False, server_default=text("1")
+    )
 
 
 class System(Base):
@@ -387,11 +397,14 @@ class Node(Base):
     port = Column(Integer)
     xray_version = Column(String(32))
     inbounds = relationship(
-        "Inbound", back_populates="node", cascade="all, delete"
-    )
+        "Inbound",
+        back_populates="node",
+        cascade="all, delete",
+        lazy="selectin",
+    )  # README one to many
     backends = relationship(
-        "Backend", back_populates="node", cascade="all, delete"
-    )
+        "Backend", cascade="all, delete", lazy="selectin"
+    )  # README one to many
     status = Column(
         Enum(NodeStatus), nullable=False, default=NodeStatus.unhealthy
     )
@@ -400,16 +413,6 @@ class Node(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
     uplink = Column(BigInteger, default=0)
     downlink = Column(BigInteger, default=0)
-    user_usages = relationship(
-        "NodeUserUsage",
-        back_populates="node",
-        cascade="all, delete, delete-orphan",
-    )
-    usages = relationship(
-        "NodeUsage",
-        back_populates="node",
-        cascade="all, delete, delete-orphan",
-    )
     usage_coefficient = Column(
         Float, nullable=False, server_default=text("1.0"), default=1
     )
@@ -426,9 +429,7 @@ class NodeUserUsage(Base):
     id = Column(Integer, primary_key=True)
     created_at = Column(DateTime, nullable=False)  # one hour per record
     user_id = Column(Integer, ForeignKey("users.id"))
-    user = relationship("User", back_populates="node_usages")
-    node_id = Column(Integer, ForeignKey("nodes.id"))
-    node = relationship("Node", back_populates="user_usages")
+    node_id = Column(Integer, ForeignKey("nodes.id", ondelete="SET NULL"))
     used_traffic = Column(BigInteger, default=0)
 
 
@@ -438,8 +439,7 @@ class NodeUsage(Base):
 
     id = Column(Integer, primary_key=True)
     created_at = Column(DateTime, nullable=False)  # one hour per record
-    node_id = Column(Integer, ForeignKey("nodes.id"))
-    node = relationship("Node", back_populates="usages")
+    node_id = Column(Integer, ForeignKey("nodes.id", ondelete="SET NULL"))
     uplink = Column(BigInteger, default=0)
     downlink = Column(BigInteger, default=0)
 
@@ -449,7 +449,6 @@ class NotificationReminder(Base):
 
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey("users.id"))
-    user = relationship("User", back_populates="notification_reminders")
     type = Column(Enum(ReminderType), nullable=False)
     expires_at = Column(DateTime)
     created_at = Column(DateTime, default=datetime.utcnow)
@@ -458,6 +457,6 @@ class NotificationReminder(Base):
 class Settings(Base):
     __tablename__ = "settings"
 
-    id = Column(Integer, primary_key=True, server_default=text("0"))
+    id = Column(Integer, primary_key=True)
     subscription = Column(JSON, nullable=False)
     telegram = Column(JSON)

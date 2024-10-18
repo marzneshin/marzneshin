@@ -4,10 +4,10 @@ from collections import defaultdict
 from datetime import datetime, timedelta, timezone
 from enum import Enum
 from types import NoneType
-from typing import List, Optional, Tuple, Union
+from typing import List, Optional, Sequence, Tuple, Union
 
 from sqlalchemy import and_, delete, update, select, func
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db.models import (
     JWT,
@@ -46,7 +46,7 @@ from app.models.user import (
 )
 
 
-def add_default_hosts(db: Session, inbounds: List[Inbound]):
+async def add_default_hosts(db: AsyncSession, inbounds: List[Inbound]):
     hosts = [
         InboundHost(
             remark="🚀 Marz ({USERNAME}) [{PROTOCOL} - {TRANSPORT}]",
@@ -56,13 +56,11 @@ def add_default_hosts(db: Session, inbounds: List[Inbound]):
         for i in inbounds
     ]
     db.add_all(hosts)
-    db.commit()
+    await db.commit()
 
 
-def ensure_node_backends(db: Session, backends, node_id: int):
-    old_backends = db.query(Backend).where(Backend.node_id == node_id)
-    for backend in old_backends:
-        db.delete(backend)
+async def ensure_node_backends(db: AsyncSession, backends, node_id: int):
+    await db.execute(delete(Backend).where(Backend.node_id == node_id))
     backends = [
         Backend(
             name=backend.name,
@@ -73,26 +71,26 @@ def ensure_node_backends(db: Session, backends, node_id: int):
         for backend in backends
     ]
     db.add_all(backends)
-    db.flush()
+    await db.commit()
 
 
-def ensure_node_inbounds(db: Session, inbounds: List[Inbound], node_id: int):
-    current_tags = [
-        i[0]
-        for i in db.execute(
+async def ensure_node_inbounds(
+    db: AsyncSession, inbounds: List[Inbound], node_id: int
+):
+    current_tags = (
+        await db.scalars(
             select(Inbound.tag).filter(Inbound.node_id == node_id)
-        ).all()
-    ]
+        )
+    ).all()
     updated_tags = set(i.tag for i in list(inbounds))
     inbound_additions, tag_deletions = list(), set()
     for tag in current_tags:
         if tag not in updated_tags:
             tag_deletions.add(tag)
-    removals = db.query(Inbound).where(
+    removals = delete(Inbound).where(
         and_(Inbound.node_id == node_id, Inbound.tag.in_(tag_deletions))
     )
-    for i in removals:
-        db.delete(i)
+    await db.execute(removals)
 
     for inb in inbounds:
         if inb.tag in current_tags:
@@ -106,7 +104,7 @@ def ensure_node_inbounds(db: Session, inbounds: List[Inbound], node_id: int):
                     config=inb.config,
                 )
             )
-            db.execute(stmt)
+            await db.execute(stmt)
         else:
             inbound_additions.append(inb)
     new_inbounds = [
@@ -119,61 +117,68 @@ def ensure_node_inbounds(db: Session, inbounds: List[Inbound], node_id: int):
         for inb in inbound_additions
     ]
     db.add_all(new_inbounds)
-    db.flush()
+    await db.flush()
     for i in new_inbounds:
-        db.refresh(i)
-    add_default_hosts(db, new_inbounds)
-    db.commit()
+        await db.refresh(i)
+    await add_default_hosts(db, new_inbounds)
+    await db.commit()
 
 
-def get_node_users(
-    db: Session,
+async def get_node_users(
+    db: AsyncSession,
     node_id: int,
 ):
     query = (
-        db.query(User.id, User.username, User.key, Inbound)
+        select(User.id, User.username, User.key, Inbound)
         .distinct()
         .join(Inbound.services)
         .join(Service.users)
         .filter(Inbound.node_id == node_id)
         .filter(User.activated == True)
     )
-    return query.all()
+    result = await db.execute(query)
+    return result.all()
 
 
-def get_user_hosts(db: Session, user_id: int):
-    return (
-        db.query(InboundHost)
+async def get_user_hosts(db: AsyncSession, user_id: int):
+    query = (
+        select(InboundHost)
         .distinct()
         .join(User.services)
         .join(Service.inbounds)
         .join(Inbound.hosts)
         .filter(User.id == user_id)
-        .all()
     )
+    return (await db.scalars(query)).all()
 
 
-def get_inbound_hosts(db: Session, inbound_id: int) -> List[InboundHost]:
+async def get_inbound_hosts(
+    db: AsyncSession, inbound_id: int
+) -> Sequence[InboundHost]:
     return (
-        db.query(InboundHost)
-        .filter(InboundHost.inbound_id == inbound_id)
-        .all()
+        await db.scalars(
+            select(InboundHost).filter(InboundHost.inbound_id == inbound_id)
+        )
+    ).all()
+
+
+async def get_all_inbounds(db: AsyncSession):
+    return (await db.scalars(select(Inbound))).all()
+
+
+async def get_inbound(db: AsyncSession, inbound_id: int) -> Inbound | None:
+    return await db.get(entity=Inbound, ident=inbound_id)
+
+
+async def get_host(db: AsyncSession, host_id) -> InboundHost | None:
+    return await db.scalar(
+        select(InboundHost).filter(InboundHost.id == host_id)
     )
 
 
-def get_all_inbounds(db: Session):
-    return db.query(Inbound).all()
-
-
-def get_inbound(db: Session, inbound_id: int) -> Inbound | None:
-    return db.query(Inbound).filter(Inbound.id == inbound_id).first()
-
-
-def get_host(db: Session, host_id) -> InboundHost:
-    return db.query(InboundHost).filter(InboundHost.id == host_id).first()
-
-
-def add_host(db: Session, inbound: Inbound, host: InboundHostModify):
+async def add_host(
+    db: AsyncSession, inbound: Inbound, host: InboundHostModify
+):
     host = InboundHost(
         remark=host.remark,
         address=host.address,
@@ -191,12 +196,14 @@ def add_host(db: Session, inbound: Inbound, host: InboundHostModify):
         weight=host.weight,
     )
     inbound.hosts.append(host)
-    db.commit()
-    db.refresh(host)
+    await db.commit()
+    await db.refresh(host)
     return host
 
 
-def update_host(db: Session, db_host: InboundHost, host: InboundHostModify):
+async def update_host(
+    db: AsyncSession, db_host: InboundHost, host: InboundHostModify
+):
     db_host.remark = host.remark
     db_host.address = host.address
     db_host.port = host.port
@@ -211,17 +218,17 @@ def update_host(db: Session, db_host: InboundHost, host: InboundHostModify):
     db_host.is_disabled = host.is_disabled
     db_host.allowinsecure = host.allowinsecure
     db_host.weight = host.weight
-    db.commit()
-    db.refresh(db_host)
+    await db.commit()
+    await db.refresh(db_host)
     return db_host
 
 
-def get_user(db: Session, username: str):
-    return db.query(User).filter(User.username == username).first()
+async def get_user(db: AsyncSession, username: str):
+    return await db.scalar(select(User).filter(User.username == username))
 
 
-def get_user_by_id(db: Session, user_id: int):
-    return db.query(User).filter(User.id == user_id).first()
+async def get_user_by_id(db: AsyncSession, user_id: int):
+    return await db.get(entity=User, ident=user_id)
 
 
 UsersSortingOptions = Enum(
@@ -241,8 +248,8 @@ UsersSortingOptions = Enum(
 )
 
 
-def get_users(
-    db: Session,
+async def get_users(
+    db: AsyncSession,
     offset: Optional[int] = None,
     limit: Optional[int] = None,
     usernames: Optional[List[str]] = None,
@@ -257,8 +264,8 @@ def get_users(
     expired: bool | None = None,
     data_limit_reached: bool | None = None,
     enabled: bool | None = None,
-) -> Union[List[User], Tuple[List[User], int]]:
-    query = db.query(User).filter(User.removed == False)
+) -> Union[Sequence[User], Tuple[Sequence[User], int]]:
+    query = select(User).filter(User.removed == False)
 
     if usernames:
         if len(usernames) == 1:
@@ -309,18 +316,16 @@ def get_users(
     if limit:
         query = query.limit(limit)
 
-    return query.all()
+    return (await db.scalars(query)).all()
 
 
-def get_total_usages(
-    db: Session, admin: Admin, start: datetime, end: datetime
+async def get_total_usages(
+    db: AsyncSession, admin: Admin, start: datetime, end: datetime
 ):
     usages = defaultdict(int)
 
     query = (
-        db.query(
-            NodeUserUsage.created_at, func.sum(NodeUserUsage.used_traffic)
-        )
+        select(NodeUserUsage.created_at, func.sum(NodeUserUsage.used_traffic))
         .group_by(NodeUserUsage.created_at)
         .filter(
             and_(
@@ -338,7 +343,8 @@ def get_total_usages(
             .join(User, NodeUserUsage.user_id == User.id)
             .join(Admin, User.admin_id == Admin.id)
         )
-    for created_at, used_traffic in query.all():
+    res = (await db.execute(query)).scalars().all()
+    for created_at, used_traffic in res:
         usages[created_at.replace(tzinfo=timezone.utc).timestamp()] += int(
             used_traffic
         )
@@ -357,8 +363,8 @@ def get_total_usages(
     return result
 
 
-def get_user_usages(
-    db: Session,
+async def get_user_usages(
+    db: AsyncSession,
     db_user: User,
     start: datetime,
     end: datetime,
@@ -371,13 +377,16 @@ def get_user_usages(
 
     usages = defaultdict(dict)
 
-    for v in db.query(NodeUserUsage).filter(cond):
+    nodes_user_usage = await db.stream_scalars(
+        select(NodeUserUsage).filter(cond)
+    )
+    for v in nodes_user_usage:
         usages[v.node_id][
             v.created_at.replace(tzinfo=timezone.utc).timestamp()
         ] = v.used_traffic
 
     node_ids = list(usages.keys())
-    nodes = db.query(Node).where(Node.id.in_(node_ids))
+    nodes = (await db.scalars(select(Node).where(Node.id.in_(node_ids)))).all()
     node_id_names = {node.id: node.name for node in nodes}
 
     result = UserUsageSeriesResponse(username=db_user.username, node_usages=[])
@@ -395,11 +404,12 @@ def get_user_usages(
             )
             current += timedelta(hours=1)
         result.node_usages.append(node_usages)
+
     return result
 
 
-def get_users_count(
-    db: Session,
+async def get_users_count(
+    db: AsyncSession,
     admin: Admin | None = None,
     enabled: bool | None = None,
     online: bool | None = None,
@@ -408,7 +418,8 @@ def get_users_count(
     expired: bool | None = None,
     data_limit_reached: bool | None = None,
 ):
-    query = db.query(User.id).filter(User.removed == False)
+    query = select(func.count(User.id)).filter(User.removed == False)
+
     if admin:
         query = query.filter(User.admin_id == admin.id)
     if is_active:
@@ -430,13 +441,14 @@ def get_users_count(
     if expire_strategy:
         query = query.filter(User.expire_strategy == expire_strategy)
 
-    return query.count()
+    result = await db.scalar(query)
+    return result
 
 
-def create_user(
-    db: Session,
+async def create_user(
+    db: AsyncSession,
     user: UserCreate,
-    admin: Admin = None,
+    admin_id: int,
     allowed_services: list | None = None,
 ):
     service_ids = (
@@ -451,29 +463,31 @@ def create_user(
         expire_date=user.expire_date,
         usage_duration=user.usage_duration,
         activation_deadline=user.activation_deadline,
-        services=db.query(Service)
-        .filter(Service.id.in_(service_ids))
-        .all(),  # user.services,
+        services=(
+            await db.scalars(
+                select(Service).filter(Service.id.in_(service_ids))
+            )
+        ).all(),  # user.services,
         data_limit=(user.data_limit or None),
-        admin=admin,
+        admin_id=admin_id,
         data_limit_reset_strategy=user.data_limit_reset_strategy,
         note=user.note,
     )
     db.add(dbuser)
-    db.commit()
-    db.refresh(dbuser)
+    await db.commit()
+    await db.refresh(dbuser)
     return dbuser
 
 
-def remove_user(db: Session, dbuser: User):
+async def remove_user(db: AsyncSession, dbuser: User):
     dbuser.removed = True
     dbuser.activated = False
     # db.query(User).filter_by(id=user_id).delete()
-    db.commit()
+    await db.commit()
 
 
-def update_user(
-    db: Session,
+async def update_user(
+    db: AsyncSession,
     dbuser: User,
     modify: UserModify,
     allowed_services: list | None = None,
@@ -518,87 +532,95 @@ def update_user(
             service_ids = modify.service_ids
 
         dbuser.services = (
-            db.query(Service).filter(Service.id.in_(service_ids)).all()
-        )
+            await db.scalars(
+                select(Service).filter(Service.id.in_(service_ids))
+            )
+        ).all()
     dbuser.edit_at = datetime.utcnow()
 
-    db.commit()
-    db.refresh(dbuser)
+    await db.commit()
+    await db.refresh(dbuser)
     return dbuser
 
 
-def reset_user_data_usage(db: Session, dbuser: User):
+async def reset_user_data_usage(db: AsyncSession, dbuser: User):
     dbuser.traffic_reset_at = datetime.utcnow()
 
     dbuser.used_traffic = 0
 
     db.add(dbuser)
 
-    db.commit()
-    db.refresh(dbuser)
+    await db.commit()
+    await db.refresh(dbuser)
     return dbuser
 
 
-def revoke_user_sub(db: Session, dbuser: User):
+async def revoke_user_sub(db: AsyncSession, dbuser: User):
     dbuser.key = secrets.token_hex(16)
     dbuser.sub_revoked_at = datetime.utcnow()
-    db.commit()
-    db.refresh(dbuser)
+    await db.commit()
+    await db.refresh(dbuser)
     return dbuser
 
 
-def update_user_sub(db: Session, dbuser: User, user_agent: str):
+async def update_user_sub(db: AsyncSession, dbuser: User, user_agent: str):
     dbuser.sub_updated_at = datetime.utcnow()
     dbuser.sub_last_user_agent = user_agent
 
-    db.commit()
-    db.refresh(dbuser)
+    await db.commit()
+    await db.refresh(dbuser)
     return dbuser
 
 
-def reset_all_users_data_usage(db: Session, admin: Optional[Admin] = None):
-    query = db.query(User)
+async def reset_all_users_data_usage(
+    db: AsyncSession, admin: Optional[Admin] = None
+):
+    query = select(User)
 
     if admin:
         query = query.filter(User.admin == admin)
 
-    for db_user in query.all():
+    users = await db.stream_scalars(query)
+
+    async for db_user in users:
         db_user.used_traffic = 0
 
-    db.commit()
+    await db.commit()
 
 
-def update_user_status(db: Session, dbuser: User, status: UserStatus):
+async def update_user_status(
+    db: AsyncSession, dbuser: User, status: UserStatus
+):
     dbuser.status = status
-    db.commit()
-    db.refresh(dbuser)
+    await db.commit()
+    await db.refresh(dbuser)
     return dbuser
 
 
-def set_owner(db: Session, dbuser: User, admin: Admin):
+async def set_owner(db: AsyncSession, dbuser: User, admin: Admin):
     dbuser.admin = admin
-    db.commit()
-    db.refresh(dbuser)
+    await db.commit()
+    await db.refresh(dbuser)
     return dbuser
 
 
-def get_system_usage(db: Session):
-    return db.query(System).first()
+async def get_system_usage(db: AsyncSession):
+    return await db.scalar(select(System))
 
 
-def get_jwt_secret_key(db: Session):
-    return db.query(JWT).first().secret_key
+async def get_jwt_secret_key(db: AsyncSession):
+    return await db.scalar(select(JWT.secret_key))
 
 
-def get_tls_certificate(db: Session):
-    return db.query(TLS).first()
+async def get_tls_certificate(db: AsyncSession):
+    return await db.scalar(select(TLS))
 
 
-def get_admin(db: Session, username: str) -> Admin | None:
-    return db.query(Admin).filter(Admin.username == username).first()
+async def get_admin(db: AsyncSession, username: str) -> Admin | None:
+    return await db.scalar(select(Admin).filter(Admin.username == username))
 
 
-def create_admin(db: Session, admin: AdminCreate):
+async def create_admin(db: AsyncSession, admin: AdminCreate):
     dbadmin = Admin(
         username=admin.username,
         hashed_password=admin.hashed_password,
@@ -612,13 +634,13 @@ def create_admin(db: Session, admin: AdminCreate):
         subscription_url_prefix=admin.subscription_url_prefix,
     )
     db.add(dbadmin)
-    db.commit()
-    db.refresh(dbadmin)
+    await db.commit()
+    await db.refresh(dbadmin)
     return dbadmin
 
 
-def update_admin(
-    db: Session, dbadmin: Admin, modifications: AdminPartialModify
+async def update_admin(
+    db: AsyncSession, dbadmin: Admin, modifications: AdminPartialModify
 ):
     for attribute in [
         "is_sudo",
@@ -634,17 +656,19 @@ def update_admin(
                 dbadmin.password_reset_at = datetime.utcnow()
     if isinstance(modifications.service_ids, list):
         dbadmin.services = (
-            db.query(Service)
-            .filter(Service.id.in_(modifications.service_ids))
-            .all()
-        )
-    db.commit()
-    db.refresh(dbadmin)
+            await db.scalars(
+                select(Service).filter(
+                    Service.id.in_(modifications.service_ids)
+                )
+            )
+        ).all()
+    await db.commit()
+    await db.refresh(dbadmin)
     return dbadmin
 
 
-def partial_update_admin(
-    db: Session, dbadmin: Admin, modified_admin: AdminPartialModify
+async def partial_update_admin(
+    db: AsyncSession, dbadmin: Admin, modified_admin: AdminPartialModify
 ):
     if modified_admin.is_sudo is not None:
         dbadmin.is_sudo = modified_admin.is_sudo
@@ -655,93 +679,102 @@ def partial_update_admin(
         dbadmin.hashed_password = modified_admin.hashed_password
         dbadmin.password_reset_at = datetime.utcnow()
 
-    db.commit()
-    db.refresh(dbadmin)
+    await db.commit()
+    await db.refresh(dbadmin)
     return dbadmin
 
 
-def remove_admin(db: Session, dbadmin: Admin):
-    db.delete(dbadmin)
-    db.commit()
+async def remove_admin(db: AsyncSession, dbadmin: Admin):
+    await db.delete(dbadmin)
+    await db.commit()
     return dbadmin
 
 
-def get_admins(
-    db: Session,
+async def get_admins(
+    db: AsyncSession,
     offset: Optional[int] = None,
     limit: Optional[int] = None,
     username: Optional[str] = None,
 ):
-    query = db.query(Admin)
+    query = select(Admin)
     if username:
         query = query.filter(Admin.username.ilike(f"%{username}%"))
     if offset:
         query = query.offset(offset)
     if limit:
         query = query.limit(limit)
-    return query.all()
+
+    result = await db.scalars(query)
+    return result.all()
 
 
-def create_service(db: Session, service: ServiceCreate) -> Service:
+async def create_service(db: AsyncSession, service: ServiceCreate) -> Service:
+    inbounds = (
+        await db.scalars(
+            select(Inbound).filter(Inbound.id.in_(service.inbound_ids))
+        )
+    ).all()
     dbservice = Service(
         name=service.name,
-        inbounds=db.query(Inbound)
-        .filter(Inbound.id.in_(service.inbound_ids))
-        .all(),
+        inbounds=inbounds,
         users=[],
     )
     db.add(dbservice)
-    db.commit()
-    db.refresh(dbservice)
+    await db.commit()
+    await db.refresh(dbservice)
     return dbservice
 
 
-def get_service(db: Session, service_id: id) -> Service:
-    return db.query(Service).filter(Service.id == service_id).first()
+async def get_service(db: AsyncSession, service_id: id) -> Service:
+    return await db.get(Service, service_id)
 
 
-def get_services(db: Session) -> List[Service]:
-    return db.query(Service).all()
+async def get_services(db: AsyncSession) -> Sequence[Service]:
+    return (await db.scalars(select(Service))).all()
 
 
-def update_service(
-    db: Session, db_service: Service, modification: ServiceModify
+async def update_service(
+    db: AsyncSession, db_service: Service, modification: ServiceModify
 ):
     if modification.name is not None:
         db_service.name = modification.name
 
     if modification.inbound_ids is not None:
         db_service.inbounds = (
-            db.query(Inbound)
-            .filter(Inbound.id.in_(modification.inbound_ids))
-            .all()
-        )
-
-    db.commit()
-    db.refresh(db_service)
+            await db.scalars(
+                select(Inbound).filter(
+                    Inbound.id.in_(modification.inbound_ids)
+                )
+            )
+        ).all()
+    await db.commit()
+    await db.refresh(db_service)
     return db_service
 
 
-def remove_service(db: Session, db_service: Service):
-    db.delete(db_service)
-    db.commit()
+async def remove_service(db: AsyncSession, db_service: Service):
+    await db.delete(db_service)
+    await db.commit()
     return db_service
 
 
-def get_node(db: Session, name: str):
-    return db.query(Node).filter(Node.name == name).first()
+async def get_node(db: AsyncSession, name: str):
+    return await db.scalar(select(Node).filter(Node.name == name))
 
 
-def get_node_by_id(db: Session, node_id: int):
-    return db.query(Node).filter(Node.id == node_id).first()
+async def get_node_by_id(db: AsyncSession, node_id: int):
+    query = select(Node).where(Node.id == node_id)
+    result = await db.execute(query)
+    return result.scalar_one_or_none()
+    # return await db.get(Node, node_id)
 
 
-def get_nodes(
-    db: Session,
+async def get_nodes(
+    db: AsyncSession,
     status: Optional[Union[NodeStatus, list]] = None,
     enabled: bool = None,
 ):
-    query = db.query(Node)
+    query = select(Node)
 
     if status:
         if isinstance(status, list):
@@ -752,25 +785,25 @@ def get_nodes(
     if enabled:
         query = query.filter(Node.status != NodeStatus.disabled)
 
-    return query.all()
+    result = await db.scalars(query)
+    return result.all()
 
 
-def get_nodes_usage(
-    db: Session, start: datetime, end: datetime
+async def get_nodes_usage(
+    db: AsyncSession, start: datetime, end: datetime
 ) -> List[NodeUsageResponse]:
     usages = dict()
 
-    usages[0] = NodeUsageResponse(  # Main Core
-        node_id=None, node_name="Master", uplink=0, downlink=0
-    )
-    for node in db.query(Node).all():
+    nodes = await db.stream_scalars(select(Node))
+    async for node in nodes:
         usages[node.id] = NodeUsageResponse(
             node_id=node.id, node_name=node.name, uplink=0, downlink=0
         )
 
     cond = and_(NodeUsage.created_at >= start, NodeUsage.created_at <= end)
 
-    for v in db.query(NodeUsage).filter(cond):
+    node_usage = await db.stream_scalars(select(NodeUsage).filter(cond))
+    async for v in node_usage:
         try:
             usages[v.node_id or 0].uplink += v.uplink
             usages[v.node_id or 0].downlink += v.downlink
@@ -780,7 +813,7 @@ def get_nodes_usage(
     return list(usages.values())
 
 
-def create_node(db: Session, node: NodeCreate):
+async def create_node(db: AsyncSession, node: NodeCreate):
     dbnode = Node(
         name=node.name,
         address=node.address,
@@ -789,18 +822,18 @@ def create_node(db: Session, node: NodeCreate):
     )
 
     db.add(dbnode)
-    db.commit()
-    db.refresh(dbnode)
+    await db.commit()
+    await db.refresh(dbnode)
     return dbnode
 
 
-def remove_node(db: Session, dbnode: Node):
-    db.delete(dbnode)
-    db.commit()
+async def remove_node(db: AsyncSession, dbnode: Node):
+    await db.delete(dbnode)
+    await db.commit()
     return dbnode
 
 
-def update_node(db: Session, dbnode: Node, modify: NodeModify):
+async def update_node(db: AsyncSession, dbnode: Node, modify: NodeModify):
     if modify.name is not None:
         dbnode.name = modify.name
 
@@ -823,28 +856,28 @@ def update_node(db: Session, dbnode: Node, modify: NodeModify):
     if modify.connection_backend:
         dbnode.connection_backend = modify.connection_backend
 
-    db.commit()
-    db.refresh(dbnode)
+    await db.commit()
+    await db.refresh(dbnode)
     return dbnode
 
 
-def update_node_status(
-    db: Session,
+async def update_node_status(
+    db: AsyncSession,
     node_id: int,
     status: NodeStatus,
     message: str = None,
     version: str = None,
 ):
-    db_node = db.query(Node).where(Node.id == node_id).first()
+    db_node = await db.scalar((select(Node).where(Node.id == node_id)))
     db_node.status = status
     if message:
         db_node.message = message
     db_node.last_status_change = datetime.utcnow()
-    db.commit()
+    await db.commit()
 
 
-def create_notification_reminder(
-    db: Session,
+async def create_notification_reminder(
+    db: AsyncSession,
     reminder_type: ReminderType,
     expires_at: datetime,
     user_id: int,
@@ -853,47 +886,46 @@ def create_notification_reminder(
         type=reminder_type, expires_at=expires_at, user_id=user_id
     )
     db.add(reminder)
-    db.commit()
-    db.refresh(reminder)
+    await db.commit()
+    await db.refresh(reminder)
     return reminder
 
 
-def get_notification_reminder(
-    db: Session,
+async def get_notification_reminder(
+    db: AsyncSession,
     user_id: int,
     reminder_type: ReminderType,
 ) -> Optional[NotificationReminder]:
-    reminder = (
-        db.query(NotificationReminder)
+    reminder = await db.scalar(
+        select(NotificationReminder)
         .filter(NotificationReminder.user_id == user_id)
         .filter(NotificationReminder.type == reminder_type)
-        .first()
     )
     if reminder is None:
         return
     if reminder.expires_at and reminder.expires_at < datetime.utcnow():
-        db.delete(reminder)
-        db.commit()
+        await db.delete(reminder)
+        await db.commit()
         return
     return reminder
 
 
-def delete_notification_reminder_by_type(
-    db: Session, user_id: int, reminder_type: ReminderType
+async def delete_notification_reminder_by_type(
+    db: AsyncSession, user_id: int, reminder_type: ReminderType
 ) -> None:
     """Deletes notification reminder filtered by user_id and type if exists"""
     stmt = delete(NotificationReminder).where(
         NotificationReminder.user_id == user_id,
         NotificationReminder.type == reminder_type,
     )
-    db.execute(stmt)
-    db.commit()
+    await db.execute(stmt)
+    await db.commit()
     return
 
 
-def delete_notification_reminder(
-    db: Session, dbreminder: NotificationReminder
+async def delete_notification_reminder(
+    db: AsyncSession, dbreminder: NotificationReminder
 ) -> None:
-    db.delete(dbreminder)
-    db.commit()
+    await db.delete(dbreminder)
+    await db.commit()
     return

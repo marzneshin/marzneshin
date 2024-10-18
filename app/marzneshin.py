@@ -29,6 +29,7 @@ from app.config.env import (
 )
 from app.templates import render_template
 from . import __version__, telegram
+from app.db.base import sessionmanager
 from .routes import api_router
 from .tasks import (
     delete_expired_reminders,
@@ -47,8 +48,16 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     await nodes_startup()
     yield
     scheduler.shutdown()
-    logger.info("Sending pending notifications before shutdown...")
     await send_notifications()
+    logger.info("Sending pending notifications before shutdown...")
+    if sessionmanager._engine is not None:
+        # Close the DB connection
+        try:
+            logger.info("Closing database connection.")
+            await sessionmanager.close()
+            logger.info("Database connection closed successfully.")
+        except Exception as e:
+            logger.error(f"Error closing database connection: {e}")
 
 
 app = FastAPI(
