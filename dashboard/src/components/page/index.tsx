@@ -25,7 +25,7 @@ export const Page: FC<PageProps & PropsWithChildren & HTMLAttributes<HTMLDivElem
     return (
         <ScrollArea className="w-full h-full overflow-auto">
             <div className="flex flex-col justify-center items-center h-full w-full">
-                <Card className="shadow-none border-none p-0 w-full h-full">
+                <Card className="shadow-none sm:w-screen md:w-full border-none p-0 w-full h-full">
                     <CardHeader className="border-none sm:flex-row">
                         <CardTitle className="flex flex-row justify-start items-center text-2xl text-sans">
                             {title}
