@@ -15,7 +15,6 @@ export interface SectionWidgetProps {
     content?: JSX.Element | string;
     footer?: JSX.Element | string;
     options?: JSX.Element | string;
-
 }
 
 export const SectionWidget: FC<SectionWidgetProps & PropsWithChildren & HTMLAttributes<HTMLDivElement>> = ({

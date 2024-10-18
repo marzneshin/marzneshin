@@ -1,8 +1,4 @@
 import {
-    Card,
-    CardContent,
-    CardHeader,
-    CardTitle,
     Page,
     Loading,
 } from '@marzneshin/components';
@@ -15,20 +11,11 @@ import { useTranslation } from 'react-i18next';
 export const AdminsPage: FC = () => {
     const { t } = useTranslation();
     return (
-        <Page>
-            <Card className="border-0 sm:w-screen md:w-full">
-                <CardHeader>
-                    <CardTitle>
-                        {t('admins')}
-                    </CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <AdminsTable />
-                    <Suspense fallback={<Loading />}>
-                        <Outlet />
-                    </Suspense>
-                </CardContent>
-            </Card>
+        <Page title={t('admins')}>
+            <AdminsTable />
+            <Suspense fallback={<Loading />}>
+                <Outlet />
+            </Suspense>
         </Page>
     )
 };

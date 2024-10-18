@@ -1,8 +1,4 @@
 import {
-    Card,
-    CardContent,
-    CardHeader,
-    CardTitle,
     Page,
     Loading,
 } from "@marzneshin/components";
@@ -15,18 +11,11 @@ import { SudoRoute } from "@marzneshin/features/sudo-routes";
 export const ServicesPage: FC = () => {
     const { t } = useTranslation();
     return (
-        <Page>
-            <Card className="border-0 sm:w-screen md:w-full">
-                <CardHeader>
-                    <CardTitle>{t("services")}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <ServicesTable />
-                    <Suspense fallback={<Loading />}>
-                        <Outlet />
-                    </Suspense>
-                </CardContent>
-            </Card>
+        <Page title={t("services")}>
+            <ServicesTable />
+            <Suspense fallback={<Loading />}>
+                <Outlet />
+            </Suspense>
         </Page>
     );
 };
