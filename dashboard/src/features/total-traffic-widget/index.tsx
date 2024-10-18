@@ -8,7 +8,7 @@ import {
     ChartTooltipContent,
     ChartConfig,
 } from "@marzneshin/components";
-import { XAxis, BarChart, CartesianGrid, Bar } from "recharts"
+import { XAxis, BarChart, YAxis, CartesianGrid, Bar } from "recharts"
 import { useTransformData } from "./hooks";
 import { format as formatByte } from '@chbphone55/pretty-bytes';
 import { useTotalTrafficQuery } from "./api";
@@ -55,10 +55,20 @@ export const TotalTrafficsWidget: FC = () => {
                             data={chartData}
                             margin={{
                                 left: 12,
+                                top: 13,
                                 right: 12,
                             }}
                         >
                             <CartesianGrid vertical={false} />
+                            <YAxis
+                                tickLine={false}
+                                axisLine={false}
+                                tickMargin={8}
+                                tickFormatter={(value) => {
+                                    const [amount, metric] = formatByte(value)
+                                    return `${amount} ${metric}`
+                                }}
+                            />
                             <XAxis
                                 dataKey="datetime"
                                 tickLine={false}
