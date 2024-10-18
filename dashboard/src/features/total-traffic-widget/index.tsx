@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { useState, FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
     SectionWidget,
@@ -8,13 +8,12 @@ import {
     ChartTooltipContent,
     ChartConfig,
 } from "@marzneshin/components";
-import { BarChart, CartesianGrid, Bar, XAxis } from "recharts"
-import { useState } from "react";
-import { ChartDateInterval } from "./types";
+import { BarChart, CartesianGrid, Bar } from "recharts"
 import { useTransformData, useFromNowInterval } from "./hooks";
 import { format as formatByte } from '@chbphone55/pretty-bytes';
 import { useTotalTrafficQuery } from "./api";
-import { SelectDateView, UsageGraphSkeleton } from "./components";
+import { UsageGraphSkeleton } from "./components";
+import { DateXAxis, ChartDateInterval, SelectDateView } from "@marzneshin/common/stats-charts";
 
 const chartConfig = {
     traffic: {
@@ -34,7 +33,12 @@ export const TotalTrafficsWidget: FC = () => {
         <Awaiting
             Component={
                 <SectionWidget
-                    title={<div className="hstack justify-between w-full">{t("page.home.total-traffics.title")} <SelectDateView timeRange={timeRange} setTimeRange={setTimeRange} /></div>}
+                    title={
+                        <div className="hstack justify-between w-full">
+                            {t("page.home.total-traffics.title")}
+                            <SelectDateView timeRange={timeRange} setTimeRange={setTimeRange} />
+                        </div>
+                    }
                     description={t("page.home.total-traffics.desc")}
                 >
                     <ChartContainer
@@ -50,35 +54,7 @@ export const TotalTrafficsWidget: FC = () => {
                             }}
                         >
                             <CartesianGrid vertical={false} />
-                            <XAxis
-                                dataKey="datetime"
-                                tickLine={false}
-                                axisLine={false}
-                                tickMargin={8}
-                                tickFormatter={(value) => {
-                                    const date = new Date(value);
-                                    const format = {
-                                        "90d": {
-                                            day: "numeric",
-                                            month: "short",
-                                        }, "30d": {
-                                            day: "numeric",
-                                        }, "7d": {
-                                            day: "numeric",
-                                            hour: "numeric",
-                                        },
-                                        "1d": {
-                                            minute: "numeric",
-                                            hour: "numeric",
-                                        }
-                                    }[timeRange as ChartDateInterval];
-                                    if (timeRange === "1d") {
-                                        return date.toLocaleTimeString("en-US", format as Intl.DateTimeFormatOptions);
-                                    }
-
-                                    return date.toLocaleDateString("en-US", format as Intl.DateTimeFormatOptions);
-                                }}
-                            />
+                            <DateXAxis timeRange={timeRange as ChartDateInterval} />
                             <ChartTooltip
                                 content={
                                     <ChartTooltipContent
