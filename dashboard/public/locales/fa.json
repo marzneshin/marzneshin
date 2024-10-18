@@ -78,6 +78,15 @@
   "finished": "اتمام",
   "valid": "مانده",
   "page": {
+    "home": {
+      "users-stats": {
+        "desc": "مروری بر وضعیت کاربران"
+      },
+      "total-traffics": {
+        "title": "ترافیک سیستم به صورت کامل",
+        "desc": "مجموع ترافیک از تمام نود ها"
+      }
+    },
     "settings": {
       "subscription-settings": {
         "template-on-acceptance": "تمپلیت در صورت پذیرش",
