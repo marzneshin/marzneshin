@@ -23,24 +23,18 @@ export const Page: FC<PageProps & PropsWithChildren & HTMLAttributes<HTMLDivElem
     className
 }) => {
     return (
-        <ScrollArea className="h-full w-full">
-            <div className="min-h-full w-full p-4">
-                <Card className="shadow-none border-none min-h-full w-full">
-                    <CardHeader className="border-none px-4 sm:flex-row">
-                        <CardTitle className="flex flex-row items-center gap-2 text-xl sm:text-2xl">
+        <ScrollArea className="w-full h-full overflow-auto">
+            <div className="flex flex-col justify-center items-center h-full w-full">
+                <Card className="shadow-none border-none p-0 w-full h-full">
+                    <CardHeader className="border-none sm:flex-row">
+                        <CardTitle className="flex flex-row justify-start items-center text-2xl text-sans">
                             {title}
                         </CardTitle>
                     </CardHeader>
-                    <CardContent className={cn("px-4 overflow-x-auto", className)}>
-                        <div className="min-w-full w-fit">
-                            {content || children}
-                        </div>
+                    <CardContent className={cn("flex w-full max-w-full", className)}>
+                        {content || children}
                     </CardContent>
-                    {footer && (
-                        <CardFooter className="px-4">
-                            {footer}
-                        </CardFooter>
-                    )}
+                    {footer && <CardFooter> {footer} </CardFooter>}
                 </Card>
             </div>
         </ScrollArea>

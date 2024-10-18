@@ -17,12 +17,10 @@ export const UsersPage: FC = () => {
                 <UsersNoServiceAlert />
             }
         >
-            <div className="space-y-4">
-                <UsersTable />
-                <Suspense fallback={<Loading />}>
-                    <Outlet />
-                </Suspense>
-            </div>
+            <UsersTable />
+            <Suspense fallback={<Loading />}>
+                <Outlet />
+            </Suspense>
         </Page>
     )
 };
