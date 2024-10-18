@@ -12,7 +12,7 @@ export const DashboardPage: FC = () => {
     const { data } = useUsersStatsQuery()
 
     return (
-        <Page className="flex md:grid grid-cols-5 gap-4 w-full" title={t('home')}>
+        <Page className="flex md:grid flex-col grid-cols-5 gap-4 w-full" title={t('home')}>
             <div className="col-span-3">
                 <TotalTrafficsWidget />
             </div>
