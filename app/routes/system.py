@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
 from app.db import crud
-from app.db.models import Admin as DBAdmin, User, Settings
+from app.db.models import Admin as DBAdmin, Settings
 from app.db.models import Node
 from app.dependencies import (
     DBDep,
@@ -104,12 +104,5 @@ def get_users_stats(db: DBDep, admin: AdminDep):
         ),
         online=crud.get_users_count(
             db, admin=admin if not admin.is_sudo else None, online=True
-        ),
-        recent_subscription_updates=list(
-            i[0]
-            for i in db.query(User.username)
-            .filter(User.sub_updated_at != None)
-            .order_by(User.sub_updated_at)
-            .limit(5)
         ),
     )

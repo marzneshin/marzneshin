@@ -27,7 +27,6 @@ class UsersStats(BaseModel):
     expired: int
     limited: int
     online: int
-    recent_subscription_updates: list[str]
 
 
 class AdminsStats(BaseModel):
