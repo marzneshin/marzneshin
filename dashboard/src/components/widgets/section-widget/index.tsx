@@ -7,17 +7,18 @@ import {
     CardTitle,
     Separator,
 } from '@marzneshin/components';
-import type { FC, PropsWithChildren, HTMLAttributes } from 'react';
+import type { FC, PropsWithChildren } from 'react';
 
 export interface SectionWidgetProps {
-    title: JSX.Element | string;
-    description: JSX.Element | string;
-    content?: JSX.Element | string;
-    footer?: JSX.Element | string;
-    options?: JSX.Element | string;
+    title: any;
+    description: any;
+    content?: any;
+    footer?: any;
+    options?: any;
+    className?: string;
 }
 
-export const SectionWidget: FC<SectionWidgetProps & PropsWithChildren & HTMLAttributes<HTMLDivElement>> = ({
+export const SectionWidget: FC<SectionWidgetProps & PropsWithChildren> = ({
     options, footer, content, children, title, description, className
 }) => {
     return (

@@ -8,12 +8,17 @@ import {
     ChartTooltipContent,
     ChartConfig,
 } from "@marzneshin/components";
-import { BarChart, CartesianGrid, Bar } from "recharts"
-import { useTransformData, useFromNowInterval } from "./hooks";
+import { XAxis, BarChart, CartesianGrid, Bar } from "recharts"
+import { useTransformData } from "./hooks";
 import { format as formatByte } from '@chbphone55/pretty-bytes';
 import { useTotalTrafficQuery } from "./api";
 import { UsageGraphSkeleton } from "./components";
-import { DateXAxis, ChartDateInterval, SelectDateView } from "@marzneshin/common/stats-charts";
+import {
+    ChartDateInterval,
+    SelectDateView,
+    dateXAxisTicks,
+    useFromNowInterval
+} from "@marzneshin/common/stats-charts";
 
 const chartConfig = {
     traffic: {
@@ -54,7 +59,13 @@ export const TotalTrafficsWidget: FC = () => {
                             }}
                         >
                             <CartesianGrid vertical={false} />
-                            <DateXAxis timeRange={timeRange as ChartDateInterval} />
+                            <XAxis
+                                dataKey="datetime"
+                                tickLine={false}
+                                axisLine={false}
+                                tickMargin={8}
+                                tickFormatter={(value) => dateXAxisTicks(value, timeRange as ChartDateInterval)}
+                            />
                             <ChartTooltip
                                 content={
                                     <ChartTooltipContent

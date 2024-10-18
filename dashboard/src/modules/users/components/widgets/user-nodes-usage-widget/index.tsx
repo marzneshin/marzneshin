@@ -11,9 +11,9 @@ import {
 } from "@marzneshin/components";
 import { Area, AreaChart, CartesianGrid, YAxis, XAxis } from "recharts"
 import { useState } from "react";
-import { SelectDateView } from "./select-date-view";
-import { ChartDateInterval, UserNodesUsageWidgetProps } from "./types";
-import { useChartConfig, useTransformData, useFromNowInterval } from "./hooks";
+import { UserNodesUsageWidgetProps } from "./types";
+import { dateXAxisTicks, useFromNowInterval, SelectDateView, ChartDateInterval } from "@marzneshin/common/stats-charts";
+import { useChartConfig, useTransformData } from "./hooks";
 import { format as formatByte } from '@chbphone55/pretty-bytes';
 import { useUserNodeUsagesQuery } from "@marzneshin/modules/users";
 import { UsageGraphSkeleton } from "./skeleton"
@@ -35,7 +35,6 @@ export const UserNodesUsageWidget: FC<UserNodesUsageWidgetProps> = ({
                     title={<div className="hstack justify-between w-full">{t("page.users.settings.nodes-usage.title")} <SelectDateView timeRange={timeRange} setTimeRange={setTimeRange} /></div>}
                     description={t("page.users.settings.nodes-usage.desc")}
                 >
-
                     <ChartContainer
                         className="aspect-auto h-[320px] w-full"
                         config={config}>
@@ -58,35 +57,12 @@ export const UserNodesUsageWidget: FC<UserNodesUsageWidgetProps> = ({
                                     return `${amount} ${metric}`
                                 }}
                             />
-
                             <XAxis
                                 dataKey="datetime"
                                 tickLine={false}
                                 axisLine={false}
                                 tickMargin={8}
-                                tickFormatter={(value) => {
-                                    const date = new Date(value);
-                                    const format = {
-                                        "90d": {
-                                            day: "numeric",
-                                            month: "short",
-                                        }, "30d": {
-                                            day: "numeric",
-                                        }, "7d": {
-                                            day: "numeric",
-                                            hour: "numeric",
-                                        },
-                                        "1d": {
-                                            minute: "numeric",
-                                            hour: "numeric",
-                                        }
-                                    }[timeRange as ChartDateInterval];
-                                    if (timeRange === "1d") {
-                                        return date.toLocaleTimeString("en-US", format as Intl.DateTimeFormatOptions);
-                                    }
-
-                                    return date.toLocaleDateString("en-US", format as Intl.DateTimeFormatOptions);
-                                }}
+                                tickFormatter={(value) => dateXAxisTicks(value, timeRange as ChartDateInterval)}
                             />
                             <ChartTooltip
                                 cursor={false}

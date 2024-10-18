@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { fetch } from "@marzneshin/utils";
 
-type UsageMetric = number[];
+export type UsageMetric = number[];
 
 export interface TotalTrafficsResponse {
     usages: Array<UsageMetric>;
