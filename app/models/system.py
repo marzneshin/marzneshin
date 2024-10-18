@@ -27,7 +27,6 @@ class UsersStats(BaseModel):
     expired: int
     limited: int
     online: int
-    recent_subscription_updates: list[str]
 
 
 class AdminsStats(BaseModel):
@@ -38,3 +37,7 @@ class NodesStats(BaseModel):
     total: int
     healthy: int
     unhealthy: int
+
+
+class TrafficUsageSeries(BaseModel):
+    usages: list[tuple[int, int]]

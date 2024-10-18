@@ -113,3 +113,7 @@
     @apply bg-background text-foreground;
   }
 }
+
+.recharts-responsive-container {
+  height: initial !important;
+}

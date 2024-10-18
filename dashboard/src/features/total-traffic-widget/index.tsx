@@ -1,48 +1,60 @@
-import { FC } from 'react';
+import { useState, FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
     SectionWidget,
-    ChartLegendContent,
     ChartContainer,
     Awaiting,
-    ChartLegend,
     ChartTooltip,
     ChartTooltipContent,
+    ChartConfig,
 } from "@marzneshin/components";
-import { Area, AreaChart, CartesianGrid, YAxis, XAxis } from "recharts"
-import { useState } from "react";
-import { UserNodesUsageWidgetProps } from "./types";
-import { dateXAxisTicks, useFromNowInterval, SelectDateView, ChartDateInterval } from "@marzneshin/common/stats-charts";
-import { useChartConfig, useTransformData } from "./hooks";
+import { XAxis, BarChart, YAxis, CartesianGrid, Bar } from "recharts"
+import { useTransformData } from "./hooks";
 import { format as formatByte } from '@chbphone55/pretty-bytes';
-import { useUserNodeUsagesQuery } from "@marzneshin/modules/users";
-import { UsageGraphSkeleton } from "./skeleton"
+import { useTotalTrafficQuery } from "./api";
+import { UsageGraphSkeleton } from "./components";
+import {
+    ChartDateInterval,
+    SelectDateView,
+    dateXAxisTicks,
+    useFromNowInterval
+} from "@marzneshin/common/stats-charts";
 
-export const UserNodesUsageWidget: FC<UserNodesUsageWidgetProps> = ({
-    user,
-}) => {
+const chartConfig = {
+    traffic: {
+        label: "Traffic",
+        color: "hsl(var(--chart-1))",
+    },
+} satisfies ChartConfig
+
+export const TotalTrafficsWidget: FC = () => {
     const { t } = useTranslation();
     const [timeRange, setTimeRange] = useState("1d")
     const { start, end } = useFromNowInterval(timeRange as ChartDateInterval);
-    const { data, isPending } = useUserNodeUsagesQuery({ username: user.username, start, end })
-    const chartData = useTransformData(data);
-    const config = useChartConfig(data);
+    const { data, isPending } = useTotalTrafficQuery({ start, end })
+    const chartData = useTransformData(data.usages);
 
     return (
         <Awaiting
             Component={
                 <SectionWidget
-                    title={<div className="hstack justify-between w-full">{t("page.users.settings.nodes-usage.title")} <SelectDateView timeRange={timeRange} setTimeRange={setTimeRange} /></div>}
-                    description={t("page.users.settings.nodes-usage.desc")}
+                    title={
+                        <div className="hstack justify-between w-full">
+                            {t("page.home.total-traffics.title")}
+                            <SelectDateView timeRange={timeRange} setTimeRange={setTimeRange} />
+                        </div>
+                    }
+                    description={t("page.home.total-traffics.desc")}
                 >
                     <ChartContainer
+                        config={chartConfig}
                         className="aspect-auto h-[320px] w-full"
-                        config={config}>
-                        <AreaChart
+                    >
+                        <BarChart
                             accessibilityLayer
                             data={chartData}
                             margin={{
-                                left: 13,
+                                left: 12,
                                 top: 13,
                                 right: 12,
                             }}
@@ -65,7 +77,6 @@ export const UserNodesUsageWidget: FC<UserNodesUsageWidgetProps> = ({
                                 tickFormatter={(value) => dateXAxisTicks(value, timeRange as ChartDateInterval)}
                             />
                             <ChartTooltip
-                                cursor={false}
                                 content={
                                     <ChartTooltipContent
                                         indicator='line'
@@ -84,35 +95,8 @@ export const UserNodesUsageWidget: FC<UserNodesUsageWidgetProps> = ({
                                     />
                                 }
                             />
-                            <defs>
-                                {data.node_usages.map(node =>
-                                    <linearGradient key={node.node_name} id={node.node_name} x1="0" y1="0" x2="0" y2="1">
-                                        <stop
-                                            offset="5%"
-                                            stopColor={config[node.node_name].color}
-                                            stopOpacity={0.1}
-                                        />
-                                        <stop
-                                            offset="95%"
-                                            stopColor={config[node.node_name].color}
-                                            stopOpacity={0.8}
-                                        />
-                                    </linearGradient>
-                                )}
-                            </defs>
-                            {data.node_usages.map(node =>
-                                <Area
-                                    dataKey={node.node_name}
-                                    key={node.node_name}
-                                    type="natural"
-                                    fill={config[node.node_name].color}
-                                    fillOpacity={0.4}
-                                    stackId={node.node_id}
-                                    stroke={config[node.node_name].color}
-                                />
-                            )}
-                            <ChartLegend content={<ChartLegendContent />} />
-                        </AreaChart>
+                            <Bar dataKey="traffic" fill={`var(--color-traffic)`} />
+                        </BarChart>
                     </ChartContainer>
                 </SectionWidget>
             }

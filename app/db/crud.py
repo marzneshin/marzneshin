@@ -6,7 +6,7 @@ from enum import Enum
 from types import NoneType
 from typing import List, Optional, Tuple, Union
 
-from sqlalchemy import and_, delete, update, select
+from sqlalchemy import and_, delete, update, select, func
 from sqlalchemy.orm import Session
 
 from app.db.models import (
@@ -33,6 +33,7 @@ from app.models.node import (
 )
 from app.models.proxy import InboundHost as InboundHostModify
 from app.models.service import Service as ServiceModify, ServiceCreate
+from app.models.system import TrafficUsageSeries
 from app.models.user import (
     ReminderType,
     UserCreate,
@@ -311,13 +312,57 @@ def get_users(
     return query.all()
 
 
+def get_total_usages(
+    db: Session, admin: Admin, start: datetime, end: datetime
+):
+    usages = defaultdict(int)
+
+    query = (
+        db.query(
+            NodeUserUsage.created_at, func.sum(NodeUserUsage.used_traffic)
+        )
+        .group_by(NodeUserUsage.created_at)
+        .filter(
+            and_(
+                NodeUserUsage.created_at >= start,
+                NodeUserUsage.created_at <= end,
+            )
+        )
+    )
+
+    if not admin.is_sudo:
+        query = (
+            query.filter(
+                Admin.id == admin.id,
+            )
+            .join(User, NodeUserUsage.user_id == User.id)
+            .join(Admin, User.admin_id == Admin.id)
+        )
+    for created_at, used_traffic in query.all():
+        usages[created_at.replace(tzinfo=timezone.utc).timestamp()] += int(
+            used_traffic
+        )
+
+    result = TrafficUsageSeries(usages=[])
+    current = start.astimezone(timezone.utc).replace(
+        minute=0, second=0, microsecond=0
+    )
+
+    while current <= end.replace(tzinfo=timezone.utc):
+        result.usages.append(
+            (int(current.timestamp()), usages.get(current.timestamp()) or 0)
+        )
+        current += timedelta(hours=1)
+
+    return result
+
+
 def get_user_usages(
     db: Session,
     db_user: User,
     start: datetime,
     end: datetime,
 ) -> UserUsageSeriesResponse:
-    start = start.replace(minute=0, second=0, microsecond=0)
     cond = and_(
         NodeUserUsage.user_id == db_user.id,
         NodeUserUsage.created_at >= start,

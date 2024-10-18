@@ -1,12 +1,23 @@
 from fastapi import APIRouter
 
 from app.db import crud
-from app.db.models import Admin as DBAdmin, User, Settings
+from app.db.models import Admin as DBAdmin, Settings
 from app.db.models import Node
-from app.dependencies import DBDep, AdminDep, SudoAdminDep
+from app.dependencies import (
+    DBDep,
+    AdminDep,
+    SudoAdminDep,
+    EndDateDep,
+    StartDateDep,
+)
 from app.models.node import NodeStatus
 from app.models.settings import SubscriptionSettings, TelegramSettings
-from app.models.system import UsersStats, NodesStats, AdminsStats
+from app.models.system import (
+    UsersStats,
+    NodesStats,
+    AdminsStats,
+    TrafficUsageSeries,
+)
 from app.models.user import UserExpireStrategy
 
 router = APIRouter(tags=["System"], prefix="/system")
@@ -60,6 +71,13 @@ def get_nodes_stats(db: DBDep, admin: SudoAdminDep):
     )
 
 
+@router.get("/stats/traffic", response_model=TrafficUsageSeries)
+def get_total_traffic_stats(
+    db: DBDep, admin: AdminDep, start_date: StartDateDep, end_date: EndDateDep
+):
+    return crud.get_total_usages(db, admin, start_date, end_date)
+
+
 @router.get("/stats/users", response_model=UsersStats)
 def get_users_stats(db: DBDep, admin: AdminDep):
     return UsersStats(
@@ -86,12 +104,5 @@ def get_users_stats(db: DBDep, admin: AdminDep):
         ),
         online=crud.get_users_count(
             db, admin=admin if not admin.is_sudo else None, online=True
-        ),
-        recent_subscription_updates=list(
-            i[0]
-            for i in db.query(User.username)
-            .filter(User.sub_updated_at != None)
-            .order_by(User.sub_updated_at)
-            .limit(5)
         ),
     )

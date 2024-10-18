@@ -1,9 +1,4 @@
 import {
-    Card,
-    CardContent,
-    CardFooter,
-    CardHeader,
-    CardTitle,
     Page,
     Loading,
 } from '@marzneshin/components'
@@ -16,22 +11,11 @@ import { Suspense } from 'react';
 export const HostsPage = () => {
     const { t } = useTranslation()
     return (
-        <Page>
-            <Card className="border-0 sm:w-screen md:w-full">
-                <CardHeader>
-                    <CardTitle>
-                        {t('hosts')}
-                    </CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <InboundHostsTable />
-                    <Suspense fallback={<Loading />}>
-                        <Outlet />
-                    </Suspense>
-                </CardContent>
-                <CardFooter>
-                </CardFooter>
-            </Card>
+        <Page title={t('hosts')}>
+            <InboundHostsTable />
+            <Suspense fallback={<Loading />}>
+                <Outlet />
+            </Suspense>
         </Page>
     )
 }
