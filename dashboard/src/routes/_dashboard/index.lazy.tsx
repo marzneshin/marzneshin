@@ -13,21 +13,23 @@ import { FC } from 'react';
 
 export const DashboardPage: FC = () => {
     const { t } = useTranslation();
-    const { data: stats } = useUsersStatsQuery()
+    const { data } = useUsersStatsQuery()
 
     return (
         <Page>
-            <Card className="border-0 sm:w-screen md:w-full">
+            <Card className="border-0 sm:w-screen md:w-full shadow-none">
                 <CardHeader>
                     <CardTitle>
                         {t('home')}
                     </CardTitle>
                 </CardHeader>
-                <CardContent className="flex md:grid grid-cols-4 gap-4 w-full">
+                <CardContent className="flex md:grid grid-cols-5 gap-4 w-full">
                     <div className="col-span-3">
                         <TotalTrafficsWidget />
                     </div>
-                    <UsersStatsWidget {...stats} />
+                    <div className="col-span-2">
+                        <UsersStatsWidget {...data} />
+                    </div>
                 </CardContent>
             </Card>
         </Page>

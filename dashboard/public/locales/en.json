@@ -82,6 +82,9 @@
   },
   "page": {
     "home": {
+      "users-stats": {
+        "desc": "Overview of user's statuses"
+      },
       "total-traffics": {
         "title": "Total System Traffic",
         "desc": "Traffics combined from all nodes"
