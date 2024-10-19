@@ -1,3 +1,5 @@
+import asyncio
+from functools import wraps
 from datetime import datetime
 from typing import Any, Dict, Iterable, Optional, TypeVar, Union
 
@@ -61,3 +63,11 @@ def readable_datetime(
         date_time = datetime.fromtimestamp(date_time)
 
     return date_time.strftime(get_datetime_format()) if date_time else "-"
+
+
+def async_to_sync(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        return asyncio.run(f(*args, **kwargs))
+
+    return wrapper
