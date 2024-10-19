@@ -365,24 +365,29 @@ def get_user_usages(
     start: datetime,
     end: datetime,
 ) -> UserUsageSeriesResponse:
+    
+    usages = defaultdict(dict)
+    total_traffic = 0
+
     cond = and_(
         NodeUserUsage.user_id == db_user.id,
         NodeUserUsage.created_at >= start,
         NodeUserUsage.created_at <= end,
     )
 
-    usages = defaultdict(dict)
-
     for v in db.query(NodeUserUsage).filter(cond):
-        usages[v.node_id][
-            v.created_at.replace(tzinfo=timezone.utc).timestamp()
-        ] = v.used_traffic
+        timestamp = v.created_at.replace(tzinfo=timezone.utc).timestamp()
+        usages[v.node_id][timestamp] = v.used_traffic
+        total_traffic += v.used_traffic
 
     node_ids = list(usages.keys())
     nodes = db.query(Node).where(Node.id.in_(node_ids))
     node_id_names = {node.id: node.name for node in nodes}
 
-    result = UserUsageSeriesResponse(username=db_user.username, node_usages=[])
+    result = UserUsageSeriesResponse(
+        username=db_user.username, node_usages=[], total=total_traffic
+    )
+
     for node_id, rows in usages.items():
         node_usages = UserNodeUsageSeries(
             node_id=node_id, node_name=node_id_names[node_id], usages=[]
