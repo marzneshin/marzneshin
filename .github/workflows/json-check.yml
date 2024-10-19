@@ -1,0 +1,71 @@
+name: Comprehensive JSON Syntax Check
+
+on:
+  push:
+    branches:
+      - '*'
+  pull_request:
+    branches:
+      - '*'
+
+jobs:
+  json-syntax-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get install -y jq
+          pip install jsonschema
+          pip install json-spec
+
+      - name: Basic JSON syntax check
+        run: |
+          find . -name "*.json" -type f -print0 | while IFS= read -r -d '' file; do
+            if ! jq empty "$file" > /dev/null 2>&1; then
+              echo "Error: Invalid JSON syntax in $file"
+              exit 1
+            fi
+          done
+
+      - name: Check JSON formatting
+        run: |
+          find . -name "*.json" -type f -print0 | while IFS= read -r -d '' file; do
+            if ! diff -q "$file" <(jq . "$file") > /dev/null 2>&1; then
+              echo "Error: Incorrect JSON formatting in $file"
+              exit 1
+            fi
+          done
+
+      - name: Advanced JSON validation
+        run: |
+          find . -name "*.json" -type f -print0 | while IFS= read -r -d '' file; do
+            # Check for duplicate keys
+            if jq -e 'to_entries | group_by(.key) | map(select(length > 1)) | length > 0' "$file" > /dev/null; then
+              echo "Error: Duplicate keys found in $file"
+              exit 1
+            fi
+            
+            # Check for trailing commas (not allowed in JSON)
+            if grep -Pn ',[[:space:]]*[}\]]' "$file"; then
+              echo "Error: Trailing comma found in $file"
+              exit 1
+            fi
+            
+            # Additional custom checks can be added here
+          done
+
+      - name: JSON checks passed
+        if: success()
+        run: echo "All JSON files have passed the comprehensive syntax check."
+
+      - name: JSON checks failed
+        if: failure()
+        run: echo "Some JSON files have failed the comprehensive syntax check. Please check the logs for details."
