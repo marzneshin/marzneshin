@@ -314,8 +314,9 @@ def get_users(
 
 def get_total_usages(
     db: Session, admin: Admin, start: datetime, end: datetime
-):
+) -> TrafficUsageSeries:
     usages = defaultdict(int)
+    total_traffic = 0
 
     query = (
         db.query(
@@ -338,12 +339,13 @@ def get_total_usages(
             .join(User, NodeUserUsage.user_id == User.id)
             .join(Admin, User.admin_id == Admin.id)
         )
-    for created_at, used_traffic in query.all():
-        usages[created_at.replace(tzinfo=timezone.utc).timestamp()] += int(
-            used_traffic
-        )
 
-    result = TrafficUsageSeries(usages=[])
+    for created_at, used_traffic in query.all():
+        timestamp = created_at.replace(tzinfo=timezone.utc).timestamp()
+        usages[timestamp] += int(used_traffic)
+        total_traffic += int(used_traffic)
+
+    result = TrafficUsageSeries(usages=[], total=total_traffic)
     current = start.astimezone(timezone.utc).replace(
         minute=0, second=0, microsecond=0
     )
