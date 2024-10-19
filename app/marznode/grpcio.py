@@ -64,7 +64,7 @@ class MarzNodeGRPCIO(MarzNodeBase, MarzNodeDB):
             await asyncio.wait_for(self._channel.channel_ready(), timeout=5)
         except TimeoutError:
             logger.info("timeout for node, id: %i", self.id)
-            self.set_status(NodeStatus.unhealthy, "timeout")
+            await self.set_status(NodeStatus.unhealthy, "timeout")
         while state := self._channel.get_state():
             logger.debug("node %i state: %s", self.id, state.value)
             try:
@@ -76,11 +76,11 @@ class MarzNodeGRPCIO(MarzNodeBase, MarzNodeDB):
                 )
             except RpcError:
                 self.synced = False
-                self.set_status(NodeStatus.unhealthy)
+                await self.set_status(NodeStatus.unhealthy)
                 if self._streaming_task:
                     self._streaming_task.cancel()
             else:
-                self.set_status(NodeStatus.healthy)
+                await self.set_status(NodeStatus.healthy)
                 logger.info("Connected to node %i", self.id)
 
             await self._channel.wait_for_state_change(state)
@@ -105,7 +105,7 @@ class MarzNodeGRPCIO(MarzNodeBase, MarzNodeDB):
                 )
             except RpcError:
                 self.synced = False
-                self.set_status(NodeStatus.unhealthy)
+                await self.set_status(NodeStatus.unhealthy)
                 return
 
     async def update_user(self, user, inbounds: set[str] | None = None):
@@ -134,8 +134,8 @@ class MarzNodeGRPCIO(MarzNodeBase, MarzNodeDB):
 
     async def _sync(self):
         backends = await self._fetch_backends()
-        self.store_backends(backends)
-        users = self.list_users()
+        await self.store_backends(backends)
+        users = await self.list_users()
         await self._repopulate_users(users)
         self.synced = True
 
@@ -162,10 +162,10 @@ class MarzNodeGRPCIO(MarzNodeBase, MarzNodeDB):
             await self._sync()
         except RpcError:
             self.synced = False
-            self.set_status(NodeStatus.unhealthy)
+            await self.set_status(NodeStatus.unhealthy)
             raise
         else:
-            self.set_status(NodeStatus.healthy)
+            await self.set_status(NodeStatus.healthy)
 
     async def get_backend_config(self, name: str = "xray"):
         response = await self._stub.FetchBackendConfig(Backend(name=name))

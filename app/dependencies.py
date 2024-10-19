@@ -2,27 +2,21 @@ from datetime import datetime
 from typing import Annotated
 
 from fastapi import Depends, HTTPException, status
-from sqlalchemy.orm import Session
 
-from app.db import crud, User, GetDB
+from app.db import AsyncSession, get_db_session, crud, User
 from app.models.admin import Admin, oauth2_scheme
 from app.utils.auth import get_admin_payload
 
 
-def get_db():
-    with GetDB() as db:
-        yield db
-
-
-def get_admin(
-    db: Annotated[Session, Depends(get_db)],
+async def get_admin(
+    db: Annotated[AsyncSession, Depends(get_db_session)],
     token: Annotated[str, Depends(oauth2_scheme)],
 ):
-    payload = get_admin_payload(token)
+    payload = await get_admin_payload(token)
     if not payload:
         return
 
-    dbadmin = crud.get_admin(db, payload["username"])
+    dbadmin = await crud.get_admin(db, payload["username"])
     if not dbadmin:
         return
 
@@ -37,7 +31,7 @@ def get_admin(
     return Admin.model_validate(dbadmin)
 
 
-def get_current_admin(admin: Annotated[Admin, Depends(get_admin)]):
+async def get_current_admin(admin: Annotated[Admin, Depends(get_admin)]):
     if not admin:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -48,7 +42,7 @@ def get_current_admin(admin: Annotated[Admin, Depends(get_admin)]):
     return admin
 
 
-def sudo_admin(admin: Annotated[Admin, Depends(get_current_admin)]):
+async def sudo_admin(admin: Annotated[Admin, Depends(get_current_admin)]):
     if not admin.is_sudo:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
@@ -57,27 +51,29 @@ def sudo_admin(admin: Annotated[Admin, Depends(get_current_admin)]):
     return admin
 
 
-def get_subscription_user(
-    username: str, key: str, db: Annotated[Session, Depends(get_db)]
+async def get_subscription_user(
+    username: str,
+    key: str,
+    db: Annotated[AsyncSession, Depends(get_db_session)],
 ):
     try:
         int(key, 16)
     except ValueError:
         raise HTTPException(status_code=404)
 
-    db_user = crud.get_user(db, username)
+    db_user = await crud.get_user(db, username)
     if db_user and db_user.key == key:
         return db_user
     else:
         raise HTTPException(status_code=404)
 
 
-def get_user(
+async def get_user(
     username: str,
     admin: Annotated[Admin, Depends(get_current_admin)],
-    db: Annotated[Session, Depends(get_db)],
+    db: Annotated[AsyncSession, Depends(get_db_session)],
 ):
-    db_user = crud.get_user(db, username)
+    db_user = await crud.get_user(db, username)
     if not (
         admin.is_sudo or (db_user and db_user.admin.username == admin.username)
     ):
@@ -89,7 +85,7 @@ def get_user(
     return db_user
 
 
-def user_modification_access(
+async def user_modification_access(
     admin: Annotated[Admin, Depends(get_current_admin)]
 ):
     if not admin.is_sudo and not admin.modify_users_access:
@@ -116,7 +112,7 @@ SubUserDep = Annotated[User, Depends(get_subscription_user)]
 UserDep = Annotated[User, Depends(get_user)]
 AdminDep = Annotated[Admin, Depends(get_current_admin)]
 SudoAdminDep = Annotated[Admin, Depends(sudo_admin)]
-DBDep = Annotated[Session, Depends(get_db)]
+DBDep = Annotated[AsyncSession, Depends(get_db_session)]
 StartDateDep = Annotated[datetime, Depends(parse_start_date)]
 EndDateDep = Annotated[datetime, Depends(parse_end_date)]
 ModifyUsersAccess = Annotated[None, Depends(user_modification_access)]

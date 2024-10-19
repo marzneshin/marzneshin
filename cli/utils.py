@@ -1,4 +1,5 @@
-import pydoc
+import asyncio
+from functools import wraps
 from datetime import datetime
 from typing import Any, Dict, Iterable, Optional, TypeVar, Union
 
@@ -6,13 +7,9 @@ import typer
 from rich.console import Console
 from rich.table import Table
 
-from app.db import crud
-from app.db.models import User
-
 T = TypeVar("T")
 
 rich_console = Console()
-PASSWORD_ENVIRON_NAME = "MARZBAN_ADMIN_PASSWORD"
 
 FLAGS: Dict[str, tuple] = {
     "username": ("--username", "-u"),
@@ -20,9 +17,6 @@ FLAGS: Dict[str, tuple] = {
     "offset": ("--offset", "-o"),
     "yes_to_all": ("--yes", "-y"),
     "is_sudo": ("--sudo/--no-sudo",),
-    "format": ("--format", "-f"),
-    "output_file": ("--output", "-o"),
-    "status": ("--status",),
 }
 
 
@@ -36,18 +30,6 @@ def error(text: str, auto_exit: bool = True):
     typer.echo(typer.style(text, fg=typer.colors.RED), err=True)
     if auto_exit:
         raise typer.Exit(-1)
-
-
-def paginate(text: str):
-    pydoc.pager(text)
-
-
-def get_user(db, username: str) -> User:
-    user: Union[User, None] = crud.get_user(db=db, username=username)
-    if not user:
-        error(f'User "{username}" not found!')
-
-    return user
 
 
 def print_table(
@@ -83,8 +65,9 @@ def readable_datetime(
     return date_time.strftime(get_datetime_format()) if date_time else "-"
 
 
-def raise_if_falsy(obj: T, message: str) -> T:
-    if not obj:
-        error(text=message, auto_exit=True)
+def async_to_sync(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        return asyncio.run(f(*args, **kwargs))
 
-    return obj
+    return wrapper

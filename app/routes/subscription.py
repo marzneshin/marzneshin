@@ -4,6 +4,7 @@ from collections import defaultdict
 from fastapi import APIRouter
 from fastapi import Header, HTTPException, Path, Request, Response
 from starlette.responses import HTMLResponse
+from sqlalchemy import select
 
 from app.db import crud
 from app.db.models import Settings
@@ -48,7 +49,7 @@ def get_subscription_user_info(user: UserResponse) -> dict:
 
 
 @router.get("/{username}/{key}")
-def user_subscription(
+async def user_subscription(
     db_user: SubUserDep,
     request: Request,
     db: DBDep,
@@ -60,10 +61,10 @@ def user_subscription(
 
     user: UserResponse = UserResponse.model_validate(db_user)
 
-    crud.update_user_sub(db, db_user, user_agent)
+    await crud.update_user_sub(db, db_user, user_agent)
 
     subscription_settings = SubscriptionSettings.model_validate(
-        db.query(Settings.subscription).first()[0]
+        await db.scalar(select(Settings.subscription))
     )
 
     if (
@@ -71,7 +72,9 @@ def user_subscription(
         and "text/html" in request.headers.get("Accept", [])
     ):
         return HTMLResponse(
-            generate_subscription_template(db_user, subscription_settings)
+            await generate_subscription_template(
+                db_user, subscription_settings
+            )
         )
 
     response_headers = {
@@ -90,7 +93,7 @@ def user_subscription(
         if re.match(rule.pattern, user_agent):
             if rule.result.value == "template":
                 return HTMLResponse(
-                    generate_subscription_template(
+                    await generate_subscription_template(
                         db_user, subscription_settings
                     )
                 )
@@ -103,7 +106,7 @@ def user_subscription(
                 b64 = False
                 config_format = rule.result.value
 
-            conf = generate_subscription(
+            conf = await generate_subscription(
                 user=db_user,
                 config_format=config_format,
                 as_base64=b64,
@@ -120,18 +123,18 @@ def user_subscription(
 
 
 @router.get("/{username}/{key}/info", response_model=UserResponse)
-def user_subscription_info(db_user: SubUserDep):
+async def user_subscription_info(db_user: SubUserDep):
     return db_user
 
 
 @router.get("/{username}/{key}/usage")
-def user_get_usage(
+async def user_get_usage(
     db_user: SubUserDep,
     db: DBDep,
     start_date: StartDateDep,
     end_date: EndDateDep,
 ):
-    usages = crud.get_user_usages(db, db_user, start_date, end_date)
+    usages = await crud.get_user_usages(db, db_user, start_date, end_date)
 
     return {"usages": usages, "username": db_user.username}
 
@@ -146,7 +149,7 @@ client_type_mime_type = {
 
 
 @router.get("/{username}/{key}/{client_type}")
-def user_subscription_with_client_type(
+async def user_subscription_with_client_type(
     db: DBDep,
     db_user: SubUserDep,
     request: Request,
@@ -159,7 +162,7 @@ def user_subscription_with_client_type(
     user: UserResponse = UserResponse.model_validate(db_user)
 
     subscription_settings = SubscriptionSettings.model_validate(
-        db.query(Settings.subscription).first()[0]
+        await db.scalar(select(Settings.subscription))
     )
 
     response_headers = {
@@ -174,7 +177,7 @@ def user_subscription_with_client_type(
         ),
     }
 
-    conf = generate_subscription(
+    conf = await generate_subscription(
         user=db_user,
         config_format="links" if client_type == "v2ray" else client_type,
         as_base64=client_type == "v2ray",

@@ -74,7 +74,7 @@ class MarzNodeGRPCLIB(MarzNodeBase, MarzNodeDB):
                 await asyncio.wait_for(self._channel.__connect__(), timeout=2)
             except Exception:
                 logger.debug("timeout for node, id: %i", self.id)
-                self.set_status(NodeStatus.unhealthy, "timeout")
+                await self.set_status(NodeStatus.unhealthy, "timeout")
                 self.synced = False
                 if self._streaming_task:
                     self._streaming_task.cancel()
@@ -88,7 +88,7 @@ class MarzNodeGRPCLIB(MarzNodeBase, MarzNodeDB):
                         self._streaming_task = asyncio.create_task(
                             self._stream_user_updates()
                         )
-                        self.set_status(NodeStatus.healthy)
+                        await self.set_status(NodeStatus.healthy)
                         logger.info("Connected to node %i", self.id)
             await asyncio.sleep(10)
 
@@ -142,8 +142,8 @@ class MarzNodeGRPCLIB(MarzNodeBase, MarzNodeDB):
 
     async def _sync(self):
         backends = await self._fetch_backends()
-        self.store_backends(backends)
-        users = self.list_users()
+        await self.store_backends(backends)
+        users = await self.list_users()
         await self._repopulate_users(users)
         self.synced = True
 
@@ -173,10 +173,10 @@ class MarzNodeGRPCLIB(MarzNodeBase, MarzNodeDB):
             await self._sync()
         except:
             self.synced = False
-            self.set_status(NodeStatus.unhealthy)
+            await self.set_status(NodeStatus.unhealthy)
             raise
         else:
-            self.set_status(NodeStatus.healthy)
+            await self.set_status(NodeStatus.healthy)
 
     async def get_backend_config(self, name: str):
         response: BackendConfig = await self._stub.FetchBackendConfig(

@@ -6,9 +6,10 @@ from typing import Any, Dict, List
 import aiohttp
 from fastapi.encoders import jsonable_encoder
 from requests import Session
+import sqlalchemy as sa
 
 from app import config
-from app.db import GetDB
+from app.db import get_db_session
 from app.db.models import NotificationReminder
 from app.utils.notification import queue
 
@@ -86,9 +87,11 @@ async def send_notifications():
             queue.append(notification)
 
 
-def delete_expired_reminders() -> None:
-    with GetDB() as db:
-        db.query(NotificationReminder).filter(
-            NotificationReminder.expires_at < dt.utcnow()
-        ).delete()
-        db.commit()
+async def delete_expired_reminders() -> None:
+    async for db in get_db_session():
+        await db.execute(
+            sa.delete(NotificationReminder).filter(
+                NotificationReminder.expires_at < dt.utcnow()
+            )
+        )
+        await db.commit()

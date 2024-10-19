@@ -1,11 +1,11 @@
-from app.db import crud, GetDB
+from app.db import crud, get_db_session
 from app.models.node import NodeStatus
 
 
 class MarzNodeDB:
-    def list_users(self):
-        with GetDB() as db:
-            relations = crud.get_node_users(db, self.id)
+    async def list_users(self):
+        async for db in get_db_session():
+            relations = await crud.get_node_users(db, self.id)
             users = dict()
             for rel in relations:
                 if not users.get(rel[0]):
@@ -15,14 +15,14 @@ class MarzNodeDB:
                 users[rel[0]]["inbounds"].append(rel[3].tag)
         return list(users.values())
 
-    def store_backends(self, backends):
+    async def store_backends(self, backends):
         inbounds = [
             inbound for backend in backends for inbound in backend.inbounds
         ]
-        with GetDB() as db:
-            crud.ensure_node_backends(db, backends, self.id)
-            crud.ensure_node_inbounds(db, inbounds, self.id)
+        async for db in get_db_session():
+            await crud.ensure_node_backends(db, backends, self.id)
+            await crud.ensure_node_inbounds(db, inbounds, self.id)
 
-    def set_status(self, status: NodeStatus, message: str | None = None):
-        with GetDB() as db:
-            crud.update_node_status(db, self.id, status, message)
+    async def set_status(self, status: NodeStatus, message: str | None = None):
+        async for db in get_db_session():
+            await crud.update_node_status(db, self.id, status, message)

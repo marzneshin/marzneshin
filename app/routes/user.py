@@ -3,7 +3,7 @@ import logging
 from datetime import datetime, timedelta
 from enum import Enum
 
-import sqlalchemy
+import sqlalchemy as sa
 from fastapi import APIRouter
 from fastapi import HTTPException, Query
 from fastapi_pagination.ext.sqlalchemy import paginate
@@ -54,7 +54,7 @@ user_filters = [
 
 
 @router.get("", response_model=Page[UserResponse])
-def get_users(
+async def get_users(
     db: DBDep,
     admin: AdminDep,
     username: list[str] = Query(None),
@@ -70,9 +70,9 @@ def get_users(
     """
     Filters users based on the options
     """
-    dbadmin = crud.get_admin(db, admin.username)
+    dbadmin = await crud.get_admin(db, admin.username)
 
-    query = db.query(User).filter(User.removed == False)
+    query = sa.select(User).filter(User.removed == False)
 
     admin = dbadmin if not admin.is_sudo else None
 
@@ -89,7 +89,7 @@ def get_users(
             elif name == "owner_username":
                 if not dbadmin.is_sudo:
                     raise HTTPException(403, "You're not allowed.")
-                filter_admin = crud.get_admin(db, value)
+                filter_admin = await crud.get_admin(db, value)
                 if not filter_admin:
                     raise HTTPException(404, "owner_username not found.")
                 query = query.filter(User.admin_id == filter_admin.id)
@@ -105,7 +105,7 @@ def get_users(
             order_column = order_column.desc()
         query = query.order_by(order_column)
 
-    return paginate(db, query)
+    return await paginate(db, query)
 
 
 @router.post("", response_model=UserResponse)
@@ -118,20 +118,19 @@ async def add_user(new_user: UserCreate, db: DBDep, admin: AdminDep):
     - **data_limit** must be in Bytes, e.g. 1073741824B = 1GB
     - **services** list of service ids
     """
-
     try:
-        db_user = crud.create_user(
+        db_user = await crud.create_user(
             db,
             new_user,
-            admin=crud.get_admin(db, admin.username),
+            admin_id=admin.id,
             allowed_services=(
                 admin.service_ids
                 if not admin.is_sudo and not admin.all_services_access
                 else None
             ),
         )
-    except sqlalchemy.exc.IntegrityError:
-        db.rollback()
+    except sa.exc.IntegrityError:
+        await db.rollback()
         raise HTTPException(status_code=409, detail="User already exists")
 
     user = UserResponse.model_validate(db_user)
@@ -149,8 +148,8 @@ async def reset_users_data_usage(db: DBDep, admin: SudoAdminDep):
     Reset all users data usage,
     You will need to restart for this to take effect for now
     """
-    dbadmin = crud.get_admin(db, admin.username)
-    crud.reset_all_users_data_usage(db=db, admin=dbadmin)
+    dbadmin = await crud.get_admin(db, admin.username)
+    await crud.reset_all_users_data_usage(db=db, admin=dbadmin)
     return {}
 
 
@@ -167,9 +166,9 @@ async def delete_expired(
     - This function will delete all expired users that meet the specified number of days passed and can't be undone.
     """
 
-    dbadmin = crud.get_admin(db, admin.username)
+    dbadmin = await crud.get_admin(db, admin.username)
 
-    db_users = crud.get_users(
+    db_users = await crud.get_users(
         db=db,
         expired=True,
         admin=dbadmin if not admin.is_sudo else None,
@@ -187,7 +186,7 @@ async def delete_expired(
         raise HTTPException(status_code=404, detail="No expired user found.")
 
     for db_user in expired_users:
-        crud.remove_user(db, db_user)
+        await crud.remove_user(db, db_user)
 
         asyncio.ensure_future(
             report.user_deleted(username=db_user.username, by=admin)
@@ -222,7 +221,7 @@ async def modify_user(
     active_before = db_user.is_active
 
     old_inbounds = {(i.node_id, i.protocol, i.tag) for i in db_user.inbounds}
-    new_user = crud.update_user(
+    new_user = await crud.update_user(
         db,
         db_user,
         modifications,
@@ -244,7 +243,7 @@ async def modify_user(
             new_user, old_inbounds, remove=not db_user.is_active
         )
         db_user.activated = db_user.is_active
-        db.commit()
+        await db.commit()
 
     asyncio.ensure_future(
         report.user_updated(
@@ -286,8 +285,8 @@ async def remove_user(
     """
     marznode.operations.update_user(db_user, remove=True)
 
-    crud.remove_user(db, db_user)
-    db.flush()
+    await crud.remove_user(db, db_user)
+    await db.flush()
 
     asyncio.ensure_future(
         report.user_deleted(username=db_user.username, by=admin)
@@ -297,13 +296,13 @@ async def remove_user(
 
 
 @router.get("/{username}/services", response_model=Page[ServiceResponse])
-def get_user_services(user: UserDep, db: DBDep, admin: AdminDep):
+async def get_user_services(user: UserDep, db: DBDep, admin: AdminDep):
     """
     Get user services
     """
 
     query = (
-        db.query(Service)
+        sa.select(Service)
         .join(Service.users)
         .where(User.username == user.username)
     )
@@ -311,7 +310,7 @@ def get_user_services(user: UserDep, db: DBDep, admin: AdminDep):
     if not admin.is_sudo and not admin.all_services_access:
         query.filter(Service.id.in_(admin.service_ids))
 
-    return paginate(query)
+    return await paginate(db, query)
 
 
 @router.post("/{username}/reset", response_model=UserResponse)
@@ -325,12 +324,12 @@ async def reset_user_data_usage(
     Reset user data usage
     """
     was_active = db_user.is_active
-    db_user = crud.reset_user_data_usage(db, db_user)
+    db_user = await crud.reset_user_data_usage(db, db_user)
 
     if db_user.is_active and not was_active:
         marznode.operations.update_user(db_user)
         db_user.activated = True
-        db.commit()
+        await db.commit()
 
     user = UserResponse.model_validate(db_user)
     asyncio.ensure_future(report.user_data_usage_reset(user=user, by=admin))
@@ -359,7 +358,7 @@ async def enable_user(
         db_user.activated = True
         marznode.operations.update_user(db_user)
 
-    db.commit()
+    await db.commit()
 
     user = UserResponse.model_validate(db_user)
 
@@ -382,7 +381,7 @@ async def disable_user(
         raise HTTPException(409, "User is not enabled")
     db_user.enabled = False
     db_user.activated = False
-    db.commit()
+    await db.commit()
 
     marznode.operations.update_user(db_user, remove=True)
 
@@ -403,7 +402,7 @@ async def revoke_user_subscription(
     """
     Revoke users subscription (Subscription link and proxies)
     """
-    db_user = crud.revoke_user_sub(db, db_user)
+    db_user = await crud.revoke_user_sub(db, db_user)
 
     if db_user.is_active:
         marznode.operations.update_user(db_user, remove=True)
@@ -419,29 +418,29 @@ async def revoke_user_subscription(
 
 
 @router.get("/{username}/usage", response_model=UserUsageSeriesResponse)
-def get_user_usage(
+async def get_user_usage(
     db: DBDep, db_user: UserDep, start_date: StartDateDep, end_date: EndDateDep
 ):
     """
     Get users usage
     """
 
-    return crud.get_user_usages(db, db_user, start_date, end_date)
+    return await crud.get_user_usages(db, db_user, start_date, end_date)
 
 
 @router.put("/{username}/set-owner", response_model=UserResponse)
-def set_owner(
+async def set_owner(
     username: str, admin_username: str, db: DBDep, admin: SudoAdminDep
 ):
-    db_user = crud.get_user(db, username)
+    db_user = await crud.get_user(db, username)
     if not db_user:
         raise HTTPException(status_code=404, detail="User not found")
 
-    new_admin = crud.get_admin(db, username=admin_username)
+    new_admin = await crud.get_admin(db, username=admin_username)
     if not new_admin:
         raise HTTPException(status_code=404, detail="Admin not found")
 
-    db_user = crud.set_owner(db, db_user, new_admin)
+    db_user = await crud.set_owner(db, db_user, new_admin)
     user = UserResponse.model_validate(db_user)
 
     logger.info(

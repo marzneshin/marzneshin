@@ -5,12 +5,12 @@ from datetime import datetime
 from sqlalchemy import and_, select, insert, update, bindparam
 
 from app import marznode
-from app.db import GetDB
+from app.db import get_db_session
 from app.db.models import NodeUsage, NodeUserUsage, User
 from app.marznode import MarzNodeBase
 
 
-def record_user_usage_logs(
+async def record_user_usage_logs(
     params: list, node_id: int, consumption_factor: int = 1
 ):
     if not params:
@@ -20,7 +20,7 @@ def record_user_usage_logs(
         datetime.utcnow().strftime("%Y-%m-%dT%H:00:00")
     )
 
-    with GetDB() as db:
+    async for db in get_db_session():
         # make user usage row if doesn't exist
         select_stmt = select(NodeUserUsage.user_id).where(
             and_(
@@ -28,7 +28,7 @@ def record_user_usage_logs(
                 NodeUserUsage.created_at == created_at,
             )
         )
-        existings = [r[0] for r in db.execute(select_stmt).fetchall()]
+        existings = [r[0] for r in await db.execute(select_stmt).fetchall()]
         uids_to_insert = set()
 
         for p in params:
@@ -44,7 +44,7 @@ def record_user_usage_logs(
                 node_id=node_id,
                 used_traffic=0,
             )
-            db.execute(stmt, [{"uid": uid} for uid in uids_to_insert])
+            await db.execute(stmt, [{"uid": uid} for uid in uids_to_insert])
 
         # record
         stmt = (
@@ -61,13 +61,13 @@ def record_user_usage_logs(
                 )
             )
         )
-        db.connection().execute(
+        await db.connection().execute(
             stmt, params, execution_options={"synchronize_session": None}
         )
-        db.commit()
+        await db.commit()
 
 
-def record_node_stats(node_id: int, usage: int):
+async def record_node_stats(node_id: int, usage: int):
     if not usage:
         return
 
@@ -75,8 +75,7 @@ def record_node_stats(node_id: int, usage: int):
         datetime.utcnow().strftime("%Y-%m-%dT%H:00:00")
     )
 
-    with GetDB() as db:
-
+    async for db in get_db_session():
         # make node usage row if doesn't exist
         select_stmt = select(NodeUsage.node_id).where(
             and_(
@@ -84,12 +83,12 @@ def record_node_stats(node_id: int, usage: int):
                 NodeUsage.created_at == created_at,
             )
         )
-        notfound = db.execute(select_stmt).first() is None
+        notfound = (await db.execute(select_stmt)).scalar() is None
         if notfound:
             stmt = insert(NodeUsage).values(
                 created_at=created_at, node_id=node_id, uplink=0, downlink=0
             )
-            db.execute(stmt)
+            await db.execute(stmt)
 
         # record
         stmt = (
@@ -105,8 +104,8 @@ def record_node_stats(node_id: int, usage: int):
             )
         )
 
-        db.execute(stmt)
-        db.commit()
+        await db.execute(stmt)
+        await db.commit()
 
 
 async def get_users_stats(
@@ -146,7 +145,7 @@ async def record_user_usages():
                 param["value"] * coefficient
             )  # apply the usage coefficient
             node_usage += param["value"]
-        record_node_stats(node_id, node_usage)
+        await record_node_stats(node_id, node_usage)
 
     users_usage = list(
         {"id": uid, "value": value} for uid, value in users_usage.items()
@@ -155,7 +154,7 @@ async def record_user_usages():
         return
 
     # record users usage
-    with GetDB() as db:
+    async for db in get_db_session():
         stmt = update(User).values(
             used_traffic=User.used_traffic + bindparam("value"),
             lifetime_used_traffic=User.lifetime_used_traffic
@@ -163,10 +162,10 @@ async def record_user_usages():
             online_at=datetime.utcnow(),
         )
 
-        db.execute(
+        await db.execute(
             stmt, users_usage, execution_options={"synchronize_session": None}
         )
-        db.commit()
+        await db.commit()
 
     for node_id, params in api_params.items():
         record_user_usage_logs(

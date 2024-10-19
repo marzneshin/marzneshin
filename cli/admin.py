@@ -5,19 +5,20 @@ from rich.table import Table
 from rich.console import Console
 from rich.panel import Panel
 from sqlalchemy.exc import IntegrityError
-from decouple import config, UndefinedValueError
 
-from app.db import GetDB
+from app.db import get_db_session
 from app.db import crud
-from app.db.models import Admin, User
+from app.db.models import Admin
 from app.models.admin import AdminCreate, AdminPartialModify
 from . import utils
+from cli.utils import async_to_sync
 
 app = typer.Typer(no_args_is_help=True)
 
 
 @app.command(name="list")
-def list_admins(
+@async_to_sync
+async def list_admins(
     offset: Optional[int] = typer.Option(None, *utils.FLAGS["offset"]),
     limit: Optional[int] = typer.Option(None, *utils.FLAGS["limit"]),
     username: Optional[str] = typer.Option(
@@ -25,8 +26,8 @@ def list_admins(
     ),
 ):
     """Displays a table of admins"""
-    with GetDB() as db:
-        admins: list[Admin] = crud.get_admins(
+    async for db in get_db_session():
+        admins: list[Admin] = await crud.get_admins(
             db, offset=offset, limit=limit, username=username
         )
         utils.print_table(
@@ -43,7 +44,8 @@ def list_admins(
 
 
 @app.command(name="delete")
-def delete_admin(
+@async_to_sync
+async def delete_admin(
     username: str = typer.Option(..., *utils.FLAGS["username"], prompt=True),
     yes_to_all: bool = typer.Option(
         False, *utils.FLAGS["yes_to_all"], help="Skips confirmations"
@@ -54,22 +56,23 @@ def delete_admin(
 
     Confirmations can be skipped using `--yes/-y` option.
     """
-    with GetDB() as db:
-        admin: Union[Admin, None] = crud.get_admin(db, username=username)
+    async for db in get_db_session():
+        admin: Union[Admin, None] = await crud.get_admin(db, username=username)
         if not admin:
             utils.error(f'There\'s no admin with username "{username}"!')
 
         if yes_to_all or typer.confirm(
             f'Are you sure about deleting "{username}"?', default=False
         ):
-            crud.remove_admin(db, admin)
+            await crud.remove_admin(db, admin)
             utils.success(f'"{username}" deleted successfully.')
         else:
             utils.error("Operation aborted!")
 
 
 @app.command(name="create")
-def create_admin(
+@async_to_sync
+async def create_admin(
     username: str = typer.Option(..., *utils.FLAGS["username"], prompt=True),
     is_sudo: bool = typer.Option(None, *utils.FLAGS["is_sudo"], prompt=True),
     password: str = typer.Option(
@@ -78,17 +81,14 @@ def create_admin(
         confirmation_prompt=True,
         hide_input=True,
         hidden=True,
-        envvar=utils.PASSWORD_ENVIRON_NAME,
     ),
 ):
     """
     Creates an admin
-
-    Password can also be set using the `MARZBAN_ADMIN_PASSWORD` environment variable for non-interactive usages.
     """
-    with GetDB() as db:
+    async for db in get_db_session():
         try:
-            crud.create_admin(
+            await crud.create_admin(
                 db,
                 AdminCreate(
                     username=username, password=password, is_sudo=is_sudo
@@ -100,7 +100,8 @@ def create_admin(
 
 
 @app.command(name="update")
-def update_admin(
+@async_to_sync
+async def update_admin(
     username: str = typer.Option(..., *utils.FLAGS["username"], prompt=True)
 ):
     """
@@ -133,78 +134,10 @@ def update_admin(
             password=new_password,
         )
 
-    with GetDB() as db:
-        admin: Union[Admin, None] = crud.get_admin(db, username=username)
+    async for db in get_db_session():
+        admin: Union[Admin, None] = await crud.get_admin(db, username=username)
         if not admin:
             utils.error(f'There\'s no admin with username "{username}"!')
 
-        crud.partial_update_admin(db, admin, _get_modify_model(admin))
+        await crud.partial_update_admin(db, admin, _get_modify_model(admin))
         utils.success(f'Admin "{username}" updated successfully.')
-
-
-@app.command(name="import-from-env")
-def import_from_env(
-    yes_to_all: bool = typer.Option(
-        False, *utils.FLAGS["yes_to_all"], help="Skips confirmations"
-    )
-):
-    """
-    Imports the sudo admin from env
-
-    Confirmations can be skipped using `--yes/-y` option.
-
-    What does it do?
-      - Creates a sudo admin according to `SUDO_USERNAME` and `SUDO_PASSWORD`.
-      - Links any user which doesn't have an `admin_id` to the imported sudo admin.
-    """
-    try:
-        username, password = config("SUDO_USERNAME"), config("SUDO_PASSWORD")
-    except UndefinedValueError:
-        utils.error(
-            "Unable to get SUDO_USERNAME and/or SUDO_PASSWORD.\n"
-            "Make sure you have set them in the env file or as environment variables."
-        )
-
-    if not (username and password):
-        utils.error(
-            "Unable to retrieve username and password.\n"
-            "Make sure both SUDO_USERNAME and SUDO_PASSWORD are set."
-        )
-
-    with GetDB() as db:
-        admin: Union[None, Admin] = None
-
-        # If env admin already exists
-        if current_admin := crud.get_admin(db, username=username):
-            if not yes_to_all and not typer.confirm(
-                f'Admin "{username}" already exists. Do you want to sync it with env?',
-                default=None,
-            ):
-                utils.error("Aborted.")
-
-            admin = crud.partial_update_admin(
-                db,
-                current_admin,
-                AdminPartialModify(password=password, is_sudo=True),
-            )
-        # If env admin does not exist yet
-        else:
-            admin = crud.create_admin(
-                db,
-                AdminCreate(
-                    username=username, password=password, is_sudo=True
-                ),
-            )
-
-        updated_user_count = (
-            db.query(User)
-            .filter_by(admin_id=None)
-            .update({"admin_id": admin.id})
-        )
-        db.commit()
-
-        utils.success(
-            f'Admin "{username}" imported successfully.\n'
-            f"{updated_user_count} users' admin_id set to the {username}'s id.\n"
-            "You must delete SUDO_USERNAME and SUDO_PASSWORD from your env file now."
-        )
