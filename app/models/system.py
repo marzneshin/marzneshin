@@ -40,4 +40,6 @@ class NodesStats(BaseModel):
 
 
 class TrafficUsageSeries(BaseModel):
+    step: int = 3600
+    total: int = 0
     usages: list[tuple[int, int]]

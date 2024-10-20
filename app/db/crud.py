@@ -6,7 +6,7 @@ from enum import Enum
 from types import NoneType
 from typing import List, Optional, Tuple, Union
 
-from sqlalchemy import and_, delete, update, select, func
+from sqlalchemy import and_, delete, update, select, func, cast, Date
 from sqlalchemy.orm import Session
 
 from app.db.models import (
@@ -310,6 +310,59 @@ def get_users(
         query = query.limit(limit)
 
     return query.all()
+
+
+def get_user_total_usage(
+    db: Session, user: User, start: datetime, end: datetime, per_day=False
+):
+    usages = defaultdict(int)
+
+    query = db.query(
+        (
+            cast(NodeUserUsage.created_at, Date).label("day")
+            if per_day
+            else NodeUserUsage.created_at
+        ),
+        func.sum(NodeUserUsage.used_traffic),
+    ).filter(
+        and_(
+            NodeUserUsage.user_id == user.id,
+            NodeUserUsage.created_at >= start,
+            NodeUserUsage.created_at <= end,
+        )
+    )
+    if per_day:
+        query = query.group_by(cast(NodeUserUsage.created_at, Date))
+    else:
+        query = query.group_by(NodeUserUsage.created_at)
+
+    for date, used_traffic in query:
+        if per_day:
+            timestamp = datetime(
+                date.year, date.month, date.day, tzinfo=timezone.utc
+            ).timestamp()
+            usages[timestamp] += int(used_traffic)
+        else:
+            usages[date.replace(tzinfo=timezone.utc).timestamp()] += int(
+                used_traffic
+            )
+
+    result = TrafficUsageSeries(usages=[])
+    current = start.astimezone(timezone.utc).replace(
+        minute=0, second=0, microsecond=0
+    )
+    if per_day:
+        current = current.replace(hour=0)
+
+    step = timedelta(days=1) if per_day else timedelta(hours=1)
+    while current <= end.replace(tzinfo=timezone.utc):
+        current_usage = usages.get(current.timestamp()) or 0
+        result.usages.append((int(current.timestamp()), current_usage))
+        result.total += current_usage
+        current += step
+
+    result.step = int(step.total_seconds())
+    return result
 
 
 def get_total_usages(
