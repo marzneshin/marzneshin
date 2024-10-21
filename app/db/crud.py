@@ -316,7 +316,6 @@ def get_total_usages(
     db: Session, admin: Admin, start: datetime, end: datetime
 ) -> TrafficUsageSeries:
     usages = defaultdict(int)
-    total_traffic = 0
 
     query = (
         db.query(
@@ -343,17 +342,16 @@ def get_total_usages(
     for created_at, used_traffic in query.all():
         timestamp = created_at.replace(tzinfo=timezone.utc).timestamp()
         usages[timestamp] += int(used_traffic)
-        total_traffic += int(used_traffic)
 
-    result = TrafficUsageSeries(usages=[], total=total_traffic)
+    result = TrafficUsageSeries(usages=[], total=0)
     current = start.astimezone(timezone.utc).replace(
         minute=0, second=0, microsecond=0
     )
 
     while current <= end.replace(tzinfo=timezone.utc):
-        result.usages.append(
-            (int(current.timestamp()), usages.get(current.timestamp()) or 0)
-        )
+        usage = usages.get(current.timestamp()) or 0
+        result.usages.append((int(current.timestamp()), usage))
+        result.total += usage
         current += timedelta(hours=1)
 
     return result
@@ -365,9 +363,8 @@ def get_user_usages(
     start: datetime,
     end: datetime,
 ) -> UserUsageSeriesResponse:
-    
+
     usages = defaultdict(dict)
-    total_traffic = 0
 
     cond = and_(
         NodeUserUsage.user_id == db_user.id,
@@ -378,14 +375,13 @@ def get_user_usages(
     for v in db.query(NodeUserUsage).filter(cond):
         timestamp = v.created_at.replace(tzinfo=timezone.utc).timestamp()
         usages[v.node_id][timestamp] = v.used_traffic
-        total_traffic += v.used_traffic
 
     node_ids = list(usages.keys())
     nodes = db.query(Node).where(Node.id.in_(node_ids))
     node_id_names = {node.id: node.name for node in nodes}
 
     result = UserUsageSeriesResponse(
-        username=db_user.username, node_usages=[], total=total_traffic
+        username=db_user.username, node_usages=[], total=0
     )
 
     for node_id, rows in usages.items():
@@ -397,11 +393,12 @@ def get_user_usages(
         )
 
         while current <= end:
-            node_usages.usages.append(
-                (int(current.timestamp()), rows.get(current.timestamp()) or 0)
-            )
+            usage = rows.get(current.timestamp()) or 0
+            node_usages.usages.append((int(current.timestamp()), usage))
             current += timedelta(hours=1)
+            result.total += usage
         result.node_usages.append(node_usages)
+
     return result
 
 
