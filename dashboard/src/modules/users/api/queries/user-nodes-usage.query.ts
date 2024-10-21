@@ -12,6 +12,7 @@ interface NodeUsage {
 
 export interface UserNodeUsagesResponse {
     username: string;
+    total: number;
     node_usages: NodeUsage[];
 }
 
@@ -25,7 +26,8 @@ export type UserNodeUsagesQueryKey = [string, string, { start?: string, end?: st
 
 export const UserNodeUsagesDefault = {
     username: "",
-    node_usages: []
+    node_usages: [],
+    total: 0
 }
 
 export async function fetchUserNodeUsages({ queryKey }: { queryKey: UserNodeUsagesQueryKey }): Promise<UserNodeUsagesResponse> {
