@@ -14,7 +14,6 @@ from app.db.models import (
     TLS,
     Admin,
     Node,
-    NodeUsage,
     NodeUserUsage,
     NotificationReminder,
     InboundHost,
@@ -29,7 +28,6 @@ from app.models.node import (
     NodeCreate,
     NodeModify,
     NodeStatus,
-    NodeUsageResponse,
 )
 from app.models.proxy import InboundHost as InboundHostModify
 from app.models.service import Service as ServiceModify, ServiceCreate
@@ -755,29 +753,42 @@ def get_nodes(
     return query.all()
 
 
-def get_nodes_usage(
-    db: Session, start: datetime, end: datetime
-) -> List[NodeUsageResponse]:
-    usages = dict()
+def get_node_usage(
+    db: Session, start: datetime, end: datetime, node: Node
+) -> TrafficUsageSeries:
+    usages = defaultdict(int)
 
-    usages[0] = NodeUsageResponse(  # Main Core
-        node_id=None, node_name="Master", uplink=0, downlink=0
+    query = (
+        db.query(
+            NodeUserUsage.created_at, func.sum(NodeUserUsage.used_traffic)
+        )
+        .group_by(NodeUserUsage.created_at)
+        .filter(
+            and_(
+                NodeUserUsage.node_id == node.id,
+                NodeUserUsage.created_at >= start,
+                NodeUserUsage.created_at <= end,
+            )
+        )
     )
-    for node in db.query(Node).all():
-        usages[node.id] = NodeUsageResponse(
-            node_id=node.id, node_name=node.name, uplink=0, downlink=0
+
+    for created_at, used_traffic in query.all():
+        usages[created_at.replace(tzinfo=timezone.utc).timestamp()] += int(
+            used_traffic
         )
 
-    cond = and_(NodeUsage.created_at >= start, NodeUsage.created_at <= end)
+    result = TrafficUsageSeries(usages=[])
+    current = start.astimezone(timezone.utc).replace(
+        minute=0, second=0, microsecond=0
+    )
 
-    for v in db.query(NodeUsage).filter(cond):
-        try:
-            usages[v.node_id or 0].uplink += v.uplink
-            usages[v.node_id or 0].downlink += v.downlink
-        except KeyError:
-            pass
+    while current <= end.replace(tzinfo=timezone.utc):
+        result.usages.append(
+            (int(current.timestamp()), usages.get(current.timestamp()) or 0)
+        )
+        current += timedelta(hours=1)
 
-    return list(usages.values())
+    return result
 
 
 def create_node(db: Session, node: NodeCreate):
