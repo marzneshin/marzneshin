@@ -9,8 +9,12 @@ import {
 } from "@marzneshin/components";
 import type { FC } from "react";
 import { useTranslation } from "react-i18next";
-import type { NodeBackendType, NodeType } from "../..";
-import { NodesDetailTable } from "../../tables/detail-table";
+import {
+    NodeBackendType,
+    NodeType,
+    NodesDetailTable,
+    NodesUsageWidget
+} from "@marzneshin/modules/nodes";
 import { NodeBackendSetting } from "./node-backend-setting";
 
 interface NodesSettingsDialogProps extends SettingsDialogProps {
@@ -28,6 +32,7 @@ export const NodesSettingsDialog: FC<NodesSettingsDialogProps> = ({
 
     return (
         <SettingsDialog open={open} onClose={onClose} onOpenChange={onOpenChange}>
+            <NodesUsageWidget node={entity} />
             <div className="my-4">
                 <h1 className="font-medium font-header">
                     {t("page.nodes.settings.detail")}

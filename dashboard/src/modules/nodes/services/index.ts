@@ -2,6 +2,7 @@ export * from "./nodes.query";
 export * from "./node.query";
 export * from "./logs.socket";
 export * from "./settings.query";
+export * from "./nodes-usage.query";
 export * from "./backend-stats.query";
 export * from "./settings.mutate";
 export * from "./update-node.mutate";

@@ -130,6 +130,10 @@
       }
     },
     "nodes": {
+      "nodes-usage-widget": {
+        "title": "Nodes Usage",
+        "desc": "Total nodes usage node traffic"
+      },
       "settings": {
         "no-backend-alert": {
           "title": "No backend is configured for this node",
