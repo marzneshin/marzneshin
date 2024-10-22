@@ -157,7 +157,7 @@ async def reconnect_node(node_id: int, db: DBDep, admin: SudoAdminDep):
     return {}
 
 
-@router.get("{node_id}/usage", response_model=TrafficUsageSeries)
+@router.get("/{node_id}/usage", response_model=TrafficUsageSeries)
 def get_usage(
     node_id: int,
     db: DBDep,
