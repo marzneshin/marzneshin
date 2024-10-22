@@ -131,6 +131,7 @@ class UserResponse(User):
     id: int
     activated: bool
     is_active: bool
+    removed: bool
     expired: bool
     data_limit_reached: bool
     enabled: bool
