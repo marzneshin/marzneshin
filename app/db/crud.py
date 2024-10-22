@@ -777,15 +777,17 @@ def get_node_usage(
             used_traffic
         )
 
-    result = TrafficUsageSeries(usages=[])
+    result = TrafficUsageSeries(usages=[], total=0)
     current = start.astimezone(timezone.utc).replace(
         minute=0, second=0, microsecond=0
     )
 
     while current <= end.replace(tzinfo=timezone.utc):
+        usage = usages.get(current.timestamp()) or 0
         result.usages.append(
-            (int(current.timestamp()), usages.get(current.timestamp()) or 0)
+            (int(current.timestamp()), usage)
         )
+        result.total += usage
         current += timedelta(hours=1)
 
     return result
