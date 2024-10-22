@@ -9,13 +9,13 @@ import {
     ChartConfig,
 } from "@marzneshin/components";
 import { XAxis, BarChart, YAxis, CartesianGrid, Bar } from "recharts"
-import { useTransformData } from "./hooks";
 import { format as formatByte } from '@chbphone55/pretty-bytes';
 import { useTotalTrafficQuery } from "./api";
 import { UsageGraphSkeleton } from "./components";
 import {
     ChartDateInterval,
     SelectDateView,
+    useTransformDateUsageData,
     dateXAxisTicks,
     useFromNowInterval
 } from "@marzneshin/common/stats-charts";
@@ -32,7 +32,7 @@ export const TotalTrafficsWidget: FC = () => {
     const [timeRange, setTimeRange] = useState("1d")
     const { start, end } = useFromNowInterval(timeRange as ChartDateInterval);
     const { data, isPending } = useTotalTrafficQuery({ start, end })
-    const chartData = useTransformData(data.usages);
+    const chartData = useTransformDateUsageData(data.usages);
     const [totalAmount, totalMetric] = formatByte(data.total);
 
     return (
