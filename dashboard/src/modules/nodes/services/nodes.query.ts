@@ -1,4 +1,4 @@
-import type { NodeType } from "@marzneshin/features/nodes";
+import type { NodeType } from "@marzneshin/modules/nodes";
 import { useQuery } from "@tanstack/react-query";
 import { fetch } from "@marzneshin/utils";
 import type {

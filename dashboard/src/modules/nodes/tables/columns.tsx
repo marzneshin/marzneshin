@@ -1,5 +1,5 @@
 import { ColumnDef } from "@tanstack/react-table"
-import { NodesStatusBadge, NodeType, NodesStatus } from "@marzneshin/features/nodes"
+import { NodesStatusBadge, NodeType, NodesStatus } from "@marzneshin/modules/nodes"
 import {
     DataTableActionsCell,
     DataTableColumnHeader

@@ -1,4 +1,4 @@
-import type { NodeType } from "@marzneshin/features/nodes";
+import type { NodeType } from "@marzneshin/modules/nodes";
 import { useMutation } from "@tanstack/react-query";
 import { fetch, queryClient } from "@marzneshin/utils";
 import { toast } from "sonner";

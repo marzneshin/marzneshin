@@ -5,7 +5,7 @@ import {
 import {
     NodesDeleteConfirmationDialog,
     useRouterNodeContext,
-} from "@marzneshin/features/nodes";
+} from "@marzneshin/modules/nodes";
 import { useDialog } from "@marzneshin/hooks";
 
 const NodeDelete = () => {

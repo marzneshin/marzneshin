@@ -5,7 +5,7 @@ import {
 import {
     MutationDialog,
     useRouterNodeContext,
-} from "@marzneshin/features/nodes";
+} from "@marzneshin/modules/nodes";
 
 const NodeEdit = () => {
     const value = useRouterNodeContext()

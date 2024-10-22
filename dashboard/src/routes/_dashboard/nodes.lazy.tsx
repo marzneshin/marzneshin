@@ -3,7 +3,7 @@ import {
     Page,
     Loading,
 } from '@marzneshin/components';
-import { NodesTable } from '@marzneshin/features/nodes';
+import { NodesTable } from '@marzneshin/modules/nodes';
 import { Link, createFileRoute, Outlet } from '@tanstack/react-router'
 import { type FC, Suspense } from 'react';
 import { useTranslation } from 'react-i18next';
