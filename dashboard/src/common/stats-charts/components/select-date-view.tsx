@@ -1,40 +1,39 @@
+import type { FC, PropsWithChildren } from 'react';
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
+    RadioGroup,
+    RadioGroupItem,
+    Label
 } from "@marzneshin/components";
-import { useTranslation } from 'react-i18next';
+
+const SelectDateViewItem: FC<PropsWithChildren & { interval: string }> = ({ interval, children }) => (
+    <div className="flex gap-2 justify-center items-center relative rounded-full py-0.5 px-1 cursor-pointer">
+        <RadioGroupItem
+            value={interval}
+            id={interval}
+            className="sr-only peer"
+        />
+        <Label
+            htmlFor={interval}
+            className="dark:peer-data-[state=checked]:bg-primary-foreground  dark:peer-data-[state=checked]:border-primary peer-data-[state=checked]:border-primary peer-data-[state=checked]:border-1 border-0 peer-data-[state=checked]:text-primary-foreground dark:peer-data-[state=checked]:text-primary peer-data-[state=checked]:bg-primary dark:peer-data-[state=checked]:text-white text-xs rounded-full py-0.5 px-2 transition-colors"
+        >
+            {children}
+        </Label>
+    </div>
+)
 
 export const SelectDateView = (
     { timeRange, setTimeRange }: { timeRange: string, setTimeRange: (s: string) => void }
 ) => {
-    const { t } = useTranslation();
-
     return (
-        <Select value={timeRange} onValueChange={setTimeRange}>
-            <SelectTrigger
-                className="w-[160px] rounded-lg sm:ml-auto"
-                aria-label="Select a value"
-            >
-                <SelectValue placeholder="Last 3 months" />
-            </SelectTrigger>
-            <SelectContent className="rounded-xl">
-                <SelectItem value="1d" className="rounded-lg">
-                    {t('page.users.settings.nodes-usage.last-hours', { count: 24 })}
-                </SelectItem>
-                <SelectItem value="7d" className="rounded-lg">
-                    {t('page.users.settings.nodes-usage.last-days', { count: 7 })}
-                </SelectItem>
-                <SelectItem value="30d" className="rounded-lg">
-                    {t('page.users.settings.nodes-usage.last-days', { count: 30 })}
-                </SelectItem>
-                <SelectItem value="90d" className="rounded-lg">
-                    {t('page.users.settings.nodes-usage.last-months', { count: 3 })}
-                </SelectItem>
-            </SelectContent>
-        </Select>
+        <RadioGroup
+            className="bg-muted border flex flex-row rounded-full"
+            value={timeRange}
+            onValueChange={setTimeRange}
+        >
+            <SelectDateViewItem interval="1d"> 24H</SelectDateViewItem>
+            <SelectDateViewItem interval="7d"> 7D</SelectDateViewItem>
+            <SelectDateViewItem interval="30d"> 30D</SelectDateViewItem>
+            <SelectDateViewItem interval="90d"> 3M</SelectDateViewItem>
+        </RadioGroup>
     )
 };
-

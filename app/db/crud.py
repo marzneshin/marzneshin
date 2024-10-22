@@ -314,7 +314,7 @@ def get_users(
 
 def get_total_usages(
     db: Session, admin: Admin, start: datetime, end: datetime
-):
+) -> TrafficUsageSeries:
     usages = defaultdict(int)
 
     query = (
@@ -338,20 +338,20 @@ def get_total_usages(
             .join(User, NodeUserUsage.user_id == User.id)
             .join(Admin, User.admin_id == Admin.id)
         )
-    for created_at, used_traffic in query.all():
-        usages[created_at.replace(tzinfo=timezone.utc).timestamp()] += int(
-            used_traffic
-        )
 
-    result = TrafficUsageSeries(usages=[])
+    for created_at, used_traffic in query.all():
+        timestamp = created_at.replace(tzinfo=timezone.utc).timestamp()
+        usages[timestamp] += int(used_traffic)
+
+    result = TrafficUsageSeries(usages=[], total=0)
     current = start.astimezone(timezone.utc).replace(
         minute=0, second=0, microsecond=0
     )
 
     while current <= end.replace(tzinfo=timezone.utc):
-        result.usages.append(
-            (int(current.timestamp()), usages.get(current.timestamp()) or 0)
-        )
+        usage = usages.get(current.timestamp()) or 0
+        result.usages.append((int(current.timestamp()), usage))
+        result.total += usage
         current += timedelta(hours=1)
 
     return result
@@ -363,24 +363,27 @@ def get_user_usages(
     start: datetime,
     end: datetime,
 ) -> UserUsageSeriesResponse:
+
+    usages = defaultdict(dict)
+
     cond = and_(
         NodeUserUsage.user_id == db_user.id,
         NodeUserUsage.created_at >= start,
         NodeUserUsage.created_at <= end,
     )
 
-    usages = defaultdict(dict)
-
     for v in db.query(NodeUserUsage).filter(cond):
-        usages[v.node_id][
-            v.created_at.replace(tzinfo=timezone.utc).timestamp()
-        ] = v.used_traffic
+        timestamp = v.created_at.replace(tzinfo=timezone.utc).timestamp()
+        usages[v.node_id][timestamp] = v.used_traffic
 
     node_ids = list(usages.keys())
     nodes = db.query(Node).where(Node.id.in_(node_ids))
     node_id_names = {node.id: node.name for node in nodes}
 
-    result = UserUsageSeriesResponse(username=db_user.username, node_usages=[])
+    result = UserUsageSeriesResponse(
+        username=db_user.username, node_usages=[], total=0
+    )
+
     for node_id, rows in usages.items():
         node_usages = UserNodeUsageSeries(
             node_id=node_id, node_name=node_id_names[node_id], usages=[]
@@ -390,11 +393,12 @@ def get_user_usages(
         )
 
         while current <= end:
-            node_usages.usages.append(
-                (int(current.timestamp()), rows.get(current.timestamp()) or 0)
-            )
+            usage = rows.get(current.timestamp()) or 0
+            node_usages.usages.append((int(current.timestamp()), usage))
             current += timedelta(hours=1)
+            result.total += usage
         result.node_usages.append(node_usages)
+
     return result
 
 

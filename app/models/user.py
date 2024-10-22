@@ -155,3 +155,4 @@ class UserNodeUsageSeries(BaseModel):
 class UserUsageSeriesResponse(BaseModel):
     username: str
     node_usages: list[UserNodeUsageSeries]
+    total: int

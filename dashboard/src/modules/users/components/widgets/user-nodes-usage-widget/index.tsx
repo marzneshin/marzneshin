@@ -27,13 +27,27 @@ export const UserNodesUsageWidget: FC<UserNodesUsageWidgetProps> = ({
     const { data, isPending } = useUserNodeUsagesQuery({ username: user.username, start, end })
     const chartData = useTransformData(data);
     const config = useChartConfig(data);
+    const [totalAmount, totalMetric] = formatByte(data.total);
 
     return (
         <Awaiting
             Component={
                 <SectionWidget
-                    title={<div className="hstack justify-between w-full">{t("page.users.settings.nodes-usage.title")} <SelectDateView timeRange={timeRange} setTimeRange={setTimeRange} /></div>}
+                    title={<div className="hstack justify-between w-full">{t("page.users.settings.nodes-usage.title")}</div>}
                     description={t("page.users.settings.nodes-usage.desc")}
+                    options={
+                        <div className="vstack justify-end w-full">
+                            <span className="text-lg leading-none sm:text-2xl w-full">
+                                {totalAmount} {totalMetric}
+                            </span>
+                            <span className="text-sm flex justify-end  text-muted-foreground w-full">
+                                Total
+                            </span>
+                        </div>
+                    }
+                    footer={
+                        <SelectDateView timeRange={timeRange} setTimeRange={setTimeRange} />
+                    }
                 >
                     <ChartContainer
                         className="aspect-auto h-[320px] w-full"
