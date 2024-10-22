@@ -83,7 +83,7 @@ def get_user(
     ):
         raise HTTPException(status_code=403, detail="You're not allowed")
 
-    if not db_user:
+    if not db_user or db_user.removed:
         raise HTTPException(status_code=404, detail="User not found")
 
     return db_user
