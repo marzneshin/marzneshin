@@ -5,6 +5,7 @@ export type UsageMetric = number[];
 
 export interface TotalTrafficsResponse {
     usages: Array<UsageMetric>;
+    total: number;
 }
 
 export interface TotalTrafficsQueryOptions {
@@ -15,6 +16,7 @@ export interface TotalTrafficsQueryOptions {
 export type TotalTrafficsQueryKey = [string, string, string, { start?: string, end?: string }]
 
 export const TotalTrafficsDefault = {
+    total: 0,
     usages: []
 }
 

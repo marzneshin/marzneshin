@@ -39,10 +39,10 @@ export const SectionWidget: FC<SectionWidgetProps & PropsWithChildren> = ({
                 }
             </CardHeader>
             <Separator />
-            <CardContent className="p-4">
+            <CardContent className="p-4 flex justify-center">
                 {content || children}
             </CardContent>
-            {footer && <CardFooter> {footer} </CardFooter>}
+            {footer && <CardFooter className="flex w-full justify-center"> {footer} </CardFooter>}
         </Card>
     )
 }

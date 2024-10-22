@@ -41,3 +41,4 @@ class NodesStats(BaseModel):
 
 class TrafficUsageSeries(BaseModel):
     usages: list[tuple[int, int]]
+    total: int
