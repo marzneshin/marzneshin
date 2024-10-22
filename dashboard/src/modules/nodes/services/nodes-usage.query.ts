@@ -22,7 +22,7 @@ export const NodesUsageDefault = {
 }
 
 export async function fetchNodesUsage({ queryKey }: { queryKey: NodesUsageQueryKey }): Promise<NodesUsageResponse> {
-    return await fetch(`/nodes/${queryKey[1]}/traffic`, {
+    return await fetch(`/nodes/${queryKey[1]}/usage`, {
         query: {
             start: queryKey[3].start,
             end: queryKey[3].end
