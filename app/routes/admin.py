@@ -91,7 +91,10 @@ def get_admin(
     db: DBDep,
     admin: SudoAdminDep,
 ):
-    return crud.get_admin(db, username)
+    dbadmin = crud.get_admin(db, username)
+    if not dbadmin:
+        raise HTTPException(status_code=404, detail="Admin not found")
+    return dbadmin
 
 
 @router.put("/{username}", response_model=AdminResponse)
