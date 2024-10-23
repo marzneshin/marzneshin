@@ -42,7 +42,7 @@ export const InboundHostsTable = () => {
     };
 
     return (
-        <div>
+        <div className="w-full">
             <InboundNotSelectedAlertDialog
                 open={inboundSelectionAlert}
                 onOpenChange={setInboundSelectionAlert}
