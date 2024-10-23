@@ -24,10 +24,10 @@ from app.models.node import (
     NodeResponse,
     NodeSettings,
     NodeStatus,
-    NodesUsageResponse,
     BackendConfig,
     BackendStats,
 )
+from app.models.system import TrafficUsageSeries
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/nodes", tags=["Node"])
@@ -73,21 +73,6 @@ def get_node_settings(db: DBDep, admin: SudoAdminDep):
     tls = crud.get_tls_certificate(db)
 
     return NodeSettings(certificate=tls.certificate)
-
-
-@router.get("/usage", response_model=NodesUsageResponse)
-def get_usage(
-    db: DBDep,
-    admin: SudoAdminDep,
-    start_date: StartDateDep,
-    end_date: EndDateDep,
-):
-    """
-    Get nodes usage
-    """
-    usages = crud.get_nodes_usage(db, start_date, end_date)
-
-    return {"usages": usages}
 
 
 @router.get("/{node_id}", response_model=NodeResponse)
@@ -170,6 +155,24 @@ async def reconnect_node(node_id: int, db: DBDep, admin: SudoAdminDep):
         raise HTTPException(status_code=404, detail="Node not found")
 
     return {}
+
+
+@router.get("/{node_id}/usage", response_model=TrafficUsageSeries)
+def get_usage(
+    node_id: int,
+    db: DBDep,
+    admin: SudoAdminDep,
+    start_date: StartDateDep,
+    end_date: EndDateDep,
+):
+    """
+    Get nodes usage
+    """
+    node = crud.get_node_by_id(db, node_id)
+    if not node:
+        raise HTTPException(status_code=404, detail="Node not found")
+
+    return crud.get_node_usage(db, start_date, end_date, node)
 
 
 @router.get("/{node_id}/{backend}/stats", response_model=BackendStats)

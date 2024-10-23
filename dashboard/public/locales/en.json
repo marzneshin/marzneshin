@@ -1,5 +1,6 @@
 {
   "name": "Name",
+  "info": "Info",
   "status": "Status",
   "address": "Address",
   "users": "Users",
@@ -130,6 +131,10 @@
       }
     },
     "nodes": {
+      "nodes-usage-widget": {
+        "title": "Node Traffic Usage",
+        "desc": "Total traffic usage on this node"
+      },
       "settings": {
         "no-backend-alert": {
           "title": "No backend is configured for this node",

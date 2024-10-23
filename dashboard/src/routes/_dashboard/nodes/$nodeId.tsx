@@ -7,7 +7,7 @@ import {
 import {
     fetchNode,
     RouterNodeContext
-} from "@marzneshin/features/nodes";
+} from "@marzneshin/modules/nodes";
 import { Suspense } from "react";
 import {
     AlertDialog,

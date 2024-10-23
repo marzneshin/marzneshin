@@ -1,4 +1,4 @@
-import { NodeType } from "@marzneshin/features/nodes";
+import { NodeType } from "@marzneshin/modules/nodes";
 
 export type ProtocolType = 'vmess' | 'vless' | 'trojan' | 'shadowsocks';
 

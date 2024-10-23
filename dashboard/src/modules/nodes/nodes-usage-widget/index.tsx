@@ -10,12 +10,11 @@ import {
 } from "@marzneshin/components";
 import { XAxis, BarChart, YAxis, CartesianGrid, Bar } from "recharts"
 import { format as formatByte } from '@chbphone55/pretty-bytes';
-import { useTotalTrafficQuery } from "./api";
-import { UsageGraphSkeleton } from "./components";
+import { useNodesUsageQuery, NodeType } from "@marzneshin/modules/nodes";
 import {
+    useTransformDateUsageData,
     ChartDateInterval,
     SelectDateView,
-    useTransformDateUsageData,
     dateXAxisTicks,
     useFromNowInterval
 } from "@marzneshin/common/stats-charts";
@@ -27,11 +26,11 @@ const chartConfig = {
     },
 } satisfies ChartConfig
 
-export const TotalTrafficsWidget: FC = () => {
+export const NodesUsageWidget: FC<{ node: NodeType }> = ({ node }) => {
     const { t } = useTranslation();
     const [timeRange, setTimeRange] = useState("1d")
     const { start, end } = useFromNowInterval(timeRange as ChartDateInterval);
-    const { data, isPending } = useTotalTrafficQuery({ start, end })
+    const { data } = useNodesUsageQuery({ nodeId: node.id, start, end })
     const chartData = useTransformDateUsageData(data.usages);
     const [totalAmount, totalMetric] = formatByte(data.total);
 
@@ -41,10 +40,10 @@ export const TotalTrafficsWidget: FC = () => {
                 <SectionWidget
                     title={
                         <div className="hstack justify-between w-full">
-                            {t("page.home.total-traffics.title")}
+                            {t("page.nodes.nodes-usage-widget.title")}
                         </div>
                     }
-                    description={t("page.home.total-traffics.desc")}
+                    description={t("page.nodes.nodes-usage-widget.desc")}
                     options={
                         <div className="vstack justify-end w-full">
                             <span className="text-lg leading-none sm:text-2xl w-full">
@@ -113,8 +112,6 @@ export const TotalTrafficsWidget: FC = () => {
                     </ChartContainer>
                 </SectionWidget>
             }
-            Skeleton={<UsageGraphSkeleton />}
-            isFetching={isPending}
         />
     );
 };

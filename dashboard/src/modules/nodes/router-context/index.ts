@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import { NodeType } from "@marzneshin/features/nodes";
+import { NodeType } from "@marzneshin/modules/nodes";
 
 interface RouterNodeContextProps {
     node: NodeType;

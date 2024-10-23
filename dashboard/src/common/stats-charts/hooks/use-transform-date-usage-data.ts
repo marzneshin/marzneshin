@@ -1,13 +1,6 @@
-import { UsageMetric } from "../api";
+import { UsageMetric, ChartData } from "./../types";
 
-export type ChartDataEntry = {
-    datetime: string;
-    [key: string]: number | string;
-};
-
-export type ChartData = ChartDataEntry[];
-
-export function useTransformData(usages: Array<UsageMetric>): ChartData {
+export function useTransformDateUsageData(usages: Array<UsageMetric>): ChartData {
     return usages.map(usageData => {
         const [timestamp, usage] = usageData;
         const date = new Date(timestamp * 1000);
