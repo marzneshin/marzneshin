@@ -264,7 +264,9 @@ class User(Base):
 
     @property
     def subscription_url(self):
-        prefix = self.admin.subscription_url_prefix or SUBSCRIPTION_URL_PREFIX
+        prefix = (
+            self.admin.subscription_url_prefix if self.admin else None
+        ) or SUBSCRIPTION_URL_PREFIX
         return (
             prefix.replace("*", secrets.token_hex(8))
             + f"/sub/{self.username}/{self.key}"
@@ -272,7 +274,7 @@ class User(Base):
 
     @hybrid_property
     def owner_username(self):
-        return self.admin.username
+        return self.admin.username if self.admin else None
 
 
 class Backend(Base):
