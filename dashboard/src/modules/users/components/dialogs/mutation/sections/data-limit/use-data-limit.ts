@@ -8,7 +8,10 @@ export const useDataLimit = () => {
     const [isDataLimitEnabled, setIsDataLimitEnabled] = useState(dataLimit !== 0);
 
     useEffect(() => {
-        setIsDataLimitEnabled(dataLimit !== 0);
+        if (dataLimit !== 0 && dataLimit !== undefined)
+            setIsDataLimitEnabled(
+                true
+            );
     }, [dataLimit]);
 
     useEffect(() => {
