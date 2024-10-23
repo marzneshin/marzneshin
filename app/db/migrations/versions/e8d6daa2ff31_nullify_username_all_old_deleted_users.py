@@ -22,11 +22,15 @@ def upgrade() -> None:
 
     if dialect in ("mysql", "mariadb", "postgresql"):
         op.execute(
-            sa.text("UPDATE users SET username = NULL WHERE removed = TRUE")
+            sa.update("users")
+            .where(sa.column("removed").is_(True))
+            .values(username=None)
         )
     elif dialect == "sqlite":
         op.execute(
-            sa.text("UPDATE users SET username = NULL WHERE removed = 1")
+            sa.update("users")
+            .where(sa.column("removed") == 1)
+            .values(username=None)
         )
 
 
