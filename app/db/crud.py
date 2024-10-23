@@ -788,9 +788,7 @@ def get_node_usage(
 
     while current <= end.replace(tzinfo=timezone.utc):
         usage = usages.get(current.timestamp()) or 0
-        result.usages.append(
-            (int(current.timestamp()), usage)
-        )
+        result.usages.append((int(current.timestamp()), usage))
         result.total += usage
         current += timedelta(hours=1)
 

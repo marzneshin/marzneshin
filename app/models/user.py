@@ -140,7 +140,7 @@ class UserResponse(User):
     created_at: datetime
     service_ids: list[int]
     subscription_url: str
-    owner_username: str
+    owner_username: str | None
     traffic_reset_at: datetime | None
 
     model_config = ConfigDict(from_attributes=True)
