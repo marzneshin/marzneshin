@@ -132,8 +132,8 @@
     },
     "nodes": {
       "nodes-usage-widget": {
-        "title": "Nodes Usage",
-        "desc": "Total nodes usage node traffic"
+        "title": "Node Traffic Usage",
+        "desc": "Total traffic usage on this node"
       },
       "settings": {
         "no-backend-alert": {
