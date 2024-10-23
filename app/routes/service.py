@@ -72,7 +72,12 @@ def get_service_users(id: int, db: DBDep, admin: SudoAdminDep):
     if not service:
         raise HTTPException(status_code=404, detail="Service not found")
 
-    query = db.query(User).join(User.services).where(Service.id == service.id)
+    query = (
+        db.query(User)
+        .join(User.services)
+        .where(Service.id == service.id)
+        .filter(User.removed != True)
+    )
 
     return paginate(query)
 

@@ -521,6 +521,7 @@ def create_user(
 
 
 def remove_user(db: Session, dbuser: User):
+    dbuser.username = None
     dbuser.removed = True
     dbuser.activated = False
     # db.query(User).filter_by(id=user_id).delete()
