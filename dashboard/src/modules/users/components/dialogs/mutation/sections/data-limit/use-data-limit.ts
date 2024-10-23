@@ -8,10 +8,6 @@ export const useDataLimit = () => {
     const [isDataLimitEnabled, setIsDataLimitEnabled] = useState(dataLimit !== 0);
 
     useEffect(() => {
-        setIsDataLimitEnabled(dataLimit !== 0);
-    }, [dataLimit]);
-
-    useEffect(() => {
         if (!isDataLimitEnabled) {
             form.setValue("data_limit", undefined);
             form.setValue("data_limit_reset_strategy", "no_reset");
