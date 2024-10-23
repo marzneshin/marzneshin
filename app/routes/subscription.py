@@ -9,6 +9,7 @@ from app.db import crud
 from app.db.models import Settings
 from app.dependencies import DBDep, SubUserDep, StartDateDep, EndDateDep
 from app.models.settings import SubscriptionSettings
+from app.models.system import TrafficUsageSeries
 from app.models.user import UserResponse
 from app.utils.share import (
     encode_title,
@@ -124,16 +125,17 @@ def user_subscription_info(db_user: SubUserDep):
     return db_user
 
 
-@router.get("/{username}/{key}/usage")
+@router.get("/{username}/{key}/usage", response_model=TrafficUsageSeries)
 def user_get_usage(
     db_user: SubUserDep,
     db: DBDep,
     start_date: StartDateDep,
     end_date: EndDateDep,
 ):
-    usages = crud.get_user_usages(db, db_user, start_date, end_date)
-
-    return {"usages": usages, "username": db_user.username}
+    per_day = (end_date - start_date).total_seconds() > 3 * 86400
+    return crud.get_user_total_usage(
+        db, db_user, start_date, end_date, per_day=per_day
+    )
 
 
 client_type_mime_type = {
