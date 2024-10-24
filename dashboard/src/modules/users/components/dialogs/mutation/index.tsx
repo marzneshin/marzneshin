@@ -51,7 +51,7 @@ export const UsersMutationDialog: FC<MutationDialogProps<UserMutationType>> = ({
         defaultValue,
         loadFormtter: (d) => ({
             ...d,
-            data_limit: (d.data_limit ? d.data_limit : undefined) / DATA_LIMIT_METRIC,
+            data_limit: (d.data_limit ? d.data_limit : 0) / DATA_LIMIT_METRIC,
         }),
     });
 
