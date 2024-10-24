@@ -5,7 +5,7 @@ export const useDataLimit = () => {
     const form = useFormContext();
     const dataLimit = form.watch("data_limit");
 
-    const [isDataLimitEnabled, setIsDataLimitEnabled] = useState(dataLimit !== 0 && dataLimit !== undefined);
+    const [isDataLimitEnabled, setIsDataLimitEnabled] = useState<boolean>(!!dataLimit);
 
     useEffect(() => {
         if (!isDataLimitEnabled) {
