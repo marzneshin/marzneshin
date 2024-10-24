@@ -34,6 +34,7 @@ export const UsersMutationDialog: FC<MutationDialogProps<UserMutationType>> = ({
             service_ids: [],
             username: "",
             data_limit_reset_strategy: "no_reset",
+            data_limit: undefined,
             note: "",
             expire_date: "",
             expire_strategy: "fixed_date",
