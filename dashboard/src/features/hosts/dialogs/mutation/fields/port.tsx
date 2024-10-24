@@ -20,7 +20,7 @@ export const PortField = () => {
                 <FormItem className="w-1/3">
                     <FormLabel>{t('port')}</FormLabel>
                     <FormControl>
-                        <Input type="number" {...field} />
+                        <Input {...field} />
                     </FormControl>
                     <FormMessage />
                 </FormItem>
