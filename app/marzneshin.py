@@ -1,8 +1,5 @@
-import asyncio
 import logging
 from contextlib import asynccontextmanager
-from datetime import datetime as dt
-from datetime import timedelta as td
 from typing import AsyncGenerator
 
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
@@ -28,15 +25,14 @@ from app.config.env import (
     WEBHOOK_ADDRESS,
 )
 from app.templates import render_template
-from . import __version__, telegram
+from . import __version__
 from .routes import api_router
 from .tasks import (
-    delete_expired_reminders,
     nodes_startup,
     record_user_usages,
     reset_user_data_usage,
     review_users,
-    send_notifications,
+    expire_days_reached,
 )
 
 logger = logging.getLogger(__name__)
@@ -47,8 +43,6 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     await nodes_startup()
     yield
     scheduler.shutdown()
-    logger.info("Sending pending notifications before shutdown...")
-    await send_notifications()
 
 
 app = FastAPI(
@@ -82,18 +76,10 @@ scheduler.add_job(record_user_usages, "interval", coalesce=True, seconds=30)
 scheduler.add_job(
     review_users, "interval", seconds=30, coalesce=True, max_instances=1
 )
+scheduler.add_job(
+    expire_days_reached, "interval", seconds=30, coalesce=True, max_instances=1
+)
 scheduler.add_job(reset_user_data_usage, "interval", coalesce=True, hours=1)
-
-if WEBHOOK_ADDRESS:
-    scheduler.add_job(
-        send_notifications, "interval", seconds=30, replace_existing=True
-    )
-    scheduler.add_job(
-        delete_expired_reminders,
-        "interval",
-        hours=2,
-        start_date=dt.utcnow() + td(minutes=1),
-    )
 
 
 @app.exception_handler(RequestValidationError)
@@ -127,7 +113,6 @@ async def main():
             name="locales",
         )
     scheduler.start()
-    asyncio.create_task(telegram.start_bot())
     cfg = Config(
         app=app,
         host=UVICORN_HOST,
