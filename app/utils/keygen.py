@@ -1,5 +1,9 @@
-import xxhash
+import base64
 import uuid
+
+import xxhash
+from nacl.public import PrivateKey
+
 from app.config.env import AuthAlgorithm, AUTH_GENERATION_ALGORITHM
 
 
@@ -15,3 +19,7 @@ def gen_password(key: str) -> str:
         return key
     else:
         return xxhash.xxh128(key.encode()).hexdigest()
+
+
+def generate_curve25519_pbk(key: str) -> str:
+    return base64.b64encode(PrivateKey(key.encode()).encode()).decode()

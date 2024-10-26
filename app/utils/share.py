@@ -1,4 +1,5 @@
 import base64
+import ipaddress
 import json
 import random
 import secrets
@@ -32,7 +33,7 @@ from app.models.proxy import (
 from app.models.settings import SubscriptionSettings
 from app.models.user import UserResponse, UserExpireStrategy
 from app.templates import render_template
-from app.utils.keygen import gen_uuid, gen_password
+from app.utils.keygen import gen_uuid, gen_password, generate_curve25519_pbk
 from app.utils.system import get_public_ip, readable_size
 
 SERVER_IP = get_public_ip()
@@ -115,6 +116,7 @@ def generate_subscription(
         configs = generate_user_configs(
             user.inbounds,
             user.key,
+            user.id,
             format_variables,
         )
 
@@ -209,6 +211,7 @@ def setup_format_variables(extra_data: dict) -> dict:
 def generate_user_configs(
     inbounds: list,
     key: str,
+    user_id: int,
     format_variables: dict,
 ) -> Union[List, str]:
 
@@ -274,10 +277,19 @@ def generate_user_configs(
                 fingerprint=host.fingerprint.value or inbound.get("fp"),
                 reality_pbk=inbound.get("pbk"),
                 reality_sid=inbound.get("sid"),
+                client_address=(
+                    ipaddress.ip_network(inbound["address"], strict=False)[
+                        user_id
+                    ].compressed
+                    + "/32"
+                    if inbound.get("address")
+                    else None
+                ),
                 flow=inbound.get("flow"),
                 allow_insecure=host.allowinsecure,
                 uuid=UUID(gen_uuid(key)),
                 password=gen_password(key),
+                ed25519=generate_curve25519_pbk(key),
                 enable_mux=host.mux,
                 http_headers={
                     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.3"
