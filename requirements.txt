@@ -1,8 +1,8 @@
 alembic==1.13.1
 APScheduler==3.10.4
 cryptography==43.0.1
-fastapi==0.111.1
-fastapi-pagination==0.12.21
+fastapi==0.115.3
+fastapi-pagination==0.12.31
 grpclib==0.4.7
 jdatetime==4.1.1
 Jinja2==3.1.4
