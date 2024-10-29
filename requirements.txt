@@ -30,3 +30,4 @@ starlette==0.40.0
 uvicorn==0.30.4
 rich==13.7.1
 python-multipart==0.0.12
+httptools==0.6.4
