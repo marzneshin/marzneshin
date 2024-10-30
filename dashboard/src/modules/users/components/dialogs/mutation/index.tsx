@@ -19,7 +19,7 @@ import {
     UsernameField,
     type UserMutationType,
 } from "@marzneshin/modules/users";
-import { ServicesField } from "@marzneshin/features/services";
+import { ServicesField } from "@marzneshin/modules/services";
 import { NoteField } from "./fields";
 import { type MutationDialogProps, useMutationDialog } from "@marzneshin/hooks";
 import { DataLimitFields, ExpirationMethodFields } from "./sections";

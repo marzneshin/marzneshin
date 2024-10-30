@@ -11,7 +11,7 @@ import {
     type ServiceType,
     useServicesCreationMutation,
     useServicesUpdateMutation,
-} from "@marzneshin/features/services";
+} from "@marzneshin/modules/services";
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
 import { useMutationDialog, MutationDialogProps } from "@marzneshin/hooks";

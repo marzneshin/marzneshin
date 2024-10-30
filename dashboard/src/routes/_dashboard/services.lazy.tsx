@@ -2,7 +2,7 @@ import {
     Page,
     Loading,
 } from "@marzneshin/components";
-import { ServicesTable } from "@marzneshin/features/services";
+import { ServicesTable } from "@marzneshin/modules/services";
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { type FC, Suspense } from "react";
 import { useTranslation } from "react-i18next";

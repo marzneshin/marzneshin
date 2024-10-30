@@ -5,7 +5,7 @@ import {
 import {
     useRouterServiceContext,
     ServiceSettingsDialog,
-} from "@marzneshin/features/services";
+} from "@marzneshin/modules/services";
 import { useDialog } from "@marzneshin/hooks";
 
 const ServiceOpen = () => {

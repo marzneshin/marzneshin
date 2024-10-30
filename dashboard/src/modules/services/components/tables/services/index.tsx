@@ -3,7 +3,7 @@ import {
     ServicesQueryFetchKey,
     fetchServices,
     ServiceType
-} from "@marzneshin/features/services";
+} from "@marzneshin/modules/services";
 import { columns as columnsFn } from "./columns";
 import { EntityTable } from "@marzneshin/features/entity-table";
 import { useNavigate } from "@tanstack/react-router";

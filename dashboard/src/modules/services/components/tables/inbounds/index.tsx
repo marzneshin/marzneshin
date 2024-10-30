@@ -2,7 +2,7 @@ import { type FC, useCallback, useState } from "react";
 import { Button } from "@marzneshin/components";
 import { SelectableEntityTable, useRowSelection } from "@marzneshin/features/entity-table";
 import { columns } from "./columns";
-import { type ServiceType, useServicesUpdateMutation, fetchSelectableServiceInbounds } from "@marzneshin/features/services";
+import { type ServiceType, useServicesUpdateMutation, fetchSelectableServiceInbounds } from "@marzneshin/modules/services";
 import { useTranslation } from "react-i18next";
 
 interface ServiceInboundsTableProps {

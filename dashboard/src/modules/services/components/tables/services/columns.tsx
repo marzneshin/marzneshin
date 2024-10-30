@@ -1,5 +1,5 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { ServiceType } from "@marzneshin/features/services";
+import { ServiceType } from "@marzneshin/modules/services";
 import {
     DataTableActionsCell,
     DataTableColumnHeader

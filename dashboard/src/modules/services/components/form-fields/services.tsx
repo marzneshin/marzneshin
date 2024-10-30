@@ -17,7 +17,7 @@ import { ExclamationTriangleIcon } from '@radix-ui/react-icons';
 import {
     useServicesQuery,
     type ServiceType,
-} from "@marzneshin/features/services";
+} from "@marzneshin/modules/services";
 import { ServiceCard } from "@marzneshin/modules/users";
 import { cn } from "@marzneshin/utils";
 import type { FC } from "react";

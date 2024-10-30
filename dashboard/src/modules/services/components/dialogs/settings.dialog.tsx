@@ -12,7 +12,7 @@ import {
   ServicesUsersTable,
   ServiceInboundsTable,
   ServiceType,
-} from "@marzneshin/features/services";
+} from "@marzneshin/modules/services";
 
 interface ServicecSettingsDialogProps extends SettingsDialogProps {
   entity: ServiceType;

@@ -1,4 +1,4 @@
-import { ServiceType, ServicesQueryFetchKey } from "@marzneshin/features/services";
+import { ServiceType, ServicesQueryFetchKey } from "@marzneshin/modules/services";
 import { useMutation } from "@tanstack/react-query";
 import { fetch, queryClient } from "@marzneshin/utils";
 import { toast } from "sonner";

@@ -1,7 +1,7 @@
 
 import { DeleteConfirmation } from '@marzneshin/components'
 import { type FC, useEffect } from 'react'
-import { ServiceType, useServicesDeletionMutation } from '@marzneshin/features/services'
+import { ServiceType, useServicesDeletionMutation } from '@marzneshin/modules/services'
 
 interface ServicesDeleteConfirmationDialogProps {
     onOpenChange: (state: boolean) => void
