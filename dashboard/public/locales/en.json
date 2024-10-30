@@ -158,8 +158,8 @@
         }
       },
       "usage_coefficient": "Usage Coefficient",
-      "connection_backend": "Backend Connection",
-      "connection_backend_desc": "Used for remote tls connections",
+      "connection_backend": "Connection Backend",
+      "connection_backend_desc": "Used for the remote connection",
       "certificate-alert": {
         "title": "Nodes Certificate Configuration",
         "desc": "If you aim to configure your nodes certificate, checkout settings page.",
