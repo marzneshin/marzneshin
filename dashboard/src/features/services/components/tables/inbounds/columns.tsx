@@ -1,6 +1,6 @@
 
 import { ColumnDef } from "@tanstack/react-table"
-import { InboundType } from "@marzneshin/features/inbounds"
+import { InboundType } from "@marzneshin/modules/inbounds"
 import {
     DataTableColumnHeader
 } from "@marzneshin/features/entity-table"

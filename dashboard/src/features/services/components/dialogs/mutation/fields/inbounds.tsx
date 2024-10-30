@@ -11,7 +11,7 @@ import {
 import {
     useInboundsQuery,
     type InboundType,
-} from "@marzneshin/features/inbounds";
+} from "@marzneshin/modules/inbounds";
 import {
     useFormContext,
     type FieldValues,

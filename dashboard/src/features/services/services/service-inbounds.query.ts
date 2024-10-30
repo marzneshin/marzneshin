@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { fetch } from "@marzneshin/utils";
-import { InboundType } from "@marzneshin/features/inbounds";
+import { InboundType } from "@marzneshin/modules/inbounds";
 import {
     FetchEntityReturn,
     SelectableEntityQueryKeyType
