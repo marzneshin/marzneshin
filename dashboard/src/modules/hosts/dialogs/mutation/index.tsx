@@ -34,7 +34,7 @@ import {
     WeightField,
     SecurityFields,
 } from "./fields";
-import { useDialog, MutationDialogProps } from "@marzneshin/hooks";
+import { useDialog, MutationDialogProps } from "@marzneshin/common/hooks";
 
 interface HostMutationDialogProps extends MutationDialogProps<HostType> {
     inboundId?: number;

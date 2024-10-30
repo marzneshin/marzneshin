@@ -1,5 +1,5 @@
 
-import { fetch } from "@marzneshin/utils"
+import { fetch } from "@marzneshin/common/utils"
 import { LoginSchema, useAuth } from "@marzneshin/features/auth";
 import { useNavigate } from "@tanstack/react-router";
 import { useState } from "react";

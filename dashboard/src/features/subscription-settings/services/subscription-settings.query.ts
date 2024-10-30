@@ -1,6 +1,6 @@
 import { SubscriptionSettingsType } from "@marzneshin/features/subscription-settings";
 import { useQuery } from "@tanstack/react-query";
-import { fetch } from "@marzneshin/utils";
+import { fetch } from "@marzneshin/common/utils";
 
 export async function fetchSubscriptionSettings(): Promise<SubscriptionSettingsType> {
     return fetch(`/system/settings/subscription`);

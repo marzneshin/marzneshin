@@ -11,8 +11,8 @@ import {
 import { useAuth } from "@marzneshin/features/auth";
 import { DashboardSidebar, ToggleButton } from "@marzneshin/features/sidebar";
 import { usePanelToggle } from "@marzneshin/features/sidebar/use-panel-toggle";
-import { useScreenBreakpoint } from "@marzneshin/hooks/use-screen-breakpoint";
-import { cn } from "@marzneshin/utils";
+import { useScreenBreakpoint } from "@marzneshin/common/hooks/use-screen-breakpoint";
+import { cn } from "@marzneshin/common/utils";
 import { Suspense } from "react";
 import {
     Outlet,

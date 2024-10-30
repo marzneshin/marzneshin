@@ -1,6 +1,6 @@
 import { InboundType } from "@marzneshin/modules/inbounds";
 import { useQuery } from "@tanstack/react-query";
-import { fetch } from "@marzneshin/utils";
+import { fetch } from "@marzneshin/common/utils";
 
 export async function fetchInbound({ queryKey }: { queryKey: [string, number] }): Promise<InboundType> {
     return fetch(`/inbounds/${queryKey[1]}`).then((result) => result);

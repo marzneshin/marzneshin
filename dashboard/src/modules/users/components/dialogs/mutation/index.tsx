@@ -21,7 +21,7 @@ import {
 } from "@marzneshin/modules/users";
 import { ServicesField } from "@marzneshin/modules/services";
 import { NoteField } from "./fields";
-import { type MutationDialogProps, useMutationDialog } from "@marzneshin/hooks";
+import { type MutationDialogProps, useMutationDialog } from "@marzneshin/common/hooks";
 import { DataLimitFields, ExpirationMethodFields } from "./sections";
 
 export const UsersMutationDialog: FC<MutationDialogProps<UserMutationType>> = ({

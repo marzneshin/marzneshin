@@ -27,7 +27,7 @@ import {
     useNodesUpdateMutation,
 } from "../..";
 import type { NodeType } from "../..";
-import { useMutationDialog, MutationDialogProps } from "@marzneshin/hooks";
+import { useMutationDialog, MutationDialogProps } from "@marzneshin/common/hooks";
 
 export const MutationDialog: FC<MutationDialogProps<NodeType>> = ({
     entity,

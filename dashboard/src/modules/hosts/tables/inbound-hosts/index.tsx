@@ -9,7 +9,7 @@ import {
 } from '@marzneshin/modules/inbounds';
 import { SidebarEntityTable } from '@marzneshin/features/entity-table';
 import { columns } from './columns';
-import { useDialog } from '@marzneshin/hooks';
+import { useDialog } from '@marzneshin/common/hooks';
 import {
     InboundNotSelectedAlertDialog
 } from './inbound-not-selected-alert-dialog';

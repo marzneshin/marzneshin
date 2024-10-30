@@ -1,6 +1,6 @@
 import { HostType } from "@marzneshin/modules/hosts";
 import { useQuery } from "@tanstack/react-query";
-import { fetch } from "@marzneshin/utils";
+import { fetch } from "@marzneshin/common/utils";
 import {
     FetchEntityReturn,
     UseEntityQueryProps,

@@ -9,7 +9,7 @@ import {
     CardTitle,
 } from "@marzneshin/components";
 import { useTranslation } from "react-i18next";
-import { getSubscriptionLink } from "@marzneshin/utils";
+import { getSubscriptionLink } from "@marzneshin/common/utils";
 
 export interface QRCodeProps {
     entity: UserType;

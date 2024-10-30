@@ -6,7 +6,7 @@ import {
     ServicesDeleteConfirmationDialog,
     useRouterServiceContext,
 } from "@marzneshin/modules/services";
-import { useDialog } from "@marzneshin/hooks";
+import { useDialog } from "@marzneshin/common/hooks";
 
 const ServiceDelete = () => {
     const [deleteDialogOpen, setDeleteDialogOpen] = useDialog(true);

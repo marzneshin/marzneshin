@@ -27,7 +27,7 @@ import {
     SudoPrivilageField,
     AllServicesAccessField,
 } from "./fields";
-import { useMutationDialog, MutationDialogProps } from "@marzneshin/hooks";
+import { useMutationDialog, MutationDialogProps } from "@marzneshin/common/hooks";
 
 export const AdminsMutationDialog: FC<MutationDialogProps<AdminType>> = ({
     onClose,

@@ -14,7 +14,7 @@ import {
 } from "@marzneshin/modules/services";
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
-import { useMutationDialog, MutationDialogProps } from "@marzneshin/hooks";
+import { useMutationDialog, MutationDialogProps } from "@marzneshin/common/hooks";
 import { NameField, InboundsField } from "./fields";
 
 export const ServiceSchema = z.object({

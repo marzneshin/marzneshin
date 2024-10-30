@@ -1,4 +1,4 @@
-import { fetch } from "@marzneshin/utils";
+import { fetch } from "@marzneshin/common/utils";
 import { ServiceType } from "../types";
 import {
     EntityQueryKeyType,

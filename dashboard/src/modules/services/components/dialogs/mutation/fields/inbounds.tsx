@@ -18,7 +18,7 @@ import {
     type ControllerRenderProps,
 } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { cn } from "@marzneshin/utils";
+import { cn } from "@marzneshin/common/utils";
 import { Box, GlobeLock } from "lucide-react";
 
 export const InboundCard = ({

@@ -13,7 +13,7 @@ import {
     SelectValue,
     DeleteConfirmation
 } from "@marzneshin/components";
-import { useDialog } from "@marzneshin/hooks";
+import { useDialog } from "@marzneshin/common/hooks";
 import {
     Schema
 } from "./schema"

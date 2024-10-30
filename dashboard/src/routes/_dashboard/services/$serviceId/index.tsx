@@ -6,7 +6,7 @@ import {
     useRouterServiceContext,
     ServiceSettingsDialog,
 } from "@marzneshin/modules/services";
-import { useDialog } from "@marzneshin/hooks";
+import { useDialog } from "@marzneshin/common/hooks";
 
 const ServiceOpen = () => {
     const [settingsDialogOpen, setSettingsDialogOpen] = useDialog(true);

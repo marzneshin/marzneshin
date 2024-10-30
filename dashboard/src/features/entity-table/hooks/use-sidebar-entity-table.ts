@@ -13,7 +13,7 @@ import {
     type SidebarQueryKey,
     type UseRowSelectionReturn
 } from ".";
-import { useScreenBreakpoint } from "@marzneshin/hooks";
+import { useScreenBreakpoint } from "@marzneshin/common/hooks";
 import {
     type SidebarEntityCardSectionsProps
 } from "@marzneshin/features/entity-table/components";

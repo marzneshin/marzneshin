@@ -6,7 +6,7 @@ import {
     UsersDeleteConfirmationDialog,
     useRouterUserContext,
 } from "@marzneshin/modules/users";
-import { useDialog } from "@marzneshin/hooks";
+import { useDialog } from "@marzneshin/common/hooks";
 
 const UserDelete = () => {
     const [deleteDialogOpen, setDeleteDialogOpen] = useDialog(true);

@@ -10,7 +10,7 @@ import {
     GithubIcon,
     StarIcon,
 } from "lucide-react";
-import { projectInfo } from "@marzneshin/utils";
+import { projectInfo } from "@marzneshin/common/utils";
 
 interface GithubRepoProps {
     variant?: "full" | "mini"

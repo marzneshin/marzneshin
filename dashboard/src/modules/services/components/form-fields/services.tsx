@@ -19,7 +19,7 @@ import {
     type ServiceType,
 } from "@marzneshin/modules/services";
 import { ServiceCard } from "@marzneshin/modules/users";
-import { cn } from "@marzneshin/utils";
+import { cn } from "@marzneshin/common/utils";
 import type { FC } from "react";
 import {
     useFormContext,

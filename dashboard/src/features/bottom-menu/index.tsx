@@ -3,8 +3,8 @@ import i18n from "@marzneshin/features/i18n";
 import { Link } from "@tanstack/react-router";
 import { FC } from "react";
 import { Box, Home, Server, ServerCog, UsersIcon } from 'lucide-react';
-import { useIsCurrentRoute } from "@marzneshin/hooks";
-import { cn } from "@marzneshin/utils";
+import { useIsCurrentRoute } from "@marzneshin/common/hooks";
+import { cn } from "@marzneshin/common/utils";
 
 type BottomMenuItemProps = Omit<SidebarItem, 'isParent' | 'subItem'>
 
