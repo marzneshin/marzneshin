@@ -1,8 +1,8 @@
 alembic==1.13.1
 APScheduler==3.10.4
 cryptography==43.0.1
-fastapi==0.111.1
-fastapi-pagination==0.12.21
+fastapi==0.115.3
+fastapi-pagination==0.12.31
 grpclib==0.4.7
 jdatetime==4.1.1
 Jinja2==3.1.4
@@ -23,5 +23,11 @@ aiohttp==3.10.2
 xxhash==3.4.1
 grpcio==1.65.4
 psycopg==3.1.18
-v2share==0.1.0b19
+v2share==0.1.0b21
 PyJWT~=2.8.0
+PyNaCl==1.5.0
+starlette==0.40.0
+uvicorn==0.30.4
+rich==13.7.1
+python-multipart==0.0.12
+httptools==0.6.4
