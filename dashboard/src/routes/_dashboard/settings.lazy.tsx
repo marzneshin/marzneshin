@@ -1,7 +1,7 @@
 
 import { Page, VStack } from '@marzneshin/components'
 import { CertificateWidget } from '@marzneshin/modules/settings';
-import { SubscriptionSettingsWidget } from '@marzneshin/features/subscription-settings';
+import { SubscriptionSettingsWidget } from '@marzneshin/modules/settings/subscription';
 import { createFileRoute } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next'
 import { SudoRoute } from "@marzneshin/features/sudo-routes";

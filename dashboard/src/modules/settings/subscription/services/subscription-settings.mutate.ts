@@ -6,7 +6,7 @@ import i18n from "@marzneshin/features/i18n";
 import {
     subscriptionSettingsQueryKey,
     SubscriptionSettingsType
-} from "@marzneshin/features/subscription-settings";
+} from "@marzneshin/modules/settings/subscription";
 
 export async function updateSubscriptionSettings(settings: SubscriptionSettingsType): Promise<NodeType> {
     return fetch("/system/settings/subscription", { method: 'put', body: settings }).then((node) => {

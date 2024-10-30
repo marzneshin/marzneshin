@@ -26,7 +26,7 @@ import { NoRulesAlert } from "./no-rules-alert";
 import {
     useSubscriptionSettingsQuery,
     useSubscriptionSettingsMutation,
-} from "@marzneshin/features/subscription-settings";
+} from "@marzneshin/modules/settings/subscription";
 import { useEffect, useCallback } from "react";
 
 export function SubscriptionRulesForm() {

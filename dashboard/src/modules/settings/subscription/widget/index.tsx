@@ -1,7 +1,7 @@
 import {
     SectionWidget
 } from "@marzneshin/components";
-import { SubscriptionRulesForm } from "@marzneshin/features/subscription-settings";
+import { SubscriptionRulesForm } from "@marzneshin/modules/settings/subscription";
 import { useTranslation } from "react-i18next";
 
 export const SubscriptionSettingsWidget = () => {
