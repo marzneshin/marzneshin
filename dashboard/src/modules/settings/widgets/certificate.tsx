@@ -3,7 +3,7 @@ import {
 } from "@marzneshin/components";
 import {
     CertificateButton
-} from "@marzneshin/features/settings";
+} from "@marzneshin/modules/settings";
 import { useTranslation } from "react-i18next";
 
 export const CertificateWidget = () => {
