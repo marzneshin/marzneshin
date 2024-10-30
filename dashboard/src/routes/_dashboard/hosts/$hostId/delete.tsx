@@ -5,7 +5,7 @@ import {
 import {
     HostsDeleteConfirmationDialog,
     useRouterHostContext,
-} from "@marzneshin/features/hosts";
+} from "@marzneshin/modules/hosts";
 import { useDialog } from "@marzneshin/hooks";
 
 const HostDelete = () => {

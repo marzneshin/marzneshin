@@ -1,5 +1,5 @@
 import { ColumnDef } from "@tanstack/react-table"
-import { HostType } from "@marzneshin/features/hosts"
+import { HostType } from "@marzneshin/modules/hosts"
 import {
     DataTableActionsCell,
     DataTableColumnHeader

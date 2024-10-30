@@ -6,7 +6,7 @@ import {
 } from "@marzneshin/components";
 import {
     type InboundType
-} from '@marzneshin/features/inbounds';
+} from '@marzneshin/modules/inbounds';
 
 export const InboundCardHeader: FC<{ entity: InboundType }> = ({ entity }) => {
     return (

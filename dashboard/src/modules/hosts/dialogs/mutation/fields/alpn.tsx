@@ -12,7 +12,7 @@ import {
 } from "@marzneshin/components";
 import { useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { alpnOptions } from "@marzneshin/features/hosts";
+import { alpnOptions } from "@marzneshin/modules/hosts";
 
 export const AlpnField = () => {
     const { t } = useTranslation();

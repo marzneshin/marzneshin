@@ -22,7 +22,7 @@ import {
     useHostsCreationMutation,
     useHostsUpdateMutation,
     type HostType,
-} from "@marzneshin/features/hosts";
+} from "@marzneshin/modules/hosts";
 import {
     RemarkField,
     AddressField,

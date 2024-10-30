@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import { HostType } from "@marzneshin/features/hosts";
+import { HostType } from "@marzneshin/modules/hosts";
 
 interface RouterHostContextProps {
     host: HostType;

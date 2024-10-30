@@ -1,6 +1,6 @@
 import { DeleteConfirmation } from '@marzneshin/components'
 import { type FC, useEffect } from 'react'
-import { HostType, useHostsDeletionMutation } from '@marzneshin/features/hosts'
+import { HostType, useHostsDeletionMutation } from '@marzneshin/modules/hosts'
 
 interface HostsDeleteConfirmationDialogProps {
     onOpenChange: (state: boolean) => void

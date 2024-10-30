@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { HostsMutationDialog } from "@marzneshin/features/hosts";
+import { HostsMutationDialog } from "@marzneshin/modules/hosts";
 import { AlertDialog, AlertDialogContent } from "@marzneshin/components";
 
 const HostCreate = () => {

@@ -1,12 +1,12 @@
 import {
     HostType,
     fetchHosts
-} from '@marzneshin/features/hosts';
+} from '@marzneshin/modules/hosts';
 import { useNavigate } from "@tanstack/react-router";
 import { useState } from 'react';
 import {
     useInboundsQuery,
-} from '@marzneshin/features/inbounds';
+} from '@marzneshin/modules/inbounds';
 import { SidebarEntityTable } from '@marzneshin/features/entity-table';
 import { columns } from './columns';
 import { useDialog } from '@marzneshin/hooks';

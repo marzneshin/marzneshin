@@ -5,7 +5,7 @@ import {
 import {
     HostsMutationDialog,
     useRouterHostContext,
-} from "@marzneshin/features/hosts";
+} from "@marzneshin/modules/hosts";
 
 const HostEdit = () => {
     const value = useRouterHostContext()
