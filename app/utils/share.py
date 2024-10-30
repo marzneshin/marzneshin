@@ -16,6 +16,7 @@ from v2share import (
     ClashConfig,
     ClashMetaConfig,
     XrayConfig,
+    WireGuardConfig,
 )
 from v2share.base import BaseConfig
 from v2share.links import LinksConfig
@@ -49,10 +50,12 @@ subscription_handlers: dict[str, Type[BaseConfig]] = {
     "clash-meta": ClashMetaConfig,
     "clash": ClashConfig,
     "sing-box": SingBoxConfig,
+    "wireguard": WireGuardConfig,
 }
 
 handlers_templates = {
     LinksConfig: None,
+    WireGuardConfig: None,
     XrayConfig: XRAY_SUBSCRIPTION_TEMPLATE
     or resources.files("app.templates") / "xray.json",
     ClashConfig: CLASH_SUBSCRIPTION_TEMPLATE,
