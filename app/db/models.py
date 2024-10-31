@@ -21,6 +21,7 @@ from sqlalchemy import (
     select,
 )
 from sqlalchemy.ext.hybrid import hybrid_property
+from sqlalchemy.ext.orderinglist import ordering_list
 from sqlalchemy.orm import relationship, column_property
 from sqlalchemy.sql.expression import text
 
@@ -313,6 +314,14 @@ class Inbound(Base):
         return [service.id for service in self.services]
 
 
+class HostChain(Base):
+    __tablename__ = "host_chains"
+
+    host_id = Column(Integer, ForeignKey("hosts.id"), primary_key=True)
+    chained_host_id = Column(Integer, ForeignKey("hosts.id"))
+    seq = Column(Integer, primary_key=True)
+
+
 class InboundHost(Base):
     __tablename__ = "hosts"
 
@@ -352,6 +361,17 @@ class InboundHost(Base):
     allowinsecure = Column(Boolean, default=False)
     is_disabled = Column(Boolean, default=False)
     weight = Column(Integer, default=1, nullable=False, server_default="1")
+    chain = relationship(
+        "HostChain",
+        foreign_keys="[HostChain.host_id]",
+        order_by=HostChain.seq,
+        collection_class=ordering_list("seq"),
+        lazy="joined",
+    )
+
+    @property
+    def chain_ids(self):
+        return [c.chained_host_id for c in self.chain]
 
 
 class System(Base):

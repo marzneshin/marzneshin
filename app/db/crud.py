@@ -22,6 +22,7 @@ from app.db.models import (
     System,
     User,
     Backend,
+    HostChain,
 )
 from app.models.admin import AdminCreate, AdminPartialModify
 from app.models.node import (
@@ -179,7 +180,6 @@ def add_host(db: Session, inbound: Inbound, host: InboundHostModify):
         path=host.path,
         sni=host.sni,
         host=host.host,
-        inbound=inbound,
         security=host.security,
         alpn=host.alpn.value,
         fingerprint=host.fingerprint,
@@ -187,6 +187,12 @@ def add_host(db: Session, inbound: Inbound, host: InboundHostModify):
         mux=host.mux,
         allowinsecure=host.allowinsecure,
         weight=host.weight,
+        chain=[
+            HostChain(chained_host_id=ch[0])
+            for ch in db.query(InboundHost.id)
+            .filter(InboundHost.id.in_(host.chain_ids))
+            .all()
+        ],
     )
     inbound.hosts.append(host)
     db.commit()

@@ -64,6 +64,7 @@ class FragmentSettings(BaseModel):
 
 
 class InboundHost(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
     remark: str
     address: str
     port: int | None = Field(None)
@@ -78,7 +79,7 @@ class InboundHost(BaseModel):
     mux: bool = Field(False)
     fragment: FragmentSettings | None = Field(None)
     weight: int = 1
-    model_config = ConfigDict(from_attributes=True)
+    chain_ids: list[int] = []
 
     @field_validator("remark", "address", "path")
     @classmethod
