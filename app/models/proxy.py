@@ -78,6 +78,8 @@ class InboundHost(BaseModel):
     mux: bool = Field(False)
     fragment: FragmentSettings | None = Field(None)
     weight: int = 1
+    protocol: ProxyTypes | None = None
+    inbound_id: int | None = None
     model_config = ConfigDict(from_attributes=True)
 
     @field_validator("remark", "address", "path")
