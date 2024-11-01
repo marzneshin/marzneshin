@@ -15,15 +15,18 @@ import {
     useHostsCreationMutation,
     useHostsUpdateMutation,
     type HostType,
+    type HostWithProfileSchemaType
 } from "@marzneshin/modules/hosts";
-import { useDialog, MutationDialogProps } from "@marzneshin/common/hooks";
+import { useDialog, type MutationDialogProps } from "@marzneshin/common/hooks";
 import { useProfileStrategy } from "./profiles";
 
 interface HostMutationDialogProps extends MutationDialogProps<HostType> {
     inboundId?: number;
 }
 
-const transformFormValue = (values: HostType) => {
+const transformFormValue = (values: any) => {
+    if (!(values.alpn && values.fingerprint))
+        return values;
     const port = values.port === "" ? null : values.port;
     const alpn = values.alpn === "none" ? "" : values.alpn;
     const fingerprint = values.fingerprint === "none" ? "" : values.fingerprint;
@@ -45,7 +48,7 @@ export const HostsMutationDialog: FC<HostMutationDialogProps> = ({
     const createMutation = useHostsCreationMutation();
     const { t } = useTranslation();
 
-    const submit = (values: HostType) => {
+    const submit = (values: HostWithProfileSchemaType) => {
         const host = transformFormValue(values);
         if (entity && entity.id !== undefined) {
             updateMutation.mutate({ hostId: entity.id, host });

@@ -1,11 +1,11 @@
-import { HostType } from "@marzneshin/modules/hosts";
+import { HostWithProfileSchemaType } from "@marzneshin/modules/hosts";
 
 export interface HostRequestDto {
     inboundId: number
-    host: HostType
+    host: HostWithProfileSchemaType
 }
 
 export interface HostUpdateRequestDto {
     hostId: number
-    host: HostType
+    host: HostWithProfileSchemaType
 }

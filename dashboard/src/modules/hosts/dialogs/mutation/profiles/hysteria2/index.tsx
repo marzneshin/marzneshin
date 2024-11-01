@@ -7,23 +7,17 @@ import {
 } from "../../sections";
 import {
     Accordion,
-    HStack
 } from "@marzneshin/components";
-import { SettingSection } from "@marzneshin/modules/hosts"
 
 export const Hysteria2ProfileFields = () => {
     return (
-        <>
+        <div className="space-y-2">
             <CommonFields />
-            <Accordion type="single" collapsible>
-                <SettingSection value="hysteria2" triggerText="Hysteria2">
-                    <HStack>
-                        <PathField />
-                    </HStack>
-                    <TlsFields />
-                </SettingSection>
+            <PathField />
+            <Accordion className="space-y-2" type="single" collapsible>
+                <TlsFields />
             </Accordion>
-        </>
+        </div>
     )
 }
 
