@@ -1,6 +1,14 @@
 import { NodeType } from "@marzneshin/modules/nodes";
 
-export type ProtocolType = 'vmess' | 'vless' | 'trojan' | 'shadowsocks';
+export type ProtocolType =
+    "wireguard"
+    | "vless"
+    | "vmess"
+    | "trojan"
+    | "shadowsocks"
+    | "shadowsocks2022"
+    | "hysteria2"
+    | "tuic"
 
 export interface InboundType {
     id: number;
