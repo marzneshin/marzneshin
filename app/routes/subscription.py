@@ -140,6 +140,7 @@ def user_get_usage(
 
 client_type_mime_type = {
     "sing-box": "application/json",
+    "wireguard": "application/json",
     "clash-meta": "text/yaml",
     "clash": "text/yaml",
     "xray": "application/json",
@@ -152,7 +153,9 @@ def user_subscription_with_client_type(
     db: DBDep,
     db_user: SubUserDep,
     request: Request,
-    client_type: str = Path(regex="sing-box|clash-meta|clash|xray|v2ray"),
+    client_type: str = Path(
+        regex="^(sing-box|clash-meta|clash|xray|v2ray|links|wireguard)$"
+    ),
 ):
     """
     Subscription by client type; v2ray, xray, sing-box, clash and clash-meta formats supported

@@ -11,7 +11,10 @@ class ProxyTypes(str, Enum):
     VLESS = "vless"
     Trojan = "trojan"
     Shadowsocks = "shadowsocks"
+    Shadowsocks2022 = "shadowsocks2022"
     Hysteria2 = "hysteria2"
+    WireGuard = "wireguard"
+    TUIC = "tuic"
 
 
 class InboundHostSecurity(str, Enum):
