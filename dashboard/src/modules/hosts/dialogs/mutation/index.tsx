@@ -40,7 +40,7 @@ export const HostsMutationDialog: FC<HostMutationDialogProps> = ({
 }) => {
     const [open, onOpenChange] = useDialog(true);
     const [Schema, ProfileFields, defaultValue] = useProfileStrategy(entity!.protocol)
-    const form = useForm({
+    const form = useForm<HostWithProfileSchemaType>({
         defaultValues: entity ? entity : defaultValue,
         resolver: zodResolver(Schema),
     });
