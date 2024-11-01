@@ -32,3 +32,4 @@ export const WireguardProfileFields = () => {
 }
 
 export * from "./schema";
+export * from "./default";

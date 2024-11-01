@@ -12,7 +12,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslation } from "react-i18next";
 import {
-    getDefaultValues,
     useHostsCreationMutation,
     useHostsUpdateMutation,
     type HostType,
@@ -37,9 +36,9 @@ export const HostsMutationDialog: FC<HostMutationDialogProps> = ({
     onClose,
 }) => {
     const [open, onOpenChange] = useDialog(true);
-    const [Schema, ProfileFields] = useProfileStrategy(entity.protocol)
+    const [Schema, ProfileFields, defaultValue] = useProfileStrategy(entity!.protocol)
     const form = useForm({
-        defaultValues: entity ? entity : getDefaultValues(),
+        defaultValues: entity ? entity : defaultValue,
         resolver: zodResolver(Schema),
     });
     const updateMutation = useHostsUpdateMutation();
@@ -63,8 +62,8 @@ export const HostsMutationDialog: FC<HostMutationDialogProps> = ({
 
     useEffect(() => {
         if (entity) form.reset(entity);
-        else form.reset(getDefaultValues());
-    }, [entity, form, open]);
+        else form.reset(defaultValue);
+    }, [entity, form, open, defaultValue]);
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange} defaultOpen={true}>

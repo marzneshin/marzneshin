@@ -28,3 +28,4 @@ export const Hysteria2ProfileFields = () => {
 }
 
 export * from "./schema";
+export * from "./default";

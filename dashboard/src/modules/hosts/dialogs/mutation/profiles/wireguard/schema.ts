@@ -13,3 +13,5 @@ export const WireguardSchema = HostSchema.extend({
         .nullable()
         .optional(),
 });
+
+export type WireguardSchemaType = z.infer<typeof WireguardSchema>;

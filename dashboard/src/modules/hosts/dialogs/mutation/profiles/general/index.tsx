@@ -36,3 +36,4 @@ export const GeneralProfileFields = () => {
 }
 
 export * from "./schema";
+export * from "./default";

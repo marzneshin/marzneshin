@@ -15,3 +15,4 @@ export const TuicProfileFields = () => {
 }
 
 export * from "./schema";
+export * from "./default";

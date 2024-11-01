@@ -1,18 +1,18 @@
 import { ProtocolType } from "@marzneshin/modules/inbounds";
-import { GeneralSchema, GeneralProfileFields } from "./general";
-import { WireguardSchema, WireguardProfileFields } from "./wireguard";
-import { Hysteria2Schema, Hysteria2ProfileFields } from "./hysteria2";
-import { TuicSchema, TuicProfileFields } from "./tuic";
+import { GeneralSchema, GeneralProfileFields, generalProfileDefaultValue } from "./general";
+import { WireguardSchema, WireguardProfileFields, wireguardProfileDefaultValue } from "./wireguard";
+import { Hysteria2Schema, Hysteria2ProfileFields, hysteria2ProfileDefaultValue } from "./hysteria2";
+import { TuicSchema, TuicProfileFields, tuicProfileDefaultValue } from "./tuic";
 
 export const useProfileStrategy = (profile: ProtocolType) => {
     return {
-        vless: [GeneralSchema, GeneralProfileFields],
-        vmess: [GeneralSchema, GeneralProfileFields],
-        trojan: [GeneralSchema, GeneralProfileFields],
-        shadowsocks: [GeneralSchema, GeneralProfileFields],
-        shadowsocks2022: [GeneralSchema, GeneralProfileFields],
-        wireguard: [WireguardSchema, WireguardProfileFields],
-        hysteria2: [Hysteria2Schema, Hysteria2ProfileFields],
-        tuic: [TuicSchema, TuicProfileFields],
+        vless: [GeneralSchema, GeneralProfileFields, generalProfileDefaultValue],
+        vmess: [GeneralSchema, GeneralProfileFields, generalProfileDefaultValue],
+        trojan: [GeneralSchema, GeneralProfileFields, generalProfileDefaultValue],
+        shadowsocks: [GeneralSchema, GeneralProfileFields, generalProfileDefaultValue],
+        shadowsocks2022: [GeneralSchema, GeneralProfileFields, generalProfileDefaultValue],
+        wireguard: [WireguardSchema, WireguardProfileFields, wireguardProfileDefaultValue],
+        hysteria2: [Hysteria2Schema, Hysteria2ProfileFields, hysteria2ProfileDefaultValue],
+        tuic: [TuicSchema, TuicProfileFields, tuicProfileDefaultValue],
     }[profile];
 }
