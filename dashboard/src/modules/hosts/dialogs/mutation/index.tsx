@@ -6,35 +6,19 @@ import {
     DialogHeader,
     Form,
     Button,
-    Accordion,
-    AccordionContent,
-    AccordionItem,
-    AccordionTrigger,
     ScrollArea,
-    HStack,
 } from "@marzneshin/components";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslation } from "react-i18next";
 import {
-    HostSchema,
     getDefaultValues,
     useHostsCreationMutation,
     useHostsUpdateMutation,
     type HostType,
 } from "@marzneshin/modules/hosts";
-import {
-    RemarkField,
-    AddressField,
-    PortField,
-    HostField,
-    MuxField,
-    FragmentField,
-    PathField,
-    WeightField,
-    SecurityFields,
-} from "./fields";
 import { useDialog, MutationDialogProps } from "@marzneshin/common/hooks";
+import { useProfileStrategy } from "./profiles";
 
 interface HostMutationDialogProps extends MutationDialogProps<HostType> {
     inboundId?: number;
@@ -48,14 +32,15 @@ const transformFormValue = (values: HostType) => {
 };
 
 export const HostsMutationDialog: FC<HostMutationDialogProps> = ({
-    inboundId,
     entity,
+    inboundId,
     onClose,
 }) => {
     const [open, onOpenChange] = useDialog(true);
+    const [Schema, ProfileFields] = useProfileStrategy(entity.protocol)
     const form = useForm({
         defaultValues: entity ? entity : getDefaultValues(),
-        resolver: zodResolver(HostSchema),
+        resolver: zodResolver(Schema),
     });
     const updateMutation = useHostsUpdateMutation();
     const createMutation = useHostsCreationMutation();
@@ -97,26 +82,7 @@ export const HostsMutationDialog: FC<HostMutationDialogProps> = ({
                             onSubmit={form.handleSubmit(submit)}
                             className="h-full flex flex-col justify-between"
                         >
-                            <RemarkField />
-                            <HStack className="gap-2 items-start">
-                                <AddressField />
-                                <PortField />
-                            </HStack>
-                            <Accordion type="single" collapsible>
-                                <AccordionItem value="item-1">
-                                    <AccordionTrigger>{t("advanced-options")}</AccordionTrigger>
-                                    <AccordionContent>
-                                        <div className="flex flex-row gap-2 items-start">
-                                            <HostField />
-                                            <PathField />
-                                            <WeightField />
-                                        </div>
-                                        <FragmentField />
-                                        <MuxField />
-                                        <SecurityFields />
-                                    </AccordionContent>
-                                </AccordionItem>
-                            </Accordion>
+                            <ProfileFields />
                             <Button
                                 className="mt-3 w-full font-semibold"
                                 type="submit"
