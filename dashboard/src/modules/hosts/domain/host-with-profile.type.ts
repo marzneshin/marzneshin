@@ -5,6 +5,7 @@ import {
     TuicSchemaType
 } from "../dialogs/mutation/profiles";
 import { HostSchemaType } from "./host";
+import { ProtocolType } from "@marzneshin/modules/inbounds";
 
 export type HostWithProfileSchemaType =
     HostSchemaType
