@@ -266,6 +266,8 @@
       "users-data-usage": "Users Data Usage"
     },
     "hosts": {
+      "dns-servers": "DNS Servers",
+      "tls-config": "TLS Config",
       "fragment": {
         "interval": "Interval",
         "length": "Length",
