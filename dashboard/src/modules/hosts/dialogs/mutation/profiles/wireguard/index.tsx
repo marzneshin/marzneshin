@@ -3,7 +3,6 @@ import {
     MtuField,
     DNSServersField,
     PathField,
-    WeightField,
 } from "../../fields";
 import {
     Accordion,
@@ -21,7 +20,6 @@ export const WireguardProfileFields = () => {
                 <SettingSection value="wireguard" triggerText={t("wireguard")}>
                     <HStack>
                         <PathField label={t("page.hosts.server-private-key")} />
-                        <WeightField />
                         <MtuField />
                     </HStack>
                     <DNSServersField />
