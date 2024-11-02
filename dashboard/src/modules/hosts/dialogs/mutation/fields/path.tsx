@@ -9,7 +9,7 @@ import {
 import { useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-export const PathField = () => {
+export const PathField = ({ label }: { label?: string }) => {
     const { t } = useTranslation();
     const form = useFormContext();
     return (
@@ -18,7 +18,7 @@ export const PathField = () => {
             name="path"
             render={({ field }) => (
                 <FormItem className="w-full">
-                    <FormLabel>{t("path")}</FormLabel>
+                    <FormLabel>{label ?? t("path")}</FormLabel>
                     <FormControl>
                         <Input {...field} />
                     </FormControl>

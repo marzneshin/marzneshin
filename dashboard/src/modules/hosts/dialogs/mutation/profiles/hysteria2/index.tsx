@@ -8,12 +8,14 @@ import {
 import {
     Accordion,
 } from "@marzneshin/components";
+import { useTranslation } from "react-i18next";
 
 export const Hysteria2ProfileFields = () => {
+    const { t } = useTranslation();
     return (
         <div className="space-y-2">
             <CommonFields />
-            <PathField />
+            <PathField label={t("page.hosts.obfuscation-password")} />
             <Accordion className="space-y-2" type="single" collapsible>
                 <TlsFields />
             </Accordion>

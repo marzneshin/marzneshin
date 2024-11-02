@@ -267,6 +267,8 @@
     },
     "hosts": {
       "dns-servers": "DNS Servers",
+      "obfuscation-password": "Obfuscation Password",
+      "server-private-key": "server-private-key",
       "tls-config": "TLS Config",
       "fragment": {
         "interval": "Interval",
