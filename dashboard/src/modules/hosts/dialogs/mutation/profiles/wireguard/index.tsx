@@ -19,7 +19,7 @@ export const WireguardProfileFields = () => {
             <Accordion type="single" collapsible>
                 <SettingSection value="wireguard" triggerText={t("wireguard")}>
                     <HStack>
-                        <PathField label={t("page.hosts.server-private-key")} />
+                        <PathField label={t("page.hosts.server-public-key")} />
                         <MtuField />
                     </HStack>
                     <DNSServersField />

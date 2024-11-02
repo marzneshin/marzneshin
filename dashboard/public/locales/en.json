@@ -268,7 +268,7 @@
     "hosts": {
       "dns-servers": "DNS Servers",
       "obfuscation-password": "Obfuscation Password",
-      "server-private-key": "server-private-key",
+      "server-public-key": "Server public key",
       "tls-config": "TLS Config",
       "network-settings": "Network Settings",
       "security-settings": "Security Settings",
