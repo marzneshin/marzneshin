@@ -270,6 +270,9 @@
       "obfuscation-password": "Obfuscation Password",
       "server-private-key": "server-private-key",
       "tls-config": "TLS Config",
+      "network-settings": "Network Settings",
+      "security-settings": "Security Settings",
+      "camouflage-settings": "Camouflage Settings",
       "fragment": {
         "interval": "Interval",
         "length": "Length",
