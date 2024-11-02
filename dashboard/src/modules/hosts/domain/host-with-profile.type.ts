@@ -12,3 +12,6 @@ export type HostWithProfileSchemaType =
     | WireguardSchemaType
     | Hysteria2SchemaType
     | TuicSchemaType;
+
+
+export type HostWithProfileType = HostWithProfileSchemaType & { id?: number, inboundId?: number, protocol: ProtocolType };

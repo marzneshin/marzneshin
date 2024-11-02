@@ -13,8 +13,11 @@ type ProfileFields = FC;
  * @returns [schema, fields, default values] - An array of schema, profile fields, and their default
  */
 export const useProfileStrategy = (
-    protocol: ProtocolType
+    protocol?: ProtocolType
 ): [ProfileSchema, ProfileFields, object] => {
+    if (!protocol)
+        return [GeneralSchema, GeneralProfileFields, generalProfileDefaultValue]
+
     const profileMap: { [key in ProtocolType]: [ProfileSchema, ProfileFields, object] } = {
         vless: [GeneralSchema, GeneralProfileFields, generalProfileDefaultValue],
         vmess: [GeneralSchema, GeneralProfileFields, generalProfileDefaultValue],

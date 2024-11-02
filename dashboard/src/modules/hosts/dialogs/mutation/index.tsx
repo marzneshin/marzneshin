@@ -14,14 +14,16 @@ import { useTranslation } from "react-i18next";
 import {
     useHostsCreationMutation,
     useHostsUpdateMutation,
-    type HostType,
+    type HostWithProfileType,
     type HostWithProfileSchemaType
 } from "@marzneshin/modules/hosts";
 import { useDialog, type MutationDialogProps } from "@marzneshin/common/hooks";
+import { ProtocolType } from "@marzneshin/modules/inbounds";
 import { useProfileStrategy } from "./profiles";
 
-interface HostMutationDialogProps extends MutationDialogProps<HostType> {
+interface HostMutationDialogProps extends MutationDialogProps<HostWithProfileType> {
     inboundId?: number;
+    protocol?: ProtocolType;
 }
 
 const transformFormValue = (values: any) => {
@@ -37,9 +39,10 @@ export const HostsMutationDialog: FC<HostMutationDialogProps> = ({
     entity,
     inboundId,
     onClose,
+    protocol,
 }) => {
     const [open, onOpenChange] = useDialog(true);
-    const [Schema, ProfileFields, defaultValue] = useProfileStrategy(entity!.protocol)
+    const [Schema, ProfileFields, defaultValue] = useProfileStrategy(protocol)
     const form = useForm<HostWithProfileSchemaType>({
         defaultValues: entity ? entity : defaultValue,
         resolver: zodResolver(Schema),

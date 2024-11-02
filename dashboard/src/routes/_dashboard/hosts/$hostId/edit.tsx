@@ -14,6 +14,7 @@ const HostEdit = () => {
     return value && (
         <HostsMutationDialog
             entity={value.host}
+            protocol={value.host.protocol}
             onClose={() => navigate({ to: "/hosts" })}
         />
     );
