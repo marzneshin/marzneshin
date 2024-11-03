@@ -7,7 +7,7 @@ import {
     Popover,
     PopoverTrigger,
     PopoverContent,
-} from "@marzneshin/components";
+} from "@marzneshin/common/components";
 import { PopoverGuide } from "@marzneshin/modules/hosts";
 import { InfoIcon } from 'lucide-react';
 import { useFormContext } from "react-hook-form";

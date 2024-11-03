@@ -5,7 +5,7 @@ import {
     FetchEntityReturn,
     UseEntityQueryProps,
     EntityQueryKeyType
-} from "@marzneshin/features/entity-table";
+} from "@marzneshin/libs/entity-table";
 
 export async function fetchAdmins({ queryKey }: EntityQueryKeyType): FetchEntityReturn<AdminType> {
     const pagination = queryKey[1];

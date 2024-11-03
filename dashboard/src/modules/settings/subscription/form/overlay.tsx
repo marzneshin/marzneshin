@@ -1,6 +1,6 @@
 import {
     Skeleton,
-} from "@marzneshin/components";
+} from "@marzneshin/common/components";
 
 export const Overlay = () => (
     <div className="grid grid-cols-[2fr,1.3fr,0.25fr,0.25fr] items-center justify-start gap-2 my-0 ">

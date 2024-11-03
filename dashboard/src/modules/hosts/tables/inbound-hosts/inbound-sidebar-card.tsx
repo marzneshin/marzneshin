@@ -3,7 +3,7 @@ import { type FC } from 'react';
 import {
     Badge,
     Label,
-} from "@marzneshin/components";
+} from "@marzneshin/common/components";
 import {
     type InboundType
 } from '@marzneshin/modules/inbounds';

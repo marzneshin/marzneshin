@@ -5,7 +5,7 @@ import {
   TabsContent,
   TabsList,
   TabsTrigger,
-} from "@marzneshin/components";
+} from "@marzneshin/common/components";
 import { type FC } from "react";
 import { useTranslation } from "react-i18next";
 import {

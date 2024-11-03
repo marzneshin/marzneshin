@@ -1,6 +1,6 @@
 import { NodeType } from "@marzneshin/modules/nodes";
 import useWebSocket, { ReadyState } from "react-use-websocket";
-import { useAuth } from "@marzneshin/features/auth";
+import { useAuth } from "@marzneshin/modules/auth";
 import { joinPaths } from "@tanstack/react-router";
 import { useCallback, useEffect, useRef, useState } from "react";
 

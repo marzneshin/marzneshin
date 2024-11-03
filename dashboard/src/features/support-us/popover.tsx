@@ -1,5 +1,5 @@
 import { HeartHandshake } from "lucide-react";
-import { Button, PopoverTrigger, Popover, PopoverContent } from "@marzneshin/components";
+import { Button, PopoverTrigger, Popover, PopoverContent } from "@marzneshin/common/components";
 import { type FC, type HTMLAttributes } from "react";
 import { cn } from "@marzneshin/common/utils";
 import { useTranslation } from "react-i18next";

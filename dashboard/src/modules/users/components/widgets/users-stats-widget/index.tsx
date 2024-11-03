@@ -9,7 +9,7 @@ import {
     ChartTooltipContent,
     ChartLegend,
     ChartLegendContent,
-} from "@marzneshin/components";
+} from "@marzneshin/common/components";
 import { Label, Pie, PieChart } from "recharts"
 
 const chartConfig = {

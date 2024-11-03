@@ -7,7 +7,7 @@ import {
 } from "../../sections";
 import {
     Accordion,
-} from "@marzneshin/components";
+} from "@marzneshin/common/components";
 import { useTranslation } from "react-i18next";
 
 export const Hysteria2ProfileFields = () => {

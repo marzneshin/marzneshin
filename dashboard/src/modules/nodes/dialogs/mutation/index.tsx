@@ -19,7 +19,7 @@ import {
     SelectValue,
     FormDescription,
     HStack,
-} from "@marzneshin/components";
+} from "@marzneshin/common/components";
 import { useTranslation } from "react-i18next";
 import {
     NodeSchema,
@@ -38,7 +38,7 @@ export const MutationDialog: FC<MutationDialogProps<NodeType>> = ({
     const { t } = useTranslation();
 
     const defaultValue = useMemo(() => ({
-        id: 0,  
+        id: 0,
         name: "",
         address: "",
         status: "none",

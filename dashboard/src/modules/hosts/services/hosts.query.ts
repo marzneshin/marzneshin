@@ -5,7 +5,7 @@ import {
     FetchEntityReturn,
     UseEntityQueryProps,
     EntitySidebarQueryKeyType
-} from "@marzneshin/features/entity-table/hooks";
+} from "@marzneshin/libs/entity-table/hooks";
 
 export async function fetchHosts({ queryKey }: EntitySidebarQueryKeyType): FetchEntityReturn<HostType> {
     const pagination = queryKey[3];

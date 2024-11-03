@@ -8,11 +8,11 @@ import {
     ChartLegend,
     ChartTooltip,
     ChartTooltipContent,
-} from "@marzneshin/components";
+} from "@marzneshin/common/components";
 import { Area, AreaChart, CartesianGrid, YAxis, XAxis } from "recharts"
 import { useState } from "react";
 import { UserNodesUsageWidgetProps } from "./types";
-import { dateXAxisTicks, useFromNowInterval, SelectDateView, ChartDateInterval } from "@marzneshin/common/stats-charts";
+import { dateXAxisTicks, useFromNowInterval, SelectDateView, ChartDateInterval } from "@marzneshin/libs/stats-charts";
 import { useChartConfig, useTransformData } from "./hooks";
 import { format as formatByte } from '@chbphone55/pretty-bytes';
 import { useUserNodeUsagesQuery } from "@marzneshin/modules/users";

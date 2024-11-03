@@ -1,5 +1,5 @@
 import { ColumnDef } from "@tanstack/react-table"
-import { DataTableColumnHeader } from "@marzneshin/features/entity-table"
+import { DataTableColumnHeader } from "@marzneshin/libs/entity-table"
 import i18n from "@marzneshin/features/i18n"
 import {
     UserType,

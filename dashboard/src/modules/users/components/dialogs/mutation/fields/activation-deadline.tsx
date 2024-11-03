@@ -1,5 +1,5 @@
 
-import { DateField } from "@marzneshin/components";
+import { DateField } from "@marzneshin/common/components";
 import { FC } from "react";
 
 export const ActivationDeadlineField: FC = () => {

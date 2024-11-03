@@ -5,7 +5,7 @@ import {
     SelectableEntityQueryKeyType,
     FetchEntityReturn,
     UseEntityQueryProps
-} from "@marzneshin/features/entity-table";
+} from "@marzneshin/libs/entity-table";
 import { useQuery } from "@tanstack/react-query";
 
 export async function fetchServices({ queryKey }: EntityQueryKeyType): FetchEntityReturn<ServiceType> {

@@ -7,7 +7,7 @@ import {
     Checkbox,
     ScrollArea,
     EntityFieldCard,
-} from "@marzneshin/components";
+} from "@marzneshin/common/components";
 import {
     useInboundsQuery,
     type InboundType,

@@ -1,4 +1,4 @@
-import { BadgeVariantKeys } from "@marzneshin/components";
+import { BadgeVariantKeys } from "@marzneshin/common/components";
 import { LucideIcon } from "lucide-react";
 
 export interface StatusType {

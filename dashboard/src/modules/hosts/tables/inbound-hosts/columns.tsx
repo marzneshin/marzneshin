@@ -3,14 +3,14 @@ import { HostType } from "@marzneshin/modules/hosts"
 import {
     DataTableActionsCell,
     DataTableColumnHeader
-} from "@marzneshin/features/entity-table"
+} from "@marzneshin/libs/entity-table"
 import i18n from "@marzneshin/features/i18n"
 import {
     type ColumnActions
-} from "@marzneshin/features/entity-table";
+} from "@marzneshin/libs/entity-table";
 import {
     NoPropogationButton,
-} from "@marzneshin/components"
+} from "@marzneshin/common/components"
 
 export const columns = (actions: ColumnActions<HostType>): ColumnDef<HostType>[] => ([
     {

@@ -7,7 +7,7 @@ import { useState } from 'react';
 import {
     useInboundsQuery,
 } from '@marzneshin/modules/inbounds';
-import { SidebarEntityTable } from '@marzneshin/features/entity-table';
+import { SidebarEntityTable } from '@marzneshin/libs/entity-table';
 import { columns } from './columns';
 import { useDialog } from '@marzneshin/common/hooks';
 import {

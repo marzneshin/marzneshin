@@ -5,7 +5,7 @@ import type {
     DoubleEntityQueryKeyType,
     UseEntityQueryProps,
     FetchEntityReturn
-} from "@marzneshin/features/entity-table";
+} from "@marzneshin/libs/entity-table";
 
 interface UseServiceUsersQueryProps extends UseEntityQueryProps {
     serviceId: number;

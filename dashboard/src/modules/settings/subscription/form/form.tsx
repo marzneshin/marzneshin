@@ -13,7 +13,7 @@ import {
     Separator,
     Awaiting,
     CheckboxField,
-} from "@marzneshin/components";
+} from "@marzneshin/common/components";
 import { Schema } from "./schema"
 import { Overlay } from "./overlay"
 import {

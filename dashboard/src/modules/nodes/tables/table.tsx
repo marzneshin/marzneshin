@@ -4,7 +4,7 @@ import {
     fetchNodes,
     NodeType
 } from '@marzneshin/modules/nodes';
-import { EntityTable } from "@marzneshin/features/entity-table";
+import { EntityTable } from "@marzneshin/libs/entity-table";
 import { useNavigate } from "@tanstack/react-router";
 
 export const NodesTable: FC = () => {

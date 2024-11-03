@@ -5,7 +5,7 @@ import {
     FetchEntityReturn,
     UseEntityQueryProps,
     EntityQueryKeyType
-} from "@marzneshin/features/entity-table";
+} from "@marzneshin/libs/entity-table";
 import { InboundType } from "../types";
 
 export async function fetchInbounds({ queryKey }: EntityQueryKeyType): FetchEntityReturn<InboundType> {

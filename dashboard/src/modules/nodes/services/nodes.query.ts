@@ -5,7 +5,7 @@ import type {
     EntityQueryKeyType,
     UseEntityQueryProps,
     FetchEntityReturn
-} from "@marzneshin/features/entity-table";
+} from "@marzneshin/libs/entity-table";
 
 export async function fetchNodes({
     queryKey,

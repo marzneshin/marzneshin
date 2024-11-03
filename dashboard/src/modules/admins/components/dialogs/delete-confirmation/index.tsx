@@ -1,4 +1,4 @@
-import { DeleteConfirmation } from "@marzneshin/components";
+import { DeleteConfirmation } from "@marzneshin/common/components";
 import { type FC, useEffect } from "react";
 import {
     type AdminType,

@@ -1,6 +1,6 @@
 import {
     SectionWidget
-} from "@marzneshin/components";
+} from "@marzneshin/common/components";
 import { SubscriptionRulesForm } from "@marzneshin/modules/settings/subscription";
 import { useTranslation } from "react-i18next";
 

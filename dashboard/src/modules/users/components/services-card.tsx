@@ -1,4 +1,4 @@
-import { EntityFieldCard } from '@marzneshin/components';
+import { EntityFieldCard } from '@marzneshin/common/components';
 import { ServiceType } from '@marzneshin/modules/services';
 import { ServerIcon, UserIcon } from 'lucide-react';
 import { FC } from 'react'

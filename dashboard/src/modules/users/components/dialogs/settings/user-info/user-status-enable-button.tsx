@@ -1,4 +1,4 @@
-import { Button } from "@marzneshin/components";
+import { Button } from "@marzneshin/common/components";
 import { cn } from "@marzneshin/common/utils";
 import { UserType, useUserStatusEnable } from "@marzneshin/modules/users";
 import { LoaderIcon, UserCheck, UserX } from "lucide-react";

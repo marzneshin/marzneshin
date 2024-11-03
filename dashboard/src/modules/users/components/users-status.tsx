@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Badge, Label } from '@marzneshin/components';
+import { Badge, Label } from '@marzneshin/common/components';
 import { StatusType } from '@marzneshin/common/types';
 import {
     AlarmClock,

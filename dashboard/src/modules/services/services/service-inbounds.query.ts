@@ -4,7 +4,7 @@ import { InboundType } from "@marzneshin/modules/inbounds";
 import {
     FetchEntityReturn,
     SelectableEntityQueryKeyType
-} from "@marzneshin/features/entity-table";
+} from "@marzneshin/libs/entity-table";
 
 interface FetchServiceInboundsType {
     queryKey: [string, number, number, number]

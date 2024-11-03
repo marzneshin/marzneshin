@@ -7,8 +7,8 @@ import {
     Loading,
     HeaderLogo,
     HeaderMenu,
-} from "@marzneshin/components";
-import { useAuth } from "@marzneshin/features/auth";
+} from "@marzneshin/common/components";
+import { useAuth } from "@marzneshin/modules/auth";
 import { DashboardSidebar, ToggleButton } from "@marzneshin/features/sidebar";
 import { usePanelToggle } from "@marzneshin/features/sidebar/use-panel-toggle";
 import { useScreenBreakpoint } from "@marzneshin/common/hooks/use-screen-breakpoint";

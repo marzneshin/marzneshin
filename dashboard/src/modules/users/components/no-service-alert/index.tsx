@@ -3,7 +3,7 @@ import { Link } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next';
 import {
     AlertCard,
-} from '@marzneshin/components';
+} from '@marzneshin/common/components';
 
 export const UsersNoServiceAlert = () => {
     const { t } = useTranslation();

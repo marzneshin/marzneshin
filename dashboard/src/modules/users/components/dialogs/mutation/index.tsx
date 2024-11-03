@@ -9,7 +9,7 @@ import {
     Button,
     ScrollArea,
     VStack,
-} from "@marzneshin/components";
+} from "@marzneshin/common/components";
 import { useTranslation } from "react-i18next";
 import {
     DATA_LIMIT_METRIC,

@@ -4,7 +4,7 @@ import {
     CardContent,
     CardDescription,
     Button,
-} from "@marzneshin/components"
+} from "@marzneshin/common/components"
 import { type FC } from "react";
 import {
     GithubIcon,

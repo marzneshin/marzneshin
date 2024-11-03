@@ -1,5 +1,5 @@
 import { type FC } from "react";
-import { BooleanPill } from "@marzneshin/components";
+import { BooleanPill } from "@marzneshin/common/components";
 import { useTranslation } from "react-i18next";
 import { UserProp } from "@marzneshin/modules/users";
 

@@ -4,7 +4,7 @@ import {
     DropdownMenuItem,
     DropdownMenuSubTrigger,
     DropdownMenuPortal
-} from "@marzneshin/components";
+} from "@marzneshin/common/components";
 import { Languages } from "lucide-react";
 import { FC } from "react";
 import { useTranslation } from "react-i18next";

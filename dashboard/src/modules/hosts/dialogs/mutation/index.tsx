@@ -7,7 +7,7 @@ import {
     Form,
     Button,
     ScrollArea,
-} from "@marzneshin/components";
+} from "@marzneshin/common/components";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslation } from "react-i18next";

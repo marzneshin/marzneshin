@@ -6,7 +6,7 @@ import {
     Input,
     FormLabel,
     FormMessage,
-} from "@marzneshin/components";
+} from "@marzneshin/common/components";
 import { type FC } from "react";
 import { useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";

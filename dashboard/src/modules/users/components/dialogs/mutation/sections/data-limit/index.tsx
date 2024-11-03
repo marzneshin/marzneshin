@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { FormLabel, Switch } from '@marzneshin/components';
+import { FormLabel, Switch } from '@marzneshin/common/components';
 import { useTranslation } from 'react-i18next';
 import { DataLimitField, DataLimitResetStrategyField } from "../../fields";
 import { useDataLimit } from "./use-data-limit";

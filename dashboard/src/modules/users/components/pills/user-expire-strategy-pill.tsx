@@ -1,6 +1,6 @@
 
 import { type FC } from "react";
-import { Badge } from "@marzneshin/components";
+import { Badge } from "@marzneshin/common/components";
 import { useTranslation } from "react-i18next";
 import { UserProp } from "@marzneshin/modules/users";
 
