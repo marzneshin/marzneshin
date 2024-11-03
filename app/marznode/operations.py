@@ -51,6 +51,7 @@ async def remove_user(user: "DBUser"):
 
 async def remove_node(node_id: int):
     if node_id in marznode.nodes:
+        await marznode.nodes[node_id].stop()
         del marznode.nodes[node_id]
 
 
