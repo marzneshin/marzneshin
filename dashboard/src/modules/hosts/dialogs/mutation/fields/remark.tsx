@@ -8,7 +8,7 @@ import {
     Popover,
     PopoverTrigger,
     PopoverContent,
-} from "@marzneshin/components";
+} from "@marzneshin/common/components";
 import { PopoverGuide } from '@marzneshin/modules/hosts';
 import { useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";

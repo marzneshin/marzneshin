@@ -12,7 +12,7 @@ import {
     SelectTrigger,
     SelectValue,
     DeleteConfirmation
-} from "@marzneshin/components";
+} from "@marzneshin/common/components";
 import { useDialog } from "@marzneshin/common/hooks";
 import {
     Schema

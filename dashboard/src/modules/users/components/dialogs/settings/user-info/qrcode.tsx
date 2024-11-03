@@ -7,7 +7,7 @@ import {
     CardContent,
     CardHeader,
     CardTitle,
-} from "@marzneshin/components";
+} from "@marzneshin/common/components";
 import { useTranslation } from "react-i18next";
 import { getSubscriptionLink } from "@marzneshin/common/utils";
 

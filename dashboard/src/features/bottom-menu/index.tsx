@@ -1,4 +1,4 @@
-import { Button, SidebarItem } from "@marzneshin/components";
+import { Button, SidebarItem } from "@marzneshin/common/components";
 import i18n from "@marzneshin/features/i18n";
 import { Link } from "@tanstack/react-router";
 import { FC } from "react";

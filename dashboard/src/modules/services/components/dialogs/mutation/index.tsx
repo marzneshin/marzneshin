@@ -5,7 +5,7 @@ import {
     DialogHeader,
     Form,
     Button,
-} from "@marzneshin/components";
+} from "@marzneshin/common/components";
 import { type FC, useMemo } from "react";
 import {
     type ServiceType,

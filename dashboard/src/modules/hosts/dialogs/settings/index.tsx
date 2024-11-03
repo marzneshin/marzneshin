@@ -5,7 +5,7 @@ import {
     Table,
     TableBody,
     TableRowWithCell,
-} from "@marzneshin/components";
+} from "@marzneshin/common/components";
 import { useTranslation } from "react-i18next";
 
 interface HostWithProfileSchemaType {
@@ -40,25 +40,25 @@ export const HostSettingsDialog: FC<HostsSettingsDialogProps> = ({
                 <TableBody>
                     <TableRowWithCell label={t("remark")} value={entity.remark} />
                     <TableRowWithCell label={t("address")} value={entity.address} />
-                    <TableRowWithCell 
-                        label={t("port")} 
-                        value={entity.port?.toString() ?? ""} 
+                    <TableRowWithCell
+                        label={t("port")}
+                        value={entity.port?.toString() ?? ""}
                     />
-                    <TableRowWithCell 
-                        label={t("host")} 
-                        value={entity.host ?? ""} 
+                    <TableRowWithCell
+                        label={t("host")}
+                        value={entity.host ?? ""}
                     />
-                    <TableRowWithCell 
-                        label={t("path")} 
-                        value={entity.path ?? ""} 
+                    <TableRowWithCell
+                        label={t("path")}
+                        value={entity.path ?? ""}
                     />
-                    <TableRowWithCell 
-                        label={t("sni")} 
-                        value={entity.sni ?? ""} 
+                    <TableRowWithCell
+                        label={t("sni")}
+                        value={entity.sni ?? ""}
                     />
-                    <TableRowWithCell 
-                        label={t("alpn")} 
-                        value={entity.alpn ?? ""} 
+                    <TableRowWithCell
+                        label={t("alpn")}
+                        value={entity.alpn ?? ""}
                     />
                 </TableBody>
             </Table>

@@ -1,6 +1,6 @@
 
-import { Button } from "@marzneshin/components";
-import { SelectableEntityTable, useRowSelection } from "@marzneshin/features/entity-table";
+import { Button } from "@marzneshin/common/components";
+import { SelectableEntityTable, useRowSelection } from "@marzneshin/libs/entity-table";
 import { columns } from "./columns";
 import {
     type UserType,

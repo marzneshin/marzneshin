@@ -3,9 +3,9 @@ import { ColumnDef } from "@tanstack/react-table"
 import { InboundType } from "@marzneshin/modules/inbounds"
 import {
     DataTableColumnHeader
-} from "@marzneshin/features/entity-table"
+} from "@marzneshin/libs/entity-table"
 import i18n from "@marzneshin/features/i18n"
-import { Badge, Checkbox } from "@marzneshin/components"
+import { Badge, Checkbox } from "@marzneshin/common/components"
 
 export const columns: ColumnDef<InboundType>[] = [
     {

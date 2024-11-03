@@ -5,7 +5,7 @@ import {
   CardHeader,
   ScrollArea,
   Separator,
-} from "@marzneshin/components";
+} from "@marzneshin/common/components";
 import type { NodeType } from "..";
 import { useNodesLog } from "..";
 import type { FC } from "react";

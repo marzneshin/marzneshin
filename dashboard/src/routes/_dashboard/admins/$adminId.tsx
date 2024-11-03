@@ -12,7 +12,7 @@ import { Suspense, useMemo } from "react";
 import {
     AlertDialog,
     AlertDialogContent,
-} from "@marzneshin/components";
+} from "@marzneshin/common/components";
 
 const AdminProvider = () => {
     const { username } = Route.useLoaderData()

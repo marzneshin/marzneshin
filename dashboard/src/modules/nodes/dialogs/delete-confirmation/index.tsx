@@ -1,5 +1,5 @@
 
-import { DeleteConfirmation } from '@marzneshin/components'
+import { DeleteConfirmation } from '@marzneshin/common/components'
 import { FC, useEffect } from 'react'
 import { NodeType, useNodesDeletionMutation } from '@marzneshin/modules/nodes'
 

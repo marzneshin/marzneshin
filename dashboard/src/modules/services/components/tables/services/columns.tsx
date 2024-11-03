@@ -3,12 +3,12 @@ import { ServiceType } from "@marzneshin/modules/services";
 import {
     DataTableActionsCell,
     DataTableColumnHeader
-} from "@marzneshin/features/entity-table"
+} from "@marzneshin/libs/entity-table"
 import i18n from "@marzneshin/features/i18n";
 import {
     NoPropogationButton,
-} from "@marzneshin/components";
-import { ColumnActions } from "@marzneshin/features/entity-table";
+} from "@marzneshin/common/components";
+import { ColumnActions } from "@marzneshin/libs/entity-table";
 
 export const columns = (actions: ColumnActions<ServiceType>): ColumnDef<ServiceType>[] => ([
     {

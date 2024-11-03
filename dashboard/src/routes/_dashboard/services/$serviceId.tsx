@@ -13,7 +13,7 @@ import {
     AlertDialog,
     AlertDialogContent,
     Loading
-} from "@marzneshin/components";
+} from "@marzneshin/common/components";
 
 const ServiceProvider = () => {
     const { service } = Route.useLoaderData()

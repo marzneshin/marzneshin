@@ -1,6 +1,6 @@
 import {
     MiniWidget
-} from "@marzneshin/components";
+} from "@marzneshin/common/components";
 import {
     CertificateButton
 } from "@marzneshin/modules/settings";

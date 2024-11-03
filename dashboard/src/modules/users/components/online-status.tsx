@@ -2,7 +2,7 @@ import { FC } from "react"
 import { useTranslation } from "react-i18next"
 import { cn } from "@marzneshin/common/utils"
 import { UserType, isUserOnline } from "@marzneshin/modules/users"
-import { Tooltip, TooltipContent, TooltipTrigger } from "@marzneshin/components"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@marzneshin/common/components"
 import { Circle } from "lucide-react"
 
 interface OnlineStatusProps {

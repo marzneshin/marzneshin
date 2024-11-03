@@ -5,7 +5,7 @@ import {
     FetchEntityReturn,
     UseEntityQueryProps,
     EntityQueryKeyType
-} from "@marzneshin/features/entity-table";
+} from "@marzneshin/libs/entity-table";
 
 export type SortUserBy = "username" | "used_traffic" | "data_limit" | "expire_date" | "created_at"
 

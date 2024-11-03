@@ -8,7 +8,7 @@ import {
     SettingsInfoSkeleton,
     SettingsDialogProps,
     SettingsDialog,
-} from "@marzneshin/components";
+} from "@marzneshin/common/components";
 import {
     UserServicesTable,
     UserNodesUsageWidget,

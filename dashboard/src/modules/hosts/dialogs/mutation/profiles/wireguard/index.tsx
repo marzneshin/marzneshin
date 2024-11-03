@@ -7,7 +7,7 @@ import {
 import {
     Accordion,
     HStack
-} from "@marzneshin/components";
+} from "@marzneshin/common/components";
 import { SettingSection } from "@marzneshin/modules/hosts"
 import { useTranslation } from "react-i18next";
 

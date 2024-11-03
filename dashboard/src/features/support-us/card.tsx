@@ -1,7 +1,7 @@
 import type { FC, HTMLAttributes } from "react";
 import { SupportUsVariation } from "./types";
 import { X, HeartHandshake } from "lucide-react";
-import { Button, Card, CardTitle, CardContent } from "@marzneshin/components";
+import { Button, Card, CardTitle, CardContent } from "@marzneshin/common/components";
 import { cn } from "@marzneshin/common/utils";
 import { useTranslation } from "react-i18next";
 

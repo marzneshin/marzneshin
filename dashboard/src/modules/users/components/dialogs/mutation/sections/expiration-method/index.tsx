@@ -4,7 +4,7 @@ import {
     TabsTrigger,
     TabsContent,
     FormLabel
-} from '@marzneshin/components';
+} from '@marzneshin/common/components';
 import type {
     UserMutationType,
 } from "@marzneshin/modules/users";

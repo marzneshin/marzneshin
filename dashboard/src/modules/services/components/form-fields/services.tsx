@@ -11,7 +11,7 @@ import {
     ScrollArea,
     Skeleton,
     Awaiting
-} from "@marzneshin/components";
+} from "@marzneshin/common/components";
 import { Link } from "@tanstack/react-router";
 import { ExclamationTriangleIcon } from '@radix-ui/react-icons';
 import {

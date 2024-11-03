@@ -1,4 +1,4 @@
-import { SidebarObject } from '@marzneshin/components';
+import { SidebarObject } from '@marzneshin/common/components';
 import { Box, Home, ShieldCheck, Server, ServerCog, Settings, UsersIcon } from 'lucide-react';
 
 export const sidebarItems: SidebarObject = {

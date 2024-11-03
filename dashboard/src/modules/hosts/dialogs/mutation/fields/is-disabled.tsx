@@ -1,4 +1,4 @@
-import { Switch, FormField, FormControl, FormItem } from "@marzneshin/components";
+import { Switch, FormField, FormControl, FormItem } from "@marzneshin/common/components";
 import { useFormContext } from "react-hook-form";
 
 export const IsDisabled = () => {

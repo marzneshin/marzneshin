@@ -1,7 +1,7 @@
 
 import { FC } from 'react'
 import { NodeType, NodesStatus, NodesStatusBadge } from '../..'
-import { Table, TableBody, TableCell, TableHead, TableRow } from '@marzneshin/components'
+import { Table, TableBody, TableCell, TableHead, TableRow } from '@marzneshin/common/components'
 import { useTranslation } from 'react-i18next'
 
 

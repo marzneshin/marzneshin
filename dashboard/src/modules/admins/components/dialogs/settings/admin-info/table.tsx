@@ -6,7 +6,7 @@ import {
     Table,
     TableBody,
     TableRowWithCell,
-} from "@marzneshin/components";
+} from "@marzneshin/common/components";
 import { FC } from "react";
 import {
     type AdminProp,
