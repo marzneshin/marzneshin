@@ -346,12 +346,19 @@ class InboundHost(Base):
         server_default=sqlalchemy.sql.false(),
     )
     fragment = Column(JSON())
-
+    udp_noises = Column(JSON())
+    http_headers = Column(JSON())
+    dns_servers = Column(String(128))
+    mtu = Column(Integer)
     inbound_id = Column(Integer, ForeignKey("inbounds.id"), nullable=False)
-    inbound = relationship("Inbound", back_populates="hosts")
+    inbound = relationship("Inbound", back_populates="hosts", lazy="joined")
     allowinsecure = Column(Boolean, default=False)
     is_disabled = Column(Boolean, default=False)
     weight = Column(Integer, default=1, nullable=False, server_default="1")
+
+    @property
+    def protocol(self):
+        return self.inbound.protocol if self.inbound else None
 
 
 class System(Base):

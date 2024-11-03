@@ -2,7 +2,7 @@ import {
     Page,
     Loading,
 } from '@marzneshin/components'
-import { InboundHostsTable } from '@marzneshin/features/hosts'
+import { InboundHostsTable } from '@marzneshin/modules/hosts'
 import { SudoRoute } from '@marzneshin/features/sudo-routes'
 import { createFileRoute, Outlet } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'

@@ -6,7 +6,7 @@ import {
     useRouterUserContext,
     UsersSettingsDialog,
 } from "@marzneshin/modules/users";
-import { useDialog } from "@marzneshin/hooks";
+import { useDialog } from "@marzneshin/common/hooks";
 
 const UserOpen = () => {
     const [settingsDialogOpen, setSettingsDialogOpen] = useDialog(true);

@@ -11,7 +11,10 @@ class ProxyTypes(str, Enum):
     VLESS = "vless"
     Trojan = "trojan"
     Shadowsocks = "shadowsocks"
+    Shadowsocks2022 = "shadowsocks2022"
     Hysteria2 = "hysteria2"
+    WireGuard = "wireguard"
+    TUIC = "tuic"
 
 
 class InboundHostSecurity(str, Enum):
@@ -63,6 +66,12 @@ class FragmentSettings(BaseModel):
     interval: str = Field(pattern=r"^[\d-]{1,32}$")
 
 
+class UDPNoiseSettings(BaseModel):
+    type: str = Field(pattern=r"^(:?rand|str|base64)$")
+    packet: str = Field()
+    interval: str = Field(pattern=r"^[\d-]{1,32}$")
+
+
 class InboundHost(BaseModel):
     remark: str
     address: str
@@ -73,11 +82,17 @@ class InboundHost(BaseModel):
     security: InboundHostSecurity = InboundHostSecurity.inbound_default
     alpn: InboundHostALPN = InboundHostALPN.none
     fingerprint: InboundHostFingerprint = InboundHostFingerprint.none
-    allowinsecure: bool | None = None
-    is_disabled: bool | None = None
+    allowinsecure: bool | None = False
+    is_disabled: bool | None = False
     mux: bool = Field(False)
     fragment: FragmentSettings | None = Field(None)
+    udp_noises: list[UDPNoiseSettings] | None = []
+    http_headers: dict[str, list[str]] | None = {}
+    mtu: int | None = None
+    dns_servers: str | None = None
     weight: int = 1
+    protocol: ProxyTypes | None = None
+    inbound_id: int | None = None
     model_config = ConfigDict(from_attributes=True)
 
     @field_validator("remark", "address", "path")

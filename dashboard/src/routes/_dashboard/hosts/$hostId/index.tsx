@@ -5,8 +5,8 @@ import {
 import {
     useRouterHostContext,
     HostSettingsDialog,
-} from "@marzneshin/features/hosts";
-import { useDialog } from "@marzneshin/hooks";
+} from "@marzneshin/modules/hosts";
+import { useDialog } from "@marzneshin/common/hooks";
 
 const HostOpen = () => {
     const [settingsDialogOpen, setSettingsDialogOpen] = useDialog(true);

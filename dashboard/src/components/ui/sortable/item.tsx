@@ -2,7 +2,7 @@ import React from "react"
 import { CSS } from "@dnd-kit/utilities"
 import { Slot, type SlotProps } from "@radix-ui/react-slot"
 import { useSortable } from "@dnd-kit/sortable"
-import { composeRefs, cn } from "@marzneshin/utils"
+import { composeRefs, cn } from "@marzneshin/common/utils"
 import type {
     UniqueIdentifier,
 } from "@dnd-kit/core"

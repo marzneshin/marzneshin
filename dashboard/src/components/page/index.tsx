@@ -7,7 +7,7 @@ import {
     CardHeader,
     CardTitle,
 } from '@marzneshin/components';
-import { cn } from '@marzneshin/utils';
+import { cn } from '@marzneshin/common/utils';
 
 interface PageProps {
     title: JSX.Element | string;

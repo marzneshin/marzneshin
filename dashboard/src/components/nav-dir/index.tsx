@@ -24,8 +24,8 @@ import {
     Button,
     SidebarObject,
 } from "@marzneshin/components"
-import { useScreenBreakpoint } from "@marzneshin/hooks/use-screen-breakpoint";
-import { AppRouterPaths } from "@marzneshin/types";
+import { useScreenBreakpoint } from "@marzneshin/common/hooks";
+import { AppRouterPaths } from "@marzneshin/common/types";
 import i18n from "@marzneshin/features/i18n";
 
 interface Dir {

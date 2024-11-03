@@ -7,7 +7,7 @@ import {
 import {
     RouterHostContext,
     fetchHost,
-} from "@marzneshin/features/hosts";
+} from "@marzneshin/modules/hosts";
 import { Suspense } from "react";
 import {
     AlertDialog,

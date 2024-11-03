@@ -1,6 +1,6 @@
 import { UserMutationType, UsersQueryFetchKey } from "@marzneshin/modules/users";
 import { useMutation } from "@tanstack/react-query";
-import { fetch, queryClient } from "@marzneshin/utils";
+import { fetch, queryClient } from "@marzneshin/common/utils";
 import { toast } from "sonner";
 import i18n from "@marzneshin/features/i18n";
 

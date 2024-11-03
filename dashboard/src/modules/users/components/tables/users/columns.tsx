@@ -14,7 +14,7 @@ import {
     NoPropogationButton,
 } from "@marzneshin/components";
 import { LinkIcon } from "lucide-react";
-import { getSubscriptionLink } from "@marzneshin/utils";
+import { getSubscriptionLink } from "@marzneshin/common/utils";
 import {
     DataTableColumnHeader,
     DataTableColumnHeaderFilterOption,

@@ -14,7 +14,7 @@ import { Settings, MenuIcon, ShieldCheck } from "lucide-react";
 import { LanguageSwitchMenu } from "@marzneshin/features/language-switch";
 import { ThemeToggle } from "@marzneshin/features/theme-switch";
 import { useAuth, Logout } from "@marzneshin/features/auth";
-import { useScreenBreakpoint } from "@marzneshin/hooks/use-screen-breakpoint";
+import { useScreenBreakpoint } from "@marzneshin/common/hooks/use-screen-breakpoint";
 import { useTranslation } from "react-i18next";
 
 export const HeaderMenu: FC = () => {

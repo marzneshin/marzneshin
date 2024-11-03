@@ -6,7 +6,7 @@ import {
     useRouterAdminContext,
     AdminsSettingsDialog,
 } from "@marzneshin/modules/admins";
-import { useDialog } from "@marzneshin/hooks";
+import { useDialog } from "@marzneshin/common/hooks";
 
 const AdminOpen = () => {
     const [settingsDialogOpen, setSettingsDialogOpen] = useDialog(true);
