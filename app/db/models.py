@@ -346,7 +346,9 @@ class InboundHost(Base):
         server_default=sqlalchemy.sql.false(),
     )
     fragment = Column(JSON())
-
+    udp_noises = Column(JSON())
+    dns_servers = Column(String(128))
+    mtu = Column(Integer)
     inbound_id = Column(Integer, ForeignKey("inbounds.id"), nullable=False)
     inbound = relationship("Inbound", back_populates="hosts", lazy="joined")
     allowinsecure = Column(Boolean, default=False)

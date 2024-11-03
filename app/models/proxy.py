@@ -66,6 +66,12 @@ class FragmentSettings(BaseModel):
     interval: str = Field(pattern=r"^[\d-]{1,32}$")
 
 
+class UDPNoiseSettings(BaseModel):
+    type: str = Field(pattern=r"^(:?rand|str|base64)$")
+    packet: str = Field()
+    interval: str = Field(pattern=r"^[\d-]{1,32}$")
+
+
 class InboundHost(BaseModel):
     remark: str
     address: str
@@ -80,6 +86,9 @@ class InboundHost(BaseModel):
     is_disabled: bool | None = None
     mux: bool = Field(False)
     fragment: FragmentSettings | None = Field(None)
+    udp_noises: list[UDPNoiseSettings] = []
+    mtu: int | None = None
+    dns_servers: str | None = None
     weight: int = 1
     protocol: ProxyTypes | None = None
     inbound_id: int | None = None
