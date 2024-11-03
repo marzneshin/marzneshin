@@ -266,6 +266,13 @@
       "users-data-usage": "Users Data Usage"
     },
     "hosts": {
+      "dns-servers": "DNS Servers",
+      "obfuscation-password": "Obfuscation Password",
+      "server-public-key": "Server public key",
+      "tls-config": "TLS Config",
+      "network-settings": "Network Settings",
+      "security-settings": "Security Settings",
+      "camouflage-settings": "Camouflage Settings",
       "fragment": {
         "interval": "Interval",
         "length": "Length",

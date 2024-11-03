@@ -1,4 +1,4 @@
-import { useServicesQuery } from '@marzneshin/features/services';
+import { useServicesQuery } from '@marzneshin/modules/services';
 import { Link } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next';
 import {

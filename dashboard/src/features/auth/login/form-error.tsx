@@ -1,5 +1,5 @@
 import { Alert, AlertDescription, AlertTitle } from "@marzneshin/components"
-import { cn } from "@marzneshin/utils";
+import { cn } from "@marzneshin/common/utils";
 
 interface FormErrorProps {
     className: string;

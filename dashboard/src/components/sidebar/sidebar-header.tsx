@@ -1,4 +1,4 @@
-import { cn } from "@marzneshin/utils"
+import { cn } from "@marzneshin/common/utils"
 import { FC, PropsWithChildren } from "react"
 
 export interface SidebarHeaderProps extends

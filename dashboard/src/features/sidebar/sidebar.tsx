@@ -2,10 +2,10 @@ import {
     Sidebar,
     type SidebarItem,
 } from "@marzneshin/components";
-import { useIsCurrentRoute } from "@marzneshin/hooks";
+import { useIsCurrentRoute } from "@marzneshin/common/hooks";
 import type { FC } from "react";
 import { sidebarItems as sidebarItemsSudoAdmin, sidebarItemsNonSudoAdmin } from ".";
-import { projectInfo, cn } from "@marzneshin/utils";
+import { projectInfo, cn } from "@marzneshin/common/utils";
 import { useAuth } from "@marzneshin/features/auth";
 import { SupportUs } from "@marzneshin/features/support-us";
 

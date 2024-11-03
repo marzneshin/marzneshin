@@ -4,7 +4,7 @@ import {
 } from "@marzneshin/components";
 import {
     cn
-} from "@marzneshin/utils";
+} from "@marzneshin/common/utils";
 import { type FC } from 'react'
 
 interface SidebarEntityCardSectionProps<T> {

@@ -1,6 +1,6 @@
 import { FC } from "react"
 import { useTranslation } from "react-i18next"
-import { cn } from "@marzneshin/utils"
+import { cn } from "@marzneshin/common/utils"
 import { UserType, isUserOnline } from "@marzneshin/modules/users"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@marzneshin/components"
 import { Circle } from "lucide-react"

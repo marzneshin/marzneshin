@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, type ButtonProps } from "@marzneshin/components"
 import { useSortableItem } from "./use-sortable-item";
-import { composeRefs, cn } from "@marzneshin/utils";
+import { composeRefs, cn } from "@marzneshin/common/utils";
 
 interface SortableDragHandleProps extends ButtonProps {
     withHandle?: boolean

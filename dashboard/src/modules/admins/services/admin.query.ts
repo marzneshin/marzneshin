@@ -1,5 +1,5 @@
 import { queryOptions, useQuery } from "@tanstack/react-query";
-import { fetch } from "@marzneshin/utils";
+import { fetch } from "@marzneshin/common/utils";
 import type { AdminType } from "../types";
 
 export async function fetchAdmin({

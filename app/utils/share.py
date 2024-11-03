@@ -299,6 +299,10 @@ def generate_user_configs(
                     inbound.get("address"), user_id
                 ),
                 flow=inbound.get("flow"),
+                dns_servers=(
+                    host.dns_servers.split(",") if host.dns_servers else []
+                ),
+                mtu=host.mtu,
                 allow_insecure=host.allowinsecure,
                 uuid=UUID(gen_uuid(key)),
                 password=gen_password(key),

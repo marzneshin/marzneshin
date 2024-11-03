@@ -3,8 +3,8 @@ import {
     Table, TableHeader, TableRow, TableBody, TableHead,
     ScrollArea, Button,
 } from "@marzneshin/components";
-import { useScreenBreakpoint } from "@marzneshin/hooks";
-import { cn } from "@marzneshin/utils";
+import { useScreenBreakpoint } from "@marzneshin/common/hooks";
+import { cn } from "@marzneshin/common/utils";
 import {
     SidebarEntityCard,
 } from "@marzneshin/features/entity-table/components";

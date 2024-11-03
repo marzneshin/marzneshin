@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { fetch } from "@marzneshin/utils";
+import { fetch } from "@marzneshin/common/utils";
 import { UserType } from "@marzneshin/modules/users";
 import {
     FetchEntityReturn,

@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { CopyCheck, CopyX, ClipboardCopy, LucideIcon } from "lucide-react";
 import { toast } from "sonner";
-import { cn } from "@marzneshin/utils";
+import { cn } from "@marzneshin/common/utils";
 
 interface CopyToClipboardButtonProps {
     text: string;
