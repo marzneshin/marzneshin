@@ -82,11 +82,12 @@ class InboundHost(BaseModel):
     security: InboundHostSecurity = InboundHostSecurity.inbound_default
     alpn: InboundHostALPN = InboundHostALPN.none
     fingerprint: InboundHostFingerprint = InboundHostFingerprint.none
-    allowinsecure: bool | None = None
+    allowinsecure: bool | None = False
     is_disabled: bool | None = None
     mux: bool = Field(False)
     fragment: FragmentSettings | None = Field(None)
-    udp_noises: list[UDPNoiseSettings] = []
+    udp_noises: list[UDPNoiseSettings] | None = []
+    http_headers: dict[str, list[str]] | None = {}
     mtu: int | None = None
     dns_servers: str | None = None
     weight: int = 1

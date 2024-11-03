@@ -347,6 +347,7 @@ class InboundHost(Base):
     )
     fragment = Column(JSON())
     udp_noises = Column(JSON())
+    http_headers = Column(JSON())
     dns_servers = Column(String(128))
     mtu = Column(Integer)
     inbound_id = Column(Integer, ForeignKey("inbounds.id"), nullable=False)

@@ -185,6 +185,7 @@ def add_host(db: Session, inbound: Inbound, host: InboundHostModify):
         fingerprint=host.fingerprint,
         fragment=host.fragment.model_dump() if host.fragment else None,
         udp_noises=host.udp_noises,
+        http_headers=host.http_headers,
         mtu=host.mtu,
         dns_servers=host.dns_servers,
         mux=host.mux,
@@ -212,6 +213,7 @@ def update_host(db: Session, db_host: InboundHost, host: InboundHostModify):
     db_host.is_disabled = host.is_disabled
     db_host.allowinsecure = host.allowinsecure
     db_host.udp_noises = host.udp_noises
+    db_host.http_headers = host.http_headers
     db_host.mtu = host.mtu
     db_host.dns_servers = host.dns_servers
     db_host.weight = host.weight
