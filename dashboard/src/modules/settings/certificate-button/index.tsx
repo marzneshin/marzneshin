@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { useCertificateQuery } from '../services';
+import { useCertificateQuery } from '../api';
 import { CopyToClipboardButton } from '@marzneshin/common/components';
 import { ClipboardCopy } from 'lucide-react';
 
