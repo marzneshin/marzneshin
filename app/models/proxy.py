@@ -83,7 +83,7 @@ class InboundHost(BaseModel):
     alpn: InboundHostALPN = InboundHostALPN.none
     fingerprint: InboundHostFingerprint = InboundHostFingerprint.none
     allowinsecure: bool | None = False
-    is_disabled: bool | None = None
+    is_disabled: bool | None = False
     mux: bool = Field(False)
     fragment: FragmentSettings | None = Field(None)
     udp_noises: list[UDPNoiseSettings] | None = []
