@@ -14,7 +14,6 @@ export const adminQueryOptions = ({ username }: { username: string }) => {
     return queryOptions({
         queryKey: [AdminQueryFetchKey, username],
         queryFn: fetchAdmin,
-        initialData: null,
     });
 };
 
