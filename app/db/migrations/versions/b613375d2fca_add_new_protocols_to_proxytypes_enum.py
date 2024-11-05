@@ -23,7 +23,7 @@ def upgrade() -> None:
         op.execute("ALTER TYPE proxytypes ADD VALUE 'Shadowsocks2022'")
         op.execute("ALTER TYPE proxytypes ADD VALUE 'WireGuard'")
         op.execute("ALTER TYPE proxytypes ADD VALUE 'TUIC'")
-    elif dialect == "mysql":
+    elif dialect in ("mariadb", "mysql"):
         op.execute(
             "ALTER TABLE inbounds MODIFY protocol ENUM('VMess', 'VLESS', 'Trojan', 'Shadowsocks', 'Shadowsocks2022', 'Hysteria2', 'WireGuard', 'TUIC')"
         )
@@ -33,7 +33,7 @@ def downgrade() -> None:
     bind = op.get_bind()
     dialect = bind.dialect.name
 
-    if dialect == "mysql":
+    if dialect in ("mysql", "mariadb"):
         op.execute(
             "ALTER TABLE inbounds MODIFY protocol ENUM('VMess', 'VLESS', 'Shadowsocks', 'Trojan', 'Hysteria2')"
         )
