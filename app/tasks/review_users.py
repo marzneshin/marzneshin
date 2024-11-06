@@ -10,7 +10,7 @@ from app.db import (
 )
 from app.models.user import (
     UserResponse,
-    UserExpireStrategy,
+    UserExpireStrategy, UserStatus
 )
 from app.utils import report
 
@@ -26,7 +26,14 @@ async def review_users():
     with GetDB() as db:
         for user in get_users(db, activated=True, is_active=False):
             """looking for expired/to be limited users who are still active"""
+            limited = user.data_limit_reached
+            expired = user.expired
 
+            if limited:
+                status = UserStatus.limited
+            elif expired:
+                status = UserStatus.expired
+            
             marznode.operations.update_user(user, remove=True)
             user.activated = False
             db.commit()
@@ -34,7 +41,7 @@ async def review_users():
             asyncio.ensure_future(
                 report.status_change(
                     user.username,
-                    user.status,
+                    status,
                     UserResponse.model_validate(user),
                 )
             )
