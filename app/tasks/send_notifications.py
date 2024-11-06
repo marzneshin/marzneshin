@@ -25,10 +25,8 @@ headers = (
 
 async def send(data: List[Dict[Any, Any]]) -> bool:
     """Send the notification to the webhook address provided by config.WEBHOOK_ADDRESS
-
     Args:
         data (List[Dict[Any, Any]]): list of json encoded notifications
-
     Returns:
         bool: returns True if an ok response received
     """
@@ -36,16 +34,16 @@ async def send(data: List[Dict[Any, Any]]) -> bool:
         logger.debug(
             f"Sending {len(data)} webhook updates to {config.WEBHOOK_ADDRESS}"
         )
-
-        r = await aiohttp.request(
-            "post", config.WEBHOOK_ADDRESS, json=data, headers=headers
-        )
-        if r.ok:
-            return True
-        logger.error(r)
+        async with aiohttp.ClientSession() as session:
+            async with session.post(
+                config.WEBHOOK_ADDRESS,
+                json=data,
+                headers=headers
+            ) as response:
+                return response.ok
     except Exception as err:
         logger.error(err)
-    return False
+        return False
 
 
 async def send_notifications():
