@@ -57,7 +57,7 @@ async def user_created(user: UserResponse, user_id: int, by: Admin) -> None:
         expire_date=user.expire_date,
         data_limit=user.data_limit,
         # proxies=[]
-        services=user.services,
+        services=user.service_ids,
     )
 
     await notify(
@@ -76,7 +76,7 @@ async def user_updated(user: UserResponse, by: Admin) -> None:
             username=user.username,
             expire_date=user.expire_date,
             data_limit=user.data_limit,
-            services=user.services,
+            services=user.service_ids,
             by=by.username,
         )
     except Exception:
