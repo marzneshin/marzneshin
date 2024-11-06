@@ -43,7 +43,7 @@ export const UsersSettingsDialog: FC<UsersSettingsDialogProps> = ({
                 Component={
                     entity ? (
                         <ScrollArea className="flex flex-col gap-4 h-full">
-                            <Tabs defaultValue="info" className="w-full h-full">
+                            <Tabs defaultValue="info" className="w-full h-fit">
                                 <TabsList className="w-full bg-accent">
                                     <TabsTrigger className="w-full" value="info">
                                         {t("user_info")}

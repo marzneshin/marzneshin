@@ -14,7 +14,6 @@ export const userQueryOptions = ({ username }: { username: string }) => {
     return queryOptions({
         queryKey: [UserQueryFetchKey, username],
         queryFn: fetchUser,
-        initialData: null,
     });
 };
 
