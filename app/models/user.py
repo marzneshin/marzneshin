@@ -20,9 +20,11 @@ class ReminderType(str, Enum):
 
 
 class UserStatus(str, Enum):
-    ACTIVE = "active"
-    INACTIVE = "inactive"
-
+    active = "active"
+    inactive = "inactive"
+    limited = "limited"
+    expired = "expired"
+    on_hold = "on_hold"
 
 class UserDataUsageResetStrategy(str, Enum):
     no_reset = "no_reset"
