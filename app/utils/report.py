@@ -4,7 +4,7 @@ from typing import Optional
 from app import telegram
 from app.db import Session, create_notification_reminder
 from app.models.admin import Admin
-from app.models.user import ReminderType, UserResponse
+from app.models.user import ReminderType, UserResponse, UserStatus
 from app.utils.notification import (
     Notification,
     ReachedDaysLeft,
@@ -22,31 +22,24 @@ from app.utils.notification import (
 
 async def status_change(
     username: str,
-    activation: bool,
+    status: UserStatus,
     user: UserResponse,
     by: Optional[Admin] = None,
 ) -> None:
-    try:
-        await telegram.report_status_change(username, status)
-    except Exception:
-        pass
-    if activation is False:
-        await notify(
-            UserLimited(
-                username=username,
-                action=Notification.Type.user_disabled,
-                user=user,
-            )
-        )
-    elif activation is True:
-        await notify(
-            UserEnabled(
-                username=username,
-                action=Notification.Type.user_enabled,
-                user=user,
-                by=by,
-            )
-        )
+     try:
+         await telegram.report_status_change(username, status)
+     except Exception:
+         pass
+
+    if status == UserStatus.limited:
+        await notify(UserLimited(username=username, action=Notification.Type.user_limited, user=user))
+    elif status == UserStatus.expired:
+        await notify(UserExpired(username=username, action=Notification.Type.user_expired, user=user))
+    elif status == UserStatus.inactive:
+        await notify(UserDisabled(username=username, action=Notification.Type.user_disabled, user=user, by=by))
+    elif status == UserStatus.active:
+        await notify(UserEnabled(username=username, action=Notification.Type.user_enabled, user=user, by=by))
+        
 
 
 async def user_created(user: UserResponse, user_id: int, by: Admin) -> None:
