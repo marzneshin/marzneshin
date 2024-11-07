@@ -43,15 +43,18 @@ async def status_change(
 
 
 async def user_created(user: UserResponse, user_id: int, by: Admin) -> None:
-    await telegram.report_new_user(
-        user_id=user_id,
-        username=user.username,
-        by=by.username,
-        expire_date=user.expire_date,
-        data_limit=user.data_limit,
-        # proxies=[]
-        services=user.service_ids,
-    )
+    try:
+        await telegram.report_new_user(
+            user_id=user_id,
+            username=user.username,
+            by=by.username,
+            expire_date=user.expire_date,
+            data_limit=user.data_limit,
+            # proxies=[]
+            services=user.service_ids,
+        )
+    except Exception:
+        pass
 
     await notify(
         UserCreated(
