@@ -14,6 +14,7 @@ from app.utils.notification import (
     UserDeleted,
     UserEnabled,
     UserLimited,
+    UserExpired,
     UserSubscriptionRevoked,
     UserUpdated,
     notify,
