@@ -26,10 +26,10 @@ async def status_change(
     user: UserResponse,
     by: Optional[Admin] = None,
 ) -> None:
-     try:
-         await telegram.report_status_change(username, status)
-     except Exception:
-         pass
+    try:
+        await telegram.report_status_change(username, status)
+    except Exception:
+        pass
 
     if status == UserStatus.limited:
         await notify(UserLimited(username=username, action=Notification.Type.user_limited, user=user))
@@ -39,7 +39,6 @@ async def status_change(
         await notify(UserDisabled(username=username, action=Notification.Type.user_disabled, user=user, by=by))
     elif status == UserStatus.active:
         await notify(UserEnabled(username=username, action=Notification.Type.user_enabled, user=user, by=by))
-        
 
 
 async def user_created(user: UserResponse, user_id: int, by: Admin) -> None:
