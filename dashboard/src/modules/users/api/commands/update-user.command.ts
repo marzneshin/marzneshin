@@ -8,10 +8,16 @@ import {
 } from "@marzneshin/modules/users";
 
 export async function updateUser(user: UserMutationType): Promise<UserMutationType> {
+    const updatedUser = { ...user };
+    if (updatedUser.data_limit === undefined) {
+        updatedUser.data_limit = null;
+    }
+    return fetch(`/users/${user.username}`, { method: 'put', body: updatedUser }).then((user) => {
+        return user;
+    });
     return fetch(`/users/${user.username}`, { method: 'put', body: user }).then((user) => {
         return user;
     });
-}
 
 const handleError = (error: Error, value: UserMutationType) => {
     toast.error(
