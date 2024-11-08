@@ -6,9 +6,9 @@ export interface UserType {
     usage_duration?: number | null;
     activation_deadline?: Date | string | null;
     expire_date?: Date | string | null;
-    data_limit?: number;
+    data_limit?: number | null;
     data_limit_reset_strategy: DataLimitResetStrategy;
-    lifetime_used_traffic: number;
+    data_limit_reset_strategy: DataLimitResetStrategy;
     used_traffic: number;
     sub_updated_at?: Date | string;
     traffic_reset_at?: Date | string;
