@@ -272,6 +272,8 @@
       "tls-config": "TLS Config",
       "network-settings": "Network Settings",
       "security-settings": "Security Settings",
+      "allowed-ips": "Allowed Ips",
+      "allowed-ips-placeholder": "127.0.0.1,...",
       "camouflage-settings": "Camouflage Settings",
       "fragment": {
         "interval": "Interval",
