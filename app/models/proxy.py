@@ -90,6 +90,7 @@ class InboundHost(BaseModel):
     http_headers: dict[str, list[str]] | None = {}
     mtu: int | None = None
     dns_servers: str | None = None
+    allowed_ips: str | None = None
     weight: int = 1
     protocol: ProxyTypes | None = None
     inbound_id: int | None = None

@@ -350,6 +350,7 @@ class InboundHost(Base):
     http_headers = Column(JSON())
     dns_servers = Column(String(128))
     mtu = Column(Integer)
+    allowed_ips = Column(String(16384))
     inbound_id = Column(Integer, ForeignKey("inbounds.id"), nullable=False)
     inbound = relationship("Inbound", back_populates="hosts", lazy="joined")
     allowinsecure = Column(Boolean, default=False)
