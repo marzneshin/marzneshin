@@ -3,6 +3,7 @@ import { HostSchema } from "@marzneshin/modules/hosts";
 
 export const WireguardSchema = HostSchema.extend({
     path: z.string().nullable().optional(),
+    is_disabled: z.boolean(),
     mtu: z.coerce
         .number()
         .or(z.string())
