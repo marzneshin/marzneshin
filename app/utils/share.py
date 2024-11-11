@@ -303,6 +303,11 @@ def generate_user_configs(
                     host.dns_servers.split(",") if host.dns_servers else []
                 ),
                 mtu=host.mtu,
+                allowed_ips=(
+                    list(map(str.strip, host.allowed_ips.split(",")))
+                    if host.allowed_ips
+                    else None
+                ),
                 allow_insecure=host.allowinsecure,
                 uuid=UUID(gen_uuid(key)),
                 password=gen_password(key),
