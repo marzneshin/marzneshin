@@ -8,4 +8,5 @@ export const hysteria2ProfileDefaultValue: Hysteria2SchemaType = {
     remark: '',
     alpn: "",
     allowinsecure: false,
+    is_disabled: false,
 };
