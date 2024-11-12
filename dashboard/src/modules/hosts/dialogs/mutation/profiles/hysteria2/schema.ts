@@ -5,6 +5,7 @@ export const Hysteria2Schema =
     HostSchema.merge(
         TlsSchema.extend({
             path: z.string().nullable().optional(),
+            is_disabled: z.boolean(),
         }))
     ;
 

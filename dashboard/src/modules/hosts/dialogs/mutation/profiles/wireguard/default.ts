@@ -6,5 +6,6 @@ export const wireguardProfileDefaultValue: WireguardSchemaType = {
     address: '',
     remark: '',
     dns_servers: '',
+    is_disabled: false,
     mtu: undefined,
 };
