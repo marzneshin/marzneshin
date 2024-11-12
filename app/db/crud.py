@@ -188,6 +188,7 @@ def add_host(db: Session, inbound: Inbound, host: InboundHostModify):
         http_headers=host.http_headers,
         mtu=host.mtu,
         dns_servers=host.dns_servers,
+        allowed_ips=host.allowed_ips,
         mux=host.mux,
         allowinsecure=host.allowinsecure,
         weight=host.weight,
@@ -216,6 +217,7 @@ def update_host(db: Session, db_host: InboundHost, host: InboundHostModify):
     db_host.http_headers = host.http_headers
     db_host.mtu = host.mtu
     db_host.dns_servers = host.dns_servers
+    db_host.allowed_ips = host.allowed_ips
     db_host.weight = host.weight
     db.commit()
     db.refresh(db_host)

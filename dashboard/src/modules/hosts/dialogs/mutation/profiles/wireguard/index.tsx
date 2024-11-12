@@ -2,6 +2,7 @@ import {
     CommonFields,
     MtuField,
     DNSServersField,
+    AllowedIpsField,
     PathField,
 } from "../../fields";
 import {
@@ -23,6 +24,7 @@ export const WireguardProfileFields = () => {
                         <MtuField />
                     </HStack>
                     <DNSServersField />
+                    <AllowedIpsField />
                 </SettingSection>
             </Accordion>
         </>
