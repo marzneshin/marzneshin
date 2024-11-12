@@ -1,8 +1,8 @@
 import React from "react";
 import type { Preview } from "@storybook/react";
-import { TooltipProvider } from "../src/components";
+import { TooltipProvider } from "../src/common/components";
 import { ThemeProvider } from "../src/features/theme-switch";
-import { queryClient } from "../src/utils";
+import { queryClient } from "../src/common/utils";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { I18nextProvider } from "react-i18next";
 import { Title, Subtitle, Description, Primary, Controls, Stories } from '@storybook/blocks';
