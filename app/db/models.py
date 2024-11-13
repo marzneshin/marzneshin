@@ -19,6 +19,7 @@ from sqlalchemy import (
     and_,
     func,
     select,
+    Text,
 )
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import relationship, column_property
@@ -350,7 +351,7 @@ class InboundHost(Base):
     http_headers = Column(JSON())
     dns_servers = Column(String(128))
     mtu = Column(Integer)
-    allowed_ips = Column(String(16384))
+    allowed_ips = Column(Text())
     inbound_id = Column(Integer, ForeignKey("inbounds.id"), nullable=False)
     inbound = relationship("Inbound", back_populates="hosts", lazy="joined")
     allowinsecure = Column(Boolean, default=False)
