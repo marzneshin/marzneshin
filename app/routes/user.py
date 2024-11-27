@@ -111,9 +111,7 @@ def get_users(
 
 @router.post("", response_model=List[UserResponse])
 async def add_user(
-    new_user: Union[List[UserCreate], UserCreate], 
-    db: DBDep, 
-    admin: AdminDep
+    new_user: Union[List[UserCreate], UserCreate], db: DBDep, admin: AdminDep
 ):
     """
     Add a new user or multiple users.

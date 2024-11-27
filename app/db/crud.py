@@ -513,7 +513,9 @@ def create_user(
             if allowed_services is not None
             else user.service_ids
         )
-        user_services = db.query(Service).filter(Service.id.in_(service_ids)).all()
+        user_services = (
+            db.query(Service).filter(Service.id.in_(service_ids)).all()
+        )
         dbuser = User(
             username=user.username,
             key=user.key,
