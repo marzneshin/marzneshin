@@ -500,34 +500,39 @@ def get_users_count(
 
 def create_user(
     db: Session,
-    user: UserCreate,
+    users: Union[List[UserCreate], UserCreate],
     admin: Admin = None,
     allowed_services: list | None = None,
 ):
-    service_ids = (
-        [sid for sid in user.service_ids if sid in allowed_services]
-        if allowed_services is not None
-        else user.service_ids
-    )
-    dbuser = User(
-        username=user.username,
-        key=user.key,
-        expire_strategy=user.expire_strategy,
-        expire_date=user.expire_date,
-        usage_duration=user.usage_duration,
-        activation_deadline=user.activation_deadline,
-        services=db.query(Service)
-        .filter(Service.id.in_(service_ids))
-        .all(),  # user.services,
-        data_limit=(user.data_limit or None),
-        admin=admin,
-        data_limit_reset_strategy=user.data_limit_reset_strategy,
-        note=user.note,
-    )
-    db.add(dbuser)
+    users = [users] if isinstance(users, UserCreate) else users
+    db_users = []
+    all_service_ids = set(allowed_services or [])
+    for user in users:
+        service_ids = (
+            [sid for sid in user.service_ids if sid in all_service_ids]
+            if allowed_services is not None
+            else user.service_ids
+        )
+        user_services = db.query(Service).filter(Service.id.in_(service_ids)).all()
+        dbuser = User(
+            username=user.username,
+            key=user.key,
+            expire_strategy=user.expire_strategy,
+            expire_date=user.expire_date,
+            usage_duration=user.usage_duration,
+            activation_deadline=user.activation_deadline,
+            services=user_services,
+            data_limit=(user.data_limit or None),
+            admin=admin,
+            data_limit_reset_strategy=user.data_limit_reset_strategy,
+            note=user.note,
+        )
+        db.add(dbuser)
+        db_users.append(dbuser)
     db.commit()
-    db.refresh(dbuser)
-    return dbuser
+    for dbuser in db_users:
+        db.refresh(dbuser)
+    return db_users
 
 
 def remove_user(db: Session, dbuser: User):

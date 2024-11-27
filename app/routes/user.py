@@ -2,6 +2,7 @@ import asyncio
 import logging
 from datetime import datetime, timedelta
 from enum import Enum
+from typing import Union, List
 
 import sqlalchemy
 from fastapi import APIRouter
@@ -108,21 +109,20 @@ def get_users(
     return paginate(db, query)
 
 
-@router.post("", response_model=UserResponse)
-async def add_user(new_user: UserCreate, db: DBDep, admin: AdminDep):
+@router.post("", response_model=List[UserResponse])
+async def add_user(
+    new_user: Union[List[UserCreate], UserCreate], 
+    db: DBDep, 
+    admin: AdminDep
+):
     """
-    Add a new user
-
-    - **username** must have 3 to 32 characters and is allowed to contain a-z, 0-9, and underscores in between
-    - **expire_date** must be a datetime
-    - **data_limit** must be in Bytes, e.g. 1073741824B = 1GB
-    - **services** list of service ids
+    Add a new user or multiple users.
     """
-
+    users = [new_user] if isinstance(new_user, UserCreate) else new_user
     try:
-        db_user = crud.create_user(
+        db_users = crud.create_user(
             db,
-            new_user,
+            users,
             admin=crud.get_admin(db, admin.username),
             allowed_services=(
                 admin.service_ids
@@ -133,14 +133,18 @@ async def add_user(new_user: UserCreate, db: DBDep, admin: AdminDep):
     except sqlalchemy.exc.IntegrityError:
         db.rollback()
         raise HTTPException(status_code=409, detail="User already exists")
+    except Exception as e:
+        logger.error("Error creating users: %s", str(e))
+        raise HTTPException(status_code=500, detail="Failed to create users")
 
-    user = UserResponse.model_validate(db_user)
-    marznode.operations.update_user(user=db_user)
-    asyncio.ensure_future(
-        report.user_created(user=user, user_id=db_user.id, by=admin)
-    )
-    logger.info("New user `%s` added", db_user.username)
-    return user
+    for db_user in db_users:
+        user = UserResponse.model_validate(db_user)
+        marznode.operations.update_user(user=db_user)
+        asyncio.ensure_future(
+            report.user_created(user=user, user_id=db_user.id, by=admin)
+        )
+        logger.info("New user `%s` added", db_user.username)
+    return [UserResponse.model_validate(u) for u in db_users]
 
 
 @router.post("/reset")
