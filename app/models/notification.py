@@ -9,7 +9,6 @@ from app.models.user import UserResponse
 
 
 class Notification(BaseModel):
-
     created_at: float = dt.utcnow().timestamp()
 
 
@@ -22,6 +21,7 @@ class UserNotif(Notification):
         user_created = "user_created"
         user_updated = "user_updated"
         user_activated = "user_activated"
+        user_deactivated = "user_deactivated"
         user_deleted = "user_deleted"
         user_enabled = "user_enabled"
         user_disabled = "user_disabled"
@@ -45,6 +45,12 @@ class UserUpdated(UserNotif):
 
 class UserActivated(UserNotif):
     action: UserNotif.Action = UserNotif.Action.user_activated
+    user: UserResponse
+    by: Optional[Admin] = None
+
+
+class UserDeactivated(UserNotif):
+    action: UserNotif.Action = UserNotif.Action.user_deactivated
     user: UserResponse
     by: Optional[Admin] = None
 

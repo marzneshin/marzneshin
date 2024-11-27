@@ -256,11 +256,10 @@ async def modify_user(
     logger.info("User `%s` modified", db_user.username)
 
     if active_before != active_after:
-
         action = (
             UserNotif.Action.user_activated
             if active_after
-            else UserNotif.Action.user_disabled
+            else UserNotif.Action.user_deactivated
         )
 
         asyncio.ensure_future(

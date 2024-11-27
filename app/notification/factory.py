@@ -12,6 +12,7 @@ from app.models.notification import (
     UserCreated,
     UserUpdated,
     UserActivated,
+    UserDeactivated,
     UserDeleted,
     UserEnabled,
     UserDisabled,
@@ -29,19 +30,18 @@ class NotificationFactory(ABC):
 
 
 class AdminNotificationFactory(NotificationFactory):
-
     def create_notification(self, action: Enum, **kwargs: Any) -> Notification:
         pass
 
 
 class UserNotificationFactory(NotificationFactory):
-
     Action = UserNotif.Action
 
     notification_classes: Dict[UserNotif.Action, Type[UserNotif]] = {
         Action.user_created: UserCreated,
         Action.user_updated: UserUpdated,
         Action.user_activated: UserActivated,
+        Action.user_deactivated: UserDeactivated,
         Action.user_deleted: UserDeleted,
         Action.user_enabled: UserEnabled,
         Action.user_disabled: UserDisabled,

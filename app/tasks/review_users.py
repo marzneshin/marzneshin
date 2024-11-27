@@ -35,7 +35,7 @@ async def review_users():
 
             asyncio.ensure_future(
                 notify(
-                    action=UserNotif.Action.user_disabled,
+                    action=UserNotif.Action.user_deactivated,
                     user=UserResponse.model_validate(user),
                 )
             )
