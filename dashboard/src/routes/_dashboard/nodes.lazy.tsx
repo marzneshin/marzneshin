@@ -1,12 +1,18 @@
 import { AlertCard, Page, Loading } from '@marzneshin/common/components'
 import { NodesTable } from '@marzneshin/modules/nodes'
 import { Link, createLazyFileRoute, Outlet } from '@tanstack/react-router'
-import { type FC, Suspense } from 'react'
+import { type FC, Suspense, useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SudoRoute } from '@marzneshin/libs/sudo-routes'
 
 export const NodesPage: FC = () => {
   const { t } = useTranslation()
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    setIsLoading(false);
+  }, []);
+
   return (
     <Page
       title={t('nodes')}
@@ -32,6 +38,7 @@ export const NodesPage: FC = () => {
       <Suspense fallback={<Loading />}>
         <Outlet />
       </Suspense>
+      {isLoading && <Loading />}
     </Page>
   )
 }

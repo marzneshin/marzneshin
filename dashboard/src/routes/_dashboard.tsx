@@ -13,7 +13,7 @@ import { DashboardSidebar, ToggleButton } from "@marzneshin/features/sidebar";
 import { usePanelToggle } from "@marzneshin/features/sidebar/use-panel-toggle";
 import { useScreenBreakpoint } from "@marzneshin/common/hooks/use-screen-breakpoint";
 import { cn } from "@marzneshin/common/utils";
-import { Suspense } from "react";
+import { Suspense, useState, useEffect } from "react";
 import {
     Outlet,
     Link,
@@ -35,6 +35,11 @@ export const DashboardLayout = () => {
     } = usePanelToggle(isDesktop);
     const { isSudo } = useAuth();
     const { data: stats } = useGithubRepoStatsQuery()
+    const [isLoading, setIsLoading] = useState(false);
+
+    useEffect(() => {
+        setIsLoading(false);
+    }, [collapsed]);
 
     return (
         <div className="flex flex-col w-screen h-screen">
@@ -45,10 +50,12 @@ export const DashboardLayout = () => {
                             <HeaderLogo />
                         </Link>
                         {isDesktop && (
-
                             <ToggleButton
                                 collapsed={collapsed}
-                                onToggle={toggleCollapse}
+                                onToggle={() => {
+                                    toggleCollapse();
+                                    setIsLoading(true);
+                                }}
                             />
                         )}
                     </>
@@ -105,6 +112,7 @@ export const DashboardLayout = () => {
                     </div>
                 )}
             </div>
+            {isLoading && <Loading />}
             <Toaster position="top-center" />
         </div>
     );

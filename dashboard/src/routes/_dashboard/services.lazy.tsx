@@ -1,18 +1,25 @@
 import { Page, Loading } from '@marzneshin/common/components'
 import { ServicesTable } from '@marzneshin/modules/services'
 import { createLazyFileRoute, Outlet } from '@tanstack/react-router'
-import { type FC, Suspense } from 'react'
+import { type FC, Suspense, useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SudoRoute } from '@marzneshin/libs/sudo-routes'
 
 export const ServicesPage: FC = () => {
   const { t } = useTranslation()
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    setIsLoading(false);
+  }, []);
+
   return (
     <Page title={t('services')}>
       <ServicesTable />
       <Suspense fallback={<Loading />}>
         <Outlet />
       </Suspense>
+      {isLoading && <Loading />}
     </Page>
   )
 }
