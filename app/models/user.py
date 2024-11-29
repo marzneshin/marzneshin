@@ -46,7 +46,7 @@ class User(BaseModel):
     expire_strategy: UserExpireStrategy
     expire_date: datetime | None = Field(None)
     usage_duration: int | None = Field(None)
-    activation_deadline: datetime | None = Field(None)
+    activation_deadline: int | None = Field(None)
     key: str = Field(default_factory=lambda: secrets.token_hex(16))
     data_limit: int | None = Field(
         ge=0, default=None, description="data_limit can be 0 or greater"
@@ -100,7 +100,7 @@ class UserCreate(User):
                 "service_ids": [1, 2, 3],
                 "expire_strategy": "start_on_first_use",
                 "usage_duration": 86400 * 14,
-                "activation_deadline": "2024-11-03T20:30:00",
+                "activation_deadline": 86400 * 30,
                 "data_limit": 0,
                 "data_limit_reset_strategy": "no_reset",
                 "note": "",

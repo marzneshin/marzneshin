@@ -59,7 +59,7 @@ def upgrade() -> None:
 
     if dialect == "sqlite":
         for old, new, type_ in [
-            ("on_hold_timeout", "activation_deadline", sa.DateTime),
+            ("on_hold_timeout", "activation_deadline", sa.Integer),
             ("expire", "expire_date", sa.DateTime),
             ("on_hold_expire_duration", "usage_duration", sa.Integer),
         ]:
@@ -75,7 +75,7 @@ def upgrade() -> None:
             "users",
             "on_hold_timeout",
             new_column_name="activation_deadline",
-            existing_type=sa.DateTime,
+            existing_type=sa.Integer,
         )
         op.alter_column(
             "users",
@@ -142,7 +142,7 @@ def downgrade() -> None:
         "users",
         "activation_deadline",
         new_column_name="on_hold_timeout",
-        existing_type=sa.DateTime,
+        existing_type=sa.Integer,
     )
     op.alter_column(
         "users",
