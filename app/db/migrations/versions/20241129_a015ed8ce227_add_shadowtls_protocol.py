@@ -20,9 +20,8 @@ def upgrade() -> None:
     dialect = bind.dialect.name
 
     if dialect == "postgresql":
-        op.execute("ALTER TYPE proxytypes ADD VALUE 'Shadowsocks2022'")
-        op.execute("ALTER TYPE proxytypes ADD VALUE 'WireGuard'")
-        op.execute("ALTER TYPE proxytypes ADD VALUE 'TUIC'")
+        op.execute("ALTER TYPE proxytypes ADD VALUE 'ShadowTLS'")
+
     elif dialect in ("mariadb", "mysql"):
         op.execute(
             "ALTER TABLE inbounds MODIFY protocol ENUM('VMess', 'VLESS', 'Trojan', 'Shadowsocks', 'Shadowsocks2022', 'Hysteria2', 'WireGuard', 'TUIC', 'ShadowTLS')"
