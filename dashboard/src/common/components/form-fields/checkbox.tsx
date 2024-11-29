@@ -25,6 +25,9 @@ export const CheckboxField = ({ name, label }: { name: string, label: string }) 
                         <FormLabel>
                             {label}
                         </FormLabel>
+                        {!field.value && (
+                            <span className="text-sm text-muted-foreground">بدون محدودیت ترافیک</span>
+                        )}
                     </div>
                 </FormItem>
             )}
