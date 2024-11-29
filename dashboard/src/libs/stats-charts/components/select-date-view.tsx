@@ -22,13 +22,22 @@ const SelectDateViewItem: FC<PropsWithChildren & { interval: string }> = ({ inte
 )
 
 export const SelectDateView = (
-    { timeRange, setTimeRange }: { timeRange: string, setTimeRange: (s: string) => void }
+    { timeRange, setTimeRange, setGraphType }: { timeRange: string, setTimeRange: (s: string) => void, setGraphType: (s: string) => void }
 ) => {
+    const handleTimeRangeChange = (newTimeRange: string) => {
+        setTimeRange(newTimeRange);
+        if (newTimeRange === "1d") {
+            setGraphType("bar");
+        } else {
+            setGraphType("line");
+        }
+    };
+
     return (
         <RadioGroup
             className="bg-muted border flex flex-row rounded-full"
             value={timeRange}
-            onValueChange={setTimeRange}
+            onValueChange={handleTimeRangeChange}
         >
             <SelectDateViewItem interval="1d"> 24H</SelectDateViewItem>
             <SelectDateViewItem interval="7d"> 7D</SelectDateViewItem>
