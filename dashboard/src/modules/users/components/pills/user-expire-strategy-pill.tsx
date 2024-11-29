@@ -1,4 +1,3 @@
-
 import { type FC } from "react";
 import { Badge } from "@marzneshin/common/components";
 import { useTranslation } from "react-i18next";
@@ -13,7 +12,7 @@ export const UserExpireStrategyPill: FC<UserProp> = ({ user }) => {
     }[user.expire_strategy]
     const variant = {
         start_on_first_use: "royal",
-        fixed_date: "warning",
+        fixed_date: "royal",
         never: "disabled",
     }[user.expire_strategy]
     return (
@@ -22,4 +21,3 @@ export const UserExpireStrategyPill: FC<UserProp> = ({ user }) => {
         </Badge>
     )
 }
-
