@@ -3,7 +3,7 @@ from typing import List
 from abc import ABC, abstractmethod
 
 from app.models.notification import Notification
-from app.notification import telegram
+from app.notification import telegram, webhook
 
 
 class BaseNotificationService(ABC):
@@ -14,14 +14,11 @@ class BaseNotificationService(ABC):
 
 class WebhookNotificationService(BaseNotificationService):
     async def send_notification(self, message: Notification) -> None:
-
-        print("Not implemented yet")
+        await webhook.send_notification(message)
 
 
 class TelegramNotificationService(BaseNotificationService):
-
     async def send_notification(self, message: Notification) -> None:
-
         await telegram.send_notification(message)
 
 
