@@ -422,7 +422,6 @@ def get_user_usages(
     start: datetime,
     end: datetime,
 ) -> UserUsageSeriesResponse:
-
     usages = defaultdict(dict)
 
     cond = and_(

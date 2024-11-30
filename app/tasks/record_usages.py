@@ -77,7 +77,6 @@ def record_node_stats(node_id: int, usage: int):
     )
 
     with GetDB() as db:
-
         # make node usage row if doesn't exist
         select_stmt = select(NodeUsage.node_id).where(
             and_(

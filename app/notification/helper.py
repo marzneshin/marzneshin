@@ -27,13 +27,13 @@ def create_text(notif: Notification) -> str:
 
     if notif.action == A.user_deactivated and not notif.by:
         if notif.user.expired:
-            texts[
-                A.user_deactivated
-            ] = "🕔 <b>#Expired</b>\n➖➖➖➖➖➖➖➖➖\n<b>Username</b> : <code>{username}</code>\n<b>Belongs To :</b> <code>{owner_username}</code>"
+            texts[A.user_deactivated] = (
+                "🕔 <b>#Expired</b>\n➖➖➖➖➖➖➖➖➖\n<b>Username</b> : <code>{username}</code>\n<b>Belongs To :</b> <code>{owner_username}</code>"
+            )
         elif notif.user.data_limit_reached:
-            texts[
-                A.user_deactivated
-            ] = "🪫 <b>#Limited</b>\n➖➖➖➖➖➖➖➖➖\n<b>Username</b> : <code>{username}</code>\n<b>Belongs To :</b> <code>{owner_username}</code>"
+            texts[A.user_deactivated] = (
+                "🪫 <b>#Limited</b>\n➖➖➖➖➖➖➖➖➖\n<b>Username</b> : <code>{username}</code>\n<b>Belongs To :</b> <code>{owner_username}</code>"
+            )
 
     text = texts.get(notif.action)
     formatted_message = text.format_map(data)
