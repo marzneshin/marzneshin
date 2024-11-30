@@ -292,10 +292,12 @@ async def remove_user(
     """
     marznode.operations.update_user(db_user, remove=True)
 
+    deleted_username = db_user.username
     crud.remove_user(db, db_user)
-    db.flush()
 
+    db_user.username = deleted_username
     user = UserResponse.model_validate(db_user)
+    db.expunge(db_user)
 
     asyncio.ensure_future(
         notify(action=UserNotif.Action.user_deleted, user=user, by=admin)
