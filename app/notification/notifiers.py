@@ -6,8 +6,12 @@ from app.notification import (
 
 
 async def notify(action: Enum, **kwargs) -> None:
+    try:
+        manager = get_notification_manager()
+    except ValueError:
+        return
+
     strategy = get_notification_strategy()
     notification = strategy.create_notification(action=action, **kwargs)
 
-    manager = get_notification_manager()
     await manager.send_notification(notification)

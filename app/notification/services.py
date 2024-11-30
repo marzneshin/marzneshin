@@ -2,6 +2,7 @@ from functools import lru_cache
 from typing import List
 from abc import ABC, abstractmethod
 
+from app.config.env import TELEGRAM_API_TOKEN, WEBHOOK_ADDRESS
 from app.models.notification import Notification
 from app.notification import telegram, webhook
 
@@ -33,9 +34,15 @@ class NotificationManager:
 
 @lru_cache(maxsize=1)
 def get_notification_manager() -> NotificationManager:
-    return NotificationManager(
-        [
-            TelegramNotificationService(),
-            WebhookNotificationService(),
-        ]
-    )
+    services = []
+
+    if TELEGRAM_API_TOKEN:
+        services.append(TelegramNotificationService())
+
+    if WEBHOOK_ADDRESS:
+        services.append(WebhookNotificationService())
+
+    if not services:
+        raise ValueError("No notification services provided.")
+
+    return NotificationManager(services)
