@@ -8,12 +8,13 @@ export const HostSchema = z.object({
         .number().int()
         .nullable()
         .optional(),
-    port: z.coerce
-        .number()
-        .gte(1, "Port must be more than 1")
-        .lte(65535, "Port can not be more than 65535")
-        .nullable()
-        .optional(),
+    port: z.union([
+        z.number()
+            .int()
+            .gte(1, "Port must be more than 1")
+            .lte(65535, "Port can not be more than 65535"),
+        z.null()
+    ]).optional(),
 });
 
 
