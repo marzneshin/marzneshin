@@ -155,7 +155,7 @@ def get_admin_users(username: str, db: DBDep, admin: SudoAdminDep):
 
 
 @router.get("/{username}/disable_users", response_model=AdminResponse)
-async def disable_users(username: str, db: DBDep, admin: SudoAdminDep):
+async def disable_users(username: str,db: DBDep, admin: SudoAdminDep, offset: Optional[int] = None, limit: Optional[int] = None):
     db_admin = crud.get_admin(db, username)
     if not db_admin:
         raise HTTPException(status_code=404, detail="Admin not found")
@@ -166,7 +166,7 @@ async def disable_users(username: str, db: DBDep, admin: SudoAdminDep):
             detail="You're not allowed.",
         )
 
-    for user in crud.get_users(db, admin=db_admin, enabled=True):
+    for user in crud.get_users(db, admin=db_admin, enabled=True, offset=offset, limit=limit):
         if user.activated:
             update_user(user, remove=True)
         user.enabled = False
@@ -177,7 +177,7 @@ async def disable_users(username: str, db: DBDep, admin: SudoAdminDep):
 
 
 @router.get("/{username}/enable_users", response_model=AdminResponse)
-async def enable_users(username: str, db: DBDep, admin: SudoAdminDep):
+async def enable_users(username: str, db: DBDep, admin: SudoAdminDep, offset: Optional[int] = None, limit: Optional[int] = None):
     db_admin = crud.get_admin(db, username)
     if not db_admin:
         raise HTTPException(status_code=404, detail="Admin not found")
@@ -188,7 +188,7 @@ async def enable_users(username: str, db: DBDep, admin: SudoAdminDep):
             detail="You're not allowed.",
         )
 
-    for user in crud.get_users(db, admin=db_admin, enabled=False):
+    for user in crud.get_users(db, admin=db_admin, enabled=False, offset=offset, limit=limit):
         user.enabled = True
         if user.is_active:
             update_user(user)
