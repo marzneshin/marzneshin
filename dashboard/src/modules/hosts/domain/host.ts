@@ -12,7 +12,6 @@ export const HostSchema = z.object({
         .number()
         .gte(1, "Port must be more than 1")
         .lte(65535, "Port can not be more than 65535")
-        .or(z.string())
         .nullable()
         .optional(),
 });
