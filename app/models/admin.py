@@ -40,6 +40,7 @@ class AdminResponse(Admin):
     users_data_usage: int
     users_count: int
 
+
 class AdminModify(Admin):
     password: str
     is_sudo: bool
