@@ -110,7 +110,7 @@ def user_subscription(
                 as_base64=b64,
                 use_placeholder=not user.is_active
                 and subscription_settings.placeholder_if_disabled,
-                placeholder_remark=subscription_settings.placeholder_remark,
+                placeholder_remarks=subscription_settings.placeholder_remarks,
                 shuffle=subscription_settings.shuffle_configs,
             )
             return Response(
@@ -185,7 +185,7 @@ def user_subscription_with_client_type(
         as_base64=client_type == "v2ray",
         use_placeholder=not user.is_active
         and subscription_settings.placeholder_if_disabled,
-        placeholder_remark=subscription_settings.placeholder_remark,
+        placeholder_remarks=subscription_settings.placeholder_remarks,
         shuffle=subscription_settings.shuffle_configs,
     )
     return Response(
