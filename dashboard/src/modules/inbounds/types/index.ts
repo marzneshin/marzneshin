@@ -5,6 +5,7 @@ export type ProtocolType =
     | "vless"
     | "vmess"
     | "trojan"
+    | "shadowtls"
     | "shadowsocks"
     | "shadowsocks2022"
     | "hysteria2"

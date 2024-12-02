@@ -15,6 +15,7 @@ class ProxyTypes(str, Enum):
     Hysteria2 = "hysteria2"
     WireGuard = "wireguard"
     TUIC = "tuic"
+    ShadowTLS = "shadowtls"
 
 
 class InboundHostSecurity(str, Enum):
