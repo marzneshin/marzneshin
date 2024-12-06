@@ -1,7 +1,7 @@
 from enum import Enum
 from typing import Pattern
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class ConfigTypes(str, Enum):
@@ -20,6 +20,17 @@ class SubscriptionRule(BaseModel):
     result: ConfigTypes
 
 
+class PlaceHolderTypes(str, Enum):
+    disable = "disable"
+    expired = "expired"
+    limited = "limited"
+
+
+class PlaceHolderRule(BaseModel):
+    placetype: PlaceHolderTypes
+    texts: list[str]
+
+
 class SubscriptionSettings(BaseModel):
     template_on_acceptance: bool
     profile_title: str
@@ -27,7 +38,14 @@ class SubscriptionSettings(BaseModel):
     update_interval: int
     shuffle_configs: bool = False
     placeholder_if_disabled: bool = True
-    placeholder_remarks: list[str] = ["disabled"]
+    placeholder_remarks: list[PlaceHolderRule] = Field(
+        example=[
+            {
+                "placetype": "disable",
+                "texts": ["Service is disabled.", "Contact support."],
+            }
+        ]
+    )
     rules: list[SubscriptionRule]
 
 
