@@ -81,13 +81,13 @@ export const DashboardLayout = () => {
                             />
                         </ResizablePanel>
                         <ResizableHandle withHandle className="w-[2px]" />
-                        <ResizablePanel className="flex-col flex justify-between">
-                            <main className="flex flex-col h-full">
+                        <ResizablePanel className="flex flex-col h-full">
+                            <main className="flex-grow flex flex-col overflow-y-auto">
                                 <Suspense fallback={<Loading />}>
                                     <Outlet />
                                 </Suspense>
                             </main>
-                            <footer className="h-10 py-2">
+                            <footer className="h-10 py-2 shrink-0">
                                 <VersionIndicator />
                             </footer>
                         </ResizablePanel>
