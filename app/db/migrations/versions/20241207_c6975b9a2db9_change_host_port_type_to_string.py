@@ -5,13 +5,14 @@ Revises: a015ed8ce227
 Create Date: 2024-12-07 15:39:57.168228
 
 """
+
 from alembic import op
 from sqlalchemy import inspect, text
 
 
 # revision identifiers, used by Alembic.
-revision = 'c6975b9a2db9'
-down_revision = 'a015ed8ce227'
+revision = "c6975b9a2db9"
+down_revision = "a015ed8ce227"
 branch_labels = None
 depends_on = None
 
