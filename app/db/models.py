@@ -142,7 +142,9 @@ class Service(Base):
 
     @property
     def has_reached_limit(self):
-        return len(self.users) > self.users_limit if self.users_limit else False
+        return (
+            len(self.users) > self.users_limit if self.users_limit else False
+        )
 
 
 class User(Base):
