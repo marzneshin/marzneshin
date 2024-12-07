@@ -119,6 +119,13 @@ async def add_user(new_user: UserCreate, db: DBDep, admin: AdminDep):
     - **services** list of service ids
     """
 
+    for service in new_user.service_ids:
+        if crud.get_service(db, service).has_reached_limit:
+            raise HTTPException(
+                status_code=409,
+                detail=f"Service with ID {service} has reached its user limit.",
+            )
+
     try:
         db_user = crud.create_user(
             db,
@@ -219,6 +226,14 @@ async def modify_user(
 
     - set **data_limit** to 0 to make the user unlimited in data, null for no change
     """
+
+    for service in modifications.service_ids:
+        if crud.get_service(db, service).has_reached_limit:
+            raise HTTPException(
+                status_code=409,
+                detail=f"Service with ID {service} has reached its user limit.",
+            )
+
     active_before = db_user.is_active
 
     old_inbounds = {(i.node_id, i.protocol, i.tag) for i in db_user.inbounds}
