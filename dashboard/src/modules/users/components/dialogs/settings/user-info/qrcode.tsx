@@ -27,7 +27,7 @@ export const QRCodeSection: FC<QRCodeProps> = ({ entity }) => {
                 </CardTitle>
             </CardHeader>
             <CardContent className="flex flex-col justify-center items-center py-10 w-full h-full">
-                <QRCode size={150} className="size-2/3" value={subscribeQrLink} />
+                <QRCode size={150} className="size-2/3 bg-white p-4" value={subscribeQrLink} />
             </CardContent>
         </Card>
     );
