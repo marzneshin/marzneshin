@@ -247,6 +247,8 @@
       }
     },
     "admins": {
+      "disable_users": "Disable users",
+      "enable_users": "Enable users",
       "permission": "Permission",
       "dialogs": {
         "creation": {
