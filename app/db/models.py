@@ -278,6 +278,29 @@ class User(Base):
         return self.admin.username if self.admin else None
 
 
+class Template(Base):
+    __tablename__ = "templates"
+
+    id = Column(Integer, primary_key=True)
+    remark = Column(String(32), nullable=False)
+    data_limit = Column(BigInteger)
+    data_limit_reset_strategy = Column(
+        Enum(UserDataUsageResetStrategy),
+        nullable=False,
+        default=UserDataUsageResetStrategy.no_reset,
+    )
+    expire_strategy = Column(
+        Enum(UserExpireStrategy),
+        nullable=False,
+        default=UserExpireStrategy.NEVER,
+    )
+    expire_date = Column(Integer)
+    usage_duration = Column(BigInteger)
+    activation_deadline = Column(Integer)
+    reset_data_usage = Column(Boolean)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+
 class Backend(Base):
     __tablename__ = "backends"
 
