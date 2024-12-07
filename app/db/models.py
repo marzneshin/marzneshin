@@ -140,7 +140,6 @@ class Service(Base):
         return [user.id for user in self.users]
 
 
-
 class User(Base):
     __tablename__ = "users"
 
