@@ -141,7 +141,7 @@ class Service(Base):
         return [user.id for user in self.users]
 
     @property
-    def is_limited(self):
+    def has_reached_limit(self):
         return len[self.users] > self.users_limit if self.users_limit else None
 
 class User(Base):

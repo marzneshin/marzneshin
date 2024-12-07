@@ -518,7 +518,7 @@ def create_user(
         activation_deadline=user.activation_deadline,
         services=db.query(Service)
         .filter(Service.id.in_(service_ids))
-        .filter(Service.is_limited is False)
+        .filter(Service.has_reached_limit is False)
         .all(),  # user.services,
         data_limit=(user.data_limit or None),
         admin=admin,
@@ -585,7 +585,7 @@ def update_user(
             service_ids = modify.service_ids
 
         dbuser.services = (
-            db.query(Service).filter(Service.id.in_(service_ids)).filter(Service.is_limited is False).all()
+            db.query(Service).filter(Service.id.in_(service_ids)).filter(Service.has_reached_limit is False).all()
         )
     dbuser.edit_at = datetime.utcnow()
 
