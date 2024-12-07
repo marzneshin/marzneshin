@@ -54,6 +54,7 @@ class TemplateResponse(Template):
 
 
 class TemplateCreate(Template):
+    username: str
     name: str
     data_limit: int
     data_limit_reset_strategy: UserDataUsageResetStrategy

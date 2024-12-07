@@ -21,6 +21,33 @@ def get_templates(db: DBDep, admin: AdminDep, name: str = Query(None)):
     return paginate(query)
 
 
+@router.post("{id}/user", response_model=TemplateResponse)
+def add_template_with_template(id: int, db: DBDep, admin: SudoAdminDep):
+    """
+    Add a new user with template
+    """
+    dbtemplate = crud.get_template(db, id)
+    if not dbtemplate:
+        raise HTTPException(status_code=404, detail="Template not found")
+    try:
+        return crud.create_template_user(db, id)
+    except sqlalchemy.exc.IntegrityError:
+        db.rollback()
+        raise HTTPException(
+            status_code=409, detail="User by this name already exists"
+        )
+
+
+@router.post("{id}/user", response_model=TemplateResponse)
+def modify_template_with_template(id: int, db: DBDep, admin: SudoAdminDep):
+    """
+    Modify a exiting user with template
+    """
+    dbtemplate = crud.get_template(db, id)
+    if not dbtemplate:
+        raise HTTPException(status_code=404, detail="Template not found")
+    return crud.modify_template_user(db, id)
+    
 
 @router.post("", response_model=TemplateResponse)
 def add_template(new_template: TemplateCreate, db: DBDep, admin: SudoAdminDep):
