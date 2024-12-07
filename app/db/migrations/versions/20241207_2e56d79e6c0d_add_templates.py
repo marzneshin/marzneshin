@@ -21,6 +21,8 @@ def upgrade() -> None:
     op.create_table('templates',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('remark', sa.String(length=32), nullable=False),
+    sa.Column('prefix', sa.String(), nullable=True),
+    sa.Column('suffix', sa.String(), nullable=True),
     sa.Column('data_limit', sa.BigInteger(), nullable=True),
     sa.Column('data_limit_reset_strategy', sa.Enum('no_reset', 'day', 'week', 'month', 'year', name='userdatausageresetstrategy'), nullable=False),
     sa.Column('expire_strategy', sa.Enum('NEVER', 'FIXED_DATE', 'START_ON_FIRST_USE', name='userexpirestrategy'), nullable=False),

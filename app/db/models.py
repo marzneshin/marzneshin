@@ -283,6 +283,8 @@ class Template(Base):
 
     id = Column(Integer, primary_key=True)
     remark = Column(String(32), nullable=False)
+    prefix = Column(String(16))
+    suffix = Column(String(16))
     data_limit = Column(BigInteger)
     data_limit_reset_strategy = Column(
         Enum(UserDataUsageResetStrategy),
