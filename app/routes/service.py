@@ -35,6 +35,7 @@ def add_service(new_service: ServiceCreate, db: DBDep, admin: SudoAdminDep):
 
     - **name** service name
     - **inbounds** list of inbound ids
+    - **users_limit** Limited number of users (null for unlimited)
     """
     try:
         return crud.create_service(db, new_service)
@@ -109,6 +110,7 @@ async def modify_service(
     Modify Service
 
     - **name** can be up to 64 characters
+    - **users_limit** Limited number of users (null for unlimited)
     - **inbounds** list of inbound ids. if not specified no change will be applied;
     in case of an empty list all inbounds would be removed.
     """

@@ -4,6 +4,7 @@ from pydantic import ConfigDict, BaseModel, Field
 class Service(BaseModel):
     id: int | None = None
     name: str | None = Field(None)
+    users_limit: int | None = Field(None)
     model_config = ConfigDict(from_attributes=True)
 
 
@@ -13,6 +14,7 @@ class ServiceCreate(Service):
         json_schema_extra={
             "example": {
                 "name": "my service 1",
+                "users_limit" : 100,
                 "inbound_ids": [1, 5, 9],
             }
         }
@@ -26,6 +28,7 @@ class ServiceModify(Service):
             "example": {
                 "id": 2,
                 "name": "my service 2",
+                "users_limit" : 100,
                 "inbound_ids": [1, 2, 3],
             }
         }

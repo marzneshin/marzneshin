@@ -121,6 +121,7 @@ class Service(Base):
     __tablename__ = "services"
     id = Column(Integer, primary_key=True)
     name = Column(String(64))
+    users_limit = Column(Integer)
     admins = relationship(
         "Admin", secondary=admins_services, back_populates="services"
     )
@@ -139,6 +140,9 @@ class Service(Base):
     def user_ids(self):
         return [user.id for user in self.users]
 
+    @property
+    def is_limited(self):
+        return len[self.users] > self.users_limit if self.users_limit else None
 
 class User(Base):
     __tablename__ = "users"
