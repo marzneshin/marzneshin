@@ -14,7 +14,7 @@ class ServiceCreate(Service):
         json_schema_extra={
             "example": {
                 "name": "my service 1",
-                "users_limit" : 100,
+                "users_limit": 100,
                 "inbound_ids": [1, 5, 9],
             }
         }
@@ -28,7 +28,7 @@ class ServiceModify(Service):
             "example": {
                 "id": 2,
                 "name": "my service 2",
-                "users_limit" : 100,
+                "users_limit": 100,
                 "inbound_ids": [1, 2, 3],
             }
         }

@@ -144,6 +144,7 @@ class Service(Base):
     def has_reached_limit(self):
         return len[self.users] > self.users_limit if self.users_limit else None
 
+
 class User(Base):
     __tablename__ = "users"
 
