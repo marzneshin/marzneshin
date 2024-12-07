@@ -282,7 +282,7 @@ class Template(Base):
     __tablename__ = "templates"
 
     id = Column(Integer, primary_key=True)
-    remark = Column(String(32), nullable=False)
+    name = Column(String(32), nullable=False)
     prefix = Column(String(16))
     suffix = Column(String(16))
     data_limit = Column(BigInteger)
