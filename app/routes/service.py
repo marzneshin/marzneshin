@@ -1,4 +1,4 @@
-import sqlalchemy
+from sqlalchemy import exc, exists
 from fastapi import APIRouter, Query
 from fastapi import HTTPException
 from fastapi_pagination.ext.sqlalchemy import paginate
@@ -38,7 +38,7 @@ def add_service(new_service: ServiceCreate, db: DBDep, admin: SudoAdminDep):
     """
     try:
         return crud.create_service(db, new_service)
-    except sqlalchemy.exc.IntegrityError:
+    except exc.IntegrityError:
         db.rollback()
         raise HTTPException(
             status_code=409, detail="Service by this name already exists"
@@ -82,6 +82,73 @@ def get_service_users(id: int, db: DBDep, admin: SudoAdminDep):
     return paginate(query)
 
 
+@router.post("/{id}/users")
+async def add_service_users(id: int, db: DBDep, admin: AdminDep):
+    """Add a service to users"""
+    service = crud.get_service(db, id)
+
+    if not service:
+        raise HTTPException(status_code=404, detail="Service not found")
+
+    query = (
+        db.query(User)
+        .outerjoin(User.services)
+        .filter(
+            (User.services is None)
+            or (~exists().where(User.services.any(id=id)))
+        )
+        .filter(User.removed != True)
+    )
+    if not admin.is_sudo:
+        query = query.filter(User.admin_id == admin.id)
+
+    for user in query.all():
+        allowed_services = (
+            user.admin.service_ids
+            if not user.admin.is_sudo and not user.admin.all_services_access
+            else None
+        )
+        if allowed_services and id not in allowed_services:
+            continue
+
+        service_ids = user.service_ids + [id]
+        user.services = (
+            db.query(Service).filter(Service.id.in_(service_ids)).all()
+        )
+        marznode.operations.update_user(user=user)
+    db.commit()
+    return {"detail": "success updated users servies"}
+
+
+@router.delete("/{id}/users")
+async def remove_service_users(id: int, db: DBDep, admin: AdminDep):
+    """Remove a service from users"""
+    service = crud.get_service(db, id)
+
+    if not service:
+        raise HTTPException(status_code=404, detail="Service not found")
+
+    query = (
+        db.query(User)
+        .join(User.services)
+        .filter(User.services.any(id=id))
+        .filter(User.removed != True)
+    )
+
+    if not admin.is_sudo:
+        query = query.filter(User.admin_id == admin.id)
+
+    for user in query.all():
+        service_ids = [sid for sid in user.service_ids if sid != id]
+        user.services = (
+            db.query(Service).filter(Service.id.in_(service_ids)).all()
+        )
+        marznode.operations.update_user(user=user)
+
+    db.commit()
+    return {"detail": "success updated users servies"}
+
+
 @router.get("/{id}/inbounds", response_model=Page[Inbound])
 def get_service_inbounds(id: int, db: DBDep, admin: SudoAdminDep):
     """
@@ -118,7 +185,7 @@ async def modify_service(
     old_inbounds = {(i.node_id, i.protocol, i.tag) for i in dbservice.inbounds}
     try:
         response = crud.update_service(db, dbservice, modification)
-    except sqlalchemy.exc.IntegrityError:
+    except exc.IntegrityError:
         db.rollback()
         raise HTTPException(
             status_code=409, detail="problem updating the service"
