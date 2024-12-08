@@ -7,7 +7,7 @@ from fastapi_pagination.links import Page
 from app import marznode
 from app.db import crud
 from app.db.models import Service, User
-from app.dependencies import DBDep, AdminDep, SudoAdminDep
+from app.dependencies import DBDep, AdminDep, SudoAdminDep, ServiceDep
 from app.models.proxy import Inbound
 from app.models.service import ServiceCreate, ServiceModify, ServiceResponse
 from app.models.user import UserResponse
@@ -46,32 +46,23 @@ def add_service(new_service: ServiceCreate, db: DBDep, admin: SudoAdminDep):
 
 
 @router.get("/{id}", response_model=ServiceResponse)
-def get_service(id: int, db: DBDep, admin: AdminDep):
+def get_service(service: ServiceDep, db: DBDep, admin: AdminDep):
     """
     Get Service information with id
     """
-    dbservice = crud.get_service(db, id)
-    if not dbservice:
-        raise HTTPException(status_code=404, detail="Service not found")
-
     if not (
         admin.is_sudo or admin.all_services_access or id in admin.service_ids
     ):
         raise HTTPException(status_code=403, detail="You're not allowed")
 
-    return dbservice
+    return service
 
 
 @router.get("/{id}/users", response_model=Page[UserResponse])
-def get_service_users(id: int, db: DBDep, admin: SudoAdminDep):
+def get_service_users(service: ServiceDep, db: DBDep, admin: SudoAdminDep):
     """
     Get service users
     """
-    service = crud.get_service(db, id)
-
-    if not service:
-        raise HTTPException(status_code=404, detail="Service not found")
-
     query = (
         db.query(User)
         .join(User.services)
@@ -83,15 +74,10 @@ def get_service_users(id: int, db: DBDep, admin: SudoAdminDep):
 
 
 @router.get("/{id}/inbounds", response_model=Page[Inbound])
-def get_service_inbounds(id: int, db: DBDep, admin: SudoAdminDep):
+def get_service_inbounds(service: ServiceDep, db: DBDep, admin: SudoAdminDep):
     """
     Get service inbounds
     """
-    service = crud.get_service(db, id)
-
-    if not service:
-        raise HTTPException(status_code=404, detail="Service not found")
-
     query = (
         db.query(Inbound)
         .join(Inbound.services)
@@ -103,7 +89,10 @@ def get_service_inbounds(id: int, db: DBDep, admin: SudoAdminDep):
 
 @router.put("/{id}", response_model=ServiceResponse)
 async def modify_service(
-    id: int, modification: ServiceModify, db: DBDep, admin: SudoAdminDep
+    service: ServiceDep,
+    modification: ServiceModify,
+    db: DBDep,
+    admin: SudoAdminDep,
 ):
     """
     Modify Service
@@ -112,12 +101,9 @@ async def modify_service(
     - **inbounds** list of inbound ids. if not specified no change will be applied;
     in case of an empty list all inbounds would be removed.
     """
-    dbservice = crud.get_service(db, id)
-    if not dbservice:
-        raise HTTPException(status_code=404, detail="Service not found")
-    old_inbounds = {(i.node_id, i.protocol, i.tag) for i in dbservice.inbounds}
+    old_inbounds = {(i.node_id, i.protocol, i.tag) for i in service.inbounds}
     try:
-        response = crud.update_service(db, dbservice, modification)
+        response = crud.update_service(db, service, modification)
     except sqlalchemy.exc.IntegrityError:
         db.rollback()
         raise HTTPException(
@@ -133,10 +119,6 @@ async def modify_service(
 
 
 @router.delete("/{id}")
-def remove_service(id: int, db: DBDep, admin: SudoAdminDep):
-    dbservice = crud.get_service(db, id)
-    if not dbservice:
-        raise HTTPException(status_code=404, detail="Service not found")
-
-    crud.remove_service(db, dbservice)
+def remove_service(service: ServiceDep, db: DBDep, admin: SudoAdminDep):
+    crud.remove_service(db, service)
     return dict()
