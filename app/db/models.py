@@ -137,7 +137,7 @@ class Service(Base):
 
     @property
     def user_ids(self):
-        return [user.id for user in self.users]
+        return [user.id for user in self.users if not user.removed]
 
 
 class User(Base):
