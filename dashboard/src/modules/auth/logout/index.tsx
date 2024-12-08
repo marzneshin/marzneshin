@@ -12,10 +12,10 @@ export const Logout: FC<LogoutProps> = () => {
     }, [navigate]);
     return (
         <Button
-            size="sm"
+            size="icon"
             variant="ghost"
             onClick={handleLogout}
-            className="hstack gap-1 items-center justify-between w-full h-fit p-0"
+            className="hstack gap-2 items-center justify-end w-full h-4 p-0"
         >
             Logout
             <LogOut className="size-4" />

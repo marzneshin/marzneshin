@@ -32,8 +32,8 @@ export const LanguageSwitchMenu: FC = () => {
     return (
         <DropdownMenuSub>
             <DropdownMenuSubTrigger arrowDir="left">
-                <div className="hstack items-center justify-end">
-                    <span className="mx-1">{t("language")}</span>
+                <div className="hstack items-center gap-2 w-full justify-end">
+                    <span>{t("language")}</span>
                     <Languages className="size-[1rem]" />
                 </div>
             </DropdownMenuSubTrigger>

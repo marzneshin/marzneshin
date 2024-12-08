@@ -16,6 +16,7 @@ import { ThemeToggle } from "@marzneshin/features/theme-switch";
 import { useAuth, Logout } from "@marzneshin/modules/auth";
 import { useScreenBreakpoint } from "@marzneshin/common/hooks/use-screen-breakpoint";
 import { useTranslation } from "react-i18next";
+import { VersionIndicator } from "@marzneshin/features/version-indicator";
 
 export const HeaderMenu: FC = () => {
 
@@ -61,10 +62,11 @@ export const HeaderMenu: FC = () => {
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
                     <LanguageSwitchMenu />
+                    <ThemeToggle />
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
-                <DropdownMenuGroup>
-                    <ThemeToggle />
+                <DropdownMenuGroup className="py-1 shrink-0">
+                    <VersionIndicator />
                 </DropdownMenuGroup>
             </DropdownMenuContent>
         </DropdownMenu >
