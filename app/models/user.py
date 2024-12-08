@@ -63,6 +63,12 @@ class User(BaseModel):
 
     @model_validator(mode="after")
     def validate_expiry(self):
+
+        if not self.expire_strategy and (self.expire_date or self.usage_duration or self.activation_deadline):
+            raise ValueError(
+                "You cannot provide expiry-related fields without specifying an 'expire_strategy'."
+            )
+
         if self.expire_strategy == UserExpireStrategy.START_ON_FIRST_USE:
             if not self.usage_duration:
                 raise ValueError(
