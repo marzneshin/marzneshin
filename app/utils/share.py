@@ -31,7 +31,11 @@ from app.db import GetDB, crud
 from app.models.proxy import (
     InboundHostSecurity,
 )
-from app.models.settings import SubscriptionSettings
+from app.models.settings import (
+    SubscriptionSettings,
+    PlaceHolderRule,
+    PlaceHolderTypes,
+)
 from app.models.user import UserResponse, UserExpireStrategy
 from app.templates import render_template
 from app.utils.keygen import gen_uuid, gen_password, generate_curve25519_pbk
@@ -73,7 +77,7 @@ def generate_subscription_template(
         config_format="links",
         use_placeholder=not db_user.is_active
         and subscription_settings.placeholder_if_disabled,
-        placeholder_remark=subscription_settings.placeholder_remark,
+        placeholder_remarks=subscription_settings.placeholder_remarks,
         shuffle=subscription_settings.shuffle_configs,
     ).split()
     return render_template(
@@ -82,12 +86,22 @@ def generate_subscription_template(
     )
 
 
+def find_user_placeholder(user: "UserResponse") -> PlaceHolderTypes:
+    if user.expired:
+        return PlaceHolderTypes.expired
+    if user.data_limit and user.used_traffic > user.data_limit:
+        return PlaceHolderTypes.limited
+    if not user.is_active:
+        return PlaceHolderTypes.disable
+    return PlaceHolderTypes.disable
+
+
 def generate_subscription(
     user: "UserResponse",
     config_format: Literal["links", "xray", "clash-meta", "clash", "sing-box"],
     as_base64: bool = False,
     use_placeholder: bool = False,
-    placeholder_remark: str = "disabled",
+    placeholder_remarks: List[PlaceHolderRule] = [],
     shuffle: bool = False,
 ) -> str:
     extra_data = UserResponse.model_validate(user).model_dump(
@@ -107,13 +121,25 @@ def generate_subscription(
         subscription_handler = subscription_handler_class()
 
     if use_placeholder:
-        placeholder_config = V2Data(
-            "vmess",
-            placeholder_remark.format_map(format_variables),
-            "127.0.0.1",
-            80,
+        configs = []
+        user_placeholder_type = find_user_placeholder(user)
+
+        user_placeholder = next(
+            (
+                rule
+                for rule in placeholder_remarks
+                if rule.placetype == user_placeholder_type
+            ),
+            None,
         )
-        configs = [placeholder_config]
+        for remark in user_placeholder.texts:
+            placeholder_config = V2Data(
+                "vmess",
+                remark.format_map(format_variables),
+                "127.0.0.1",
+                80,
+            )
+            configs.append(placeholder_config)
 
     else:
         configs = generate_user_configs(
