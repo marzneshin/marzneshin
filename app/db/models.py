@@ -319,8 +319,8 @@ class InboundHost(Base):
 
     id = Column(Integer, primary_key=True)
     remark = Column(String(256), nullable=False)
-    address = Column(String(256), nullable=False)
-    port = Column(Integer)
+    address = Column(String(1024), nullable=False)
+    port = Column(String(256))
     path = Column(String(256))
     sni = Column(String(1024))
     host = Column(String(1024))
