@@ -67,7 +67,6 @@ export const GeneralSchema = HostSchema.merge(TlsSchema).extend({
         ])
         .optional()
         .default("none"),
-    is_disabled: z.boolean(),
 });
 
 
