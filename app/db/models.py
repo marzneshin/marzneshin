@@ -419,7 +419,7 @@ class Node(Base):
     usages = relationship(
         "NodeUsage",
         back_populates="node",
-        cascade="all, delete, delete-orphan",
+        cascade="save-update, merge",
     )
     usage_coefficient = Column(
         Float, nullable=False, server_default=text("1.0"), default=1
