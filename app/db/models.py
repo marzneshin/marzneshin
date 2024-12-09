@@ -414,7 +414,7 @@ class Node(Base):
     user_usages = relationship(
         "NodeUserUsage",
         back_populates="node",
-        cascade="all, delete, delete-orphan",
+        cascade="save-update, merge",
     )
     usages = relationship(
         "NodeUsage",
