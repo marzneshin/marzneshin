@@ -8,4 +8,5 @@ export const tuicProfileDefaultValue: TuicSchemaType = {
     remark: '',
     alpn: '',
     allowinsecure: false,
+    is_disabled: false,
 };

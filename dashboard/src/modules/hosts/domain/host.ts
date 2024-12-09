@@ -4,6 +4,7 @@ import { ProtocolType } from "@marzneshin/modules/inbounds";
 export const HostSchema = z.object({
     remark: z.string().min(1, "Remark is required"),
     address: z.string().min(1, "Address is required"),
+    is_disabled: z.boolean().default(false),
     weight: z.coerce
         .number().int()
         .nullable()
