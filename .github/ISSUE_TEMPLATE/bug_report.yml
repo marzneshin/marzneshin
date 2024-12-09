@@ -17,7 +17,7 @@ body:
     attributes:
       value: |
         سپاس از شما بابت صرف زمان و پر کردن گزارش باگ
-        صمیمانه درخواست می‌کنیم قبل از باز کردن ایشو، مطمئن شوید ایشو مشابه [وجود دارد یا نه](https://github.com/marzneshin/marzneshin/issues?q=is%3Aissue+sort%3Acreated-desc+) for the bug you encountered.
+        صمیمانه درخواست می‌کنیم قبل از باز کردن ایشو، مطمئن شوید ایشو مشابه [وجود دارد یا نه](https://github.com/marzneshin/marzneshin/issues?q=is%3Aissue+sort%3Acreated-desc+)
         قوانین نوشتن ایشو [اینجا](https://docs.marzneshin.org/fa/docs/contribution-guideline/issue/) نشان داده شده.
 
   - type: textarea
