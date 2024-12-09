@@ -8,11 +8,11 @@ from app.db import (
     GetDB,
     get_users,
 )
+from app.models.notification import UserNotification
 from app.models.user import (
     UserResponse,
     UserExpireStrategy,
 )
-from app.models.notification import UserNotif
 from app.notification import notify
 
 if TYPE_CHECKING:
@@ -35,7 +35,7 @@ async def review_users():
 
             asyncio.ensure_future(
                 notify(
-                    action=UserNotif.Action.user_deactivated,
+                    action=UserNotification.Action.user_deactivated,
                     user=UserResponse.model_validate(user),
                 )
             )

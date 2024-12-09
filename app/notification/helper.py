@@ -1,17 +1,19 @@
-from typing import Dict, Optional
-from app.models.notification import Notification, UserNotif
-from app.models.user import UserResponse
-from app.models.admin import Admin
-from app.utils.system import readable_size
-from aiogram import html
 from datetime import datetime
+from typing import Dict, Optional
+
+from aiogram import html
+
+from app.models.admin import Admin
+from app.models.notification import Notification, UserNotification
+from app.models.user import UserResponse
+from app.utils.system import readable_size
 
 
 def create_text(notif: Notification) -> str:
     data = prepare_data(notif)
-    A = UserNotif.Action
+    A = UserNotification.Action
 
-    texts: Dict[UserNotif.Action, str] = {
+    texts: Dict[UserNotification.Action, str] = {
         A.user_created: "🆕 <b>#Created</b>\n➖➖➖➖➖➖➖➖➖\n<b>Username :</b> <code>{username}</code>\n<b>Traffic Limit :</b> <code>{data_limit}</code>\n<b>Expire Date :</b> <code>{expire_date}</code>\n<b>Services :</b> <code>{services}</code>\n➖➖➖➖➖➖➖➖➖\n<b>Belongs To :</b> <code>{owner_username}</code>\n<b>By :</b> <b>#{by}</b>",
         A.user_updated: "✏️ <b>#Modified</b>\n➖➖➖➖➖➖➖➖➖\n<b>Username :</b> <code>{username}</code>\n<b>Traffic Limit :</b> <code>{data_limit}</code>\n<b>Expire Date :</b> <code>{expire_date}</code>\n<b>Services :</b> <code>{services}</code>\n➖➖➖➖➖➖➖➖➖\n<b>Belongs To :</b> <code>{owner_username}</code>\n<b>By :</b> <b>#{by}</b>",
         A.user_activated: "✅ <b>#Activated</b>\n➖➖➖➖➖➖➖➖➖\n<b>Username</b> : <code>{username}</code>\n<b>Belongs To :</b> <code>{owner_username}</code>",
@@ -60,7 +62,7 @@ def prepare_data(notif: Notification) -> dict:
         ),
         "usage_percent": (
             f"{round(min((user.used_traffic / user.data_limit) * 100, 100),2)}%"
-            if user.data_limit > 0
+            if isinstance(user.data_limit, int) and user.data_limit > 0
             else "0%"
         ),
         "expire_date": (

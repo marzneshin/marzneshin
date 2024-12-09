@@ -1,14 +1,13 @@
-from functools import lru_cache
 from abc import ABC, abstractmethod
-from typing import Any, Dict, Type, Optional, Union
 from enum import Enum
+from functools import lru_cache
+from typing import Any, Dict, Type, Optional, Union
 
 from app.models.admin import Admin
-from app.models.user import UserResponse
 from app.models.notification import (
     Notification,
     AdminNotif,
-    UserNotif,
+    UserNotification,
     UserCreated,
     UserUpdated,
     UserActivated,
@@ -21,6 +20,7 @@ from app.models.notification import (
     ReachedUsagePercent,
     ReachedDaysLeft,
 )
+from app.models.user import UserResponse
 
 
 class NotificationFactory(ABC):
@@ -35,9 +35,11 @@ class AdminNotificationFactory(NotificationFactory):
 
 
 class UserNotificationFactory(NotificationFactory):
-    Action = UserNotif.Action
+    Action = UserNotification.Action
 
-    notification_classes: Dict[UserNotif.Action, Type[UserNotif]] = {
+    notification_classes: Dict[
+        UserNotification.Action, Type[UserNotification]
+    ] = {
         Action.user_created: UserCreated,
         Action.user_updated: UserUpdated,
         Action.user_activated: UserActivated,
@@ -53,11 +55,11 @@ class UserNotificationFactory(NotificationFactory):
 
     def create_notification(
         self,
-        action: UserNotif.Action,
+        action: UserNotification.Action,
         user: UserResponse,
         by: Optional[Admin] = None,
         **kwargs: Any
-    ) -> UserNotif:
+    ) -> UserNotification:
         notification_class = self.notification_classes.get(action)
         return notification_class(user=user, by=by, **kwargs)
 
@@ -69,8 +71,8 @@ class NotificationStrategy:
 
     def create_notification(
         self, action: Enum, **kwargs: Any
-    ) -> Union[UserNotif, AdminNotif]:
-        if isinstance(action, UserNotif.Action):
+    ) -> Union[UserNotification, AdminNotif]:
+        if isinstance(action, UserNotification.Action):
             return self.user_factory.create_notification(action, **kwargs)
         elif isinstance(action, AdminNotif.Action):
             return self.admin_factory.create_notification(action, **kwargs)

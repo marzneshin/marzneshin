@@ -1,11 +1,12 @@
 import asyncio
+
 from sqlalchemy import case
 from sqlalchemy.orm import Session
 
 from app.config import NOTIFY_REACHED_USAGE_PERCENT
 from app.db.models import User
+from app.models.notification import UserNotification
 from app.models.user import UserResponse
-from app.models.notification import UserNotif
 from app.notification.notifiers import notify
 
 
@@ -49,7 +50,7 @@ async def data_usage_percent_reached(db: Session, users_usage: list) -> None:
         user.used_traffic += added_traffic
         asyncio.ensure_future(
             notify(
-                action=UserNotif.Action.reached_usage_percent,
+                action=UserNotification.Action.reached_usage_percent,
                 user=UserResponse.model_validate(user),
             )
         )

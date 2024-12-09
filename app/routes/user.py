@@ -21,6 +21,7 @@ from app.dependencies import (
     EndDateDep,
     ModifyUsersAccess,
 )
+from app.models.notification import UserNotification
 from app.models.service import ServiceResponse
 from app.models.user import (
     UserCreate,
@@ -28,7 +29,6 @@ from app.models.user import (
     UserResponse,
     UserUsageSeriesResponse,
 )
-from app.models.notification import UserNotif
 from app.notification import notify
 
 logger = logging.getLogger(__name__)
@@ -139,7 +139,9 @@ async def add_user(new_user: UserCreate, db: DBDep, admin: AdminDep):
     marznode.operations.update_user(user=db_user)
 
     asyncio.ensure_future(
-        notify(action=UserNotif.Action.user_created, user=user, by=admin)
+        notify(
+            action=UserNotification.Action.user_created, user=user, by=admin
+        )
     )
 
     logger.info("New user `%s` added", db_user.username)
@@ -247,7 +249,7 @@ async def modify_user(
 
     asyncio.ensure_future(
         notify(
-            action=UserNotif.Action.user_updated,
+            action=UserNotification.Action.user_updated,
             user=UserResponse.model_validate(db_user),
             by=admin,
         )
@@ -257,9 +259,9 @@ async def modify_user(
 
     if active_before != active_after:
         action = (
-            UserNotif.Action.user_activated
+            UserNotification.Action.user_activated
             if active_after
-            else UserNotif.Action.user_deactivated
+            else UserNotification.Action.user_deactivated
         )
 
         asyncio.ensure_future(
@@ -300,7 +302,9 @@ async def remove_user(
     db.expunge(db_user)
 
     asyncio.ensure_future(
-        notify(action=UserNotif.Action.user_deleted, user=user, by=admin)
+        notify(
+            action=UserNotification.Action.user_deleted, user=user, by=admin
+        )
     )
 
     logger.info("User %s deleted", db_user.username)
@@ -346,7 +350,11 @@ async def reset_user_data_usage(
     user = UserResponse.model_validate(db_user)
 
     asyncio.ensure_future(
-        notify(action=UserNotif.Action.data_usage_reset, user=user, by=admin)
+        notify(
+            action=UserNotification.Action.data_usage_reset,
+            user=user,
+            by=admin,
+        )
     )
 
     logger.info("User `%s`'s usage was reset", db_user.username)
@@ -378,7 +386,9 @@ async def enable_user(
     user = UserResponse.model_validate(db_user)
 
     asyncio.ensure_future(
-        notify(action=UserNotif.Action.user_enabled, user=user, by=admin)
+        notify(
+            action=UserNotification.Action.user_enabled, user=user, by=admin
+        )
     )
 
     logger.info("User `%s` has been enabled", db_user.username)
@@ -407,7 +417,9 @@ async def disable_user(
     user = UserResponse.model_validate(db_user)
 
     asyncio.ensure_future(
-        notify(action=UserNotif.Action.user_disabled, user=user, by=admin)
+        notify(
+            action=UserNotification.Action.user_disabled, user=user, by=admin
+        )
     )
 
     logger.info("User `%s` has been disabled", db_user.username)
@@ -435,7 +447,9 @@ async def revoke_user_subscription(
 
     asyncio.ensure_future(
         notify(
-            action=UserNotif.Action.subscription_revoked, user=user, by=admin
+            action=UserNotification.Action.subscription_revoked,
+            user=user,
+            by=admin,
         )
     )
 

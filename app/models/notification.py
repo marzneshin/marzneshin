@@ -1,6 +1,6 @@
-from typing import Optional
 from datetime import datetime as dt
 from enum import Enum
+from typing import Optional
 
 from pydantic import BaseModel
 
@@ -16,7 +16,9 @@ class AdminNotif(Notification):
     pass
 
 
-class UserNotif(Notification):
+class UserNotification(Notification):
+    user: UserResponse
+
     class Action(str, Enum):
         user_created = "user_created"
         user_updated = "user_updated"
@@ -31,65 +33,58 @@ class UserNotif(Notification):
         reached_days_left = "reached_days_left"
 
 
-class UserCreated(UserNotif):
-    action: UserNotif.Action = UserNotif.Action.user_created
-    user: UserResponse
+class UserCreated(UserNotification):
+    action: UserNotification.Action = UserNotification.Action.user_created
     by: Admin
 
 
-class UserUpdated(UserNotif):
-    action: UserNotif.Action = UserNotif.Action.user_updated
-    user: UserResponse
+class UserUpdated(UserNotification):
+    action: UserNotification.Action = UserNotification.Action.user_updated
     by: Admin
 
 
-class UserActivated(UserNotif):
-    action: UserNotif.Action = UserNotif.Action.user_activated
-    user: UserResponse
+class UserActivated(UserNotification):
+    action: UserNotification.Action = UserNotification.Action.user_activated
     by: Optional[Admin] = None
 
 
-class UserDeactivated(UserNotif):
-    action: UserNotif.Action = UserNotif.Action.user_deactivated
-    user: UserResponse
+class UserDeactivated(UserNotification):
+    action: UserNotification.Action = UserNotification.Action.user_deactivated
     by: Optional[Admin] = None
 
 
-class UserDeleted(UserNotif):
-    action: UserNotif.Action = UserNotif.Action.user_deleted
-    user: UserResponse
+class UserDeleted(UserNotification):
+    action: UserNotification.Action = UserNotification.Action.user_deleted
     by: Admin
 
 
-class UserEnabled(UserNotif):
-    action: UserNotif.Action = UserNotif.Action.user_enabled
-    user: UserResponse
+class UserEnabled(UserNotification):
+    action: UserNotification.Action = UserNotification.Action.user_enabled
     by: Optional[Admin] = None
 
 
-class UserDisabled(UserNotif):
-    action: UserNotif.Action = UserNotif.Action.user_disabled
-    user: UserResponse
+class UserDisabled(UserNotification):
+    action: UserNotification.Action = UserNotification.Action.user_disabled
     by: Optional[Admin] = None
 
 
-class UserDataUsageReset(UserNotif):
-    action: UserNotif.Action = UserNotif.Action.data_usage_reset
-    user: UserResponse
+class UserDataUsageReset(UserNotification):
+    action: UserNotification.Action = UserNotification.Action.data_usage_reset
     by: Optional[Admin] = None
 
 
-class UserSubscriptionRevoked(UserNotif):
-    action: UserNotif.Action = UserNotif.Action.subscription_revoked
-    user: UserResponse
+class UserSubscriptionRevoked(UserNotification):
+    action: UserNotification.Action = (
+        UserNotification.Action.subscription_revoked
+    )
     by: Admin
 
 
-class ReachedUsagePercent(UserNotif):
-    action: UserNotif.Action = UserNotif.Action.reached_usage_percent
-    user: UserResponse
+class ReachedUsagePercent(UserNotification):
+    action: UserNotification.Action = (
+        UserNotification.Action.reached_usage_percent
+    )
 
 
-class ReachedDaysLeft(UserNotif):
-    action: UserNotif.Action = UserNotif.Action.reached_days_left
-    user: UserResponse
+class ReachedDaysLeft(UserNotification):
+    action: UserNotification.Action = UserNotification.Action.reached_days_left
