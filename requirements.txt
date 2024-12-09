@@ -11,7 +11,6 @@ protobuf==4.25.2
 pydantic==2.7.1
 PyMySQL==1.1.1
 pyOpenSSL==24.2.1
-pyTelegramBotAPI==4.15.2
 python-decouple==3.8
 python-dotenv==1.0.0
 requests==2.32.2
@@ -31,3 +30,4 @@ uvicorn==0.30.4
 rich==13.7.1
 python-multipart==0.0.18
 httptools==0.6.4
+aiogram==3.12.0

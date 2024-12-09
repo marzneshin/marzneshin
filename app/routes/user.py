@@ -21,6 +21,7 @@ from app.dependencies import (
     EndDateDep,
     ModifyUsersAccess,
 )
+from app.models.notification import UserNotification
 from app.models.service import ServiceResponse
 from app.models.user import (
     UserCreate,
@@ -28,7 +29,7 @@ from app.models.user import (
     UserResponse,
     UserUsageSeriesResponse,
 )
-from app.utils import report
+from app.notification import notify
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/users", tags=["User"])
@@ -136,9 +137,13 @@ async def add_user(new_user: UserCreate, db: DBDep, admin: AdminDep):
 
     user = UserResponse.model_validate(db_user)
     marznode.operations.update_user(user=db_user)
+
     asyncio.ensure_future(
-        report.user_created(user=user, user_id=db_user.id, by=admin)
+        notify(
+            action=UserNotification.Action.user_created, user=user, by=admin
+        )
     )
+
     logger.info("New user `%s` added", db_user.username)
     return user
 
@@ -188,10 +193,6 @@ async def delete_expired(
 
     for db_user in expired_users:
         crud.remove_user(db, db_user)
-
-        asyncio.ensure_future(
-            report.user_deleted(username=db_user.username, by=admin)
-        )
 
         logger.info("User `%s` removed", db_user.username)
 
@@ -247,18 +248,25 @@ async def modify_user(
         db.commit()
 
     asyncio.ensure_future(
-        report.user_updated(
-            user=UserResponse.model_validate(db_user), by=admin
+        notify(
+            action=UserNotification.Action.user_updated,
+            user=UserResponse.model_validate(db_user),
+            by=admin,
         )
     )
 
     logger.info("User `%s` modified", db_user.username)
 
     if active_before != active_after:
+        action = (
+            UserNotification.Action.user_activated
+            if active_after
+            else UserNotification.Action.user_deactivated
+        )
+
         asyncio.ensure_future(
-            report.status_change(
-                username=db_user.username,
-                activation=db_user.activated,
+            notify(
+                action=action,
                 user=UserResponse.model_validate(db_user),
                 by=admin,
             )
@@ -286,12 +294,19 @@ async def remove_user(
     """
     marznode.operations.update_user(db_user, remove=True)
 
+    deleted_username = db_user.username
     crud.remove_user(db, db_user)
-    db.flush()
+
+    db_user.username = deleted_username
+    user = UserResponse.model_validate(db_user)
+    db.expunge(db_user)
 
     asyncio.ensure_future(
-        report.user_deleted(username=db_user.username, by=admin)
+        notify(
+            action=UserNotification.Action.user_deleted, user=user, by=admin
+        )
     )
+
     logger.info("User %s deleted", db_user.username)
     return {}
 
@@ -333,7 +348,14 @@ async def reset_user_data_usage(
         db.commit()
 
     user = UserResponse.model_validate(db_user)
-    asyncio.ensure_future(report.user_data_usage_reset(user=user, by=admin))
+
+    asyncio.ensure_future(
+        notify(
+            action=UserNotification.Action.data_usage_reset,
+            user=user,
+            by=admin,
+        )
+    )
 
     logger.info("User `%s`'s usage was reset", db_user.username)
 
@@ -363,6 +385,12 @@ async def enable_user(
 
     user = UserResponse.model_validate(db_user)
 
+    asyncio.ensure_future(
+        notify(
+            action=UserNotification.Action.user_enabled, user=user, by=admin
+        )
+    )
+
     logger.info("User `%s` has been enabled", db_user.username)
 
     return user
@@ -388,6 +416,12 @@ async def disable_user(
 
     user = UserResponse.model_validate(db_user)
 
+    asyncio.ensure_future(
+        notify(
+            action=UserNotification.Action.user_disabled, user=user, by=admin
+        )
+    )
+
     logger.info("User `%s` has been disabled", db_user.username)
 
     return user
@@ -408,9 +442,15 @@ async def revoke_user_subscription(
     if db_user.is_active:
         marznode.operations.update_user(db_user, remove=True)
         marznode.operations.update_user(db_user)
+
     user = UserResponse.model_validate(db_user)
+
     asyncio.ensure_future(
-        report.user_subscription_revoked(user=user, by=admin)
+        notify(
+            action=UserNotification.Action.subscription_revoked,
+            user=user,
+            by=admin,
+        )
     )
 
     logger.info("User %s subscription revoked", db_user.username)

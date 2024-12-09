@@ -15,7 +15,6 @@ from app.db.models import (
     Admin,
     Node,
     NodeUserUsage,
-    NotificationReminder,
     InboundHost,
     Service,
     Inbound,
@@ -33,7 +32,6 @@ from app.models.proxy import InboundHost as InboundHostModify
 from app.models.service import Service as ServiceModify, ServiceCreate
 from app.models.system import TrafficUsageSeries
 from app.models.user import (
-    ReminderType,
     UserCreate,
     UserDataUsageResetStrategy,
     UserModify,
@@ -424,7 +422,6 @@ def get_user_usages(
     start: datetime,
     end: datetime,
 ) -> UserUsageSeriesResponse:
-
     usages = defaultdict(dict)
 
     cond = and_(
@@ -920,59 +917,3 @@ def update_node_status(
         db_node.message = message
     db_node.last_status_change = datetime.utcnow()
     db.commit()
-
-
-def create_notification_reminder(
-    db: Session,
-    reminder_type: ReminderType,
-    expires_at: datetime,
-    user_id: int,
-) -> NotificationReminder:
-    reminder = NotificationReminder(
-        type=reminder_type, expires_at=expires_at, user_id=user_id
-    )
-    db.add(reminder)
-    db.commit()
-    db.refresh(reminder)
-    return reminder
-
-
-def get_notification_reminder(
-    db: Session,
-    user_id: int,
-    reminder_type: ReminderType,
-) -> Optional[NotificationReminder]:
-    reminder = (
-        db.query(NotificationReminder)
-        .filter(NotificationReminder.user_id == user_id)
-        .filter(NotificationReminder.type == reminder_type)
-        .first()
-    )
-    if reminder is None:
-        return
-    if reminder.expires_at and reminder.expires_at < datetime.utcnow():
-        db.delete(reminder)
-        db.commit()
-        return
-    return reminder
-
-
-def delete_notification_reminder_by_type(
-    db: Session, user_id: int, reminder_type: ReminderType
-) -> None:
-    """Deletes notification reminder filtered by user_id and type if exists"""
-    stmt = delete(NotificationReminder).where(
-        NotificationReminder.user_id == user_id,
-        NotificationReminder.type == reminder_type,
-    )
-    db.execute(stmt)
-    db.commit()
-    return
-
-
-def delete_notification_reminder(
-    db: Session, dbreminder: NotificationReminder
-) -> None:
-    db.delete(dbreminder)
-    db.commit()
-    return

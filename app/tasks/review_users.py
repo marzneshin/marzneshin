@@ -8,11 +8,12 @@ from app.db import (
     GetDB,
     get_users,
 )
+from app.models.notification import UserNotification
 from app.models.user import (
     UserResponse,
     UserExpireStrategy,
 )
-from app.utils import report
+from app.notification import notify
 
 if TYPE_CHECKING:
     pass
@@ -31,11 +32,11 @@ async def review_users():
             user.activated = False
             db.commit()
             db.refresh(user)
+
             asyncio.ensure_future(
-                report.status_change(
-                    user.username,
-                    user.status,
-                    UserResponse.model_validate(user),
+                notify(
+                    action=UserNotification.Action.user_deactivated,
+                    user=UserResponse.model_validate(user),
                 )
             )
 
@@ -70,11 +71,4 @@ async def review_users():
             user.expire_strategy = UserExpireStrategy.FIXED_DATE
             db.commit()
             db.refresh(user)
-            asyncio.ensure_future(
-                report.status_change(
-                    user.username,
-                    user.status,
-                    UserResponse.model_validate(user),
-                )
-            )
             logger.info("on hold user `%s` has been activated", user.username)

@@ -14,11 +14,6 @@ from pydantic import (
 USERNAME_REGEXP = r"^\w{3,32}$"
 
 
-class ReminderType(str, Enum):
-    expiration_date = "expiration_date"
-    data_usage = "data_usage"
-
-
 class UserStatus(str, Enum):
     ACTIVE = "active"
     INACTIVE = "inactive"

@@ -2,7 +2,6 @@ from abc import ABC
 
 
 class MarzNodeBase(ABC):
-
     async def stop(self):
         """stops all operations"""
 

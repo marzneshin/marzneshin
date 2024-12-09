@@ -232,7 +232,6 @@ def generate_user_configs(
     user_id: int,
     format_variables: dict,
 ) -> Union[List, str]:
-
     salt = secrets.token_hex(8)
     configs = []
 

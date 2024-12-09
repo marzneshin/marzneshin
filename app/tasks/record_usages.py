@@ -8,6 +8,7 @@ from app import marznode
 from app.db import GetDB
 from app.db.models import NodeUsage, NodeUserUsage, User
 from app.marznode import MarzNodeBase
+from app.tasks.data_usage_percent_reached import data_usage_percent_reached
 
 
 def record_user_usage_logs(
@@ -76,7 +77,6 @@ def record_node_stats(node_id: int, usage: int):
     )
 
     with GetDB() as db:
-
         # make node usage row if doesn't exist
         select_stmt = select(NodeUsage.node_id).where(
             and_(
@@ -156,6 +156,8 @@ async def record_user_usages():
 
     # record users usage
     with GetDB() as db:
+        await data_usage_percent_reached(db, users_usage)
+
         stmt = update(User).values(
             used_traffic=User.used_traffic + bindparam("value"),
             lifetime_used_traffic=User.lifetime_used_traffic
