@@ -1,18 +1,17 @@
 """drop notification reminders table
 
 Revision ID: 79271458a973
-Revises: be0032100c07
+Revises: a015ed8ce227
 Create Date: 2024-11-27 04:43:24.448736
 
 """
 
-from alembic import op
 import sqlalchemy as sa
-
+from alembic import op
 
 # revision identifiers, used by Alembic.
 revision = "79271458a973"
-down_revision = "be0032100c07"
+down_revision = "a015ed8ce227"
 branch_labels = None
 depends_on = None
 
