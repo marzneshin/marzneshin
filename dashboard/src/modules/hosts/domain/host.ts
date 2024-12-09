@@ -9,13 +9,18 @@ export const HostSchema = z.object({
         .number().int()
         .nullable()
         .optional(),
-    port: z.union([
-        z.number()
-            .int()
-            .gte(1, "Port must be more than 1")
-            .lte(65535, "Port can not be more than 65535"),
-        z.null()
-    ]).optional(),
+    port: z
+        .preprocess(
+            (val) => (val === "" || val === undefined ? null : Number(val)),
+            z.union([
+                z
+                    .number()
+                    .int()
+                    .gte(1, "Port must be more than 1")
+                    .lte(65535, "Port cannot be more than 65535"),
+                z.null(),
+            ])
+        ),
 });
 
 
