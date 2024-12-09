@@ -5,7 +5,7 @@ export const schema = z.object({
     rules: z.array(
         z.object({
             pattern: z.string(),
-            result: z.enum(["xray", "v2ray", "sing-box", "clash", "clash-meta", "block", "links", "base64-links", "template"]),
+            result: z.enum(["xray", "sing-box", "clash", "clash-meta", "block", "links", "base64-links", "template"]),
         })
     ),
     // url_prefix: z.string().default(""),
