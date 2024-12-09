@@ -5,7 +5,6 @@ from aiogram.client.default import DefaultBotProperties
 from aiogram.client.session.aiohttp import AiohttpSession
 from aiogram.enums import ParseMode
 from aiogram.exceptions import TelegramAPIError
-from aiogram.types import InlineKeyboardMarkup
 
 from app.config import TELEGRAM_PROXY_URL
 from app.config.env import (
@@ -37,31 +36,29 @@ class BotManager:
             )
             try:
                 await cls._instance.get_me()
-            except Exception:
-                raise ValueError("Telegram API token not valid.")
+            except:
+                logger.error("Telegram API token is not valid.")
         return cls._instance
 
 
 async def send_message(
     message: str,
     parse_mode=ParseMode.HTML,
-    keyboard: InlineKeyboardMarkup = None,
 ):
-    bot = await BotManager.get_instance()
-    if bot and (TELEGRAM_ADMIN_ID or TELEGRAM_LOGGER_CHANNEL_ID):
+    if not (bot := await BotManager.get_instance()):
+        return
+
+    for recipient_id in (TELEGRAM_ADMIN_ID or []) + [
+        TELEGRAM_LOGGER_CHANNEL_ID
+    ]:
+        if not recipient_id:
+            continue
         try:
-            if TELEGRAM_LOGGER_CHANNEL_ID:
-                await bot.send_message(
-                    TELEGRAM_LOGGER_CHANNEL_ID, message, parse_mode=parse_mode
-                )
-            else:
-                for admin in TELEGRAM_ADMIN_ID:
-                    await bot.send_message(
-                        admin,
-                        message,
-                        parse_mode=parse_mode,
-                        reply_markup=keyboard,
-                    )
+            await bot.send_message(
+                recipient_id,
+                message,
+                parse_mode=parse_mode,
+            )
         except TelegramAPIError as e:
             logger.error(e)
 
