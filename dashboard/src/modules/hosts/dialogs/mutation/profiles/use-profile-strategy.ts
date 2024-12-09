@@ -3,6 +3,7 @@ import { FC } from "react";
 import { GeneralSchema, GeneralProfileFields, generalProfileDefaultValue } from "./general";
 import { WireguardSchema, WireguardProfileFields, wireguardProfileDefaultValue } from "./wireguard";
 import { Hysteria2Schema, Hysteria2ProfileFields, hysteria2ProfileDefaultValue } from "./hysteria2";
+import { ShadowTlsSchema, ShadowTlsProfileFields, shadowTlsProfileDefaultValue } from "./shadowtls";
 import { TuicSchema, TuicProfileFields, tuicProfileDefaultValue } from "./tuic";
 
 type ProfileSchema = typeof GeneralSchema | typeof WireguardSchema | typeof Hysteria2Schema | typeof TuicSchema;
@@ -26,6 +27,7 @@ export const useProfileStrategy = (
         shadowsocks2022: [GeneralSchema, GeneralProfileFields, generalProfileDefaultValue],
         wireguard: [WireguardSchema, WireguardProfileFields, wireguardProfileDefaultValue],
         hysteria2: [Hysteria2Schema, Hysteria2ProfileFields, hysteria2ProfileDefaultValue],
+        shadowtls: [ShadowTlsSchema, ShadowTlsProfileFields, shadowTlsProfileDefaultValue],
         tuic: [TuicSchema, TuicProfileFields, tuicProfileDefaultValue],
     };
 

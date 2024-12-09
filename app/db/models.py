@@ -136,7 +136,7 @@ class Service(Base):
 
     @property
     def user_ids(self):
-        return [user.id for user in self.users]
+        return [user.id for user in self.users if not user.removed]
 
 
 class User(Base):
@@ -408,12 +408,12 @@ class Node(Base):
     user_usages = relationship(
         "NodeUserUsage",
         back_populates="node",
-        cascade="all, delete, delete-orphan",
+        cascade="save-update, merge",
     )
     usages = relationship(
         "NodeUsage",
         back_populates="node",
-        cascade="all, delete, delete-orphan",
+        cascade="save-update, merge",
     )
     usage_coefficient = Column(
         Float, nullable=False, server_default=text("1.0"), default=1

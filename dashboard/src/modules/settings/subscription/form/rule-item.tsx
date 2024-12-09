@@ -71,7 +71,6 @@ export const RuleItem = ({ index, field, onRemove: remove }: RuleItemProps) => {
                                     </FormControl>
                                     <SelectContent>
                                         <SelectItem value="xray">xray</SelectItem>
-                                        <SelectItem value="v2ray">v2ray</SelectItem>
                                         <SelectItem value="sing-box">sing-box</SelectItem>
                                         <SelectItem value="clash">clash</SelectItem>
                                         <SelectItem value="clash-meta">clash-meta</SelectItem>

@@ -8,7 +8,7 @@ import {
     Accordion,
 } from "@marzneshin/common/components";
 
-export const TuicProfileFields = () => {
+export const ShadowTlsProfileFields = () => {
     return (
         <div className="space-y-2">
             <CommonFields />
