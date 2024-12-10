@@ -414,7 +414,7 @@ def admins_stats(db: Session, start: datetime, end: datetime):
             .count()
         )
 
-        result.total_traffic_used += admin_usage
+        result.total_traffic_used += int(admin_usage)
         result.total_new_users += admin_new_users
         result.total_modify_users += admin_modify_users
 
