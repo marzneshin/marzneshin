@@ -381,12 +381,13 @@ def admins_stats(db: Session, start: datetime, end: datetime):
             .join(User, NodeUserUsage.user_id == User.id)
             .filter(User.admin_id == admin.id)
             .filter(
-                and_(   
+                and_(
                     NodeUserUsage.created_at >= start,
                     NodeUserUsage.created_at <= end,
                 )
             )
-            .scalar() or 0
+            .scalar()
+            or 0
         )
 
         admin_new_users = (
@@ -408,7 +409,7 @@ def admins_stats(db: Session, start: datetime, end: datetime):
                 and_(
                     User.edit_at >= start,
                     User.edit_at <= end,
-                    User.edit_at.isnot(None)
+                    User.edit_at.isnot(None),
                 )
             )
             .count()
