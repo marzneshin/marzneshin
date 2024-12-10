@@ -54,8 +54,13 @@ def update_telegram_settings(
 
 
 @router.get("/stats/admins", response_model=AdminsStats)
-def get_admins_stats(db: DBDep, admin: SudoAdminDep):
-    return AdminsStats(total=db.query(DBAdmin).count())
+def get_admins_stats(
+    db: DBDep,
+    admin: SudoAdminDep,
+    start_date: StartDateDep,
+    end_date: EndDateDep,
+):
+    return crud.admins_stats(db, start_date, end_date)
 
 
 @router.get("/stats/nodes", response_model=NodesStats)
