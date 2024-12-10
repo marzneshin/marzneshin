@@ -47,12 +47,12 @@ def upgrade() -> None:
                             "result": "sing-box",
                         },
                         {
-                            "pattern": "^v2rayN/(:?6\.(:?[5-9]\d+|4[1-9])|[7-9]\d*\.\d+)",
+                            "pattern": "^v2rayN/(:?6\\.(?:[5-9]\\d+|4[1-9])|[7-9]\\d*\\.\\d+)",
                             "result": "xray",
                         },
                         {"pattern": "^v2rayN/", "result": "base64-links"},
                         {
-                            "pattern": "^v2rayNG/([2-9]|1\.(9|\d{2,})|1\.8\.(1[7-9]|[2-9]\d|\d{3,}))",
+                            "pattern": "^v2rayNG/([2-9]|1\\.(9|\\d{2,})|1\\.8\\.(1[7-9]|[2-9]\\d|\\d{3,}))",
                             "result": "xray",
                         },
                         {"pattern": "^v2rayNG/", "result": "base64-links"},
