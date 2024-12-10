@@ -50,7 +50,7 @@ def get_admins(
     enabled: Optional[bool] = None,
     all_services_access: Optional[bool] = None,
     modify_users_access: Optional[bool] = None,
-    service_ids: Optional[list[int]] = Query(None)
+    service_ids: Optional[list[int]] = Query(None),
 ):
     query = db.query(DBAdmin).options(joinedload(DBAdmin.services))
 
@@ -64,15 +64,24 @@ def get_admins(
         query = query.filter(DBAdmin.enabled == enabled)
 
     if all_services_access is not None:
-        query = query.filter(DBAdmin.all_services_access == all_services_access)
+        query = query.filter(
+            DBAdmin.all_services_access == all_services_access
+        )
 
     if modify_users_access is not None:
-        query = query.filter(DBAdmin.modify_users_access == modify_users_access)
+        query = query.filter(
+            DBAdmin.modify_users_access == modify_users_access
+        )
 
     if service_ids:
-        query = query.join(DBAdmin.services).filter(Service.id.in_(service_ids)).distinct()
+        query = (
+            query.join(DBAdmin.services)
+            .filter(Service.id.in_(service_ids))
+            .distinct()
+        )
 
     return paginate(query)
+
 
 @router.post("", response_model=Admin)
 def create_admin(new_admin: AdminCreate, db: DBDep, admin: SudoAdminDep):
