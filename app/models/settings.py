@@ -1,7 +1,7 @@
 from enum import Enum
 from typing import Pattern
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, validator
 
 
 class ConfigTypes(str, Enum):
@@ -48,6 +48,15 @@ class SubscriptionSettings(BaseModel):
     )
     rules: list[SubscriptionRule]
 
+
+    @validator("placeholder_remarks")
+    def validate_unique_placetype(cls, value):
+
+        placetypes = [rule.placetype for rule in value]
+        if len(placetypes) != len(set(placetypes)):
+            raise ValueError("Duplicate 'placetype' values are not allowed.")
+
+        return value
 
 class TelegramSettings(BaseModel):
     token: str
