@@ -20,14 +20,14 @@ class SubscriptionRule(BaseModel):
     result: ConfigTypes
 
 
-class PlaceHolderTypes(str, Enum):
-    disable = "disable"
-    expired = "expired"
-    limited = "limited"
+class PlaceholderTypes(str, Enum):
+    DISABLE = "disable"
+    EXPIRED = "expired"
+    LIMITED = "limited"
 
 
-class PlaceHolderRule(BaseModel):
-    placetype: PlaceHolderTypes
+class PlaceholderRule(BaseModel):
+    placetype: PlaceholderTypes
     texts: list[str]
 
 
@@ -38,7 +38,7 @@ class SubscriptionSettings(BaseModel):
     update_interval: int
     shuffle_configs: bool = False
     placeholder_if_disabled: bool = True
-    placeholder_remarks: list[PlaceHolderRule] = Field(
+    placeholder_remarks: list[PlaceholderRule] = Field(
         example=[
             {
                 "placetype": "disable",

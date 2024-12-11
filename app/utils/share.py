@@ -33,8 +33,8 @@ from app.models.proxy import (
 )
 from app.models.settings import (
     SubscriptionSettings,
-    PlaceHolderRule,
-    PlaceHolderTypes,
+    PlaceholderRule,
+    PlaceholderTypes,
 )
 from app.models.user import UserResponse, UserExpireStrategy
 from app.templates import render_template
@@ -86,14 +86,14 @@ def generate_subscription_template(
     )
 
 
-def find_user_placeholder(user: "UserResponse") -> PlaceHolderTypes:
+def find_user_placeholder(user: "UserResponse") -> PlaceholderTypes:
     if user.expired:
-        return PlaceHolderTypes.expired
+        return PlaceholderTypes.EXPIRED
     if user.data_limit and user.used_traffic > user.data_limit:
-        return PlaceHolderTypes.limited
+        return PlaceholderTypes.LIMITED
     if not user.is_active:
-        return PlaceHolderTypes.disable
-    return PlaceHolderTypes.disable
+        return PlaceholderTypes.DISABLE
+    return PlaceholderTypes.DISABLE
 
 
 def generate_subscription(
@@ -101,7 +101,7 @@ def generate_subscription(
     config_format: Literal["links", "xray", "clash-meta", "clash", "sing-box"],
     as_base64: bool = False,
     use_placeholder: bool = False,
-    placeholder_remarks: List[PlaceHolderRule] = [],
+    placeholder_remarks: List[PlaceholderRule] = [],
     shuffle: bool = False,
 ) -> str:
     extra_data = UserResponse.model_validate(user).model_dump(
