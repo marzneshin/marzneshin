@@ -6,7 +6,7 @@ import secrets
 from collections import defaultdict
 from datetime import datetime as dt, timedelta
 from importlib import resources
-from typing import Literal, Union, List, Type
+from typing import Literal, Union, List, Type, Dict, Any
 from uuid import UUID
 
 from jdatetime import date as jd
@@ -86,14 +86,30 @@ def generate_subscription_template(
     )
 
 
-def find_user_placeholder(user: "UserResponse") -> PlaceholderTypes:
-    if user.expired:
-        return PlaceholderTypes.EXPIRED
-    if user.data_limit and user.used_traffic > user.data_limit:
-        return PlaceholderTypes.LIMITED
-    if not user.is_active:
-        return PlaceholderTypes.DISABLE
-    return PlaceholderTypes.DISABLE
+def get_user_placeholder_configs(
+    user: "UserResponse",
+    placeholder_remarks: List[PlaceholderRule],
+    format_variables: Dict[str, Any],
+) -> List[V2Data]:
+    for placeholder_type in PlaceholderTypes.get_active_types(user):
+        if user_placeholder := next(
+            (
+                rule
+                for rule in placeholder_remarks
+                if rule.placetype == placeholder_type
+            ),
+            None,
+        ):
+            return [
+                V2Data(
+                    "vmess",
+                    remark.format_map(format_variables),
+                    "127.0.0.1",
+                    80,
+                )
+                for remark in user_placeholder.texts
+            ]
+    return []
 
 
 def generate_subscription(
@@ -121,26 +137,9 @@ def generate_subscription(
         subscription_handler = subscription_handler_class()
 
     if use_placeholder:
-        configs = []
-        user_placeholder_type = find_user_placeholder(user)
-
-        user_placeholder = next(
-            (
-                rule
-                for rule in placeholder_remarks
-                if rule.placetype == user_placeholder_type
-            ),
-            None,
+        configs = get_user_placeholder_configs(
+            user, placeholder_remarks, format_variables
         )
-        for remark in user_placeholder.texts:
-            placeholder_config = V2Data(
-                "vmess",
-                remark.format_map(format_variables),
-                "127.0.0.1",
-                80,
-            )
-            configs.append(placeholder_config)
-
     else:
         configs = generate_user_configs(
             user.inbounds,
