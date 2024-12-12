@@ -22,6 +22,7 @@ class SubscriptionRule(BaseModel):
 
 
 class PlaceholderTypes(str, Enum):
+    ALL = "all"
     DISABLE = "disable"
     EXPIRED = "expired"
     LIMITED = "limited"

@@ -91,25 +91,19 @@ def get_user_placeholder_configs(
     placeholder_remarks: List[PlaceholderRule],
     format_variables: Dict[str, Any],
 ) -> List[V2Data]:
-    for placeholder_type in PlaceholderTypes.get_active_types(user):
-        if user_placeholder := next(
-            (
-                rule
-                for rule in placeholder_remarks
-                if rule.placetype == placeholder_type
-            ),
-            None,
-        ):
-            return [
-                V2Data(
-                    "vmess",
-                    remark.format_map(format_variables),
-                    "127.0.0.1",
-                    80,
-                )
-                for remark in user_placeholder.texts
-            ]
-    return []
+    target_types = {
+        PlaceholderTypes.ALL,
+        *PlaceholderTypes.get_active_types(user),
+    }
+
+    config = [
+        V2Data("vmess", remark.format_map(format_variables), "127.0.0.1", 80)
+        for rule in placeholder_remarks
+        if rule.placetype in target_types
+        for remark in rule.texts
+    ]
+
+    return config
 
 
 def generate_subscription(
