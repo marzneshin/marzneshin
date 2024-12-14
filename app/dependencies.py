@@ -89,25 +89,25 @@ def get_user(
     return db_user
 
 
-def user_create_access(
-    admin: Annotated[Admin, Depends(get_current_admin)]
-):
+def user_create_access(admin: Annotated[Admin, Depends(get_current_admin)]):
     if not admin.is_sudo and not admin.create_users_access:
-        raise HTTPException(status_code=403, detail="You're not allowed to create users")
+        raise HTTPException(
+            status_code=403, detail="You're not allowed to create users"
+        )
 
 
-def user_modify_access(
-    admin: Annotated[Admin, Depends(get_current_admin)]
-):
+def user_modify_access(admin: Annotated[Admin, Depends(get_current_admin)]):
     if not admin.is_sudo and not admin.modify_users_access:
-        raise HTTPException(status_code=403, detail="You're not allowed to modify users")
+        raise HTTPException(
+            status_code=403, detail="You're not allowed to modify users"
+        )
 
 
-def user_delete_access(
-    admin: Annotated[Admin, Depends(get_current_admin)]
-):
+def user_delete_access(admin: Annotated[Admin, Depends(get_current_admin)]):
     if not admin.is_sudo and not admin.delete_users_access:
-        raise HTTPException(status_code=403, detail="You're not allowed to delete users")
+        raise HTTPException(
+            status_code=403, detail="You're not allowed to delete users"
+        )
 
 
 def parse_start_date(start: str | None = None):

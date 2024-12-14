@@ -21,7 +21,7 @@ from app.dependencies import (
     EndDateDep,
     CreateUserAccess,
     ModifyUserAccess,
-    DeleteUserAccess
+    DeleteUserAccess,
 )
 from app.models.notification import UserNotification
 from app.models.service import ServiceResponse
@@ -112,7 +112,12 @@ def get_users(
 
 
 @router.post("", response_model=UserResponse)
-async def add_user(create_access: CreateUserAccess, new_user: UserCreate, db: DBDep, admin: AdminDep):
+async def add_user(
+    create_access: CreateUserAccess,
+    new_user: UserCreate,
+    db: DBDep,
+    admin: AdminDep,
+):
     """
     Add a new user
 
