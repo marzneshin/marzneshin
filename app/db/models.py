@@ -98,7 +98,7 @@ class Admin(Base):
         default=True,
         server_default=sqlalchemy.sql.true(),
     )
-    delete_users_access = Column(
+    remove_users_access = Column(
         Boolean,
         nullable=False,
         default=True,

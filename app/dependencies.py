@@ -103,8 +103,8 @@ def user_modify_access(admin: Annotated[Admin, Depends(get_current_admin)]):
         )
 
 
-def user_delete_access(admin: Annotated[Admin, Depends(get_current_admin)]):
-    if not admin.is_sudo and not admin.delete_users_access:
+def user_remove_access(admin: Annotated[Admin, Depends(get_current_admin)]):
+    if not admin.is_sudo and not admin.remove_users_access:
         raise HTTPException(
             status_code=403, detail="You're not allowed to delete users"
         )
@@ -135,4 +135,4 @@ StartDateDep = Annotated[datetime, Depends(parse_start_date)]
 EndDateDep = Annotated[datetime, Depends(parse_end_date)]
 CreateUserAccess = Annotated[None, Depends(user_create_access)]
 ModifyUserAccess = Annotated[None, Depends(user_modify_access)]
-DeleteUserAccess = Annotated[None, Depends(user_delete_access)]
+RemoveUserAccess = Annotated[None, Depends(user_remove_access)]

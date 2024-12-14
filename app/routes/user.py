@@ -21,7 +21,7 @@ from app.dependencies import (
     EndDateDep,
     CreateUserAccess,
     ModifyUserAccess,
-    DeleteUserAccess,
+    RemoveUserAccess,
 )
 from app.models.notification import UserNotification
 from app.models.service import ServiceResponse
@@ -171,7 +171,7 @@ async def delete_expired(
     passed_time: int,
     db: DBDep,
     admin: AdminDep,
-    delete_access: DeleteUserAccess,
+    remove_access: RemoveUserAccess,
 ):
     """
     Delete expired users
@@ -294,7 +294,7 @@ async def remove_user(
     db_user: UserDep,
     db: DBDep,
     admin: AdminDep,
-    delete_access: DeleteUserAccess,
+    remove_access: RemoveUserAccess,
 ):
     """
     Remove a user
