@@ -105,6 +105,12 @@ class Admin(Base):
         server_default=sqlalchemy.sql.true(),
     )
     created_at = Column(DateTime, default=datetime.utcnow)
+    is_owner = Column(
+        Boolean,
+        nullable=False,
+        default=False,
+        server_default=sqlalchemy.sql.false(),
+    )
     is_sudo = Column(Boolean, default=False)
     password_reset_at = Column(DateTime)
     subscription_url_prefix = Column(

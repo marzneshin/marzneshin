@@ -31,7 +31,7 @@ def get_admin(
         if not created_at or dbadmin.password_reset_at > created_at:
             return
 
-    if not dbadmin.is_sudo and not dbadmin.enabled:
+    if not dbadmin.is_owner and not dbadmin.is_sudo and not dbadmin.enabled:
         return
 
     return Admin.model_validate(dbadmin)
