@@ -20,7 +20,9 @@ class Admin(BaseModel):
     is_sudo: bool
     enabled: bool = True
     all_services_access: bool = False
+    create_users_access: bool = True
     modify_users_access: bool = True
+    delete_users_access: bool = True
     service_ids: list = []
     subscription_url_prefix: str = ""
     model_config = ConfigDict(from_attributes=True)
@@ -63,7 +65,9 @@ class AdminPartialModify(AdminModify):
     is_sudo: bool | None = None
     enabled: bool | None = None
     all_services_access: bool | None = None
+    create_users_access: bool | None = None
     modify_users_access: bool | None = None
+    delete_users_access: bool | None = None
     service_ids: list | None = None
     subscription_url_prefix: str | None = None
 

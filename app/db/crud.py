@@ -668,7 +668,9 @@ def create_admin(db: Session, admin: AdminCreate):
         is_sudo=admin.is_sudo,
         enabled=admin.enabled,
         all_services_access=admin.all_services_access,
+        create_users_access=admin.create_users_access,
         modify_users_access=admin.modify_users_access,
+        delete_users_access=admin.delete_users_access,
         services=db.query(Service)
         .filter(Service.id.in_(admin.service_ids))
         .all(),
@@ -688,8 +690,10 @@ def update_admin(
         "hashed_password",
         "enabled",
         "all_services_access",
+        "create_users_access",
         "modify_users_access",
-        "subscription_url_prefix",
+        "delete_users_access"
+        "subscription_url_prefix"
     ]:
         if not isinstance(getattr(modifications, attribute), NoneType):
             setattr(dbadmin, attribute, getattr(modifications, attribute))
