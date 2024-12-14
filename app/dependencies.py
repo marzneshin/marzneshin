@@ -103,14 +103,16 @@ def parse_start_date(start: str | None = None):
             datetime.utcnow().timestamp() - 30 * 24 * 3600, tz=timezone.utc
         )
     else:
-        return datetime.fromisoformat(start).replace(tzinfo=timezone.utc)
+        dt = datetime.fromisoformat(start)
+        return dt if dt.tzinfo else dt.replace(tzinfo=timezone.utc)
 
 
 def parse_end_date(end: str | None = None):
     if not end:
         return datetime.utcnow().replace(tzinfo=timezone.utc)
     else:
-        return datetime.fromisoformat(end).replace(tzinfo=timezone.utc)
+        dt = datetime.fromisoformat(end)
+        return dt if dt.tzinfo else dt.replace(tzinfo=timezone.utc)
 
 
 def get_service(id: int, db: Annotated[Session, Depends(get_db)]):
