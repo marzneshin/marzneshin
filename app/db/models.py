@@ -86,7 +86,19 @@ class Admin(Base):
         default=False,
         server_default=sqlalchemy.sql.false(),
     )
+    create_users_access = Column(
+        Boolean,
+        nullable=False,
+        default=True,
+        server_default=sqlalchemy.sql.true(),
+    )
     modify_users_access = Column(
+        Boolean,
+        nullable=False,
+        default=True,
+        server_default=sqlalchemy.sql.true(),
+    )
+    delete_users_access = Column(
         Boolean,
         nullable=False,
         default=True,

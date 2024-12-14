@@ -19,7 +19,9 @@ from app.dependencies import (
     UserDep,
     StartDateDep,
     EndDateDep,
-    ModifyUsersAccess,
+    CreateUserAccess,
+    ModifyUserAccess,
+    DeleteUserAccess,
 )
 from app.models.notification import UserNotification
 from app.models.service import ServiceResponse
@@ -110,7 +112,12 @@ def get_users(
 
 
 @router.post("", response_model=UserResponse)
-async def add_user(new_user: UserCreate, db: DBDep, admin: AdminDep):
+async def add_user(
+    create_access: CreateUserAccess,
+    new_user: UserCreate,
+    db: DBDep,
+    admin: AdminDep,
+):
     """
     Add a new user
 
@@ -164,7 +171,7 @@ async def delete_expired(
     passed_time: int,
     db: DBDep,
     admin: AdminDep,
-    modify_access: ModifyUsersAccess,
+    delete_access: DeleteUserAccess,
 ):
     """
     Delete expired users
@@ -213,7 +220,7 @@ async def modify_user(
     modifications: UserModify,
     db: DBDep,
     admin: AdminDep,
-    modify_access: ModifyUsersAccess,
+    modify_access: ModifyUserAccess,
 ):
     """
     Modify a user
@@ -287,7 +294,7 @@ async def remove_user(
     db_user: UserDep,
     db: DBDep,
     admin: AdminDep,
-    modify_access: ModifyUsersAccess,
+    delete_access: DeleteUserAccess,
 ):
     """
     Remove a user
@@ -334,7 +341,7 @@ async def reset_user_data_usage(
     db_user: UserDep,
     db: DBDep,
     admin: AdminDep,
-    modify_access: ModifyUsersAccess,
+    modify_access: ModifyUserAccess,
 ):
     """
     Reset user data usage
@@ -367,7 +374,7 @@ async def enable_user(
     db_user: UserDep,
     db: DBDep,
     admin: AdminDep,
-    modify_access: ModifyUsersAccess,
+    modify_access: ModifyUserAccess,
 ):
     """
     Enables a user
@@ -401,7 +408,7 @@ async def disable_user(
     db_user: UserDep,
     db: DBDep,
     admin: AdminDep,
-    modify_access: ModifyUsersAccess,
+    modify_access: ModifyUserAccess,
 ):
     """
     Disables a user
@@ -432,7 +439,7 @@ async def revoke_user_subscription(
     db_user: UserDep,
     db: DBDep,
     admin: AdminDep,
-    modify_access: ModifyUsersAccess,
+    modify_access: ModifyUserAccess,
 ):
     """
     Revoke users subscription (Subscription link and proxies)

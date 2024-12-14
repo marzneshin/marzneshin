@@ -89,11 +89,25 @@ def get_user(
     return db_user
 
 
-def user_modification_access(
-    admin: Annotated[Admin, Depends(get_current_admin)]
-):
+def user_create_access(admin: Annotated[Admin, Depends(get_current_admin)]):
+    if not admin.is_sudo and not admin.create_users_access:
+        raise HTTPException(
+            status_code=403, detail="You're not allowed to create users"
+        )
+
+
+def user_modify_access(admin: Annotated[Admin, Depends(get_current_admin)]):
     if not admin.is_sudo and not admin.modify_users_access:
-        raise HTTPException(status_code=403, detail="You're not allowed")
+        raise HTTPException(
+            status_code=403, detail="You're not allowed to modify users"
+        )
+
+
+def user_delete_access(admin: Annotated[Admin, Depends(get_current_admin)]):
+    if not admin.is_sudo and not admin.delete_users_access:
+        raise HTTPException(
+            status_code=403, detail="You're not allowed to delete users"
+        )
 
 
 def parse_start_date(start: str | None = None):
@@ -119,4 +133,6 @@ SudoAdminDep = Annotated[Admin, Depends(sudo_admin)]
 DBDep = Annotated[Session, Depends(get_db)]
 StartDateDep = Annotated[datetime, Depends(parse_start_date)]
 EndDateDep = Annotated[datetime, Depends(parse_end_date)]
-ModifyUsersAccess = Annotated[None, Depends(user_modification_access)]
+CreateUserAccess = Annotated[None, Depends(user_create_access)]
+ModifyUserAccess = Annotated[None, Depends(user_modify_access)]
+DeleteUserAccess = Annotated[None, Depends(user_delete_access)]
