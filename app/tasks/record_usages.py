@@ -22,7 +22,7 @@ def record_user_usage_logs(
     )
 
     with GetDB() as db:
-        # make user usage row if doesn't exist
+        # make user usage row if it doesn't exist
         select_stmt = select(NodeUserUsage.user_id).where(
             and_(
                 NodeUserUsage.node_id == node_id,
@@ -51,8 +51,7 @@ def record_user_usage_logs(
         stmt = (
             update(NodeUserUsage)
             .values(
-                used_traffic=NodeUserUsage.used_traffic
-                + bindparam("value") * consumption_factor
+                used_traffic=NodeUserUsage.used_traffic + bindparam("value")
             )
             .where(
                 and_(
@@ -63,7 +62,12 @@ def record_user_usage_logs(
             )
         )
         db.connection().execute(
-            stmt, params, execution_options={"synchronize_session": None}
+            stmt,
+            [
+                {**usage, "value": int(usage["value"] * consumption_factor)}
+                for usage in params
+            ],
+            execution_options={"synchronize_session": None},
         )
         db.commit()
 
