@@ -693,7 +693,7 @@ def update_admin(
         "create_users_access",
         "modify_users_access",
         "delete_users_access",
-        "subscription_url_prefix"
+        "subscription_url_prefix",
     ]:
         if not isinstance(getattr(modifications, attribute), NoneType):
             setattr(dbadmin, attribute, getattr(modifications, attribute))
