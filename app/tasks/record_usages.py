@@ -142,7 +142,7 @@ async def record_user_usages():
         )
         node_usage = 0
         for param in params:
-            users_usage[param["uid"]] += (
+            users_usage[param["uid"]] += int(
                 param["value"] * coefficient
             )  # apply the usage coefficient
             node_usage += param["value"]
