@@ -1,5 +1,5 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@marzneshin/components';
-import { LoginForm, useAuth } from '@marzneshin/features/auth';
+import { Card, CardContent, CardHeader, CardTitle } from '@marzneshin/common/components';
+import { LoginForm, useAuth } from '@marzneshin/modules/auth';
 import { createFileRoute } from '@tanstack/react-router'
 import { FC } from 'react'
 import { useTranslation } from 'react-i18next';

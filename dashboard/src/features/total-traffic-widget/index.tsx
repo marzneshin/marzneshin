@@ -7,7 +7,7 @@ import {
     ChartTooltip,
     ChartTooltipContent,
     ChartConfig,
-} from "@marzneshin/components";
+} from "@marzneshin/common/components";
 import { XAxis, BarChart, YAxis, CartesianGrid, Bar } from "recharts"
 import { format as formatByte } from '@chbphone55/pretty-bytes';
 import { useTotalTrafficQuery } from "./api";
@@ -18,7 +18,7 @@ import {
     useTransformDateUsageData,
     dateXAxisTicks,
     useFromNowInterval
-} from "@marzneshin/common/stats-charts";
+} from "@marzneshin/libs/stats-charts";
 
 const chartConfig = {
     traffic: {

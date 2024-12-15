@@ -154,7 +154,7 @@ def get_admin_users(username: str, db: DBDep, admin: SudoAdminDep):
     return paginate(query)
 
 
-@router.get("/{username}/disable_users", response_model=AdminResponse)
+@router.post("/{username}/disable_users", response_model=AdminResponse)
 async def disable_users(username: str, db: DBDep, admin: SudoAdminDep):
     db_admin = crud.get_admin(db, username)
     if not db_admin:
@@ -176,7 +176,7 @@ async def disable_users(username: str, db: DBDep, admin: SudoAdminDep):
     return db_admin
 
 
-@router.get("/{username}/enable_users", response_model=AdminResponse)
+@router.post("/{username}/enable_users", response_model=AdminResponse)
 async def enable_users(username: str, db: DBDep, admin: SudoAdminDep):
     db_admin = crud.get_admin(db, username)
     if not db_admin:

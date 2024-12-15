@@ -4,13 +4,10 @@ from sqlalchemy.orm import Session
 from .base import Base, SessionLocal, engine  # noqa
 from .crud import (
     create_admin,
-    create_notification_reminder,  # noqa
     create_user,
-    delete_notification_reminder,
     get_admin,
     get_admins,
     get_jwt_secret_key,
-    get_notification_reminder,
     ensure_node_inbounds,
     get_system_usage,
     get_tls_certificate,
@@ -64,9 +61,6 @@ __all__ = [
     "update_admin",
     "remove_admin",
     "get_admins",
-    "create_notification_reminder",
-    "get_notification_reminder",
-    "delete_notification_reminder",
     "GetDB",
     "User",
     "System",

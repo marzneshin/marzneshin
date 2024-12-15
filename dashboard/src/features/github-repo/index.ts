@@ -1,2 +1,2 @@
 export * from "./github-repo"
-export * from "./services"
+export * from "./api"

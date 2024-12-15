@@ -158,8 +158,8 @@
         }
       },
       "usage_coefficient": "Usage Coefficient",
-      "connection_backend": "Backend Connection",
-      "connection_backend_desc": "Used for remote tls connections",
+      "connection_backend": "Connection Backend",
+      "connection_backend_desc": "Used for the remote connection",
       "certificate-alert": {
         "title": "Nodes Certificate Configuration",
         "desc": "If you aim to configure your nodes certificate, checkout settings page.",
@@ -247,6 +247,8 @@
       }
     },
     "admins": {
+      "disable_users": "Disable users",
+      "enable_users": "Enable users",
       "permission": "Permission",
       "dialogs": {
         "creation": {
@@ -266,6 +268,15 @@
       "users-data-usage": "Users Data Usage"
     },
     "hosts": {
+      "dns-servers": "DNS Servers",
+      "obfuscation-password": "Obfuscation Password",
+      "server-public-key": "Server public key",
+      "tls-config": "TLS Config",
+      "network-settings": "Network Settings",
+      "security-settings": "Security Settings",
+      "allowed-ips": "Allowed Ips",
+      "allowed-ips-placeholder": "127.0.0.1,...",
+      "camouflage-settings": "Camouflage Settings",
       "fragment": {
         "interval": "Interval",
         "length": "Length",

@@ -16,6 +16,7 @@ from v2share import (
     ClashConfig,
     ClashMetaConfig,
     XrayConfig,
+    WireGuardConfig,
 )
 from v2share.base import BaseConfig
 from v2share.links import LinksConfig
@@ -49,10 +50,12 @@ subscription_handlers: dict[str, Type[BaseConfig]] = {
     "clash-meta": ClashMetaConfig,
     "clash": ClashConfig,
     "sing-box": SingBoxConfig,
+    "wireguard": WireGuardConfig,
 }
 
 handlers_templates = {
     LinksConfig: None,
+    WireGuardConfig: None,
     XrayConfig: XRAY_SUBSCRIPTION_TEMPLATE
     or resources.files("app.templates") / "xray.json",
     ClashConfig: CLASH_SUBSCRIPTION_TEMPLATE,
@@ -151,6 +154,21 @@ def format_time_left(seconds_left: int) -> str:
     return " ".join(result)
 
 
+def calculate_client_address(interface_address: str, user_id: int) -> str:
+    try:
+        interface = ipaddress.ip_interface(interface_address)
+        address = interface.ip
+        network = interface.network
+    except ValueError:
+        return ""
+    user_address = network[user_id]
+    if user_address == network[0]:
+        user_address = network.broadcast_address - 1
+    if user_address == address:
+        user_address = network.broadcast_address - 2
+    return user_address.compressed + "/" + str(user_address.max_prefixlen)
+
+
 def setup_format_variables(extra_data: dict) -> dict:
     expire_strategy = extra_data.get("expire_strategy")
     expire_datetime = extra_data.get("expire_date")
@@ -214,7 +232,6 @@ def generate_user_configs(
     user_id: int,
     format_variables: dict,
 ) -> Union[List, str]:
-
     salt = secrets.token_hex(8)
     configs = []
 
@@ -277,15 +294,19 @@ def generate_user_configs(
                 fingerprint=host.fingerprint.value or inbound.get("fp"),
                 reality_pbk=inbound.get("pbk"),
                 reality_sid=inbound.get("sid"),
-                client_address=(
-                    ipaddress.ip_network(inbound["address"], strict=False)[
-                        user_id
-                    ].compressed
-                    + "/32"
-                    if inbound.get("address")
-                    else None
+                client_address=calculate_client_address(
+                    inbound.get("address"), user_id
                 ),
                 flow=inbound.get("flow"),
+                dns_servers=(
+                    host.dns_servers.split(",") if host.dns_servers else []
+                ),
+                mtu=host.mtu,
+                allowed_ips=(
+                    list(map(str.strip, host.allowed_ips.split(",")))
+                    if host.allowed_ips
+                    else None
+                ),
                 allow_insecure=host.allowinsecure,
                 uuid=UUID(gen_uuid(key)),
                 password=gen_password(key),
@@ -295,6 +316,7 @@ def generate_user_configs(
                     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.3"
                 },
                 shadowsocks_method="chacha20-ietf-poly1305",
+                shadowtls_version=inbound.get("shadowtls_version"),
                 weight=host.weight,
             )
             if host.fragment:

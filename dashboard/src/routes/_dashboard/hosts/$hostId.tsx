@@ -7,13 +7,13 @@ import {
 import {
     RouterHostContext,
     fetchHost,
-} from "@marzneshin/features/hosts";
+} from "@marzneshin/modules/hosts";
 import { Suspense } from "react";
 import {
     AlertDialog,
     AlertDialogContent,
     Loading
-} from "@marzneshin/components";
+} from "@marzneshin/common/components";
 
 const HostProvider = () => {
     const { host } = Route.useLoaderData()

@@ -19,6 +19,7 @@ from sqlalchemy import (
     and_,
     func,
     select,
+    Text,
 )
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.ext.orderinglist import ordering_list
@@ -34,7 +35,6 @@ from app.models.proxy import (
     ProxyTypes,
 )
 from app.models.user import (
-    ReminderType,
     UserDataUsageResetStrategy,
     UserStatus,
     UserExpireStrategy,
@@ -137,7 +137,7 @@ class Service(Base):
 
     @property
     def user_ids(self):
-        return [user.id for user in self.users]
+        return [user.id for user in self.users if not user.removed]
 
 
 class User(Base):
@@ -179,11 +179,6 @@ class User(Base):
     traffic_reset_at = Column(DateTime)
     node_usages = relationship(
         "NodeUserUsage",
-        back_populates="user",
-        cascade="all,delete,delete-orphan",
-    )
-    notification_reminders = relationship(
-        "NotificationReminder",
         back_populates="user",
         cascade="all,delete,delete-orphan",
     )
@@ -355,9 +350,13 @@ class InboundHost(Base):
         server_default=sqlalchemy.sql.false(),
     )
     fragment = Column(JSON())
-
+    udp_noises = Column(JSON())
+    http_headers = Column(JSON())
+    dns_servers = Column(String(128))
+    mtu = Column(Integer)
+    allowed_ips = Column(Text())
     inbound_id = Column(Integer, ForeignKey("inbounds.id"), nullable=False)
-    inbound = relationship("Inbound", back_populates="hosts")
+    inbound = relationship("Inbound", back_populates="hosts", lazy="joined")
     allowinsecure = Column(Boolean, default=False)
     is_disabled = Column(Boolean, default=False)
     weight = Column(Integer, default=1, nullable=False, server_default="1")
@@ -372,6 +371,10 @@ class InboundHost(Base):
     @property
     def chain_ids(self):
         return [c.chained_host_id for c in self.chain]
+
+    @property
+    def protocol(self):
+        return self.inbound.protocol if self.inbound else None
 
 
 class System(Base):
@@ -425,12 +428,12 @@ class Node(Base):
     user_usages = relationship(
         "NodeUserUsage",
         back_populates="node",
-        cascade="all, delete, delete-orphan",
+        cascade="save-update, merge",
     )
     usages = relationship(
         "NodeUsage",
         back_populates="node",
-        cascade="all, delete, delete-orphan",
+        cascade="save-update, merge",
     )
     usage_coefficient = Column(
         Float, nullable=False, server_default=text("1.0"), default=1
@@ -464,17 +467,6 @@ class NodeUsage(Base):
     node = relationship("Node", back_populates="usages")
     uplink = Column(BigInteger, default=0)
     downlink = Column(BigInteger, default=0)
-
-
-class NotificationReminder(Base):
-    __tablename__ = "notification_reminders"
-
-    id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey("users.id"))
-    user = relationship("User", back_populates="notification_reminders")
-    type = Column(Enum(ReminderType), nullable=False)
-    expires_at = Column(DateTime)
-    created_at = Column(DateTime, default=datetime.utcnow)
 
 
 class Settings(Base):

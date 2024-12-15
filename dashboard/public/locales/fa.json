@@ -140,7 +140,7 @@
       },
       "usage_coefficient": "ضریب مصرف",
       "connection_backend": "بکند اتصال",
-      "connection_backend_desc": "برای اتصالات tls به کار می‌رود",
+      "connection_backend_desc": "نوع اتصال را مشخص می‌کند",
       "certificate-alert": {
         "title": "کانفیگ سرتیفیکت نود",
         "desc": "اگر قصد برداشت سرتیفیکت نود را دارید، صفحه تنظیمات را بررسی کنید",

@@ -5,9 +5,9 @@ import {
     CommandInput,
     CommandList,
     ScrollArea,
-} from "@marzneshin/components";
+} from "@marzneshin/common/components";
 import { SearchBox } from "./search-box";
-import { useAuth } from "@marzneshin/features/auth";
+import { useAuth } from "@marzneshin/modules/auth";
 import { CommandItems } from "./command-items";
 import { commandItems } from "./commands";
 

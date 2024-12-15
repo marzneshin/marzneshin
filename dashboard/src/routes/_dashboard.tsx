@@ -7,12 +7,12 @@ import {
     Loading,
     HeaderLogo,
     HeaderMenu,
-} from "@marzneshin/components";
-import { useAuth } from "@marzneshin/features/auth";
+} from "@marzneshin/common/components";
+import { useAuth } from "@marzneshin/modules/auth";
 import { DashboardSidebar, ToggleButton } from "@marzneshin/features/sidebar";
 import { usePanelToggle } from "@marzneshin/features/sidebar/use-panel-toggle";
-import { useScreenBreakpoint } from "@marzneshin/hooks/use-screen-breakpoint";
-import { cn } from "@marzneshin/utils";
+import { useScreenBreakpoint } from "@marzneshin/common/hooks/use-screen-breakpoint";
+import { cn } from "@marzneshin/common/utils";
 import { Suspense } from "react";
 import {
     Outlet,
@@ -23,7 +23,6 @@ import {
 import { useGithubRepoStatsQuery, GithubRepo } from "@marzneshin/features/github-repo";
 import { CommandBox } from "@marzneshin/features/search-command";
 import { DashboardBottomMenu } from "@marzneshin/features/bottom-menu";
-import { VersionIndicator } from "@marzneshin/features/version-indicator";
 
 export const DashboardLayout = () => {
     const isDesktop = useScreenBreakpoint("md");
@@ -81,15 +80,12 @@ export const DashboardLayout = () => {
                             />
                         </ResizablePanel>
                         <ResizableHandle withHandle className="w-[2px]" />
-                        <ResizablePanel className="flex-col flex justify-between">
-                            <main className="flex flex-col h-full">
+                        <ResizablePanel className="flex flex-col h-full">
+                            <main className="flex-grow flex flex-col overflow-y-auto">
                                 <Suspense fallback={<Loading />}>
                                     <Outlet />
                                 </Suspense>
                             </main>
-                            <footer className="h-10 py-2">
-                                <VersionIndicator />
-                            </footer>
                         </ResizablePanel>
                     </ResizablePanelGroup>
                 ) : (
@@ -98,7 +94,7 @@ export const DashboardLayout = () => {
                             <Suspense fallback={<Loading />}>
                                 <Outlet />
                             </Suspense>
-                            <footer className="h-30 border-t-3 py-2 px-5">
+                            <footer className="h-30 border-t-3 shrink-0 py-2 px-5">
                                 <DashboardBottomMenu variant={isSudo() ? "sudo-admin" : "admin"} />
                             </footer>
                         </main>

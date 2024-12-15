@@ -4,11 +4,11 @@ import {
     DropdownMenuItem,
     DropdownMenuSubTrigger,
     DropdownMenuPortal
-} from "@marzneshin/components";
+} from "@marzneshin/common/components";
 import { Languages } from "lucide-react";
 import { FC } from "react";
 import { useTranslation } from "react-i18next";
-import { cn } from "@marzneshin/utils";
+import { cn } from "@marzneshin/common/utils";
 
 const LanguageItem = ({ language, title }: { language: string, title: string }) => {
     const { i18n } = useTranslation();
@@ -32,8 +32,8 @@ export const LanguageSwitchMenu: FC = () => {
     return (
         <DropdownMenuSub>
             <DropdownMenuSubTrigger arrowDir="left">
-                <div className="hstack items-center justify-end">
-                    <span className="mx-1">{t("language")}</span>
+                <div className="hstack items-center gap-2 w-full justify-end">
+                    <span>{t("language")}</span>
                     <Languages className="size-[1rem]" />
                 </div>
             </DropdownMenuSubTrigger>

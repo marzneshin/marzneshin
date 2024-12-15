@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { Button } from "@marzneshin/components";
+import { Button } from "@marzneshin/common/components";
 import type { FC } from "react";
 
 export const DonationButton: FC<{ donationLink: string }> = ({ donationLink }) => {

@@ -2,6 +2,8 @@ from abc import ABC
 
 
 class MarzNodeBase(ABC):
+    async def stop(self):
+        """stops all operations"""
 
     async def update_user(
         self, user, inbounds: list[str] | None = None

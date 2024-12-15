@@ -9,7 +9,7 @@ import {
     TableRowWithCell,
     DateTableRow,
     Badge
-} from "@marzneshin/components";
+} from "@marzneshin/common/components";
 import type { FC } from "react";
 import { UserStatusEnableButton } from "./user-status-enable-button";
 import {

@@ -8,7 +8,7 @@ import {
     Button,
     ScrollArea,
     VStack,
-} from "@marzneshin/components";
+} from "@marzneshin/common/components";
 import { useTranslation } from "react-i18next";
 import {
     useAdminsCreationMutation,
@@ -17,7 +17,7 @@ import {
     AdminCreateSchema,
     AdminType,
 } from "@marzneshin/modules/admins";
-import { ServicesField } from "@marzneshin/features/services";
+import { ServicesField } from "@marzneshin/modules/services";
 import { UsernameField } from "@marzneshin/modules/users";
 import {
     PasswordField,
@@ -27,7 +27,7 @@ import {
     SudoPrivilageField,
     AllServicesAccessField,
 } from "./fields";
-import { useMutationDialog, MutationDialogProps } from "@marzneshin/hooks";
+import { useMutationDialog, MutationDialogProps } from "@marzneshin/common/hooks";
 
 export const AdminsMutationDialog: FC<MutationDialogProps<AdminType>> = ({
     onClose,

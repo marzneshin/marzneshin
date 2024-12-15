@@ -9,7 +9,7 @@ import {
     Button,
     ScrollArea,
     VStack,
-} from "@marzneshin/components";
+} from "@marzneshin/common/components";
 import { useTranslation } from "react-i18next";
 import {
     DATA_LIMIT_METRIC,
@@ -19,9 +19,9 @@ import {
     UsernameField,
     type UserMutationType,
 } from "@marzneshin/modules/users";
-import { ServicesField } from "@marzneshin/features/services";
+import { ServicesField } from "@marzneshin/modules/services";
 import { NoteField } from "./fields";
-import { type MutationDialogProps, useMutationDialog } from "@marzneshin/hooks";
+import { type MutationDialogProps, useMutationDialog } from "@marzneshin/common/hooks";
 import { DataLimitFields, ExpirationMethodFields } from "./sections";
 
 export const UsersMutationDialog: FC<MutationDialogProps<UserMutationType>> = ({

@@ -9,8 +9,16 @@ body:
   - type: markdown
     attributes:
       value: |
-        **Thanks :heart: for taking the time to fill out this bug report!**
+        Thanks :heart: for taking the time to fill out this bug report!
         We kindly ask that you search to see if an issue [already exists](https://github.com/marzneshin/marzneshin/issues?q=is%3Aissue+sort%3Acreated-desc+) for the bug you encountered.
+        [Here](https://docs.marzneshin.org/docs/contribution-guideline/issue/) is a basic guideline for writing an issue.
+
+  - type: markdown
+    attributes:
+      value: |
+        سپاس از شما بابت صرف زمان و پر کردن گزارش باگ
+        صمیمانه درخواست می‌کنیم قبل از باز کردن ایشو، مطمئن شوید ایشو مشابه [وجود دارد یا نه](https://github.com/marzneshin/marzneshin/issues?q=is%3Aissue+sort%3Acreated-desc+)
+        قوانین نوشتن ایشو [اینجا](https://docs.marzneshin.org/fa/docs/contribution-guideline/issue/) نشان داده شده.
 
   - type: textarea
     attributes:

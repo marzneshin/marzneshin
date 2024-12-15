@@ -12,15 +12,15 @@ import {
     CopyToClipboardButton,
     buttonVariants,
     NoPropogationButton,
-} from "@marzneshin/components";
+} from "@marzneshin/common/components";
 import { LinkIcon } from "lucide-react";
-import { getSubscriptionLink } from "@marzneshin/utils";
+import { getSubscriptionLink } from "@marzneshin/common/utils";
 import {
     DataTableColumnHeader,
     DataTableColumnHeaderFilterOption,
     DataTableActionsCell,
     type ColumnActions, type ColumnDefWithSudoRole
-} from "@marzneshin/features/entity-table";
+} from "@marzneshin/libs/entity-table";
 import { type Column } from "@tanstack/react-table";
 
 export const columns = (actions: ColumnActions<UserType>): ColumnDefWithSudoRole<UserType>[] => [

@@ -59,13 +59,17 @@ class MarzNodeGRPCLIB(MarzNodeBase, MarzNodeDB):
 
         self._channel = Channel(self._address, self._port, ssl=ctx)
         self._stub = MarzServiceStub(self._channel)
-        asyncio.create_task(self._monitor_channel())
+        self._monitor_task = asyncio.create_task(self._monitor_channel())
         self._streaming_task = None
 
         self._updates_queue = asyncio.Queue(1)
         self.synced = False
         self.usage_coefficient = usage_coefficient
         atexit.register(self._channel.close)
+
+    async def stop(self):
+        self._channel.close()
+        self._monitor_task.cancel()
 
     async def _monitor_channel(self):
         while state := self._channel._state:

@@ -8,6 +8,7 @@ from app import marznode
 from app.db import GetDB
 from app.db.models import NodeUsage, NodeUserUsage, User
 from app.marznode import MarzNodeBase
+from app.tasks.data_usage_percent_reached import data_usage_percent_reached
 
 
 def record_user_usage_logs(
@@ -21,7 +22,7 @@ def record_user_usage_logs(
     )
 
     with GetDB() as db:
-        # make user usage row if doesn't exist
+        # make user usage row if it doesn't exist
         select_stmt = select(NodeUserUsage.user_id).where(
             and_(
                 NodeUserUsage.node_id == node_id,
@@ -50,8 +51,7 @@ def record_user_usage_logs(
         stmt = (
             update(NodeUserUsage)
             .values(
-                used_traffic=NodeUserUsage.used_traffic
-                + bindparam("value") * consumption_factor
+                used_traffic=NodeUserUsage.used_traffic + bindparam("value")
             )
             .where(
                 and_(
@@ -62,7 +62,12 @@ def record_user_usage_logs(
             )
         )
         db.connection().execute(
-            stmt, params, execution_options={"synchronize_session": None}
+            stmt,
+            [
+                {**usage, "value": int(usage["value"] * consumption_factor)}
+                for usage in params
+            ],
+            execution_options={"synchronize_session": None},
         )
         db.commit()
 
@@ -76,7 +81,6 @@ def record_node_stats(node_id: int, usage: int):
     )
 
     with GetDB() as db:
-
         # make node usage row if doesn't exist
         select_stmt = select(NodeUsage.node_id).where(
             and_(
@@ -142,7 +146,7 @@ async def record_user_usages():
         )
         node_usage = 0
         for param in params:
-            users_usage[param["uid"]] += (
+            users_usage[param["uid"]] += int(
                 param["value"] * coefficient
             )  # apply the usage coefficient
             node_usage += param["value"]
@@ -156,6 +160,8 @@ async def record_user_usages():
 
     # record users usage
     with GetDB() as db:
+        await data_usage_percent_reached(db, users_usage)
+
         stmt = update(User).values(
             used_traffic=User.used_traffic + bindparam("value"),
             lifetime_used_traffic=User.lifetime_used_traffic

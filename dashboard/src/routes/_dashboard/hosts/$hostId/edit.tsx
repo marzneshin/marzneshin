@@ -5,7 +5,7 @@ import {
 import {
     HostsMutationDialog,
     useRouterHostContext,
-} from "@marzneshin/features/hosts";
+} from "@marzneshin/modules/hosts";
 
 const HostEdit = () => {
     const value = useRouterHostContext()
@@ -14,6 +14,7 @@ const HostEdit = () => {
     return value && (
         <HostsMutationDialog
             entity={value.host}
+            protocol={value.host.protocol}
             onClose={() => navigate({ to: "/hosts" })}
         />
     );
