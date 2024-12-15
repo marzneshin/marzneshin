@@ -1,8 +1,8 @@
 """implement host chains
 
 Revision ID: 982867b533e6
-Revises: 1992c49c5990
-Create Date: 2024-10-31 04:27:44.704707
+Revises: 79271458a973
+Create Date: 2024-12-15 04:27:44.704707
 
 """
 
@@ -11,7 +11,7 @@ from alembic import op
 
 # revision identifiers, used by Alembic.
 revision = "982867b533e6"
-down_revision = "1992c49c5990"
+down_revision = "79271458a973"
 branch_labels = None
 depends_on = None
 
