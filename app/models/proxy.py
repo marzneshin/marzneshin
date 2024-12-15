@@ -67,10 +67,10 @@ class FragmentSettings(BaseModel):
     interval: str = Field(pattern=r"^[\d-]{1,32}$")
 
 
-class UDPNoiseSettings(BaseModel):
+class XrayNoise(BaseModel):
     type: str = Field(pattern=r"^(:?rand|str|base64)$")
     packet: str = Field()
-    interval: str = Field(pattern=r"^[\d-]{1,32}$")
+    interval: str = Field(pattern=r"^\d{1,10}(-\d{1,10})?$")
 
 
 class InboundHost(BaseModel):
@@ -87,7 +87,7 @@ class InboundHost(BaseModel):
     is_disabled: bool | None = False
     mux: bool = Field(False)
     fragment: FragmentSettings | None = Field(None)
-    udp_noises: list[UDPNoiseSettings] | None = []
+    udp_noises: list[XrayNoise] | None = None
     http_headers: dict[str, list[str]] | None = {}
     mtu: int | None = None
     dns_servers: str | None = None
