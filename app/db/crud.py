@@ -150,13 +150,16 @@ def get_user_hosts(db: Session, user_id: int):
     )
 
 
-def get_inbound_hosts(db: Session, inbound_id: int) -> List[InboundHost]:
+def get_inbounds_hosts(
+    db: Session, inbound_ids: list[int]
+) -> list[InboundHost]:
     return (
         db.query(InboundHost)
         .options(
             joinedload(InboundHost.chain).joinedload(HostChain.chained_host)
         )
-        .filter(InboundHost.inbound_id == inbound_id)
+        .filter(InboundHost.inbound_id.in_(inbound_ids))
+        .filter(InboundHost.is_disabled == False)
         .all()
     )
 

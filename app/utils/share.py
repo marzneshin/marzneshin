@@ -28,7 +28,8 @@ from app.config.env import (
     CLASH_SUBSCRIPTION_TEMPLATE,
     SUBSCRIPTION_PAGE_TEMPLATE,
 )
-from app.db import GetDB, crud
+from app.db import GetDB
+from app.db.crud import get_inbounds_hosts
 from app.models.proxy import (
     InboundHostSecurity,
 )
@@ -237,15 +238,11 @@ def generate_user_configs(
 ) -> Union[List, str]:
     salt = secrets.token_hex(8)
     configs = []
-    hosts = []
 
-    for inb in inbounds:
-        with GetDB() as db:
-            hosts.extend(crud.get_inbound_hosts(db, inb.id))
+    with GetDB() as db:
+        hosts = get_inbounds_hosts(db, inbound_ids=[i.id for i in inbounds])
 
     for host in hosts:
-        if host.is_disabled:
-            continue
         chained_hosts = [c.chained_host for c in host.chain]
         if chained_hosts and not chaining_support:
             continue
