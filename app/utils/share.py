@@ -19,6 +19,7 @@ from v2share import (
     WireGuardConfig,
 )
 from v2share.base import BaseConfig
+from v2share.data import XrayNoise
 from v2share.links import LinksConfig
 
 from app.config.env import (
@@ -318,6 +319,11 @@ def generate_user_configs(
                 shadowsocks_method="chacha20-ietf-poly1305",
                 shadowtls_version=inbound.get("shadowtls_version"),
                 weight=host.weight,
+                xray_noises=(
+                    [XrayNoise(**noise) for noise in host.udp_noises]
+                    if host.udp_noises
+                    else None
+                ),
             )
             if host.fragment:
                 data.fragment = True
