@@ -217,7 +217,6 @@ def update_host(db: Session, db_host: InboundHost, host: InboundHostModify):
     db_host.mux = host.mux
     db_host.is_disabled = host.is_disabled
     db_host.allowinsecure = host.allowinsecure
-    db_host.udp_noises = host.udp_noises
     db_host.udp_noises = (
         [noise.model_dump() for noise in host.udp_noises]
         if host.udp_noises
