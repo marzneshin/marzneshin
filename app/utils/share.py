@@ -122,6 +122,7 @@ def generate_subscription(
             user.key,
             user.id,
             format_variables,
+            chaining_support=subscription_handler.chaining_support,
         )
 
     subscription_handler.add_proxies(configs)
@@ -232,107 +233,129 @@ def generate_user_configs(
     key: str,
     user_id: int,
     format_variables: dict,
+    chaining_support: bool,
 ) -> Union[List, str]:
     salt = secrets.token_hex(8)
     configs = []
+    hosts = []
 
     for inb in inbounds:
-        inb_id, inbound, protocol, tag = (
-            inb.id,
-            json.loads(inb.config),
-            inb.protocol,
-            inb.tag,
-        )
-
-        format_variables.update({"PROTOCOL": protocol.name})
-        if not inbound:
-            continue
-
-        format_variables.update(
-            {"TRANSPORT": inbound.get("network", "<missing>")}
-        )
         with GetDB() as db:
-            hosts = crud.get_inbound_hosts(db, inb_id)
+            hosts.extend(crud.get_inbound_hosts(db, inb.id))
 
-        for host in hosts:
-            if host.is_disabled:
-                continue
-            host_snis = host.sni.split(",") if host.sni else []
-            sni_list = host_snis or inbound.get("sni", [])
-            if sni_list:
-                sni = random.choice(sni_list).replace("*", salt)
-            else:
-                sni = ""
-
-            host_hosts = host.host.split(",") if host.host else []
-            req_host_list = host_hosts or inbound.get("host", [])
-            if req_host_list:
-                req_host = random.choice(req_host_list).replace("*", salt)
-            else:
-                req_host = ""
-
-            host_tls = (
-                None
-                if host.security == InboundHostSecurity.inbound_default
-                else host.security.value
-            )
-            data = V2Data(
-                protocol.value,
-                host.remark.format_map(format_variables),
-                host.address.format_map(format_variables),
-                host.port or inbound["port"],
-                transport_type=inbound.get("network"),
-                sni=sni,
-                host=req_host,
-                tls=host_tls or inbound.get("tls"),
-                header_type=inbound.get("header_type"),
-                alpn=host.alpn if host.alpn != "none" else None,
-                path=(
-                    host.path.format_map(format_variables)
-                    if host.path
-                    else inbound.get("path")
-                ),
-                fingerprint=host.fingerprint.value or inbound.get("fp"),
-                reality_pbk=inbound.get("pbk"),
-                reality_sid=inbound.get("sid"),
-                client_address=calculate_client_address(
-                    inbound.get("address"), user_id
-                ),
-                flow=inbound.get("flow"),
-                dns_servers=(
-                    host.dns_servers.split(",") if host.dns_servers else []
-                ),
-                mtu=host.mtu,
-                allowed_ips=(
-                    list(map(str.strip, host.allowed_ips.split(",")))
-                    if host.allowed_ips
-                    else None
-                ),
-                allow_insecure=host.allowinsecure,
-                uuid=UUID(gen_uuid(key)),
-                password=gen_password(key),
-                ed25519=generate_curve25519_pbk(key),
-                enable_mux=host.mux,
-                http_headers={
-                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.3"
-                },
-                shadowsocks_method="chacha20-ietf-poly1305",
-                shadowtls_version=inbound.get("shadowtls_version"),
-                weight=host.weight,
-                xray_noises=(
-                    [XrayNoise(**noise) for noise in host.udp_noises]
-                    if host.udp_noises
-                    else None
-                ),
-            )
-            if host.fragment:
-                data.fragment = True
-                data.fragment_packets = host.fragment["packets"]
-                data.fragment_length = host.fragment["length"]
-                data.fragment_interval = host.fragment["interval"]
-            configs.append(data)
+    for host in hosts:
+        if host.is_disabled:
+            continue
+        chained_hosts = [c.chained_host for c in host.chain]
+        if chained_hosts and not chaining_support:
+            continue
+        data = create_config(
+            host, key, format_variables, salt, user_id, chained_hosts
+        )
+        configs.append(data)
 
     return configs
+
+
+def create_config(
+    host, key, format_variables, salt, user_id, next_hosts: list = []
+):
+    inb = host.inbound
+    inb_id, inbound, protocol, tag = (
+        inb.id,
+        json.loads(inb.config),
+        inb.protocol,
+        inb.tag,
+    )
+
+    format_variables.update({"PROTOCOL": protocol.name})
+    format_variables.update({"TRANSPORT": inbound.get("network", "<missing>")})
+
+    host_snis = host.sni.split(",") if host.sni else []
+    sni_list = host_snis or inbound.get("sni", [])
+    if sni_list:
+        sni = random.choice(sni_list).replace("*", salt)
+    else:
+        sni = ""
+
+    host_hosts = host.host.split(",") if host.host else []
+    req_host_list = host_hosts or inbound.get("host", [])
+    if req_host_list:
+        req_host = random.choice(req_host_list).replace("*", salt)
+    else:
+        req_host = ""
+
+    host_tls = (
+        None
+        if host.security == InboundHostSecurity.inbound_default
+        else host.security.value
+    )
+    data = V2Data(
+        protocol.value,
+        host.remark.format_map(format_variables),
+        host.address.format_map(format_variables),
+        host.port or inbound["port"],
+        transport_type=inbound.get("network"),
+        sni=sni,
+        host=req_host,
+        tls=host_tls or inbound.get("tls"),
+        header_type=inbound.get("header_type"),
+        alpn=host.alpn if host.alpn != "none" else None,
+        path=(
+            host.path.format_map(format_variables)
+            if host.path
+            else inbound.get("path")
+        ),
+        fingerprint=host.fingerprint.value or inbound.get("fp"),
+        reality_pbk=inbound.get("pbk"),
+        reality_sid=inbound.get("sid"),
+        client_address=calculate_client_address(
+            inbound.get("address"), user_id
+        ),
+        flow=inbound.get("flow"),
+        dns_servers=(host.dns_servers.split(",") if host.dns_servers else []),
+        mtu=host.mtu,
+        allowed_ips=(
+            list(map(str.strip, host.allowed_ips.split(",")))
+            if host.allowed_ips
+            else None
+        ),
+        allow_insecure=host.allowinsecure,
+        uuid=UUID(gen_uuid(key)),
+        password=gen_password(key),
+        ed25519=generate_curve25519_pbk(key),
+        enable_mux=host.mux,
+        http_headers={
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.3"
+        },
+        shadowsocks_method="chacha20-ietf-poly1305",
+        shadowtls_version=inbound.get("shadowtls_version"),
+        weight=host.weight,
+        xray_noises=(
+            [XrayNoise(**noise) for noise in host.udp_noises]
+            if host.udp_noises
+            else None
+        ),
+        next=(
+            create_config(
+                next_hosts[0],
+                key,
+                format_variables,
+                salt,
+                user_id,
+                next_hosts[1:],
+            )
+            if next_hosts
+            else None
+        ),
+    )
+    if host.fragment:
+        data.fragment = True
+        data.fragment_packets = host.fragment["packets"]
+        data.fragment_length = host.fragment["length"]
+        data.fragment_interval = host.fragment["interval"]
+
+    return data
 
 
 def encode_title(text: str) -> str:

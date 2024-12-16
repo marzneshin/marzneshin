@@ -7,7 +7,7 @@ from types import NoneType
 from typing import List, Optional, Tuple, Union
 
 from sqlalchemy import and_, update, select, func, cast, Date
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 
 from app.db.models import (
     JWT,
@@ -153,6 +153,9 @@ def get_user_hosts(db: Session, user_id: int):
 def get_inbound_hosts(db: Session, inbound_id: int) -> List[InboundHost]:
     return (
         db.query(InboundHost)
+        .options(
+            joinedload(InboundHost.chain).joinedload(HostChain.chained_host)
+        )
         .filter(InboundHost.inbound_id == inbound_id)
         .all()
     )

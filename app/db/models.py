@@ -322,7 +322,7 @@ class HostChain(Base):
     chained_host = relationship(
         "InboundHost",
         foreign_keys=[chained_host_id],
-        # backref=backref("previous_hosts"),
+        lazy="joined",
     )
 
 
