@@ -218,6 +218,11 @@ def update_host(db: Session, db_host: InboundHost, host: InboundHostModify):
     db_host.is_disabled = host.is_disabled
     db_host.allowinsecure = host.allowinsecure
     db_host.udp_noises = host.udp_noises
+    db_host.udp_noises = (
+        [noise.model_dump() for noise in host.udp_noises]
+        if host.udp_noises
+        else None
+    )
     db_host.http_headers = host.http_headers
     db_host.mtu = host.mtu
     db_host.dns_servers = host.dns_servers

@@ -70,7 +70,7 @@ class FragmentSettings(BaseModel):
 class XrayNoise(BaseModel):
     type: str = Field(pattern=r"^(:?rand|str|base64)$")
     packet: str = Field()
-    interval: str = Field(pattern=r"^\d{1,10}(-\d{1,10})?$")
+    delay: str = Field(pattern=r"^\d{1,10}(-\d{1,10})?$")
 
 
 class InboundHost(BaseModel):
