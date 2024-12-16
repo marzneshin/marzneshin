@@ -316,6 +316,15 @@ class HostChain(Base):
     chained_host_id = Column(Integer, ForeignKey("hosts.id"))
     seq = Column(Integer, primary_key=True)
 
+    host = relationship(
+        "InboundHost", foreign_keys=[host_id], back_populates="chain"
+    )
+    chained_host = relationship(
+        "InboundHost",
+        foreign_keys=[chained_host_id],
+        # backref=backref("previous_hosts"),
+    )
+
 
 class InboundHost(Base):
     __tablename__ = "hosts"
@@ -366,6 +375,7 @@ class InboundHost(Base):
         order_by=HostChain.seq,
         collection_class=ordering_list("seq"),
         lazy="joined",
+        cascade="all, delete-orphan",
     )
 
     @property

@@ -6,7 +6,7 @@ from enum import Enum
 from types import NoneType
 from typing import List, Optional, Tuple, Union
 
-from sqlalchemy import and_, delete, update, select, func, cast, Date
+from sqlalchemy import and_, update, select, func, cast, Date
 from sqlalchemy.orm import Session
 
 from app.db.models import (
@@ -222,6 +222,18 @@ def update_host(db: Session, db_host: InboundHost, host: InboundHostModify):
         if host.udp_noises
         else None
     )
+
+    chain_ids = [
+        int(i[0])
+        for i in db.query(InboundHost.id)
+        .filter(InboundHost.id.in_(host.chain_ids))
+        .all()
+    ]
+    chain_nodes = [
+        HostChain(host_id=db_host.id, chained_host_id=chain_id)
+        for chain_id in chain_ids
+    ]
+    db_host.chain = chain_nodes
     db_host.http_headers = host.http_headers
     db_host.mtu = host.mtu
     db_host.dns_servers = host.dns_servers
