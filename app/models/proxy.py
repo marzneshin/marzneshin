@@ -73,9 +73,33 @@ class XrayNoise(BaseModel):
     delay: str = Field(pattern=r"^\d{1,10}(-\d{1,10})?$")
 
 
+class XMuxSettings(BaseModel):
+    max_concurrency: str | None = Field(
+        None, pattern=r"^\d{1,10}(-\d{1,10})?$"
+    )
+    max_connections: str | None = Field(
+        None, pattern=r"^\d{1,10}(-\d{1,10})?$"
+    )
+    max_reuse_times: str | None = Field(
+        None, pattern=r"^\d{1,10}(-\d{1,10})?$"
+    )
+    max_lifetime: str | None = Field(None, pattern=r"^\d{1,10}(-\d{1,10})?$")
+
+
+class SplitHttpSettings(BaseModel):
+    mode: str | None = None
+    no_grpc_header: bool | None = None
+    padding_bytes: str | None = None
+    xmux: XMuxSettings | None = None
+
+
 class InboundHost(BaseModel):
     remark: str
     address: str
+    uuid: str | None = None
+    password: str | None = None
+    protocol: ProxyTypes | str | None = None
+    network: str | None = None
     port: int | None = Field(None)
     sni: str | None = Field(None)
     host: str | None = Field(None)
@@ -92,8 +116,16 @@ class InboundHost(BaseModel):
     mtu: int | None = None
     dns_servers: str | None = None
     allowed_ips: str | None = None
+    header_type: str | None = None
+    reality_public_key: str | None = None
+    reality_short_ids: list[str] | None = None
+    flow: str | None = None
+    shadowtls_version: int | None = None
+    shadowsocks_method: str | None = None
+    splithttp_settings: SplitHttpSettings | None = None
+    universal: bool = True
+    service_ids: list[int] = []
     weight: int = 1
-    protocol: ProxyTypes | None = None
     inbound_id: int | None = None
     chain_ids: list[int] = []
 

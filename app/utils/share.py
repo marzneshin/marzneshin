@@ -29,7 +29,7 @@ from app.config.env import (
     SUBSCRIPTION_PAGE_TEMPLATE,
 )
 from app.db import GetDB
-from app.db.crud import get_inbounds_hosts
+from app.db.crud import get_hosts_for_user
 from app.models.proxy import (
     InboundHostSecurity,
 )
@@ -240,7 +240,7 @@ def generate_user_configs(
     configs = []
 
     with GetDB() as db:
-        hosts = get_inbounds_hosts(db, inbound_ids=[i.id for i in inbounds])
+        hosts = get_hosts_for_user(db, user_id)
 
     for host in hosts:
         chained_hosts = [c.chained_host for c in host.chain]
@@ -255,18 +255,34 @@ def generate_user_configs(
 
 
 def create_config(
-    host, key, format_variables, salt, user_id, next_hosts: list = []
+    host, key, format_variables, salt, user_id, next_hosts: list | None = None
 ):
-    inb = host.inbound
-    inb_id, inbound, protocol, tag = (
-        inb.id,
-        json.loads(inb.config),
-        inb.protocol,
-        inb.tag,
-    )
+    if next_hosts is None:
+        next_hosts = []
 
-    format_variables.update({"PROTOCOL": protocol.name})
-    format_variables.update({"TRANSPORT": inbound.get("network", "<missing>")})
+    if host.inbound:
+        inbound, protocol = (
+            json.loads(host.inbound.config),
+            host.inbound.protocol,
+        )
+        network = inbound.get("network")
+        auth_uuid, auth_password = UUID(gen_uuid(key)), gen_password(key)
+    else:
+        inbound, protocol, network = {}, host.host_protocol, host.host_network
+        auth_uuid, auth_password = (
+            UUID(host.uuid) if host.uuid else None
+        ), host.password
+
+    format_variables.update(
+        {
+            "PROTOCOL": (
+                host.inbound.protocol.value
+                if host.inbound
+                else host.host_protocol
+            )
+        }
+    )
+    format_variables.update({"TRANSPORT": network or "<missing>"})
 
     host_snis = host.sni.split(",") if host.sni else []
     sni_list = host_snis or inbound.get("sni", [])
@@ -288,15 +304,15 @@ def create_config(
         else host.security.value
     )
     data = V2Data(
-        protocol.value,
+        host.inbound.protocol.value if host.inbound else host.host_protocol,
         host.remark.format_map(format_variables),
         host.address.format_map(format_variables),
-        host.port or inbound["port"],
-        transport_type=inbound.get("network"),
+        host.port or inbound.get("port", 0),
+        transport_type=network,
         sni=sni,
         host=req_host,
         tls=host_tls or inbound.get("tls"),
-        header_type=inbound.get("header_type"),
+        header_type=host.header_type or inbound.get("header_type"),
         alpn=host.alpn if host.alpn != "none" else None,
         path=(
             host.path.format_map(format_variables)
@@ -309,7 +325,7 @@ def create_config(
         client_address=calculate_client_address(
             inbound.get("address"), user_id
         ),
-        flow=inbound.get("flow"),
+        flow=host.flow or inbound.get("flow"),
         dns_servers=(host.dns_servers.split(",") if host.dns_servers else []),
         mtu=host.mtu,
         allowed_ips=(
@@ -318,15 +334,14 @@ def create_config(
             else None
         ),
         allow_insecure=host.allowinsecure,
-        uuid=UUID(gen_uuid(key)),
-        password=gen_password(key),
+        uuid=auth_uuid,
+        password=auth_password,
         ed25519=generate_curve25519_pbk(key),
         enable_mux=host.mux,
-        http_headers={
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.3"
-        },
-        shadowsocks_method="chacha20-ietf-poly1305",
-        shadowtls_version=inbound.get("shadowtls_version"),
+        http_headers=host.http_headers,
+        shadowsocks_method=host.shadowsocks_method or "chacha20-ietf-poly1305",
+        shadowtls_version=host.shadowtls_version
+        or inbound.get("shadowtls_version"),
         weight=host.weight,
         xray_noises=(
             [XrayNoise(**noise) for noise in host.udp_noises]

@@ -61,6 +61,13 @@ users_services = Table(
     Column("service_id", ForeignKey("services.id"), primary_key=True),
 )
 
+hosts_services = Table(
+    "hosts_services",
+    Base.metadata,
+    Column("host_id", ForeignKey("hosts.id"), primary_key=True),
+    Column("service_id", ForeignKey("services.id"), primary_key=True),
+)
+
 
 class Admin(Base):
     __tablename__ = "admins"
@@ -332,6 +339,10 @@ class InboundHost(Base):
     id = Column(Integer, primary_key=True)
     remark = Column(String(256), nullable=False)
     address = Column(String(256), nullable=False)
+    host_protocol = Column(String(32))
+    host_network = Column(String(32))
+    uuid = Column(String(36))
+    password = Column(String(128))
     port = Column(Integer)
     path = Column(String(256))
     sni = Column(String(1024))
@@ -364,11 +375,31 @@ class InboundHost(Base):
     dns_servers = Column(String(128))
     mtu = Column(Integer)
     allowed_ips = Column(Text())
-    inbound_id = Column(Integer, ForeignKey("inbounds.id"), nullable=False)
+    header_type = Column(String(32))
+    reality_public_key = Column(String(128))
+    reality_short_ids = Column(JSON())
+    flow = Column(String(32))
+    shadowtls_version = Column(Integer)
+    shadowsocks_method = Column(String(32))
+    splithttp_settings = Column(JSON())
+    inbound_id = Column(Integer, ForeignKey("inbounds.id"), nullable=True)
     inbound = relationship("Inbound", back_populates="hosts", lazy="joined")
     allowinsecure = Column(Boolean, default=False)
     is_disabled = Column(Boolean, default=False)
     weight = Column(Integer, default=1, nullable=False, server_default="1")
+
+    universal = Column(
+        Boolean,
+        default=False,
+        nullable=False,
+        server_default=sqlalchemy.sql.false(),
+    )
+    services = relationship("Service", secondary=hosts_services)
+
+    @property
+    def service_ids(self):
+        return [service.id for service in self.services]
+
     chain = relationship(
         "HostChain",
         foreign_keys="[HostChain.host_id]",
@@ -384,7 +415,11 @@ class InboundHost(Base):
 
     @property
     def protocol(self):
-        return self.inbound.protocol if self.inbound else None
+        return self.inbound.protocol if self.inbound else self.host_protocol
+
+    @property
+    def network(self):
+        return self.host_network
 
 
 class System(Base):

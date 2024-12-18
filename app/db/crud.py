@@ -6,7 +6,7 @@ from enum import Enum
 from types import NoneType
 from typing import List, Optional, Tuple, Union
 
-from sqlalchemy import and_, update, select, func, cast, Date
+from sqlalchemy import and_, update, select, func, cast, Date, or_
 from sqlalchemy.orm import Session, joinedload
 
 from app.db.models import (
@@ -164,6 +164,43 @@ def get_inbounds_hosts(
     )
 
 
+def get_hosts_for_user(session, user_id):
+    # Fetch the user object (assumes relationships are properly set up in the model)
+    user = session.query(User).filter(User.id == user_id).one()
+
+    # Query for hosts linked through user's services and inbounds
+    result_query = session.query(InboundHost).filter(
+        and_(
+            # Exclude disabled hosts
+            InboundHost.is_disabled.is_(False),
+            or_(
+                # Case 1: Host has an inbound linked to a service of the user
+                InboundHost.inbound.has(
+                    Inbound.services.any(
+                        Service.id.in_([s.id for s in user.services])
+                    )
+                ),
+                # Case 2: Host has no inbound
+                and_(
+                    InboundHost.inbound_id.is_(
+                        None
+                    ),  # Host does not have an inbound
+                    or_(
+                        # Host is directly related to a service of the user
+                        InboundHost.services.any(
+                            Service.id.in_([s.id for s in user.services])
+                        ),
+                        # Host is available to all
+                        InboundHost.universal.is_(True),
+                    ),
+                ),
+            ),
+        )
+    )
+
+    return result_query.all()
+
+
 def get_all_inbounds(db: Session):
     return db.query(Inbound).all()
 
@@ -180,6 +217,10 @@ def add_host(db: Session, inbound: Inbound, host: InboundHostModify):
     host = InboundHost(
         remark=host.remark,
         address=host.address,
+        host_network=host.network,
+        host_protocol=host.protocol,
+        uuid=host.uuid,
+        password=host.password,
         port=host.port,
         path=host.path,
         sni=host.sni,
@@ -189,6 +230,17 @@ def add_host(db: Session, inbound: Inbound, host: InboundHostModify):
         fingerprint=host.fingerprint,
         fragment=host.fragment.model_dump() if host.fragment else None,
         udp_noises=host.udp_noises,
+        header_type=host.header_type,
+        reality_public_key=host.reality_public_key,
+        reality_short_ids=host.reality_short_ids,
+        flow=host.flow,
+        shadowtls_version=host.shadowtls_version,
+        shadowsocks_method=host.shadowsocks_method,
+        splithttp_settings=(
+            host.splithttp_settings.model_dump()
+            if host.splithttp_settings
+            else None
+        ),
         http_headers=host.http_headers,
         mtu=host.mtu,
         dns_servers=host.dns_servers,
@@ -196,6 +248,10 @@ def add_host(db: Session, inbound: Inbound, host: InboundHostModify):
         mux=host.mux,
         allowinsecure=host.allowinsecure,
         weight=host.weight,
+        for_all_services=host.for_all_services,
+        services=(
+            db.query(Service).filter(Service.id.in_(host.service_ids)).all()
+        ),
         chain=[
             HostChain(chained_host_id=ch[0])
             for ch in db.query(InboundHost.id)
@@ -203,7 +259,8 @@ def add_host(db: Session, inbound: Inbound, host: InboundHostModify):
             .all()
         ],
     )
-    inbound.hosts.append(host)
+    # inbound.hosts.append(host)
+    db.add(host)
     db.commit()
     db.refresh(host)
     return host
@@ -212,6 +269,10 @@ def add_host(db: Session, inbound: Inbound, host: InboundHostModify):
 def update_host(db: Session, db_host: InboundHost, host: InboundHostModify):
     db_host.remark = host.remark
     db_host.address = host.address
+    db_host.uuid = host.uuid
+    db_host.password = host.password
+    db_host.host_network = host.network
+    db_host.host_protocol = host.protocol
     db_host.port = host.port
     db_host.path = host.path
     db_host.sni = host.sni
@@ -226,6 +287,17 @@ def update_host(db: Session, db_host: InboundHost, host: InboundHostModify):
     db_host.udp_noises = (
         [noise.model_dump() for noise in host.udp_noises]
         if host.udp_noises
+        else None
+    )
+    db_host.header_type = host.header_type
+    db_host.reality_public_key = host.reality_public_key
+    db_host.reality_short_ids = host.reality_short_ids
+    db_host.flow = host.flow
+    db_host.shadowtls_version = host.shadowtls_version
+    db_host.shadowsocks_method = host.shadowsocks_method
+    db_host.splithttp_settings = (
+        host.splithttp_settings.model_dump()
+        if host.splithttp_settings
         else None
     )
 
@@ -244,6 +316,10 @@ def update_host(db: Session, db_host: InboundHost, host: InboundHostModify):
     db_host.mtu = host.mtu
     db_host.dns_servers = host.dns_servers
     db_host.allowed_ips = host.allowed_ips
+    db_host.for_all_services = host.for_all_services
+    db_host.services = (
+        db.query(Service).filter(Service.id.in_(host.service_ids)).all()
+    )
     db_host.weight = host.weight
     db.commit()
     db.refresh(db_host)
