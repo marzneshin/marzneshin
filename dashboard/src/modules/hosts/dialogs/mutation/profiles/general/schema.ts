@@ -1,5 +1,5 @@
-import { z } from "zod";
-import { HostSchema, TlsSchema } from "@marzneshin/modules/hosts";
+import {z} from "zod";
+import {HostSchema, TlsSchema} from "@marzneshin/modules/hosts";
 import i18n from "i18next";
 
 const numberInterval = (v: string | null | undefined) => {
@@ -19,6 +19,23 @@ export const alpnOptions = [
     "h2,http/1.1",
     "h3,h2,http/1.1"
 ]
+
+export const XMuxSettingsSchema = z.object({
+    max_concurrency: z.string().nullable().optional(),
+    max_connections: z.string().nullable().optional(),
+    max_reuse_times: z.string().nullable().optional(),
+    max_lifetime: z.string().nullable().optional(),
+});
+
+export const SplitHttpSettingsSchema = z.object({
+    mode: z.string().nullable().optional(),
+    no_grpc_header: z.boolean().nullable().optional(),
+    padding_bytes: z.string().nullable().optional(),
+    xmux: XMuxSettingsSchema.nullable().optional(),
+    // Add new fields here, for example:
+    max_retries: z.number().nullable().optional(),
+    timeout: z.string().nullable().optional(),
+});
 
 export const GeneralSchema = HostSchema.merge(TlsSchema).extend({
     path: z.string().nullable().optional(),
@@ -47,6 +64,19 @@ export const GeneralSchema = HostSchema.merge(TlsSchema).extend({
         })
         .nullable()
         .optional(),
+    splithttp_settings: SplitHttpSettingsSchema.nullable().optional().default(null),
+    early_data: z
+        .preprocess(
+            (val) => (val === "" || val === undefined || val === null ? null : Number(val)),
+            z.union([
+                z
+                    .number()
+                    .int()
+                    .gte(1, "Port must be more than 1")
+                    .lte(65535, "Port cannot be more than 65535"),
+                z.null(),
+            ])
+        ),
     security: z
         .enum(["inbound_default", "none", "tls"])
         .default("inbound_default"),
