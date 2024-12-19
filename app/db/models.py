@@ -382,6 +382,7 @@ class InboundHost(Base):
     shadowtls_version = Column(Integer)
     shadowsocks_method = Column(String(32))
     splithttp_settings = Column(JSON())
+    early_data = Column(Integer)
     inbound_id = Column(Integer, ForeignKey("inbounds.id"), nullable=True)
     inbound = relationship("Inbound", back_populates="hosts", lazy="joined")
     allowinsecure = Column(Boolean, default=False)

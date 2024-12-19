@@ -123,6 +123,7 @@ class InboundHost(BaseModel):
     shadowtls_version: int | None = None
     shadowsocks_method: str | None = None
     splithttp_settings: SplitHttpSettings | None = None
+    early_data: int | None = None
     universal: bool = True
     service_ids: list[int] = []
     weight: int = 1
