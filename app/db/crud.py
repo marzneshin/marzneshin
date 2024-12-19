@@ -320,7 +320,7 @@ def update_host(db: Session, db_host: InboundHost, host: InboundHostModify):
     db_host.mtu = host.mtu
     db_host.dns_servers = host.dns_servers
     db_host.allowed_ips = host.allowed_ips
-    db_host.for_all_services = host.for_all_services
+    db_host.universal = host.universal
     db_host.services = (
         db.query(Service).filter(Service.id.in_(host.service_ids)).all()
     )
