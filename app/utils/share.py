@@ -337,6 +337,7 @@ def create_config(
         uuid=auth_uuid,
         password=auth_password,
         ed25519=generate_curve25519_pbk(key),
+        early_data=host.early_data,
         enable_mux=host.mux,
         http_headers=host.http_headers,
         shadowsocks_method=host.shadowsocks_method or "chacha20-ietf-poly1305",
