@@ -77,9 +77,31 @@ def upgrade() -> None:
             nullable=False,
         ),
     )
-    op.alter_column(
-        "hosts", "inbound_id", existing_type=sa.INTEGER(), nullable=True
-    )
+    if op.get_bind().dialect.name == "sqlite":
+        op.add_column(
+            "hosts", sa.Column("inbound_id_new", sa.Integer, nullable=True)
+        )
+
+        # Copy data from the old column to the new column
+        op.execute(
+            """
+            UPDATE hosts
+            SET inbound_id_new = inbound_id
+            """
+        )
+
+        # Drop the old column (SQLite requires recreating the table for this step)
+        with op.batch_alter_table("hosts") as batch_op:
+            batch_op.drop_column("inbound_id")
+
+        # Rename the new column to the old column's name
+        op.alter_column(
+            "hosts", "inbound_id_new", new_column_name="inbound_id"
+        )
+    else:
+        op.alter_column(
+            "hosts", "inbound_id", existing_type=sa.INTEGER(), nullable=True
+        )
     # ### end Alembic commands ###
 
 
@@ -98,7 +120,29 @@ def downgrade() -> None:
     op.drop_column("hosts", "host_network")
     op.drop_column("hosts", "host_protocol")
     op.drop_table("hosts_services")
-    op.alter_column(
-        "hosts", "inbound_id", existing_type=sa.INTEGER(), nullable=False
-    )
+    if op.get_bind().dialect.name == "sqlite":
+        op.add_column(
+            "hosts", sa.Column("inbound_id_old", sa.Integer, nullable=False)
+        )
+
+        # Copy data from the new column back to the old column
+        op.execute(
+            """
+            UPDATE hosts
+            SET inbound_id_old = inbound_id
+            """
+        )
+
+        # Drop the modified column
+        with op.batch_alter_table("hosts") as batch_op:
+            batch_op.drop_column("inbound_id")
+
+        # Rename the old column back to the original name
+        op.alter_column(
+            "hosts", "inbound_id_old", new_column_name="inbound_id"
+        )
+    else:
+        op.alter_column(
+            "hosts", "inbound_id", existing_type=sa.INTEGER(), nullable=False
+        )
     # ### end Alembic commands ###
