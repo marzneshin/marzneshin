@@ -21,52 +21,76 @@ export const alpnOptions = [
 ]
 
 export const GeneralSchema = HostSchema.merge(TlsSchema).extend({
-    path: z.string().nullable().optional(),
-    host: z.string().nullable().optional(),
-    mux: z.boolean().nullable().optional(),
-    fragment: z
-        .object({
-            interval: z
-                .string()
-                .refine(
-                    (v) => numberInterval(v),
-                    i18n.t("page.hosts.fragment.interval-error"),
-                ),
-            length: z
-                .string()
-                .refine(
-                    (v) => numberInterval(v),
-                    i18n.t("page.hosts.fragment.length-error"),
-                ),
-            packets: z
-                .string()
-                .refine(
-                    (v) => packetsInterval(v),
-                    i18n.t("page.hosts.fragment.packets-error"),
-                ),
-        })
-        .nullable()
-        .optional(),
-    security: z
-        .enum(["inbound_default", "none", "tls"])
-        .default("inbound_default"),
-    fingerprint: z
-        .enum([
-            "",
-            "none",
-            "chrome",
-            "firefox",
-            "safari",
-            "ios",
-            "android",
-            "edge",
-            "360",
-            "qq",
-            "random",
-            "randomized",
-        ])
-        .optional()
-        .default("none"),
+  path: z.string().nullable().optional(),
+  host: z.string().nullable().optional(),
+  mux: z.boolean().nullable().optional(),
+  fragment: z
+    .object({
+      interval: z
+        .string()
+        .refine(
+          (v) => numberInterval(v),
+          i18n.t("page.hosts.fragment.interval-error")
+        ),
+      length: z
+        .string()
+        .refine(
+          (v) => numberInterval(v),
+          i18n.t("page.hosts.fragment.length-error")
+        ),
+      packets: z
+        .string()
+        .refine(
+          (v) => packetsInterval(v),
+          i18n.t("page.hosts.fragment.packets-error")
+        ),
+    })
+    .nullable()
+    .optional(),
+
+  noise: z
+    .object({
+      interval: z
+        .string()
+        .refine(
+          (v) => numberInterval(v),
+          i18n.t("page.hosts.noise.interval-error")
+        ),
+      length: z
+        .string()
+        .refine(
+          (v) => numberInterval(v),
+          i18n.t("page.hosts.noise.length-error")
+        ),
+      packets: z
+        .string()
+        .refine(
+          (v) => packetsInterval(v),
+          i18n.t("page.hosts.noise.packets-error")
+        ),
+    })
+    .nullable()
+    .optional(),
+  security: z
+    .enum(["inbound_default", "none", "tls"])
+    .default("inbound_default"),
+  fingerprint: z
+    .enum([
+      "",
+      "none",
+      "chrome",
+      "firefox",
+      "safari",
+      "ios",
+      "android",
+      "edge",
+      "360",
+      "qq",
+      "random",
+      "randomized",
+    ])
+    .optional()
+    .default("none"),
 });
 
 
