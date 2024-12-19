@@ -213,7 +213,7 @@ def get_host(db: Session, host_id) -> InboundHost:
     return db.query(InboundHost).filter(InboundHost.id == host_id).first()
 
 
-def add_host(db: Session, inbound: Inbound, host: InboundHostModify):
+def add_host(db: Session, inbound: Inbound | None, host: InboundHostModify):
     host = InboundHost(
         remark=host.remark,
         address=host.address,
@@ -259,8 +259,10 @@ def add_host(db: Session, inbound: Inbound, host: InboundHostModify):
             .all()
         ],
     )
-    # inbound.hosts.append(host)
-    db.add(host)
+    if inbound:
+        inbound.hosts.append(host)
+    else:
+        db.add(host)
     db.commit()
     db.refresh(host)
     return host
