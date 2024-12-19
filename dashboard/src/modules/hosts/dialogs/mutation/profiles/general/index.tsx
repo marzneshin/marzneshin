@@ -10,6 +10,7 @@ import {
 import {Accordion, HStack} from "@marzneshin/common/components";
 import {SettingSection} from "@marzneshin/modules/hosts"
 import {useTranslation} from "react-i18next";
+import {EarlyDataField} from "@marzneshin/modules/hosts/dialogs/mutation/fields/early_data.tsx";
 
 export const GeneralProfileFields = () => {
     const {t} = useTranslation();
@@ -22,6 +23,7 @@ export const GeneralProfileFields = () => {
                         <HostField/>
                         <PathField/>
                     </HStack>
+                    <EarlyDataField/>
                     <SplitHttpField/>
                 </SettingSection>
                 <SettingSection value="camouflage" triggerText={t("page.hosts.camouflage-settings")}>

@@ -9,6 +9,7 @@ export const generalProfileDefaultValue: GeneralSchemaType = {
     remark: '',
     fragment: null,
     splithttp_settings: null,
+    early_data: null,
     mux: false,
     security: 'inbound_default',
     alpn: "none",
