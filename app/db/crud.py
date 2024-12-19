@@ -248,7 +248,7 @@ def add_host(db: Session, inbound: Inbound, host: InboundHostModify):
         mux=host.mux,
         allowinsecure=host.allowinsecure,
         weight=host.weight,
-        for_all_services=host.for_all_services,
+        universal=host.universal,
         services=(
             db.query(Service).filter(Service.id.in_(host.service_ids)).all()
         ),
