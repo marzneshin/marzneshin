@@ -41,6 +41,11 @@ export function PopoverGuide() {
             />
             <Separator />
             <CommandGuide
+                command="DATA_LIMIT_RESET_STRATEGY"
+                desc={t("page.hosts.popover-guide.DataLimitResetStrategy")}
+            />
+            <Separator />
+            <CommandGuide
                 command="DAYS_LEFT"
                 desc={t("page.hosts.popover-guide.remainingDays")}
             />
