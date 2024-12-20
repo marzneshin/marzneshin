@@ -49,6 +49,18 @@ export const GeneralSchema = HostSchema.merge(TlsSchema).extend({
         .nullable()
         .optional(),
     splithttp_settings: SplitHttpSettingsSchema.nullable().optional().default(null),
+    early_data: z
+        .preprocess(
+            (val) => (val === "" || val === undefined || val === null ? null : Number(val)),
+            z.union([
+                z
+                    .number()
+                    .int()
+                    .gte(1, "Port must be more than 1")
+                    .lte(65535, "Port cannot be more than 65535"),
+                z.null(),
+            ])
+        ),
     security: z
         .enum(["inbound_default", "none", "tls"])
         .default("inbound_default"),

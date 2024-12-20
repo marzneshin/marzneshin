@@ -241,6 +241,7 @@ def add_host(db: Session, inbound: Inbound | None, host: InboundHostModify):
             if host.splithttp_settings
             else None
         ),
+        early_data=host.early_data,
         http_headers=host.http_headers,
         mtu=host.mtu,
         dns_servers=host.dns_servers,
@@ -302,6 +303,7 @@ def update_host(db: Session, db_host: InboundHost, host: InboundHostModify):
         if host.splithttp_settings
         else None
     )
+    db_host.early_data = host.early_data
 
     chain_ids = [
         int(i[0])
@@ -318,7 +320,7 @@ def update_host(db: Session, db_host: InboundHost, host: InboundHostModify):
     db_host.mtu = host.mtu
     db_host.dns_servers = host.dns_servers
     db_host.allowed_ips = host.allowed_ips
-    db_host.for_all_services = host.for_all_services
+    db_host.universal = host.universal
     db_host.services = (
         db.query(Service).filter(Service.id.in_(host.service_ids)).all()
     )

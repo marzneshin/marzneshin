@@ -84,6 +84,8 @@ class XMuxSettings(BaseModel):
         None, pattern=r"^\d{1,10}(-\d{1,10})?$"
     )
     max_lifetime: str | None = Field(None, pattern=r"^\d{1,10}(-\d{1,10})?$")
+    max_request_times: str | None = Field(None)
+    keep_alive_period: str | None = Field(None)
 
 
 class SplitHttpSettings(BaseModel):
@@ -123,6 +125,7 @@ class InboundHost(BaseModel):
     shadowtls_version: int | None = None
     shadowsocks_method: str | None = None
     splithttp_settings: SplitHttpSettings | None = None
+    early_data: int | None = None
     universal: bool = True
     service_ids: list[int] = []
     weight: int = 1

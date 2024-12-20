@@ -6,6 +6,7 @@ import {
     PathField,
     SecurityFields,
     SplitHttpFields,
+    EarlyDataField,
 } from "../../fields";
 import { Accordion, HStack } from "@marzneshin/common/components";
 import { SettingSection } from "@marzneshin/modules/hosts"
@@ -29,6 +30,7 @@ export const GeneralProfileFields = () => {
                     triggerText={t("page.hosts.split-http-settings")}
                 >
                     <SplitHttpFields />
+                    <EarlyDataField />
                 </SettingSection>
                 <SettingSection value="camouflage" triggerText={t("page.hosts.camouflage-settings")}>
                     <FragmentField />
