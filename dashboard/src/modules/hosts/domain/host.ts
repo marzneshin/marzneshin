@@ -11,7 +11,7 @@ export const HostSchema = z.object({
         .optional(),
     port: z
         .preprocess(
-            (val) => (val === "" || val === undefined ? null : Number(val)),
+            (val) => (val === "" || val === undefined || val === null ? null : Number(val)),
             z.union([
                 z
                     .number()
