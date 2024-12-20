@@ -268,6 +268,9 @@
       "users-data-usage": "Users Data Usage"
     },
     "hosts": {
+      "xmux-settings": "Xmux Settings",
+      "split-http-settings": "Split HTTP Settings",
+      "no-grpc-header": "No GRPC Header",
       "dns-servers": "DNS Servers",
       "obfuscation-password": "Obfuscation Password",
       "server-public-key": "Server public key",
