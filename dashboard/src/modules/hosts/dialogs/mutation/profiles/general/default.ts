@@ -1,18 +1,20 @@
-import { GeneralSchemaType } from "./schema";
+import {GeneralSchemaType} from "./schema";
 
 export const generalProfileDefaultValue: GeneralSchemaType = {
-    host: '',
-    sni: '',
+    host: null,
+    sni: null,
     port: 8080,
-    path: '',
+    path: null,
     address: '',
     remark: '',
     fragment: null,
+    splithttp_settings: null,
+    early_data: null,
     mux: false,
     security: 'inbound_default',
-    alpn: "",
+    alpn: "none",
     allowinsecure: false,
-    fingerprint: "",
+    fingerprint: "none",
     is_disabled: false,
 };
 
