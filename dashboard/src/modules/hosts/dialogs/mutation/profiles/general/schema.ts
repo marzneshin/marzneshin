@@ -20,6 +20,8 @@ export const alpnOptions = [
     "h3,h2,http/1.1",
 ];
 
+export const noiseTypes = ["rand", "str", "base64"] as const;
+
 export const GeneralSchema = HostSchema.merge(TlsSchema).extend({
     path: z.string().nullable().optional(),
     host: z.string().nullable().optional(),
@@ -57,12 +59,7 @@ export const GeneralSchema = HostSchema.merge(TlsSchema).extend({
                         (v) => numberInterval(v),
                         i18n.t("page.hosts.noise.interval-error"),
                     ),
-                type: z
-                    .string()
-                    .refine(
-                        (v) => numberInterval(v),
-                        i18n.t("page.hosts.noise.length-error"),
-                    ),
+                type: z.enum(noiseTypes).default("rand"),
                 packet: z
                     .string()
                     .refine(
