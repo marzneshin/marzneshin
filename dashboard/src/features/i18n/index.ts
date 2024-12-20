@@ -34,10 +34,12 @@ i18n
     })
     .then(() => {
         dayjs.locale(i18n.language);
+        document.documentElement.lang = i18n.language;
     });
 
 i18n.on('languageChanged', (lng) => {
     dayjs.locale(lng);
+    document.documentElement.lang = lng;
 });
 
 export default i18n;
