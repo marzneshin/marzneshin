@@ -1,29 +1,29 @@
 import {
-    Card,
+    Badge,
     Button,
+    Card,
     CardContent,
     CardHeader,
     CardTitle,
+    DateTableRow,
     Table,
     TableBody,
     TableRowWithCell,
-    DateTableRow,
-    Badge
 } from "@marzneshin/common/components";
 import type { FC } from "react";
 import { UserStatusEnableButton } from "./user-status-enable-button";
 import {
-    type UserProp,
-    UserEnabledPill,
-    UserUsedTraffic,
     UserActivatedPill,
-    useUserUsageResetCmd,
     UserDataLimitReachedPill,
+    UserEnabledPill,
     UserExpiredPill,
+    type UserProp,
+    UserUsedTraffic,
+    useUserUsageResetCmd,
 } from "@marzneshin/modules/users";
 import { useTranslation } from "react-i18next";
 import { formatDistanceToNow } from "date-fns";
-import { format } from '@chbphone55/pretty-bytes';
+import { format } from "@chbphone55/pretty-bytes";
 import { TimerReset } from "lucide-react";
 
 export const UserInfoTable: FC<UserProp> = ({ user: entity }) => {
@@ -50,7 +50,10 @@ export const UserInfoTable: FC<UserProp> = ({ user: entity }) => {
             <CardContent>
                 <Table>
                     <TableBody>
-                        <TableRowWithCell label={t("username")} value={entity.username} />
+                        <TableRowWithCell
+                            label={t("username")}
+                            value={entity.username}
+                        />
                         <TableRowWithCell
                             label={t("activated")}
                             value={<UserActivatedPill user={entity} />}
@@ -78,14 +81,19 @@ export const UserInfoTable: FC<UserProp> = ({ user: entity }) => {
                                 start_on_first_use: (
                                     <>
                                         <TableRowWithCell
-                                            label={t("page.users.usage_duration")}
+                                            label={t(
+                                                "page.users.usage_duration",
+                                            )}
                                             value={
-                                                (entity.usage_duration ? entity.usage_duration : 0) /
-                                                86400
+                                                (entity.usage_duration
+                                                    ? entity.usage_duration
+                                                    : 0) / 86400
                                             }
                                         />
                                         <DateTableRow
-                                            label={t("page.users.activation_deadline")}
+                                            label={t(
+                                                "page.users.activation_deadline",
+                                            )}
                                             date={entity.activation_deadline}
                                         />
                                     </>
@@ -93,7 +101,11 @@ export const UserInfoTable: FC<UserProp> = ({ user: entity }) => {
                                 never: (
                                     <TableRowWithCell
                                         label={t("page.users.expire_method")}
-                                        value={t("never")}
+                                        value={
+                                            <Badge>
+                                                {t("page.users.never")}
+                                            </Badge>
+                                        }
                                     />
                                 ),
                             }[entity.expire_strategy]
@@ -102,11 +114,18 @@ export const UserInfoTable: FC<UserProp> = ({ user: entity }) => {
                             label={t("page.users.used_traffic")}
                             value={<UserUsedTraffic user={entity} />}
                         />
-                        <DateTableRow
-                            label={t("page.users.traffic_reset_at")}
-                            date={entity.traffic_reset_at}
-                            withTime
-                        />
+                        {entity.traffic_reset_at ? (
+                            <DateTableRow
+                                label={t("page.users.traffic_reset_at")}
+                                date={new Date(entity.traffic_reset_at)}
+                                withTime
+                            />
+                        ) : (
+                            <TableRowWithCell
+                                label={t("page.users.traffic_reset_at")}
+                                value={<Badge>{t("page.users.never")}</Badge>}
+                            />
+                        )}
                         <TableRowWithCell
                             label={t("page.users.lifetime_used_traffic")}
                             value={`${lifetimeUsedTrafficByte[0]} ${lifetimeUsedTrafficByte[1]}`}
@@ -114,7 +133,11 @@ export const UserInfoTable: FC<UserProp> = ({ user: entity }) => {
                         {entity.online_at ? (
                             <TableRowWithCell
                                 label={t("page.users.online_at")}
-                                value={formatDistanceToNow(new Date(entity.online_at + "Z")) + " ago"}
+                                value={
+                                    formatDistanceToNow(
+                                        new Date(entity.online_at + "Z"),
+                                    ) + " ago"
+                                }
                             />
                         ) : (
                             <TableRowWithCell
@@ -122,21 +145,37 @@ export const UserInfoTable: FC<UserProp> = ({ user: entity }) => {
                                 value={<Badge>{t("page.users.no_use")}</Badge>}
                             />
                         )}
-                        <DateTableRow
-                            label={t("page.users.sub_updated_at")}
-                            date={entity.sub_updated_at}
-                            withTime
-                        />
+                        {entity.sub_updated_at ? (
+                            <DateTableRow
+                                label={t("page.users.sub_updated_at")}
+                                date={new Date(entity.sub_updated_at)}
+                                withTime
+                            />
+                        ) : (
+                            <TableRowWithCell
+                                label={t("page.users.sub_updated_at")}
+                                value={<Badge>{t("page.users.never")}</Badge>}
+                            />
+                        )}
                         <TableRowWithCell
                             label={t("page.users.sub_last_user_agent")}
-                            value={entity.sub_last_user_agent}
+                            value={
+                                entity.sub_last_user_agent ? (
+                                    entity.sub_last_user_agent
+                                ) : (
+                                    <Badge>{t("page.users.no_use")}</Badge>
+                                )
+                            }
                         />
                         <DateTableRow
                             label={t("page.users.created_at")}
                             date={entity.created_at}
                             withTime
                         />
-                        <TableRowWithCell label={t("note")} value={entity.note} />
+                        <TableRowWithCell
+                            label={t("note")}
+                            value={entity.note}
+                        />
                     </TableBody>
                 </Table>
             </CardContent>

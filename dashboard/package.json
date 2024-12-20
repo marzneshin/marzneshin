@@ -3,6 +3,9 @@
   "private": true,
   "version": "0.3.0",
   "type": "module",
+  "prettier": {
+    "tabWidth": 4
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
