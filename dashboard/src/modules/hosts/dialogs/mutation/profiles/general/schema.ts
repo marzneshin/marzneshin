@@ -18,8 +18,8 @@ export const alpnOptions = [
     "h3,h2",
     "http/1.1",
     "h2,http/1.1",
-    "h3,h2,http/1.1"
-]
+    "h3,h2,http/1.1",
+];
 
 export const GeneralSchema = HostSchema.merge(TlsSchema).extend({
     path: z.string().nullable().optional(),
@@ -46,6 +46,31 @@ export const GeneralSchema = HostSchema.merge(TlsSchema).extend({
                     i18n.t("page.hosts.fragment.packets-error"),
                 ),
         })
+        .nullable()
+        .optional(),
+    noise: z
+        .array(
+            z.object({
+                delay: z
+                    .string()
+                    .refine(
+                        (v) => numberInterval(v),
+                        i18n.t("page.hosts.noise.interval-error"),
+                    ),
+                type: z
+                    .string()
+                    .refine(
+                        (v) => numberInterval(v),
+                        i18n.t("page.hosts.noise.length-error"),
+                    ),
+                packet: z
+                    .string()
+                    .refine(
+                        (v) => packetsInterval(v),
+                        i18n.t("page.hosts.noise.packet-error"),
+                    ),
+            }),
+        )
         .nullable()
         .optional(),
     splithttp_settings: SplitHttpSettingsSchema.nullable().optional().default(null),
@@ -82,6 +107,5 @@ export const GeneralSchema = HostSchema.merge(TlsSchema).extend({
         .optional()
         .default("none"),
 });
-
 
 export type GeneralSchemaType = z.infer<typeof GeneralSchema>;
