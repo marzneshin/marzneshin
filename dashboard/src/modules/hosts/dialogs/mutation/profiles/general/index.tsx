@@ -24,13 +24,13 @@ export const GeneralProfileFields = () => {
                         <HostField />
                         <PathField />
                     </HStack>
+                    <EarlyDataField />
                 </SettingSection>
                 <SettingSection
                     value="split-http"
                     triggerText={t("page.hosts.split-http-settings")}
                 >
                     <SplitHttpFields />
-                    <EarlyDataField />
                 </SettingSection>
                 <SettingSection value="camouflage" triggerText={t("page.hosts.camouflage-settings")}>
                     <FragmentField />
