@@ -148,6 +148,53 @@ async def add_user(new_user: UserCreate, db: DBDep, admin: AdminDep):
     return user
 
 
+@router.post("/bulk", response_model=list[UserResponse])
+async def add_bulk_user(
+    new_users: list[UserCreate], db: DBDep, admin: AdminDep
+):
+    """
+    Add bulk new users
+
+    - **username** must have 3 to 32 characters and is allowed to contain a-z, 0-9, and underscores in between
+    - **expire_date** must be a datetime
+    - **data_limit** must be in Bytes, e.g. 1073741824B = 1GB
+    - **services** list of service ids
+    """
+    try:
+        db_users: list[User] = crud.create_user(
+            db,
+            new_users,
+            admin=crud.get_admin(db, admin.username),
+            allowed_services=(
+                admin.service_ids
+                if not admin.is_sudo and not admin.all_services_access
+                else None
+            ),
+        )
+    except sqlalchemy.exc.IntegrityError as e:
+        db.rollback()
+        raise HTTPException(
+            status_code=409, detail="User already exists"
+        ) from e
+
+    created_users = []
+    for db_user in db_users:
+        user_response = UserResponse.model_validate(db_user)
+        created_users.append(user_response)
+
+        marznode.operations.update_user(user=db_user)
+
+        asyncio.create_task(
+            report.user_created(
+                user=user_response, user_id=db_user.id, by=admin
+            )
+        )
+
+        logger.info("New user `%s` added", db_user.username)
+
+    return created_users
+
+
 @router.post("/reset")
 async def reset_users_data_usage(db: DBDep, admin: SudoAdminDep):
     """
