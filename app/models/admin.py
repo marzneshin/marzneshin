@@ -38,6 +38,7 @@ class AdminCreate(Admin):
 class AdminResponse(Admin):
     id: int
     users_data_usage: int
+    users_count: int
 
 
 class AdminModify(Admin):
