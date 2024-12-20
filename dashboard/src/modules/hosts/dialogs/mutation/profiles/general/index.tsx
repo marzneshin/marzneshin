@@ -26,7 +26,6 @@ export const GeneralProfileFields = () => {
                     </HStack>
                 </SettingSection>
                 <SettingSection
-                    variant='toggle'
                     value="split-http"
                     triggerText={t("page.hosts.split-http-settings")}
                 >
