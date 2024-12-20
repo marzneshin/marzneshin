@@ -1,26 +1,26 @@
-import {Button, FormControl, FormField, FormItem, FormLabel, FormMessage, Input} from "@marzneshin/common/components";
-import {useFormContext} from "react-hook-form";
-import {useTranslation} from "react-i18next";
-import {X} from "lucide-react";
+import { Button, FormControl, FormField, FormItem, FormLabel, FormMessage, Input } from "@marzneshin/common/components";
+import { useFormContext } from "react-hook-form";
+import { useTranslation } from "react-i18next";
+import { X } from "lucide-react";
 
 export const SniField = () => {
-    const {t} = useTranslation()
+    const { t } = useTranslation()
     const form = useFormContext()
-    const value = form.watch("sni"); // Watch the `sni` value for changes.
+    const value = form.watch("sni");
 
     const handleNullify = () => {
-        form.setValue("sni", null); // Set the `sni` field to `null` in the form state.
+        form.setValue("sni", null);
     };
 
     const handleRestore = () => {
-        form.setValue("sni", ""); // Set the `sni` field to an empty string or any default value.
+        form.setValue("sni", "");
     };
 
     return (
         <FormField
             control={form.control}
             name="sni"
-            render={({field}) => (
+            render={({ field }) => (
                 <FormItem className="w-full">
                     <FormLabel>{t("sni")}</FormLabel>
                     <FormControl>
@@ -37,7 +37,7 @@ export const SniField = () => {
                                     onClick={handleRestore}
                                     className="p-1"
                                 >
-                                    <X className="h-4 w-4 text-gray-500"/>
+                                    <X className="h-4 w-4 text-gray-500" />
                                 </Button>
                             </div>
                         ) : (
@@ -50,12 +50,12 @@ export const SniField = () => {
                                     onClick={handleNullify}
                                     className="p-1"
                                 >
-                                    <X className="h-4 w-4 text-gray-500"/>
+                                    <X className="h-4 w-4 text-gray-500" />
                                 </Button>
                             </div>
                         )}
                     </FormControl>
-                    <FormMessage/>
+                    <FormMessage />
                 </FormItem>
             )}
         />
