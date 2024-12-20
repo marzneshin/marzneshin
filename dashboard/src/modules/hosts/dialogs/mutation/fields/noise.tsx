@@ -8,7 +8,6 @@ import {
     Popover,
     PopoverContent,
     PopoverTrigger,
-
     Select,
     SelectContent,
     SelectItem,
@@ -18,11 +17,10 @@ import {
 import type { FieldError, FieldErrors } from "react-hook-form";
 import { useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { Copy, MailWarning, TrashIcon } from "lucide-react";
+import { ListPlus, MailWarning, TrashIcon } from "lucide-react";
 import type { FC } from "react";
 import { useState } from "react";
 import { noiseTypes } from "../profiles";
-
 
 interface NoiseForm {
     noise: Array<{
@@ -115,14 +113,14 @@ export const NoiseField = () => {
                                     )}
                                     {forms.length < 5 && (
                                         <Button
-                                            variant="default"
                                             className="p-0 size-5 bg-primary-background"
+                                            variant="secondary"
                                             onClick={(e) => {
                                                 e.preventDefault();
                                                 addForm();
                                             }}
                                         >
-                                            <Copy className="text-black" />
+                                            <ListPlus />
                                         </Button>
                                     )}
                                 </div>
@@ -142,7 +140,7 @@ export const NoiseField = () => {
                                                     defaultValue={field.value}
                                                 >
                                                     <FormControl>
-                                                        <SelectTrigger>
+                                                        <SelectTrigger className="w-2/5">
                                                             <SelectValue placeholder="Noise Type" />
                                                         </SelectTrigger>
                                                     </FormControl>
@@ -162,26 +160,28 @@ export const NoiseField = () => {
                                                 </Select>
                                             )}
                                         />
-                                        <FormField
-                                            name={`noise.${index}.packet`}
-                                            render={({ field }) => (
-                                                <Input
-                                                    className="border rounded-none rounded-s-lg p-2 w-full"
-                                                    placeholder="Packet"
-                                                    {...field}
-                                                />
-                                            )}
-                                        />
-                                        <FormField
-                                            name={`noise.${index}.delay`}
-                                            render={({ field }) => (
-                                                <Input
-                                                    placeholder="Delay"
-                                                    className="border w-full rounded-none rounded-e-lg p-2"
-                                                    {...field}
-                                                />
-                                            )}
-                                        />
+                                        <div className="w-full hstack">
+                                            <FormField
+                                                name={`noise.${index}.packet`}
+                                                render={({ field }) => (
+                                                    <Input
+                                                        className="border rounded-none rounded-s-lg p-2 w-full"
+                                                        placeholder="Packet"
+                                                        {...field}
+                                                    />
+                                                )}
+                                            />
+                                            <FormField
+                                                name={`noise.${index}.delay`}
+                                                render={({ field }) => (
+                                                    <Input
+                                                        placeholder="Delay"
+                                                        className="border w-full rounded-none rounded-e-lg p-2"
+                                                        {...field}
+                                                    />
+                                                )}
+                                            />
+                                        </div>
                                         <Button
                                             variant="destructive"
                                             className="p-0 size-5 bg-primary-background"
