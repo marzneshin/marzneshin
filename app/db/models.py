@@ -22,6 +22,7 @@ from sqlalchemy import (
     Text,
 )
 from sqlalchemy.ext.hybrid import hybrid_property
+from sqlalchemy.ext.orderinglist import ordering_list
 from sqlalchemy.orm import relationship, column_property
 from sqlalchemy.sql.expression import text
 
@@ -57,6 +58,13 @@ users_services = Table(
     "users_services",
     Base.metadata,
     Column("user_id", ForeignKey("users.id"), primary_key=True),
+    Column("service_id", ForeignKey("services.id"), primary_key=True),
+)
+
+hosts_services = Table(
+    "hosts_services",
+    Base.metadata,
+    Column("host_id", ForeignKey("hosts.id"), primary_key=True),
     Column("service_id", ForeignKey("services.id"), primary_key=True),
 )
 
@@ -308,12 +316,33 @@ class Inbound(Base):
         return [service.id for service in self.services]
 
 
+class HostChain(Base):
+    __tablename__ = "host_chains"
+
+    host_id = Column(Integer, ForeignKey("hosts.id"), primary_key=True)
+    chained_host_id = Column(Integer, ForeignKey("hosts.id"))
+    seq = Column(Integer, primary_key=True)
+
+    host = relationship(
+        "InboundHost", foreign_keys=[host_id], back_populates="chain"
+    )
+    chained_host = relationship(
+        "InboundHost",
+        foreign_keys=[chained_host_id],
+        lazy="joined",
+    )
+
+
 class InboundHost(Base):
     __tablename__ = "hosts"
 
     id = Column(Integer, primary_key=True)
     remark = Column(String(256), nullable=False)
     address = Column(String(256), nullable=False)
+    host_protocol = Column(String(32))
+    host_network = Column(String(32))
+    uuid = Column(String(36))
+    password = Column(String(128))
     port = Column(Integer)
     path = Column(String(256))
     sni = Column(String(1024))
@@ -346,15 +375,52 @@ class InboundHost(Base):
     dns_servers = Column(String(128))
     mtu = Column(Integer)
     allowed_ips = Column(Text())
-    inbound_id = Column(Integer, ForeignKey("inbounds.id"), nullable=False)
+    header_type = Column(String(32))
+    reality_public_key = Column(String(128))
+    reality_short_ids = Column(JSON())
+    flow = Column(String(32))
+    shadowtls_version = Column(Integer)
+    shadowsocks_method = Column(String(32))
+    splithttp_settings = Column(JSON())
+    early_data = Column(Integer)
+    inbound_id = Column(Integer, ForeignKey("inbounds.id"), nullable=True)
     inbound = relationship("Inbound", back_populates="hosts", lazy="joined")
     allowinsecure = Column(Boolean, default=False)
     is_disabled = Column(Boolean, default=False)
     weight = Column(Integer, default=1, nullable=False, server_default="1")
 
+    universal = Column(
+        Boolean,
+        default=False,
+        nullable=False,
+        server_default=sqlalchemy.sql.false(),
+    )
+    services = relationship("Service", secondary=hosts_services)
+
+    @property
+    def service_ids(self):
+        return [service.id for service in self.services]
+
+    chain = relationship(
+        "HostChain",
+        foreign_keys="[HostChain.host_id]",
+        order_by=HostChain.seq,
+        collection_class=ordering_list("seq"),
+        lazy="joined",
+        cascade="all, delete-orphan",
+    )
+
+    @property
+    def chain_ids(self):
+        return [c.chained_host_id for c in self.chain]
+
     @property
     def protocol(self):
-        return self.inbound.protocol if self.inbound else None
+        return self.inbound.protocol if self.inbound else self.host_protocol
+
+    @property
+    def network(self):
+        return self.host_network
 
 
 class System(Base):

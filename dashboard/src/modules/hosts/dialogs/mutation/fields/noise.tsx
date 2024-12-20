@@ -8,6 +8,7 @@ import {
     Popover,
     PopoverContent,
     PopoverTrigger,
+
     Select,
     SelectContent,
     SelectItem,
@@ -21,6 +22,7 @@ import { Copy, MailWarning, TrashIcon } from "lucide-react";
 import type { FC } from "react";
 import { useState } from "react";
 import { noiseTypes } from "../profiles";
+
 
 interface NoiseForm {
     noise: Array<{
