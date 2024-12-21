@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Annotated
 
 from fastapi import Depends, HTTPException, status
@@ -100,17 +100,19 @@ def user_modification_access(
 def parse_start_date(start: str | None = None):
     if not start:
         return datetime.fromtimestamp(
-            datetime.utcnow().timestamp() - 30 * 24 * 3600
+            datetime.utcnow().timestamp() - 30 * 24 * 3600, tz=timezone.utc
         )
     else:
-        return datetime.fromisoformat(start)
+        dt = datetime.fromisoformat(start)
+        return dt if dt.tzinfo else dt.replace(tzinfo=timezone.utc)
 
 
 def parse_end_date(end: str | None = None):
     if not end:
-        return datetime.utcnow()
+        return datetime.utcnow().replace(tzinfo=timezone.utc)
     else:
-        return datetime.fromisoformat(end)
+        dt = datetime.fromisoformat(end)
+        return dt if dt.tzinfo else dt.replace(tzinfo=timezone.utc)
 
 
 def get_service(id: int, db: Annotated[Session, Depends(get_db)]):
