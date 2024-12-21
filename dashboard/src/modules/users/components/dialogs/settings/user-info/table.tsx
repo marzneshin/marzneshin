@@ -28,7 +28,6 @@ import { TimerReset } from "lucide-react";
 
 export const UserInfoTable: FC<UserProp> = ({ user: entity }) => {
     const { t } = useTranslation();
-    const expireDate = entity.expire_date ? new Date(entity.expire_date) : null;
     const { mutate: resetUsage } = useUserUsageResetCmd();
     const lifetimeUsedTrafficByte = format(entity.lifetime_used_traffic);
 
@@ -75,7 +74,7 @@ export const UserInfoTable: FC<UserProp> = ({ user: entity }) => {
                                 fixed_date: (
                                     <DateTableRow
                                         label={t("page.users.expire_date")}
-                                        date={expireDate}
+                                        date={entity.expire_date}
                                     />
                                 ),
                                 start_on_first_use: (
@@ -117,7 +116,7 @@ export const UserInfoTable: FC<UserProp> = ({ user: entity }) => {
                         {entity.traffic_reset_at ? (
                             <DateTableRow
                                 label={t("page.users.traffic_reset_at")}
-                                date={new Date(entity.traffic_reset_at)}
+                                date={entity.traffic_reset_at}
                                 withTime
                             />
                         ) : (
@@ -148,7 +147,7 @@ export const UserInfoTable: FC<UserProp> = ({ user: entity }) => {
                         {entity.sub_updated_at ? (
                             <DateTableRow
                                 label={t("page.users.sub_updated_at")}
-                                date={new Date(entity.sub_updated_at)}
+                                date={entity.sub_updated_at}
                                 withTime
                             />
                         ) : (
