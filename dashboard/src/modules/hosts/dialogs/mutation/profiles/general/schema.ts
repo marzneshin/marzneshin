@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { HostSchema, TlsSchema } from "@marzneshin/modules/hosts";
+import { SplitHttpSettingsSchema } from "./split-http-settings.schema";
 import i18n from "i18next";
 
 const numberInterval = (v: string | null | undefined) => {
@@ -17,8 +18,10 @@ export const alpnOptions = [
     "h3,h2",
     "http/1.1",
     "h2,http/1.1",
-    "h3,h2,http/1.1"
-]
+    "h3,h2,http/1.1",
+];
+
+export const noiseTypes = ["rand", "str", "base64"] as const;
 
 export const GeneralSchema = HostSchema.merge(TlsSchema).extend({
     path: z.string().nullable().optional(),
@@ -47,6 +50,38 @@ export const GeneralSchema = HostSchema.merge(TlsSchema).extend({
         })
         .nullable()
         .optional(),
+    noise: z
+        .array(
+            z.object({
+                delay: z
+                    .string()
+                    .refine(
+                        (v) => numberInterval(v),
+                        i18n.t("page.hosts.noise.delay-error"),
+                    ),
+                type: z.enum(noiseTypes).default("rand"),
+                packet: z.string(),
+            }),
+        )
+        .nullable()
+        .optional(),
+    splithttp_settings: SplitHttpSettingsSchema.nullable()
+        .optional()
+        .default(null),
+    early_data: z.preprocess(
+        (val) =>
+            val === "" || val === undefined || val === null
+                ? null
+                : Number(val),
+        z.union([
+            z
+                .number()
+                .int()
+                .gte(1, "Port must be more than 1")
+                .lte(65535, "Port cannot be more than 65535"),
+            z.null(),
+        ]),
+    ),
     security: z
         .enum(["inbound_default", "none", "tls"])
         .default("inbound_default"),
@@ -68,6 +103,5 @@ export const GeneralSchema = HostSchema.merge(TlsSchema).extend({
         .optional()
         .default("none"),
 });
-
 
 export type GeneralSchemaType = z.infer<typeof GeneralSchema>;
