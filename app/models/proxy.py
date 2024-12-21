@@ -114,7 +114,7 @@ class InboundHost(BaseModel):
     mux: bool = Field(False)
     fragment: FragmentSettings | None = Field(None)
     udp_noises: list[XrayNoise] | None = None
-    http_headers: dict[str, list[str]] | None = {}
+    http_headers: dict[str, str] | None = {}
     mtu: int | None = None
     dns_servers: str | None = None
     allowed_ips: str | None = None
