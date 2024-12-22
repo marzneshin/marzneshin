@@ -9,7 +9,6 @@ import { DynamicField } from "@marzneshin/libs/dynamic-field";
 import { useTranslation } from "react-i18next";
 import { ListPlus, Trash } from "lucide-react";
 
-// TODO: Load the values correctly from the host entity
 // TODO: Default back to previous value
 // TODO: Push up animation for adding new headers
 // TODO: Remove animation for removing previous headers
