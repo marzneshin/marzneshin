@@ -74,6 +74,10 @@ export const HostsMutationDialog: FC<HostMutationDialogProps> = ({
     const createMutation = useHostsCreationMutation();
     const { t } = useTranslation();
 
+    // TODO: Refactor value transformation for api using of
+    // function composition to pipes and port-adapter patterns.
+    // - [ ] ALPN and fingerprint
+    // - [ ] HTTP headers (duplex adaptation)
     const submit = (values: HostWithProfileSchemaType) => {
         const host = transformFormValueHttpHeaders(transformFormValue(values));
         if (entity && entity.id !== undefined) {
