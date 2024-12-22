@@ -11,7 +11,7 @@ export const generalProfileDefaultValue: GeneralSchemaType = {
     splithttp_settings: null,
     early_data: null,
     http_headers: null,
-    mux: false,
+    mux_settings: null,
     security: "inbound_default",
     alpn: "none",
     allowinsecure: false,
