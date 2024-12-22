@@ -11,7 +11,7 @@ import {
 } from "@marzneshin/common/components";
 import { useTranslation } from "react-i18next";
 
-export const ProtocolField = ({
+export const XudpProxy443Field = ({
     updater,
 }: {
     updater: (field: string, value: any) => void;

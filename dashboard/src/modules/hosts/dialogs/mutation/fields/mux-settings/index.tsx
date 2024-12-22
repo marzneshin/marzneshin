@@ -9,6 +9,7 @@ import {
 import { useFormContext, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { ProtocolField } from "./protocol";
+import { XudpProxy443Field } from "./xudp-proxy-443";
 
 export const MuxSettingsFields = () => {
     const { t } = useTranslation();
@@ -36,7 +37,6 @@ export const MuxSettingsFields = () => {
                                 {[
                                     "concurrency",
                                     "xudp_connections",
-                                    "xudp_proxy_443",
                                 ].map((fieldName) => (
                                     <FormField
                                         key={fieldName}
@@ -51,6 +51,7 @@ export const MuxSettingsFields = () => {
                                                 <FormControl>
                                                     <Input
                                                         value={field.value}
+                                                            type="number"
                                                         onChange={(e) =>
                                                             updateFieldValue(
                                                                 `mux_settings.mux_cool_settings.${fieldName}`,
@@ -64,6 +65,7 @@ export const MuxSettingsFields = () => {
                                         )}
                                     />
                                 ))}
+                                <XudpProxy443Field updater={updateFieldValue} />
                             </div>
                         ) : (
                             <div className="flex flex-col  w-full">
