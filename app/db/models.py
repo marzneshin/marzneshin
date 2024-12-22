@@ -363,12 +363,6 @@ class InboundHost(Base):
         server_default=InboundHostSecurity.none.name,
     )
 
-    mux = Column(
-        Boolean,
-        default=False,
-        nullable=False,
-        server_default=sqlalchemy.sql.false(),
-    )
     fragment = Column(JSON())
     udp_noises = Column(JSON())
     http_headers = Column(JSON())
@@ -382,6 +376,7 @@ class InboundHost(Base):
     shadowtls_version = Column(Integer)
     shadowsocks_method = Column(String(32))
     splithttp_settings = Column(JSON())
+    mux_settings = Column(JSON())
     early_data = Column(Integer)
     inbound_id = Column(Integer, ForeignKey("inbounds.id"), nullable=True)
     inbound = relationship("Inbound", back_populates="hosts", lazy="joined")

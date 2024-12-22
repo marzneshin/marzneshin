@@ -95,6 +95,24 @@ class SplitHttpSettings(BaseModel):
     xmux: XMuxSettings | None = None
 
 
+class SingBoxMuxSettings(BaseModel):
+    max_connections: str | None = Field(
+        None, pattern=r"^\d{1,10}(-\d{1,10})?$"
+    )
+
+
+class MuxCoolSettings(BaseModel):
+    concurrency: int | None = None
+    xudp_concurrency: int | None = None
+    xudp_proxy_443: str | None = None
+
+
+class MuxSettings(BaseModel):
+    protocol: str
+    sing_box_mux_settings: SingBoxMuxSettings | None = None
+    mux_cool_settings: MuxCoolSettings | None = None
+
+
 class InboundHost(BaseModel):
     remark: str
     address: str
@@ -111,7 +129,6 @@ class InboundHost(BaseModel):
     fingerprint: InboundHostFingerprint = InboundHostFingerprint.none
     allowinsecure: bool | None = False
     is_disabled: bool | None = False
-    mux: bool = Field(False)
     fragment: FragmentSettings | None = Field(None)
     udp_noises: list[XrayNoise] | None = None
     http_headers: dict[str, str] | None = {}
@@ -126,6 +143,7 @@ class InboundHost(BaseModel):
     shadowsocks_method: str | None = None
     splithttp_settings: SplitHttpSettings | None = None
     early_data: int | None = None
+    mux_settings: MuxSettings | None = None
     universal: bool = True
     service_ids: list[int] = []
     weight: int = 1
