@@ -274,6 +274,7 @@
       "early-data": "Early Data",
       "http_headers": "HTTP Headers",
       "no-http-headers": "No HTTP headers",
+      "mux-settings": "Mux Settings",
       "dns-servers": "DNS Servers",
       "obfuscation-password": "Obfuscation Password",
       "server-public-key": "Server public key",

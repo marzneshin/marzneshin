@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { HostSchema, TlsSchema } from "@marzneshin/modules/hosts";
 import { SplitHttpSettingsSchema } from "./split-http-settings.schema";
+import { MuxSettingsSchema } from "./mux-settings.schema";
 import i18n from "i18next";
 
 const numberInterval = (v: string | null | undefined) => {
@@ -26,7 +27,7 @@ export const noiseTypes = ["rand", "str", "base64"] as const;
 export const GeneralSchema = HostSchema.merge(TlsSchema).extend({
     path: z.string().nullable().optional(),
     host: z.string().nullable().optional(),
-    mux: z.boolean().nullable().optional(),
+    mux_settings: MuxSettingsSchema.nullable().optional().default(null),
     http_headers: z.any().nullable().optional(),
     fragment: z
         .object({

@@ -2,13 +2,13 @@ import {
     CommonFields,
     FragmentField,
     HostField,
-    MuxField,
     PathField,
     SecurityFields,
     SplitHttpFields,
     EarlyDataField,
     NoiseField,
     HttpHeadersDynamicFields,
+    MuxSettingsFields,
 } from "../../fields";
 import { Accordion, HStack } from "@marzneshin/common/components";
 import { SettingSection } from "@marzneshin/modules/hosts";
@@ -44,7 +44,12 @@ export const GeneralProfileFields = () => {
                 >
                     <FragmentField />
                     <NoiseField />
-                    <MuxField />
+                </SettingSection>
+                <SettingSection
+                    value="mux"
+                    triggerText={t("page.hosts.mux-settings")}
+                >
+                    <MuxSettingsFields />
                 </SettingSection>
                 <SettingSection
                     value="security"
