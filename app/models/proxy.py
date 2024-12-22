@@ -85,7 +85,7 @@ class XMuxSettings(BaseModel):
     )
     max_lifetime: str | None = Field(None, pattern=r"^\d{1,10}(-\d{1,10})?$")
     max_request_times: str | None = Field(None)
-    keep_alive_period: str | None = Field(None)
+    keep_alive_period: int | None = Field(None)
 
 
 class SplitHttpSettings(BaseModel):
