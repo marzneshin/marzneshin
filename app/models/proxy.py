@@ -76,7 +76,7 @@ class UDPNoiseSettings(BaseModel):
 class InboundHost(BaseModel):
     remark: str
     address: str
-    port: int | None = Field(None)
+    port: str | None = Field(None)
     sni: str | None = Field(None)
     host: str | None = Field(None)
     path: str | None = Field(None)
@@ -104,6 +104,23 @@ class InboundHost(BaseModel):
             return v
 
         v.format_map(FormatVariables())
+
+        return v
+
+    @field_validator("port")
+    @classmethod
+    def validate_port(cls, v: str) -> str:
+        if v is not None:
+            for port_range in v.split(","):
+                ports = port_range.split("-")
+                if not (0 < len(ports) < 3):
+                    raise ValueError("Invalid port pattern")
+                if any(int(port) > 65535 for port in ports):
+                    raise ValueError("invalid port specified in the range")
+                if len(ports) == 2 and int(ports[0]) > int(ports[1]):
+                    raise ValueError(
+                        "The first port must be less than or equal to the second port"
+                    )
 
         return v
 
