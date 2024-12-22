@@ -16,7 +16,6 @@ export const SplitHttpXmuxFields = () => {
     const isXMuxDisabled = xmux === null;
 
     const updateFieldValue = (path: string, value: any) => {
-        console.log(form.formState);
         form.setValue(path, value === "" ? null : value, {
             shouldDirty: true,
             shouldValidate: true,
