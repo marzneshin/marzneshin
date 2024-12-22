@@ -15,24 +15,47 @@ import {
     useHostsCreationMutation,
     useHostsUpdateMutation,
     type HostWithProfileType,
-    type HostWithProfileSchemaType
+    type HostWithProfileSchemaType,
 } from "@marzneshin/modules/hosts";
 import { useDialog, type MutationDialogProps } from "@marzneshin/common/hooks";
 import { ProtocolType } from "@marzneshin/modules/inbounds";
 import { useProfileStrategy } from "./profiles";
+import {
+    transformToDictionary,
+    transformToFields,
+} from "@marzneshin/libs/dynamic-field";
 
-interface HostMutationDialogProps extends MutationDialogProps<HostWithProfileType> {
+interface HostMutationDialogProps
+    extends MutationDialogProps<HostWithProfileType> {
     inboundId?: number;
     protocol?: ProtocolType;
 }
 
 const transformFormValue = (values: any) => {
-    if (!(values.alpn && values.fingerprint))
-        return values;
+    if (!(values.alpn && values.fingerprint)) return values;
     const port = values.port === "" ? null : values.port;
     const alpn = values.alpn === "none" ? "" : values.alpn;
     const fingerprint = values.fingerprint === "none" ? "" : values.fingerprint;
-    return { ...values, alpn, fingerprint, port };
+    const http_headers = values.http_headers
+        ? transformToDictionary(values.http_headers)
+        : undefined;
+    return { ...values, alpn, fingerprint, port, http_headers };
+};
+
+const transformFormValueHttpHeaders = (values: any) => {
+    const http_headers = values.http_headers
+        ? transformToDictionary(values.http_headers)
+        : undefined;
+    return { ...values, http_headers };
+};
+
+const formMutationToAPIAdapter = (values: HostWithProfileType) => {
+    if (values.http_headers)
+        return {
+            ...values,
+            http_headers: transformToFields(values.http_headers),
+        };
+    return values;
 };
 
 export const HostsMutationDialog: FC<HostMutationDialogProps> = ({
@@ -42,9 +65,9 @@ export const HostsMutationDialog: FC<HostMutationDialogProps> = ({
     protocol,
 }) => {
     const [open, onOpenChange] = useDialog(true);
-    const [Schema, ProfileFields, defaultValue] = useProfileStrategy(protocol)
+    const [Schema, ProfileFields, defaultValue] = useProfileStrategy(protocol);
     const form = useForm<HostWithProfileSchemaType>({
-        defaultValues: entity ? entity : defaultValue,
+        defaultValues: entity ? formMutationToAPIAdapter(entity) : defaultValue,
         resolver: zodResolver(Schema),
     });
     const updateMutation = useHostsUpdateMutation();
@@ -52,7 +75,7 @@ export const HostsMutationDialog: FC<HostMutationDialogProps> = ({
     const { t } = useTranslation();
 
     const submit = (values: HostWithProfileSchemaType) => {
-        const host = transformFormValue(values);
+        const host = transformFormValueHttpHeaders(transformFormValue(values));
         if (entity && entity.id !== undefined) {
             updateMutation.mutate({ hostId: entity.id, host });
             onOpenChange(false);
@@ -67,7 +90,7 @@ export const HostsMutationDialog: FC<HostMutationDialogProps> = ({
     }, [open, onClose]);
 
     useEffect(() => {
-        if (entity) form.reset(entity);
+        if (entity) form.reset(formMutationToAPIAdapter(entity));
         else form.reset(defaultValue);
     }, [entity, form, open, defaultValue]);
 

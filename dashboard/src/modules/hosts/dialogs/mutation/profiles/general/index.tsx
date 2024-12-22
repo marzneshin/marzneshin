@@ -7,14 +7,16 @@ import {
     SecurityFields,
     SplitHttpFields,
     EarlyDataField,
+    NoiseField,
+    HttpHeadersDynamicFields,
 } from "../../fields";
 import { Accordion, HStack } from "@marzneshin/common/components";
 import { SettingSection } from "@marzneshin/modules/hosts";
 import { useTranslation } from "react-i18next";
-import { NoiseField } from "../../fields/noise";
 
 export const GeneralProfileFields = () => {
     const { t } = useTranslation();
+
     return (
         <div className="space-y-2">
             <CommonFields />
@@ -28,6 +30,7 @@ export const GeneralProfileFields = () => {
                         <PathField />
                     </HStack>
                     <EarlyDataField />
+                    <HttpHeadersDynamicFields />
                 </SettingSection>
                 <SettingSection
                     value="split-http"

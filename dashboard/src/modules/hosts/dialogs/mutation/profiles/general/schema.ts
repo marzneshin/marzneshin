@@ -27,6 +27,7 @@ export const GeneralSchema = HostSchema.merge(TlsSchema).extend({
     path: z.string().nullable().optional(),
     host: z.string().nullable().optional(),
     mux: z.boolean().nullable().optional(),
+    http_headers: z.any().nullable().optional(),
     fragment: z
         .object({
             interval: z
