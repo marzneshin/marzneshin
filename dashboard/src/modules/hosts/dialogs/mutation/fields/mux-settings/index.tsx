@@ -51,11 +51,11 @@ export const MuxSettingsFields = () => {
                                                 <FormControl>
                                                     <Input
                                                         value={field.value}
-                                                            type="number"
+                                                        type="number"
                                                         onChange={(e) =>
                                                             updateFieldValue(
                                                                 `mux_settings.mux_cool_settings.${fieldName}`,
-                                                                e.target.value,
+                                                                Number.parseInt(e.target.value),
                                                             )
                                                         }
                                                         className="w-full"

@@ -16,6 +16,7 @@ export const SplitHttpXmuxFields = () => {
     const isXMuxDisabled = xmux === null;
 
     const updateFieldValue = (path: string, value: any) => {
+        console.log(form.formState);
         form.setValue(path, value === "" ? null : value, {
             shouldDirty: true,
             shouldValidate: true,
@@ -84,7 +85,7 @@ export const SplitHttpXmuxFields = () => {
                                         onChange={(e) =>
                                             updateFieldValue(
                                                 `splithttp_settings.xmux.keep_alive_period`,
-                                                e.target.value,
+                                                Number.parseInt(e.target.value),
                                             )
                                         }
                                         className="w-full"
