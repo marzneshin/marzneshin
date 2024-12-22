@@ -1,8 +1,6 @@
 import {
     CommonFields,
     FragmentField,
-    HostField,
-    PathField,
     SecurityFields,
     SplitHttpFields,
     EarlyDataField,
@@ -10,7 +8,11 @@ import {
     HttpHeadersDynamicFields,
     MuxSettingsFields,
 } from "../../fields";
-import { Accordion, HStack } from "@marzneshin/common/components";
+import {
+    Accordion,
+    HStack,
+    ClearableTextField,
+} from "@marzneshin/common/components";
 import { SettingSection } from "@marzneshin/modules/hosts";
 import { useTranslation } from "react-i18next";
 
@@ -26,8 +28,16 @@ export const GeneralProfileFields = () => {
                     triggerText={t("page.hosts.network-settings")}
                 >
                     <HStack>
-                        <HostField />
-                        <PathField />
+                        <ClearableTextField
+                            name="host"
+                            placeholder="inherit"
+                            label={t("host")}
+                        />
+                        <ClearableTextField
+                            name="path"
+                            placeholder="inherit"
+                            label={t("path")}
+                        />
                     </HStack>
                     <EarlyDataField />
                     <HttpHeadersDynamicFields />

@@ -76,7 +76,7 @@ const FingerprintSchema = z
     ])
 
 export const GeneralSchema = HostSchema.merge(TlsSchema).extend({
-    path: z.string().nullable().optional(),
+    path: z.string().nullable().optional().nullish(),
     host: z.string().nullable().optional(),
     mux_settings: MuxSettingsSchema.nullable().optional().default(null),
     http_headers: z.any().nullable().optional(),
