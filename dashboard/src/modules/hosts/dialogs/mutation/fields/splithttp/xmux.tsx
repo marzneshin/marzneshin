@@ -44,7 +44,6 @@ export const SplitHttpXmuxFields = () => {
                         "max_reuse_times",
                         "max_lifetime",
                         "max_request_times",
-                        "keep_alive_period",
                     ].map((fieldName) => (
                         <FormField
                             key={fieldName}
@@ -70,6 +69,30 @@ export const SplitHttpXmuxFields = () => {
                             )}
                         />
                     ))}
+                    <FormField
+                        key="keep_alive_period"
+                        name={`splithttp_settings.xmux.keep_alive_period`}
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className="flex items-center justify-between capitalize">
+                                    Keep Alive Period
+                                </FormLabel>
+                                <FormControl>
+                                    <Input
+                                        value={field.value}
+                                        type="number"
+                                        onChange={(e) =>
+                                            updateFieldValue(
+                                                `splithttp_settings.xmux.keep_alive_period`,
+                                                e.target.value,
+                                            )
+                                        }
+                                        className="w-full"
+                                    />
+                                </FormControl>
+                            </FormItem>
+                        )}
+                    />
                 </div>
             )}
         </div>
