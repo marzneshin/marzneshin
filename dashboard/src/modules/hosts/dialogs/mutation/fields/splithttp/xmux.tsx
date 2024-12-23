@@ -1,10 +1,10 @@
 import {
+    FormControl,
     FormField,
     FormItem,
     FormLabel,
-    FormControl,
-    Switch,
     Input,
+    Switch,
 } from "@marzneshin/common/components";
 import { useFormContext, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -84,7 +84,11 @@ export const SplitHttpXmuxFields = () => {
                                         onChange={(e) =>
                                             updateFieldValue(
                                                 `splithttp_settings.xmux.keep_alive_period`,
-                                                Number.parseInt(e.target.value),
+                                                e.target.value === ""
+                                                    ? null
+                                                    : Number.parseInt(
+                                                          e.target.value,
+                                                      ),
                                             )
                                         }
                                         className="w-full"
