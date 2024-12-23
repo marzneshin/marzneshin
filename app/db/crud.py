@@ -6,8 +6,8 @@ from enum import Enum
 from types import NoneType
 from typing import List, Optional, Tuple, Union
 
-from sqlalchemy import and_, delete, update, select, func, cast, Date
-from sqlalchemy.orm import Session
+from sqlalchemy import and_, update, select, func, cast, Date
+from sqlalchemy.orm import Session, joinedload
 
 from app.db.models import (
     JWT,
@@ -21,6 +21,7 @@ from app.db.models import (
     System,
     User,
     Backend,
+    HostChain,
 )
 from app.models.admin import AdminCreate, AdminPartialModify
 from app.models.node import (
@@ -149,10 +150,16 @@ def get_user_hosts(db: Session, user_id: int):
     )
 
 
-def get_inbound_hosts(db: Session, inbound_id: int) -> List[InboundHost]:
+def get_inbounds_hosts(
+    db: Session, inbound_ids: list[int]
+) -> list[InboundHost]:
     return (
         db.query(InboundHost)
-        .filter(InboundHost.inbound_id == inbound_id)
+        .options(
+            joinedload(InboundHost.chain).joinedload(HostChain.chained_host)
+        )
+        .filter(InboundHost.inbound_id.in_(inbound_ids))
+        .filter(InboundHost.is_disabled == False)
         .all()
     )
 
@@ -177,7 +184,6 @@ def add_host(db: Session, inbound: Inbound, host: InboundHostModify):
         path=host.path,
         sni=host.sni,
         host=host.host,
-        inbound=inbound,
         security=host.security,
         alpn=host.alpn.value,
         fingerprint=host.fingerprint,
@@ -190,6 +196,12 @@ def add_host(db: Session, inbound: Inbound, host: InboundHostModify):
         mux=host.mux,
         allowinsecure=host.allowinsecure,
         weight=host.weight,
+        chain=[
+            HostChain(chained_host_id=ch[0])
+            for ch in db.query(InboundHost.id)
+            .filter(InboundHost.id.in_(host.chain_ids))
+            .all()
+        ],
     )
     inbound.hosts.append(host)
     db.commit()
@@ -211,7 +223,23 @@ def update_host(db: Session, db_host: InboundHost, host: InboundHostModify):
     db_host.mux = host.mux
     db_host.is_disabled = host.is_disabled
     db_host.allowinsecure = host.allowinsecure
-    db_host.udp_noises = host.udp_noises
+    db_host.udp_noises = (
+        [noise.model_dump() for noise in host.udp_noises]
+        if host.udp_noises
+        else None
+    )
+
+    chain_ids = [
+        int(i[0])
+        for i in db.query(InboundHost.id)
+        .filter(InboundHost.id.in_(host.chain_ids))
+        .all()
+    ]
+    chain_nodes = [
+        HostChain(host_id=db_host.id, chained_host_id=chain_id)
+        for chain_id in chain_ids
+    ]
+    db_host.chain = chain_nodes
     db_host.http_headers = host.http_headers
     db_host.mtu = host.mtu
     db_host.dns_servers = host.dns_servers
