@@ -1,11 +1,11 @@
 import {
-    Switch,
     CheckboxField,
+    FormControl,
     FormField,
     FormItem,
     FormLabel,
-    FormControl,
     Input,
+    Switch,
 } from "@marzneshin/common/components";
 import { useFormContext, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -42,11 +42,11 @@ export const MuxSettingsFields = () => {
                                     "mux_settings",
                                     checked
                                         ? {
-                                            protocol: "mux_cool",
-                                            mux_cool_settings: {
-                                                xudp_proxy_443: "reject",
-                                            },
-                                        }
+                                              protocol: "mux_cool",
+                                              mux_cool_settings: {
+                                                  xudp_proxy_443: "reject",
+                                              },
+                                          }
                                         : null,
                                 )
                             }
@@ -61,11 +61,11 @@ export const MuxSettingsFields = () => {
                                     <div className="grid grid-cols-2 w-full gap-3">
                                         {[
                                             "concurrency",
-                                            "xudp_connections",
+                                            "xudp_concurrency",
                                         ].map((fieldName) => (
                                             <FormField
                                                 key={fieldName}
-                                                name={`mux_settings.sing_box_mux_settings.${fieldName}`}
+                                                name={`mux_settings.mux_cool_settings.${fieldName}`}
                                                 render={({ field }) => (
                                                     <FormItem className="w-full">
                                                         <FormLabel className="flex items-center justify-between capitalize">
@@ -82,11 +82,15 @@ export const MuxSettingsFields = () => {
                                                                 onChange={(e) =>
                                                                     updateFieldValue(
                                                                         `mux_settings.mux_cool_settings.${fieldName}`,
-                                                                        Number.parseInt(
-                                                                            e
-                                                                                .target
-                                                                                .value,
-                                                                        ),
+                                                                        e.target
+                                                                            .value ===
+                                                                            ""
+                                                                            ? null
+                                                                            : Number.parseInt(
+                                                                                  e
+                                                                                      .target
+                                                                                      .value,
+                                                                              ),
                                                                     )
                                                                 }
                                                                 className="w-full"
@@ -123,6 +127,7 @@ export const MuxSettingsFields = () => {
                                                                     value={
                                                                         field.value
                                                                     }
+                                                                    type="number"
                                                                     onChange={(
                                                                         e,
                                                                     ) =>
@@ -130,7 +135,14 @@ export const MuxSettingsFields = () => {
                                                                             `mux_settings.sing_box_mux_settings.${fieldName}`,
                                                                             e
                                                                                 .target
-                                                                                .value,
+                                                                                .value ===
+                                                                                ""
+                                                                                ? null
+                                                                                : Number.parseInt(
+                                                                                      e
+                                                                                          .target
+                                                                                          .value,
+                                                                                  ),
                                                                         )
                                                                     }
                                                                     className="w-full"

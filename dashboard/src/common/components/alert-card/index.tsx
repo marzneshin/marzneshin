@@ -1,4 +1,4 @@
-import { Info, TriangleAlert, OctagonAlert } from "lucide-react";
+import { Info, OctagonAlert, TriangleAlert } from "lucide-react";
 import {
     Alert,
     AlertDescription,
@@ -29,7 +29,7 @@ export const AlertCard = ({
         <Alert
             variant={variant}
             className={cn({
-                "flex flex-col justify-center items-center max-h-full h-[13rem] w-full gap-2 border-0":
+                "flex flex-col justify-center items-center max-h-full h-[5.8rem] w-full gap-2 border-0":
                     size === "wide-full",
             })}
         >

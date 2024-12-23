@@ -1,8 +1,8 @@
 import {
-    CommonFields,
-    MtuField,
-    DNSServersField,
     AllowedIpsField,
+    CommonFields,
+    DNSServersField,
+    MtuField,
 } from "../../fields";
 import {
     Accordion,
@@ -21,7 +21,6 @@ export const WireguardProfileFields = () => {
                 <SettingSection value="wireguard" triggerText={t("wireguard")}>
                     <HStack>
                         <ClearableTextField
-                            placeholder="inherit"
                             name="path"
                             label={t("page.hosts.server-public-key")}
                         />

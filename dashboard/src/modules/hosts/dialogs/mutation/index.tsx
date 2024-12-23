@@ -1,23 +1,23 @@
 import { type FC, useEffect } from "react";
 import {
-    DialogTitle,
-    DialogContent,
-    Dialog,
-    DialogHeader,
-    Form,
     Button,
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    Form,
     ScrollArea,
 } from "@marzneshin/common/components";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslation } from "react-i18next";
 import {
+    type HostWithProfileSchemaType,
+    type HostWithProfileType,
     useHostsCreationMutation,
     useHostsUpdateMutation,
-    type HostWithProfileType,
-    type HostWithProfileSchemaType,
 } from "@marzneshin/modules/hosts";
-import { useDialog, type MutationDialogProps } from "@marzneshin/common/hooks";
+import { type MutationDialogProps, useDialog } from "@marzneshin/common/hooks";
 import { ProtocolType } from "@marzneshin/modules/inbounds";
 import { useProfileStrategy } from "./profiles";
 import {
@@ -36,9 +36,7 @@ const transformFormValue = (values: any) => {
     const port = values.port === "" ? null : values.port;
     const alpn = values.alpn === "none" ? "" : values.alpn;
     const fingerprint = values.fingerprint === "none" ? "" : values.fingerprint;
-    const http_headers = values.http_headers
-        ? transformToDictionary(values.http_headers)
-        : undefined;
+    const http_headers = values.http_headers;
     return { ...values, alpn, fingerprint, port, http_headers };
 };
 

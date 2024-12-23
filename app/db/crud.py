@@ -246,7 +246,9 @@ def add_host(db: Session, inbound: Inbound | None, host: InboundHostModify):
         mtu=host.mtu,
         dns_servers=host.dns_servers,
         allowed_ips=host.allowed_ips,
-        mux_settings=host.mux_settings,
+        mux_settings=(
+            host.mux_settings.model_dump() if host.mux_settings else None
+        ),
         allowinsecure=host.allowinsecure,
         weight=host.weight,
         universal=host.universal,
@@ -284,7 +286,9 @@ def update_host(db: Session, db_host: InboundHost, host: InboundHostModify):
     db_host.alpn = host.alpn.value
     db_host.fingerprint = host.fingerprint
     db_host.fragment = host.fragment.model_dump() if host.fragment else None
-    db_host.mux_settings = host.mux_settings
+    db_host.mux_settings = (
+        host.mux_settings.model_dump() if host.mux_settings else None
+    )
     db_host.is_disabled = host.is_disabled
     db_host.allowinsecure = host.allowinsecure
     db_host.udp_noises = (

@@ -16,7 +16,7 @@ export const MuxSettingsSchema = z.object({
     mux_cool_settings: z
         .object({
             concurrency: z.number().nullable().optional(),
-            xudp_connections: z.number().nullable().optional(),
+            xudp_concurrency: z.number().nullable().optional(),
             xudp_proxy_443: z
                 .enum(["reject", "allow", "skip"])
                 .default("reject"),

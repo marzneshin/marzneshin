@@ -49,7 +49,7 @@ export const HttpHeadersDynamicFields = () => {
                     </Button>
                 </div>
             </FormLabel>
-            <ScrollArea className="p-2 border-2  h-[15rem] max-h-[15rem]  bg-background grid grid-cols-1 gap-2 rounded-md">
+            <ScrollArea className="p-2 border-2  h-[7rem] max-h-[10rem]  bg-background grid grid-cols-1 gap-2 rounded-md">
                 {fields.length !== 0 ? (
                     fields.map((field, index) => (
                         <DynamicField

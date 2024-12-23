@@ -11,11 +11,7 @@ export const TlsFields: FC = () => {
             value="tls-settings"
             triggerText={t("page.hosts.tls-config")}
         >
-            <ClearableTextField
-                name="sni"
-                placeholder="inherit"
-                label={t("sni")}
-            />
+            <ClearableTextField name="sni" label={t("sni")} />
             <AlpnField />
             <AllowInsecureField />
         </SettingSection>

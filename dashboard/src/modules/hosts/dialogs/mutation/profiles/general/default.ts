@@ -11,12 +11,7 @@ export const generalProfileDefaultValue: GeneralSchemaType = {
     splithttp_settings: null,
     early_data: null,
     http_headers: null,
-    mux_settings: {
-        protocol: "mux_cool",
-        mux_cool_settings: {
-            xudp_proxy_443: "reject"
-        },
-    },
+    mux_settings: null,
     security: "inbound_default",
     alpn: "none",
     allowinsecure: false,
