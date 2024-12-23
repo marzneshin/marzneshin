@@ -12,6 +12,7 @@ import { Suspense } from "react";
 import {
     AlertDialog,
     AlertDialogContent,
+    AlertDialogTitle,
     Loading
 } from "@marzneshin/common/components";
 
@@ -44,7 +45,11 @@ export const Route = createFileRoute('/_dashboard/hosts/$hostId')({
     },
     errorComponent: () => (
         <AlertDialog open={true}>
-            <AlertDialogContent>Host not found</AlertDialogContent>
+            <AlertDialogContent>
+                <AlertDialogTitle>
+                    Host not found
+                </AlertDialogTitle>
+            </AlertDialogContent>
         </AlertDialog>
     ),
     component: HostProvider,

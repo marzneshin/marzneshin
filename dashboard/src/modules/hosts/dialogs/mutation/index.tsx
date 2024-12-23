@@ -1,38 +1,59 @@
 import { type FC, useEffect } from "react";
 import {
-    DialogTitle,
-    DialogContent,
-    Dialog,
-    DialogHeader,
-    Form,
     Button,
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    Form,
     ScrollArea,
 } from "@marzneshin/common/components";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslation } from "react-i18next";
 import {
+    type HostWithProfileSchemaType,
+    type HostWithProfileType,
     useHostsCreationMutation,
     useHostsUpdateMutation,
-    type HostWithProfileType,
-    type HostWithProfileSchemaType
 } from "@marzneshin/modules/hosts";
-import { useDialog, type MutationDialogProps } from "@marzneshin/common/hooks";
+import { type MutationDialogProps, useDialog } from "@marzneshin/common/hooks";
 import { ProtocolType } from "@marzneshin/modules/inbounds";
 import { useProfileStrategy } from "./profiles";
+import {
+    transformToDictionary,
+    transformToFields,
+} from "@marzneshin/libs/dynamic-field";
 
-interface HostMutationDialogProps extends MutationDialogProps<HostWithProfileType> {
+interface HostMutationDialogProps
+    extends MutationDialogProps<HostWithProfileType> {
     inboundId?: number;
     protocol?: ProtocolType;
 }
 
 const transformFormValue = (values: any) => {
-    if (!(values.alpn && values.fingerprint))
-        return values;
+    if (!(values.alpn && values.fingerprint)) return values;
     const port = values.port === "" ? null : values.port;
     const alpn = values.alpn === "none" ? "" : values.alpn;
     const fingerprint = values.fingerprint === "none" ? "" : values.fingerprint;
-    return { ...values, alpn, fingerprint, port };
+    const http_headers = values.http_headers;
+    return { ...values, alpn, fingerprint, port, http_headers };
+};
+
+const transformFormValueHttpHeaders = (values: any) => {
+    const http_headers = values.http_headers
+        ? transformToDictionary(values.http_headers)
+        : undefined;
+    return { ...values, http_headers };
+};
+
+const formMutationToAPIAdapter = (values: HostWithProfileType) => {
+    if (values.http_headers)
+        return {
+            ...values,
+            http_headers: transformToFields(values.http_headers),
+        };
+    return values;
 };
 
 export const HostsMutationDialog: FC<HostMutationDialogProps> = ({
@@ -42,17 +63,21 @@ export const HostsMutationDialog: FC<HostMutationDialogProps> = ({
     protocol,
 }) => {
     const [open, onOpenChange] = useDialog(true);
-    const [Schema, ProfileFields, defaultValue] = useProfileStrategy(protocol)
+    const [Schema, ProfileFields, defaultValue] = useProfileStrategy(protocol);
     const form = useForm<HostWithProfileSchemaType>({
-        defaultValues: entity ? entity : defaultValue,
+        defaultValues: entity ? formMutationToAPIAdapter(entity) : defaultValue,
         resolver: zodResolver(Schema),
     });
     const updateMutation = useHostsUpdateMutation();
     const createMutation = useHostsCreationMutation();
     const { t } = useTranslation();
 
+    // TODO: Refactor value transformation for api using of
+    // function composition to pipes and port-adapter patterns.
+    // - [ ] ALPN and fingerprint
+    // - [ ] HTTP headers (duplex adaptation)
     const submit = (values: HostWithProfileSchemaType) => {
-        const host = transformFormValue(values);
+        const host = transformFormValueHttpHeaders(transformFormValue(values));
         if (entity && entity.id !== undefined) {
             updateMutation.mutate({ hostId: entity.id, host });
             onOpenChange(false);
@@ -67,7 +92,7 @@ export const HostsMutationDialog: FC<HostMutationDialogProps> = ({
     }, [open, onClose]);
 
     useEffect(() => {
-        if (entity) form.reset(entity);
+        if (entity) form.reset(formMutationToAPIAdapter(entity));
         else form.reset(defaultValue);
     }, [entity, form, open, defaultValue]);
 
