@@ -7,8 +7,8 @@ import {
     FormMessage,
     Input,
 } from "@marzneshin/common/components";
-import { useFormContext, useWatch } from "react-hook-form";
-import { Trash, X } from "lucide-react";
+import { useFormContext } from "react-hook-form";
+import { X } from "lucide-react";
 
 export const ClearableTextField = ({
     name,
@@ -42,7 +42,6 @@ export const ClearableTextField = ({
                             {value === null ? (
                                 <div className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium">
                                     {"null"}
-                                    {/* Restore button to enable the input */}
                                 </div>
                             ) : (
                                 <Input placeholder={placeholder} {...field} />
