@@ -96,9 +96,10 @@ class SplitHttpSettings(BaseModel):
 
 
 class SingBoxMuxSettings(BaseModel):
-    max_connections: str | None = Field(
-        None, pattern=r"^\d{1,10}(-\d{1,10})?$"
-    )
+    max_connections: int | None = Field(None)
+    max_streams: int | None = Field(None)
+    min_streams: int | None = Field(None)
+    padding: bool | None = Field(None)
 
 
 class MuxCoolSettings(BaseModel):
