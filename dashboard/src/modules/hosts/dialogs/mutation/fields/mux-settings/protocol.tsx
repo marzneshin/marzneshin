@@ -1,13 +1,13 @@
 import {
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
 } from "@marzneshin/common/components";
 import { useTranslation } from "react-i18next";
 
@@ -27,7 +27,7 @@ export const ProtocolField = ({
                         onValueChange={(value) =>
                             updater("mux_settings.protocol", value)
                         }
-                        defaultValue={field.value}
+                        defaultValue={field.value ? field.value : "mux_cool"}
                     >
                         <FormControl>
                             <SelectTrigger>
