@@ -59,11 +59,7 @@ export const SecurityFields = () => {
             />
             {extraSecurity && (
                 <>
-                    <ClearableTextField
-                        placeholder="inherit"
-                        name="sni"
-                        label={t("sni")}
-                    />
+                    <ClearableTextField name="sni" label={t("sni")} />
                     <div className="flex flex-row w-full gap-2">
                         <AlpnField />
                         <FingerprintField />

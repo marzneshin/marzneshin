@@ -20,12 +20,14 @@ export const ClearableTextField = ({
     placeholder?: string;
 }) => {
     const form = useFormContext();
+    const value = form.watch(name);
 
-    const clearFieldValue = () => {
-        form.setValue(name, "", {
-            shouldDirty: true,
-            shouldValidate: true,
-        });
+    const handleNullify = () => {
+        form.setValue(name, null);
+    };
+
+    const handleRestore = () => {
+        form.setValue(name, "");
     };
 
     return (
@@ -37,13 +39,24 @@ export const ClearableTextField = ({
                     <FormLabel>{label}</FormLabel>
                     <FormControl>
                         <div className="relative w-full max-w-sm flex items-center gap-2">
-                            <Input placeholder={placeholder} {...field} />
+                            {value === null ? (
+                                <div className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium">
+                                    {"null"}
+                                    {/* Restore button to enable the input */}
+                                </div>
+                            ) : (
+                                <Input placeholder={placeholder} {...field} />
+                            )}
                             <Button
                                 type="button"
                                 aria-label="clear"
                                 variant="ghost"
                                 size="icon"
-                                onClick={clearFieldValue}
+                                onClick={
+                                    value === null
+                                        ? handleRestore
+                                        : handleNullify
+                                }
                                 className="absolute hover:fg-destructive-background right-1 top-1/2 -translate-y-1/2 h-7"
                             >
                                 <X className="h-4 w-4 " />

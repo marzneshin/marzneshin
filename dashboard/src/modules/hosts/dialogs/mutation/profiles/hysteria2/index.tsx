@@ -10,7 +10,6 @@ export const Hysteria2ProfileFields = () => {
             <CommonFields />
             <ClearableTextField
                 name="path"
-                placeholder="inherit"
                 label={t("page.hosts.obfuscation-password")}
             />
             <Accordion className="space-y-2" type="single" collapsible>
