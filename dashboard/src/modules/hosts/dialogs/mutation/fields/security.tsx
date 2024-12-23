@@ -58,14 +58,14 @@ export const SecurityFields = () => {
                 )}
             />
             {extraSecurity && (
-                <>
+                <div className="w-full flex flex-col gap-2">
                     <ClearableTextField name="sni" label={t("sni")} />
                     <div className="flex flex-row w-full gap-2">
                         <AlpnField />
                         <FingerprintField />
                     </div>
                     <AllowInsecureField />
-                </>
+                </div>
             )}
         </>
     );
