@@ -1,13 +1,13 @@
 import {
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
 } from "@marzneshin/common/components";
 import { useTranslation } from "react-i18next";
 
@@ -19,7 +19,7 @@ export const XudpProxy443Field = ({
     const { t } = useTranslation();
     return (
         <FormField
-            name="mux_settings.mux_cool_settings"
+            name="mux_settings.mux_cool_settings.xudp_proxy_443"
             render={({ field }) => (
                 <FormItem>
                     <FormLabel>{t("Xudp Proxy 443")}</FormLabel>
