@@ -7,8 +7,8 @@ import {
     FormMessage,
     Input,
 } from "@marzneshin/common/components";
-import { useFormContext } from "react-hook-form";
-import { X } from "lucide-react";
+import { useFormContext, useWatch } from "react-hook-form";
+import { Trash, X } from "lucide-react";
 
 export const ClearableTextField = ({
     name,
@@ -20,7 +20,14 @@ export const ClearableTextField = ({
     placeholder?: string;
 }) => {
     const form = useFormContext();
+    const value = useWatch({ name });
 
+    const nullifyFieldValue = () => {
+        form.setValue(name, null, {
+            shouldDirty: true,
+            shouldValidate: true,
+        });
+    };
     const clearFieldValue = () => {
         form.setValue(name, "", {
             shouldDirty: true,
@@ -43,10 +50,23 @@ export const ClearableTextField = ({
                                 aria-label="clear"
                                 variant="ghost"
                                 size="icon"
-                                onClick={clearFieldValue}
+                                onClick={nullifyFieldValue}
+                                disabled={value === ""}
                                 className="absolute hover:fg-destructive-background right-1 top-1/2 -translate-y-1/2 h-7"
                             >
                                 <X className="h-4 w-4 " />
+                                <span className="sr-only">Clear</span>
+                            </Button>
+                            <Button
+                                type="button"
+                                aria-label="clear"
+                                variant="ghost"
+                                size="icon"
+                                onClick={clearFieldValue}
+                                disabled={value === ""}
+                                className="absolute hover:fg-destructive right-7 top-1/2 -translate-y-1/2 h-7"
+                            >
+                                <Trash className="h-4 w-4 " />
                                 <span className="sr-only">Clear</span>
                             </Button>
                         </div>
