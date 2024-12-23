@@ -38,10 +38,10 @@ export const ClearableTextField = ({
                 <FormItem className="w-full">
                     <FormLabel>{label}</FormLabel>
                     <FormControl>
-                        <div className="relative w-full max-w-sm flex items-center gap-2">
+                        <div className="relative w-full flex items-center gap-2">
                             {value === null ? (
                                 <div className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium">
-                                    {"null"}
+                                    null
                                 </div>
                             ) : (
                                 <Input placeholder={placeholder} {...field} />
