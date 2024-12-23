@@ -45,42 +45,40 @@ const FragmentSchema = z.object({
         ),
 });
 
-const NoiseSchema = z
-    .array(
-        z.object({
-            delay: z
-                .string()
-                .refine(
-                    (v) => numberInterval(v),
-                    i18n.t("page.hosts.noise.delay-error"),
-                ),
-            type: z.enum(noiseTypes).default("rand"),
-            packet: z.string(),
-        }),
-    );
+const NoiseSchema = z.array(
+    z.object({
+        delay: z
+            .string()
+            .refine(
+                (v) => numberInterval(v),
+                i18n.t("page.hosts.noise.delay-error"),
+            ),
+        type: z.enum(noiseTypes).default("rand"),
+        packet: z.string(),
+    }),
+);
 
-const FingerprintSchema = z
-    .enum([
-        "",
-        "none",
-        "chrome",
-        "firefox",
-        "safari",
-        "ios",
-        "android",
-        "edge",
-        "360",
-        "qq",
-        "random",
-        "randomized",
-    ])
+const FingerprintSchema = z.enum([
+    "",
+    "none",
+    "chrome",
+    "firefox",
+    "safari",
+    "ios",
+    "android",
+    "edge",
+    "360",
+    "qq",
+    "random",
+    "randomized",
+]);
 
 export const GeneralSchema = HostSchema.merge(TlsSchema).extend({
-    path: z.string().nullable().optional().nullish(),
+    path: z.string().nullable().optional().nullish().default(null),
     host: z.string().nullable().optional(),
     mux_settings: MuxSettingsSchema.nullable().optional().default(null),
-    http_headers: z.any().nullable().optional(),
-    fragment: FragmentSchema.nullable().optional(),
+    http_headers: z.any().nullable().optional().default(null),
+    fragment: FragmentSchema.nullable().optional().default(null),
     fingerprint: FingerprintSchema.optional().default("none"),
     splithttp_settings: SplitHttpSettingsSchema.nullable()
         .optional()
