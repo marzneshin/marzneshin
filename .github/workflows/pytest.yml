@@ -1,4 +1,4 @@
-name: Python Tests
+name: Python Alembic Migration Tests
 
 on:
   push:
