@@ -37,6 +37,8 @@ from app.db import GetDB
 from app.db.crud import get_hosts_for_user
 from app.models.proxy import (
     InboundHostSecurity,
+    SplitHttpSettings,
+    MuxSettings,
 )
 from app.models.settings import SubscriptionSettings
 from app.models.user import UserResponse, UserExpireStrategy
@@ -308,6 +310,17 @@ def create_config(
         if host.security == InboundHostSecurity.inbound_default
         else host.security.value
     )
+    splithttp_settings = (
+        SplitHttpSettings.model_validate(host.splithttp_settings)
+        if host.splithttp_settings
+        else None
+    )
+    mux_settings = (
+        MuxSettings.model_validate(host.mux_settings)
+        if host.mux_settings
+        else None
+    )
+
     data = V2Data(
         host.inbound.protocol.value if host.inbound else host.host_protocol,
         host.remark.format_map(format_variables),
@@ -345,37 +358,37 @@ def create_config(
         early_data=host.early_data,
         splithttp_settings=(
             V2SplitHttpSettings(
-                mode=host.splithttp_settings.mode,
-                no_grpc_header=host.splithttp_settings.no_grpc_header,
-                padding_bytes=host.splithttp_settings.padding_bytes,
+                mode=splithttp_settings.mode,
+                no_grpc_header=splithttp_settings.no_grpc_header,
+                padding_bytes=splithttp_settings.padding_bytes,
                 xmux=(
-                    V2XMuxSettings(**host.splithttp_settings.xmux.dict())
-                    if host.splithttp_settings.xmux
+                    V2XMuxSettings(**splithttp_settings.xmux.model_dump())
+                    if splithttp_settings.xmux
                     else None
                 ),
             )
-            if host.splithttp_settings
+            if splithttp_settings
             else None
         ),
         mux_settings=(
             V2MuxSettings(
-                protocol=host.mux_settings.protocol,
+                protocol=mux_settings.protocol,
                 sing_box_mux_settings=(
                     V2SingBoxMuxSettings(
-                        **host.mux_settings.sing_box_mux_settings.dict()
+                        **mux_settings.sing_box_mux_settings.model_dump()
                     )
-                    if host.mux_settings.sing_box_mux_settings
+                    if mux_settings.sing_box_mux_settings
                     else None
                 ),
                 mux_cool_settings=(
                     V2MuxCoolSettings(
-                        **host.mux_settings.mux_cool_settings.dict()
+                        **mux_settings.mux_cool_settings.model_dump()
                     )
-                    if host.mux_settings.mux_cool_settings
+                    if mux_settings.mux_cool_settings
                     else None
                 ),
             )
-            if host.mux_settings
+            if mux_settings
             else None
         ),
         http_headers=host.http_headers,
