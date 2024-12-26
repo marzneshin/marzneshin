@@ -417,6 +417,10 @@ class InboundHost(Base):
     def network(self):
         return self.host_network
 
+    @property
+    def noise(self):
+        return self.udp_noises
+
 
 class System(Base):
     __tablename__ = "system"

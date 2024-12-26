@@ -229,7 +229,11 @@ def add_host(db: Session, inbound: Inbound | None, host: InboundHostModify):
         alpn=host.alpn.value,
         fingerprint=host.fingerprint,
         fragment=host.fragment.model_dump() if host.fragment else None,
-        udp_noises=host.udp_noises,
+        udp_noises=(
+            [noise.model_dump() for noise in host.noise]
+            if host.noise
+            else None
+        ),
         header_type=host.header_type,
         reality_public_key=host.reality_public_key,
         reality_short_ids=host.reality_short_ids,
@@ -292,9 +296,7 @@ def update_host(db: Session, db_host: InboundHost, host: InboundHostModify):
     db_host.is_disabled = host.is_disabled
     db_host.allowinsecure = host.allowinsecure
     db_host.udp_noises = (
-        [noise.model_dump() for noise in host.udp_noises]
-        if host.udp_noises
-        else None
+        [noise.model_dump() for noise in host.noise] if host.noise else None
     )
     db_host.header_type = host.header_type
     db_host.reality_public_key = host.reality_public_key

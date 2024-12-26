@@ -131,8 +131,8 @@ class InboundHost(BaseModel):
     allowinsecure: bool | None = False
     is_disabled: bool | None = False
     fragment: FragmentSettings | None = Field(None)
-    udp_noises: list[XrayNoise] | None = None
-    http_headers: dict[str, str] | None = {}
+    noise: list[XrayNoise] | None = None
+    http_headers: dict[str, str] | None = Field(default_factory=dict)
     mtu: int | None = None
     dns_servers: str | None = None
     allowed_ips: str | None = None
@@ -146,10 +146,10 @@ class InboundHost(BaseModel):
     early_data: int | None = None
     mux_settings: MuxSettings | None = None
     universal: bool = True
-    service_ids: list[int] = []
+    service_ids: list[int] = Field(default_factory=list)
     weight: int = 1
     inbound_id: int | None = None
-    chain_ids: list[int] = []
+    chain_ids: list[int] = Field(default_factory=list)
 
     model_config = ConfigDict(from_attributes=True)
 
