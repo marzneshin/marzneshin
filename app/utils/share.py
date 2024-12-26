@@ -343,15 +343,19 @@ def create_config(
         password=auth_password,
         ed25519=generate_curve25519_pbk(key),
         early_data=host.early_data,
-        splithttp_settings=V2SplitHttpSettings(
-            mode=host.splithttp_settings.mode,
-            no_grpc_header=host.splithttp_settings.no_grpc_header,
-            padding_bytes=host.splithttp_settings.padding_bytes,
-            xmux=(
-                V2XMuxSettings(**host.splithttp_settings.xmux.dict())
-                if host.splithttp_settings.xmux
-                else None
-            ),
+        splithttp_settings=(
+            V2SplitHttpSettings(
+                mode=host.splithttp_settings.mode,
+                no_grpc_header=host.splithttp_settings.no_grpc_header,
+                padding_bytes=host.splithttp_settings.padding_bytes,
+                xmux=(
+                    V2XMuxSettings(**host.splithttp_settings.xmux.dict())
+                    if host.splithttp_settings.xmux
+                    else None
+                ),
+            )
+            if host.splithttp_settings
+            else None
         ),
         mux_settings=(
             V2MuxSettings(
