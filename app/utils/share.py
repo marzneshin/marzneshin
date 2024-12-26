@@ -19,6 +19,11 @@ from v2share import (
     WireGuardConfig,
 )
 from v2share.base import BaseConfig
+from v2share.data import MuxCoolSettings as V2MuxCoolSettings
+from v2share.data import MuxSettings as V2MuxSettings
+from v2share.data import SingBoxMuxSettings as V2SingBoxMuxSettings
+from v2share.data import SplitHttpSettings as V2SplitHttpSettings
+from v2share.data import XMuxSettings as V2XMuxSettings
 from v2share.data import XrayNoise
 from v2share.links import LinksConfig
 
@@ -338,7 +343,37 @@ def create_config(
         password=auth_password,
         ed25519=generate_curve25519_pbk(key),
         early_data=host.early_data,
-        enable_mux=host.mux,
+        splithttp_settings=V2SplitHttpSettings(
+            mode=host.splithttp_settings.mode,
+            no_grpc_header=host.splithttp_settings.no_grpc_header,
+            padding_bytes=host.splithttp_settings.padding_bytes,
+            xmux=(
+                V2XMuxSettings(**host.splithttp_settings.xmux.dict())
+                if host.splithttp_settings.xmux
+                else None
+            ),
+        ),
+        mux_settings=(
+            V2MuxSettings(
+                protocol=host.mux_settings.protocol,
+                sing_box_mux_settings=(
+                    V2SingBoxMuxSettings(
+                        **host.mux_settings.sing_box_mux_settings.dict()
+                    )
+                    if host.mux_settings.sing_box_mux_settings
+                    else None
+                ),
+                mux_cool_settings=(
+                    V2MuxCoolSettings(
+                        **host.mux_settings.mux_cool_settings.dict()
+                    )
+                    if host.mux_settings.mux_cool_settings
+                    else None
+                ),
+            )
+            if host.mux_settings
+            else None
+        ),
         http_headers=host.http_headers,
         shadowsocks_method=host.shadowsocks_method or "chacha20-ietf-poly1305",
         shadowtls_version=host.shadowtls_version
