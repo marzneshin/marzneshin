@@ -69,7 +69,9 @@ const NoiseErrorPopover: FC<{
 export const NoiseField = () => {
     const { t } = useTranslation();
     const form = useFormContext();
-    const [forms, setForms] = useState<NoiseForm["noise"][number][]>([]);
+    const [forms, setForms] = useState<NoiseForm["noise"][number][]>(
+        form.getValues("noise") || [],
+    );
 
     const errors = form.formState.errors as FieldErrors<NoiseForm>;
 
