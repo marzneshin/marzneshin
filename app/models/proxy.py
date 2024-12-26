@@ -145,7 +145,7 @@ class InboundHost(BaseModel):
     splithttp_settings: SplitHttpSettings | None = None
     early_data: int | None = None
     mux_settings: MuxSettings | None = None
-    universal: bool = True
+    universal: bool = False
     service_ids: list[int] = Field(default_factory=list)
     weight: int = 1
     inbound_id: int | None = None
