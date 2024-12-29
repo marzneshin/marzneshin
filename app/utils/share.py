@@ -183,6 +183,9 @@ def setup_format_variables(extra_data: dict) -> dict:
     expire_strategy = extra_data.get("expire_strategy")
     expire_datetime = extra_data.get("expire_date")
     usage_duration = extra_data.get("usage_duration")
+    data_limit_reset_strategy = (
+        extra_data.get("data_limit_reset_strategy")
+    ).value
 
     if expire_strategy != UserExpireStrategy.START_ON_FIRST_USE:
         if expire_datetime is not None:
@@ -230,6 +233,7 @@ def setup_format_variables(extra_data: dict) -> dict:
             "JALALI_EXPIRE_DATE": jalali_expire_date,
             "TIME_LEFT": time_left,
             "STATUS_EMOJI": status_emoji,
+            "DATA_LIMIT_RESET_STRATEGY": data_limit_reset_strategy,
         },
     )
 
