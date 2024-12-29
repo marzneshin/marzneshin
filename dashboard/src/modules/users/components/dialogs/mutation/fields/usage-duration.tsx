@@ -14,11 +14,11 @@ export const UsageDurationField: FC = () => {
     const form = useFormContext();
     const { t } = useTranslation();
 
-    const defaultDuration = (form.getValues('usage_duration') ?? 0) / 86400;
-    const [duration, setDuration] = useState<number>(defaultDuration);
+    const defaultDuration = (form.getValues('usage_duration') ?? null) / 86400;
+    const [duration, setDuration] = useState<number | null>(defaultDuration);
 
     useEffect(() => {
-        form.setValue('usage_duration', duration * 86400);
+        form.setValue('usage_duration', duration !== null ? duration * 86400 : null);
     }, [form, duration]);
 
     return (
@@ -32,10 +32,11 @@ export const UsageDurationField: FC = () => {
                         <Input
                             {...field}
                             type="number"
-                            value={duration}
+                            value={duration !== null ? duration : ''}
                             onChange={(e) => {
-                                setDuration(Number(e.target.value));
-                                field.onChange(e.target.value);
+                                const value = e.target.value !== '' ? Number(e.target.value) : null;
+                                setDuration(value);
+                                field.onChange(value);
                             }}
                         />
                     </FormControl>
