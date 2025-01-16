@@ -1,3 +1,4 @@
+import asyncio
 import logging
 from typing import Annotated
 
@@ -225,5 +226,7 @@ async def alter_node_xray_config(
             5,
         )
     except:
-        raise HTTPException(status_code=502, detail="Node isn't responsive")
+        raise HTTPException(
+            status_code=502, detail="No response from the node."
+        )
     return {}
