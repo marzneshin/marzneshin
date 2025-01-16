@@ -92,7 +92,7 @@ async def node_logs(
     db: DBDep,
     include_buffer: bool = True,
 ):
-    token = websocket.query_params.get("token") or websocket.headers.get(
+    token = websocket.query_params.get("token", "") or websocket.headers.get(
         "Authorization", ""
     ).removeprefix("Bearer ")
     admin = get_admin(db, token)
@@ -112,7 +112,7 @@ async def node_logs(
                 await websocket.send_text(line)
             except WebSocketDisconnect:
                 break
-    except:
+    finally:
         await websocket.close()
 
 
