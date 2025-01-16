@@ -1,3 +1,4 @@
+import asyncio
 import logging
 from typing import Annotated
 
@@ -92,7 +93,7 @@ async def node_logs(
     db: DBDep,
     include_buffer: bool = True,
 ):
-    token = websocket.query_params.get("token") or websocket.headers.get(
+    token = websocket.query_params.get("token", "") or websocket.headers.get(
         "Authorization", ""
     ).removeprefix("Bearer ")
     admin = get_admin(db, token)
@@ -112,7 +113,7 @@ async def node_logs(
                 await websocket.send_text(line)
             except WebSocketDisconnect:
                 break
-    except:
+    finally:
         await websocket.close()
 
 
@@ -192,7 +193,7 @@ async def get_backend_stats(
 
 @router.get("/{node_id}/{backend}/config", response_model=BackendConfig)
 async def get_node_xray_config(
-    node_id: int, backend: str, db: DBDep, admin: SudoAdminDep
+    node_id: int, backend: str, admin: SudoAdminDep
 ):
     if not (node := marznode.nodes.get(node_id)):
         raise HTTPException(status_code=404, detail="Node not found")
@@ -209,18 +210,23 @@ async def get_node_xray_config(
 async def alter_node_xray_config(
     node_id: int,
     backend: str,
-    db: DBDep,
     admin: SudoAdminDep,
     config: Annotated[BackendConfig, Body()],
 ):
     if not (node := marznode.nodes.get(node_id)):
         raise HTTPException(status_code=404, detail="Node not found")
+
     try:
-        await node.restart_backend(
-            name=backend,
-            config=config.config,
-            config_format=config.format.value,
+        await asyncio.wait_for(
+            node.restart_backend(
+                name=backend,
+                config=config.config,
+                config_format=config.format.value,
+            ),
+            5,
         )
     except:
-        raise HTTPException(status_code=502, detail="Node isn't responsive")
+        raise HTTPException(
+            status_code=502, detail="No response from the node."
+        )
     return {}
