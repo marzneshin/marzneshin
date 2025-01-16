@@ -215,11 +215,15 @@ async def alter_node_xray_config(
 ):
     if not (node := marznode.nodes.get(node_id)):
         raise HTTPException(status_code=404, detail="Node not found")
+
     try:
-        await node.restart_backend(
-            name=backend,
-            config=config.config,
-            config_format=config.format.value,
+        await asyncio.wait_for(
+            node.restart_backend(
+                name=backend,
+                config=config.config,
+                config_format=config.format.value,
+            ),
+            5,
         )
     except:
         raise HTTPException(status_code=502, detail="Node isn't responsive")
