@@ -192,7 +192,7 @@ async def get_backend_stats(
 
 @router.get("/{node_id}/{backend}/config", response_model=BackendConfig)
 async def get_node_xray_config(
-    node_id: int, backend: str, db: DBDep, admin: SudoAdminDep
+    node_id: int, backend: str, admin: SudoAdminDep
 ):
     if not (node := marznode.nodes.get(node_id)):
         raise HTTPException(status_code=404, detail="Node not found")
@@ -209,7 +209,6 @@ async def get_node_xray_config(
 async def alter_node_xray_config(
     node_id: int,
     backend: str,
-    db: DBDep,
     admin: SudoAdminDep,
     config: Annotated[BackendConfig, Body()],
 ):
