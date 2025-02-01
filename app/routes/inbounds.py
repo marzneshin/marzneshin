@@ -32,6 +32,14 @@ def get_hosts(db: DBDep):
     return paginate(db.query(DBInboundHost))
 
 
+@router.post("/hosts", response_model=InboundHostResponse)
+def create_unbound_host(host: InboundHost, db: DBDep):
+    """
+    Add a host without an inbound
+    """
+    return crud.add_host(db, None, host)
+
+
 @router.get("/hosts/{id}", response_model=InboundHostResponse)
 def get_host(id: int, db: DBDep):
     """

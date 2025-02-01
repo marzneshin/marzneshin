@@ -1,26 +1,19 @@
-import {
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
-    Input
-} from "@marzneshin/common/components";
+import { FormControl, FormField, FormItem, FormLabel, FormMessage, Input } from "@marzneshin/common/components";
 import { useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-export const SniField = () => {
+export const EarlyDataField = () => {
     const { t } = useTranslation()
     const form = useFormContext()
     return (
         <FormField
             control={form.control}
-            name="sni"
+            name="early_data"
             render={({ field }) => (
-                <FormItem >
-                    <FormLabel>{t('SNI')}</FormLabel>
+                <FormItem className="w-full">
+                    <FormLabel>{t('page.hosts.early-data')}</FormLabel>
                     <FormControl>
-                        <Input {...field} />
+                        <Input type="number" {...field} />
                     </FormControl>
                     <FormMessage />
                 </FormItem>
