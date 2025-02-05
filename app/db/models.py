@@ -26,7 +26,10 @@ from sqlalchemy.ext.orderinglist import ordering_list
 from sqlalchemy.orm import relationship, column_property
 from sqlalchemy.sql.expression import text
 
-from app.config.env import SUBSCRIPTION_URL_PREFIX
+from app.config.env import (
+    SUBSCRIPTION_URL_PREFIX,
+    SUBSCRIPTION_URL_PATH,
+)
 from app.db.base import Base
 from app.models.node import NodeStatus
 from app.models.proxy import (
@@ -272,7 +275,7 @@ class User(Base):
         ) or SUBSCRIPTION_URL_PREFIX
         return (
             prefix.replace("*", secrets.token_hex(8))
-            + f"/sub/{self.username}/{self.key}"
+            + f"{SUBSCRIPTION_URL_PATH}/{self.username}/{self.key}"
         )
 
     @hybrid_property
