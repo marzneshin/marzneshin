@@ -35,6 +35,7 @@ VITE_BASE_API = (
 SUBSCRIPTION_URL_PREFIX = config("SUBSCRIPTION_URL_PREFIX", default="").strip(
     "/"
 )
+SUBSCRIPTION_URL_PATH = config("SUBSCRIPTION_URL_PATH", default="/sub")
 
 TELEGRAM_API_TOKEN = config("TELEGRAM_API_TOKEN", default="")
 TELEGRAM_ADMIN_ID = config(
