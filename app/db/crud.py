@@ -31,7 +31,7 @@ from app.models.node import (
 )
 from app.models.proxy import InboundHost as InboundHostModify
 from app.models.service import Service as ServiceModify, ServiceCreate
-from app.models.system import TrafficUsageSeries
+from app.models.system import TrafficUsageSeries, AdminsStats, AdminStats
 from app.models.user import (
     UserCreate,
     UserDataUsageResetStrategy,
@@ -482,6 +482,66 @@ def get_user_total_usage(
         current += step
 
     result.step = int(step.total_seconds())
+    return result
+
+
+def admins_stats(db: Session, start: datetime, end: datetime):
+    admins = db.query(Admin).all()
+    result = AdminsStats(total=len(admins), admins=[])
+
+    for admin in admins:
+        admin_usage = (
+            db.query(func.sum(NodeUserUsage.used_traffic))
+            .join(User, NodeUserUsage.user_id == User.id)
+            .filter(User.admin_id == admin.id)
+            .filter(
+                and_(
+                    NodeUserUsage.created_at >= start,
+                    NodeUserUsage.created_at <= end,
+                )
+            )
+            .scalar()
+            or 0
+        )
+
+        admin_new_users = (
+            db.query(User)
+            .filter(User.admin_id == admin.id)
+            .filter(
+                and_(
+                    User.created_at >= start,
+                    User.created_at <= end,
+                )
+            )
+            .count()
+        )
+
+        admin_modify_users = (
+            db.query(User)
+            .filter(User.admin_id == admin.id)
+            .filter(
+                and_(
+                    User.edit_at >= start,
+                    User.edit_at <= end,
+                    User.edit_at.isnot(None),
+                )
+            )
+            .count()
+        )
+
+        result.total_traffic_used += int(admin_usage)
+        result.total_new_users += admin_new_users
+        result.total_modify_users += admin_modify_users
+
+        result.admins.append(
+            AdminStats(
+                username=admin.username,
+                new_users=admin_new_users,
+                modify_users=admin_modify_users,
+                new_traffic_used=admin_usage,
+            )
+        )
+
     return result
 
 
