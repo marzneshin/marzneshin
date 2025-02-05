@@ -16,8 +16,9 @@ from app.utils.share import (
     generate_subscription,
     generate_subscription_template,
 )
+from app.config.env import SUBSCRIPTION_URL_PATH
 
-router = APIRouter(prefix="/sub", tags=["Subscription"])
+router = APIRouter(prefix=SUBSCRIPTION_URL_PATH, tags=["Subscription"])
 
 
 config_mimetype = defaultdict(
