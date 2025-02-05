@@ -6,7 +6,7 @@ import secrets
 from collections import defaultdict
 from datetime import datetime as dt, timedelta
 from importlib import resources
-from typing import Literal, Union, List, Type
+from typing import Literal, Union, List, Type, Dict, Any
 from uuid import UUID
 
 from jdatetime import date as jd
@@ -40,7 +40,11 @@ from app.models.proxy import (
     SplitHttpSettings,
     MuxSettings,
 )
-from app.models.settings import SubscriptionSettings
+from app.models.settings import (
+    SubscriptionSettings,
+    PlaceholderRule,
+    PlaceholderTypes,
+)
 from app.models.user import UserResponse, UserExpireStrategy
 from app.templates import render_template
 from app.utils.keygen import gen_uuid, gen_password, generate_curve25519_pbk
@@ -82,7 +86,7 @@ def generate_subscription_template(
         config_format="links",
         use_placeholder=not db_user.is_active
         and subscription_settings.placeholder_if_disabled,
-        placeholder_remark=subscription_settings.placeholder_remark,
+        placeholder_remarks=subscription_settings.placeholder_remarks,
         shuffle=subscription_settings.shuffle_configs,
     ).split()
     return render_template(
@@ -91,12 +95,32 @@ def generate_subscription_template(
     )
 
 
+def get_user_placeholder_configs(
+    user: "UserResponse",
+    placeholder_remarks: List[PlaceholderRule],
+    format_variables: Dict[str, Any],
+) -> List[V2Data]:
+    target_types = {
+        PlaceholderTypes.ALL,
+        *PlaceholderTypes.get_active_types(user),
+    }
+
+    config = [
+        V2Data("vmess", remark.format_map(format_variables), "127.0.0.1", 80)
+        for rule in placeholder_remarks
+        if rule.placetype in target_types
+        for remark in rule.texts
+    ]
+
+    return config
+
+
 def generate_subscription(
     user: "UserResponse",
     config_format: Literal["links", "xray", "clash-meta", "clash", "sing-box"],
     as_base64: bool = False,
     use_placeholder: bool = False,
-    placeholder_remark: str = "disabled",
+    placeholder_remarks: List[PlaceholderRule] = [],
     shuffle: bool = False,
 ) -> str:
     extra_data = UserResponse.model_validate(user).model_dump(
@@ -116,14 +140,9 @@ def generate_subscription(
         subscription_handler = subscription_handler_class()
 
     if use_placeholder:
-        placeholder_config = V2Data(
-            "vmess",
-            placeholder_remark.format_map(format_variables),
-            "127.0.0.1",
-            80,
+        configs = get_user_placeholder_configs(
+            user, placeholder_remarks, format_variables
         )
-        configs = [placeholder_config]
-
     else:
         configs = generate_user_configs(
             user.inbounds,
