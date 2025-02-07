@@ -1,6 +1,7 @@
+from enum import Enum
+
 from decouple import config
 from dotenv import load_dotenv
-from enum import Enum
 
 load_dotenv()
 
@@ -104,4 +105,17 @@ NOTIFY_DAYS_LEFT = config("NOTIFY_DAYS_LEFT", default=3, cast=int)
 
 DISABLE_RECORDING_NODE_USAGE = config(
     "DISABLE_RECORDING_NODE_USAGE", cast=bool, default=False
+)
+
+TASKS_RECORD_USER_USAGES_INTERVAL = config(
+    "TASKS_RECORD_USER_USAGES_INTERVAL", default=30, cast=int
+)
+TASKS_REVIEW_USERS_INTERVAL = config(
+    "TASKS_REVIEW_USERS_INTERVAL", default=30, cast=int
+)
+TASKS_EXPIRE_DAYS_REACHED_INTERVAL = config(
+    "TASKS_EXPIRE_DAYS_REACHED_INTERVAL", default=30, cast=int
+)
+TASKS_RESET_USER_DATA_USAGE = config(
+    "TASKS_RESET_USER_DATA_USAGE", default=3600, cast=int
 )
