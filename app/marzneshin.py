@@ -25,6 +25,7 @@ from app.config.env import (
     TASKS_RECORD_USER_USAGES_INTERVAL,
     TASKS_REVIEW_USERS_INTERVAL,
     TASKS_EXPIRE_DAYS_REACHED_INTERVAL,
+    TASKS_RESET_USER_DATA_USAGE,
 )
 from app.templates import render_template
 from . import __version__
@@ -97,7 +98,12 @@ scheduler.add_job(
     coalesce=True,
     max_instances=1,
 )
-scheduler.add_job(reset_user_data_usage, "interval", coalesce=True, hours=1)
+scheduler.add_job(
+    reset_user_data_usage,
+    "interval",
+    seconds=TASKS_RESET_USER_DATA_USAGE,
+    coalesce=True,
+)
 
 
 @app.exception_handler(RequestValidationError)
