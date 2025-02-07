@@ -22,9 +22,9 @@ from app.config.env import (
     UVICORN_SSL_KEYFILE,
     UVICORN_UDS,
     DASHBOARD_PATH,
-    TASK_RECORD_USER_USAGES_INTERVAL,
-    TASK_REVIEW_USERS_INTERVAL,
-    TASK_EXPIRE_DAYS_REACHED_INTERVAL,
+    TASKS_RECORD_USER_USAGES_INTERVAL,
+    TASKS_REVIEW_USERS_INTERVAL,
+    TASKS_EXPIRE_DAYS_REACHED_INTERVAL,
 )
 from app.templates import render_template
 from . import __version__
@@ -77,12 +77,25 @@ app.add_middleware(
 )
 
 scheduler = AsyncIOScheduler(timezone="UTC")
-scheduler.add_job(record_user_usages, "interval", coalesce=True, seconds=TASK_RECORD_USER_USAGES_INTERVAL)
 scheduler.add_job(
-    review_users, "interval", seconds=TASK_REVIEW_USERS_INTERVAL, coalesce=True, max_instances=1
+    record_user_usages,
+    "interval",
+    coalesce=True,
+    seconds=TASKS_RECORD_USER_USAGES_INTERVAL,
 )
 scheduler.add_job(
-    expire_days_reached, "interval", seconds=TASK_EXPIRE_DAYS_REACHED_INTERVAL, coalesce=True, max_instances=1
+    review_users,
+    "interval",
+    seconds=TASKS_REVIEW_USERS_INTERVAL,
+    coalesce=True,
+    max_instances=1,
+)
+scheduler.add_job(
+    expire_days_reached,
+    "interval",
+    seconds=TASKS_EXPIRE_DAYS_REACHED_INTERVAL,
+    coalesce=True,
+    max_instances=1,
 )
 scheduler.add_job(reset_user_data_usage, "interval", coalesce=True, hours=1)
 
