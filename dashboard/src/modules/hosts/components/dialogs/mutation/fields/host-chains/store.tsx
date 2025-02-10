@@ -18,7 +18,9 @@ export interface ChainedHostsStoreActions {
 
 export type ChainedHostsStore = ChainedHostsStoreState & ChainedHostsStoreActions;
 
-const ChainedHostsContext = createContext<StoreApi<ChainedHostsStore> | null>(
+const ChainedHostsContext = createContext<
+    StoreApi<ChainedHostsStore> | null
+>(
     null,
 );
 
