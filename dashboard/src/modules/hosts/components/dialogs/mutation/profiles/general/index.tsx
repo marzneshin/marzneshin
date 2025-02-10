@@ -56,7 +56,7 @@ export const GeneralProfileFields = () => {
                 </SettingSection>
                 <SettingSection
                     value="chains"
-                    triggerText={t("page.hosts.host-chains")}
+                    triggerText={t("page.hosts.host-chain")}
                 >
                     <HostChainsField />
                 </SettingSection>

@@ -268,6 +268,11 @@
       "users-data-usage": "Users Data Usage"
     },
     "hosts": {
+      "host-chain": "Host Chain",
+      "host-chains": {
+        "add": "Add Host",
+        "apply": "Apply Selection"
+      },
       "xmux-settings": "Xmux Settings",
       "split-http-settings": "Split HTTP Settings",
       "no-grpc-header": "No GRPC Header",
