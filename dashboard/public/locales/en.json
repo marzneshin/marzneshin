@@ -306,6 +306,7 @@
         "username": "Username of the user",
         "dataUsage": "Current usage of the user",
         "remainingData": "Remaining data of the user",
+        "DataLimitResetStrategy": "Periodic reset of user usage volume",
         "dataLimit": "Data limit of the user",
         "remainingDays": "Remaining days of the user",
         "expireDate": "Expiry date of the user",
