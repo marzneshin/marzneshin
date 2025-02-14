@@ -25,6 +25,12 @@ def get_services(db: DBDep, admin: AdminDep, name: str = Query(None)):
     if not admin.is_sudo and not admin.all_services_access:
         query = query.filter(Service.id.in_(admin.service_ids))
 
+    if not admin.is_sudo:
+        for service in query.all():
+            service.users = [
+                user for user in service.users if user.admin_id == admin.id
+            ]
+
     return paginate(query)
 
 
