@@ -1,7 +1,8 @@
 from typing import Optional, Annotated
 
-import sqlalchemy
-from fastapi import APIRouter
+from sqlalchemy.orm import joinedload
+from sqlalchemy.exc import IntegrityError
+from fastapi import APIRouter, Query
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi_pagination import Page
@@ -41,18 +42,52 @@ def authenticate_admin(
 
 
 @router.get("", response_model=Page[AdminResponse])
-def get_admins(db: DBDep, admin: SudoAdminDep, username: str | None = None):
-    query = db.query(DBAdmin)
+def get_admins(
+    db: DBDep,
+    admin: SudoAdminDep,
+    username: Optional[str] = None,
+    is_sudo: Optional[bool] = None,
+    enabled: Optional[bool] = None,
+    all_services_access: Optional[bool] = None,
+    modify_users_access: Optional[bool] = None,
+    service_ids: Optional[list[int]] = Query(None),
+):
+    query = db.query(DBAdmin).options(joinedload(DBAdmin.services))
+
     if username:
         query = query.filter(DBAdmin.username.ilike(f"%{username}%"))
-    return paginate(db, query)
+
+    if is_sudo is not None:
+        query = query.filter(DBAdmin.is_sudo == is_sudo)
+
+    if enabled is not None:
+        query = query.filter(DBAdmin.enabled == enabled)
+
+    if all_services_access is not None:
+        query = query.filter(
+            DBAdmin.all_services_access == all_services_access
+        )
+
+    if modify_users_access is not None:
+        query = query.filter(
+            DBAdmin.modify_users_access == modify_users_access
+        )
+
+    if service_ids:
+        query = (
+            query.join(DBAdmin.services)
+            .filter(Service.id.in_(service_ids))
+            .distinct()
+        )
+
+    return paginate(query)
 
 
 @router.post("", response_model=Admin)
 def create_admin(new_admin: AdminCreate, db: DBDep, admin: SudoAdminDep):
     try:
         dbadmin = crud.create_admin(db, new_admin)
-    except sqlalchemy.exc.IntegrityError:
+    except IntegrityError:
         db.rollback()
         raise HTTPException(status_code=409, detail="Admin already exists")
 
