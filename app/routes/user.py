@@ -148,6 +148,58 @@ async def add_user(new_user: UserCreate, db: DBDep, admin: AdminDep):
     return user
 
 
+@router.post("/bulk", response_model=list[UserResponse])
+async def add_bulk_users(
+    new_users: list[UserCreate], db: DBDep, admin: AdminDep
+):
+    """
+    Add a new user
+
+    - **username** must have 3 to 32 characters and is allowed to contain a-z, 0-9, and underscores in between
+    - **expire_date** must be a datetime
+    - **data_limit** must be in Bytes, e.g. 1073741824B = 1GB
+    - **services** list of service ids
+    """
+
+    try:
+        created_users = crud.create_user(
+            db,
+            new_users,
+            admin=crud.get_admin(db, admin.username),
+            allowed_services=(
+                admin.service_ids
+                if not admin.is_sudo and not admin.all_services_access
+                else None
+            ),
+        )
+
+        user_responses = [
+            UserResponse.model_validate(db_user) for db_user in created_users
+        ]
+
+        for db_user in created_users:
+            marznode.operations.update_user(user=db_user)
+
+        for user_response in user_responses:
+            asyncio.ensure_future(
+                report.user_created(
+                    user=user_response, user_id=user_response.id, by=admin
+                )
+            )
+
+        logger.info(
+            "New users added: %s", [user.username for user in created_users]
+        )
+
+        return user_responses
+
+    except sqlalchemy.exc.IntegrityError:
+        db.rollback()
+        raise HTTPException(
+            status_code=409, detail="One or more users already exist"
+        )
+
+
 @router.post("/reset")
 async def reset_users_data_usage(db: DBDep, admin: SudoAdminDep):
     """
@@ -311,6 +363,46 @@ async def remove_user(
     return {}
 
 
+@router.delete("/bulk")
+async def remove_bulk_users(
+    users: list[str],
+    db: DBDep,
+    admin: AdminDep,
+    modify_access: ModifyUsersAccess,
+):
+    """
+    Remove bulk user
+    """
+    try:
+        for username in users:
+            user = crud.get_user(db, username)
+            if not user:
+                raise ValueError(f"User {username} not found")
+            user.removed = True
+            user.activated = False
+
+        db.commit()
+
+        for user in users:
+            marznode.operations.update_user(user, remove=True)
+
+        for username in users:
+            asyncio.ensure_future(
+                report.user_deleted(username=username, by=admin)
+            )
+
+        logger.info("Users %s deleted", ", ".join(users))
+        return {}
+
+    except (sqlalchemy.exc.IntegrityError, ValueError) as e:
+        db.rollback()
+        logger.error(f"Failed to delete users: {str(e)}")
+        raise HTTPException(
+            status_code=409,
+            detail="Failed to delete one or more users. No users were deleted.",
+        )
+
+
 @router.get("/{username}/services", response_model=Page[ServiceResponse])
 def get_user_services(user: UserDep, db: DBDep, admin: AdminDep):
     """
@@ -362,6 +454,59 @@ async def reset_user_data_usage(
     return user
 
 
+@router.post("/bulk/reset", response_model=list[UserResponse])
+async def reset_bulk_users_data_usage(
+    usernames: list[str],
+    db: DBDep,
+    admin: AdminDep,
+    modify_access: ModifyUsersAccess,
+):
+    """
+    Reset data usage for multiple users in bulk
+    """
+    users_to_update = []
+    reset_users = []
+    try:
+        for username in usernames:
+            user = crud.get_user(db, username)
+            if not user:
+                raise ValueError(f"User {username} not found")
+
+            was_active = user.is_active
+            user.traffic_reset_at = datetime.utcnow()
+            user.used_traffic = 0
+
+            if user.is_active and not was_active:
+                user.activated = True
+
+            users_to_update.append((user, was_active))
+            reset_users.append(user)
+
+        db.commit()
+
+        for user, was_active in users_to_update:
+            if user.is_active and not was_active:
+                marznode.operations.update_user(user)
+
+        for user in reset_users:
+            asyncio.ensure_future(
+                report.user_data_usage_reset(
+                    user=UserResponse.model_validate(user), by=admin
+                )
+            )
+
+        logger.info("Data usage reset for users: %s", ", ".join(usernames))
+        return [UserResponse.model_validate(user) for user in reset_users]
+
+    except (sqlalchemy.exc.IntegrityError, ValueError) as e:
+        db.rollback()
+        logger.error(f"Failed to reset data usage: {str(e)}")
+        raise HTTPException(
+            status_code=409,
+            detail="Failed to reset data usage for one or more users. No changes were made.",
+        )
+
+
 @router.post("/{username}/enable", response_model=UserResponse)
 async def enable_user(
     db_user: UserDep,
@@ -396,6 +541,53 @@ async def enable_user(
     return user
 
 
+@router.post("/bulk/enable", response_model=list[UserResponse])
+async def bulk_enable_users(
+    usernames: list[str],
+    db: DBDep,
+    admin: AdminDep,
+    modify_access: ModifyUsersAccess,
+):
+    """
+    Bulk enable users
+    """
+    enabled_users = []
+    marznode_updates = []
+
+    try:
+        for username in usernames:
+            user = crud.get_user(db, username)
+            if not user:
+                raise HTTPException(
+                    status_code=404, detail=f"User {username} not found"
+                )
+
+            if not user.enabled:
+                user.enabled = True
+                if user.is_active:
+                    user.activated = True
+                    marznode_updates.append(user)
+
+                enabled_users.append(user)
+
+        db.commit()
+
+        for user in marznode_updates:
+            marznode.operations.update_user(user)
+
+        logger.info(
+            "Users %s have been enabled",
+            ", ".join(u.username for u in enabled_users),
+        )
+
+        return [UserResponse.model_validate(user) for user in enabled_users]
+
+    except Exception as e:
+        db.rollback()
+        logger.error(f"Failed to enable users: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to enable users")
+
+
 @router.post("/{username}/disable", response_model=UserResponse)
 async def disable_user(
     db_user: UserDep,
@@ -425,6 +617,49 @@ async def disable_user(
     logger.info("User `%s` has been disabled", db_user.username)
 
     return user
+
+
+@router.post("/bulk/disable", response_model=list[UserResponse])
+async def bulk_disable_users(
+    usernames: list[str],
+    db: DBDep,
+    admin: AdminDep,
+    modify_access: ModifyUsersAccess,
+):
+    """
+    Bulk disable users
+    """
+    disabled_users = []
+
+    try:
+        for username in usernames:
+            user = crud.get_user(db, username)
+            if not user:
+                raise HTTPException(
+                    status_code=404, detail=f"User {username} not found"
+                )
+
+            if user.enabled:
+                user.enabled = False
+                user.activated = False
+                disabled_users.append(user)
+
+        db.commit()
+
+        for user in disabled_users:
+            marznode.operations.update_user(user, remove=True)
+
+        logger.info(
+            "Users %s have been disabled",
+            ", ".join(u.username for u in disabled_users),
+        )
+
+        return [UserResponse.model_validate(user) for user in disabled_users]
+
+    except Exception as e:
+        db.rollback()
+        logger.error(f"Failed to disable users: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to disable users")
 
 
 @router.post("/{username}/revoke_sub", response_model=UserResponse)
@@ -489,3 +724,39 @@ def set_owner(
     )
 
     return user
+
+
+@router.put("/bulk/set-owner", response_model=list[UserResponse])
+def bulk_set_owner(
+    usernames: list[str], admin_username: str, db: DBDep, admin: SudoAdminDep
+):
+    users_to_update = []
+    new_admin = crud.get_admin(db, username=admin_username)
+    if not new_admin:
+        raise HTTPException(status_code=404, detail="Admin not found")
+
+    try:
+        for username in usernames:
+            db_user = crud.get_user(db, username)
+            if not db_user:
+                raise HTTPException(
+                    status_code=404, detail=f"User {username} not found"
+                )
+            users_to_update.append(db_user)
+
+        updated_users = crud.bulk_set_owner(db, users_to_update, new_admin)
+
+        logger.info(
+            "Owner of users `%s` successfully set to `%s`",
+            ", ".join(user.username for user in updated_users),
+            new_admin.username,
+        )
+
+        return [UserResponse.model_validate(user) for user in updated_users]
+
+    except Exception as e:
+        db.rollback()
+        logger.error(f"Failed to set owner for users: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail="Failed to set owner for users"
+        )
