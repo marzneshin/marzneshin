@@ -123,6 +123,13 @@ class Admin(Base):
             .scalar_subquery()
         )
 
+        cls.users_count = column_property(
+            select(func.count(User.id))
+            .where(User.admin_id == cls.id, User.removed == False)
+            .correlate_except(User)
+            .scalar_subquery()
+        )
+
 
 class Service(Base):
     __tablename__ = "services"
