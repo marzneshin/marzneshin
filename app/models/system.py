@@ -29,8 +29,19 @@ class UsersStats(BaseModel):
     online: int
 
 
+class AdminStats(BaseModel):
+    username: str
+    new_users: int = 0
+    modify_users: int = 0
+    new_traffic_used: int = 0
+
+
 class AdminsStats(BaseModel):
-    total: int
+    total: int = 0
+    total_new_users: int = 0
+    total_modify_users: int = 0
+    total_traffic_used: int = 0
+    admins: list[AdminStats]
 
 
 class NodesStats(BaseModel):
