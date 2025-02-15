@@ -14,44 +14,21 @@ import { PlusIcon } from "lucide-react";
 import { useHostsQuery } from "../../../../../api";
 import { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
-
-interface Host {
-    id?: number;
-    remark: string;
-    address: string;
-    port: number | null;
-}
-
-interface HostsSelectionQueryProps {
-    selectedHosts: number[];
-    setSelectedHosts: (hosts: number[]) => void;
-}
-
-const HostSearchInput: FC<{
-    query: string;
-    onQueryChange: (query: string) => void;
-}> = ({ query, onQueryChange }) => (
-    <div className="vstack p-2 gap-2">
-        <Input
-            value={query}
-            onChange={(e) => onQueryChange(e.target.value)}
-            placeholder="Search..."
-        />
-    </div>
-);
+import { HostType } from "@marzneshin/modules/hosts/domain";
+import { ChainedHostsStore, useChainedHostsStore } from "./store";
 
 const HostListItem: FC<{
-    host: Host;
+    host: HostType;
     isSelected: boolean;
-    onToggleSelection: (id: number) => void;
+    onToggleSelection: (host: HostType) => void;
 }> = ({ host, isSelected, onToggleSelection }) => (
-    <Card className="text-sm gap-3 p-2 hstack">
+    <Card className=" gap-3 p-2 hstack">
         <Checkbox
             checked={isSelected}
-            onCheckedChange={() => onToggleSelection(host.id!)}
+            onCheckedChange={() => onToggleSelection(host)}
         />
-        <div className="text-sm gap-3 vstack">
-            <span>{host.remark}</span>
+        <div className="gap-3 vstack">
+            <span className="text-sm">{host.remark}</span>
             <Badge className="w-fit">
                 {host.address}:{host.port}
             </Badge>
@@ -59,10 +36,16 @@ const HostListItem: FC<{
     </Card>
 );
 
-export const HostsSelectionQuery: FC<HostsSelectionQueryProps> = ({
-    selectedHosts,
-    setSelectedHosts,
-}) => {
+export const HostsSelectionQuery: FC = () => {
+    const { selectedHosts, addHost, removeHost } = useChainedHostsStore(
+        (state: ChainedHostsStore) => ({
+            selectedHosts: state.selectedHosts,
+            fieldsArray: state.fieldsArray,
+            addHost: state.addHost,
+            removeHost: state.removeHost,
+        }),
+    );
+
     const [hostSearchQuery, setHostSearchQuery] = useState("");
     const [open, setOpen] = useState(false);
     const { t } = useTranslation();
@@ -73,20 +56,13 @@ export const HostsSelectionQuery: FC<HostsSelectionQueryProps> = ({
         filters: { remark: hostSearchQuery },
     });
 
-    const toggleHostSelection = (hostId: number) => {
-        setSelectedHosts(
-            selectedHosts.includes(hostId)
-                ? selectedHosts.filter((id) => id !== hostId)
-                : [...selectedHosts, hostId]
-        );
+    const toggleHostSelection = (host: HostType) => {
+        const exist = selectedHosts.find((hostData) => hostData.id === host.id);
+        if (!exist) addHost(host);
+        if (exist && host.id) removeHost(host.id);
     };
 
     const applySelection = () => {
-        setSelectedHosts(
-            data.entities
-                .filter((host) => selectedHosts.includes(host.id!))
-                .map((host) => host.id!)
-        );
         setOpen(false);
     };
 
@@ -98,28 +74,31 @@ export const HostsSelectionQuery: FC<HostsSelectionQueryProps> = ({
                 </Button>
             </PopoverTrigger>
             <PopoverContent className="vstack p-0 gap-2">
-                <HostSearchInput
-                    query={hostSearchQuery}
-                    onQueryChange={setHostSearchQuery}
-                />
+                <div className="hstack p-2 gap-2 items-center">
+                    <Input
+                        value={hostSearchQuery}
+                        onChange={(e) => setHostSearchQuery(e.target.value)}
+                        placeholder="Search..."
+                    />
+                    <Button
+                        size="sm"
+                        className="w-1/4"
+                        onClick={applySelection}
+                    >
+                        {t("page.hosts.host-chains.apply")}
+                    </Button>
+                </div>
                 <Separator className="w-full" />
                 <ScrollArea className="vstack p-2 max-h-80 divide-primary gap-2">
                     {data.entities.map((host) => (
                         <HostListItem
                             key={host.id}
                             host={host}
-                            isSelected={selectedHosts.includes(host.id!)}
+                            isSelected={selectedHosts.includes(host)}
                             onToggleSelection={toggleHostSelection}
                         />
                     ))}
                 </ScrollArea>
-                    <Button
-                        size="sm"
-                        onClick={applySelection}
-                    >
-                        {t("page.hosts.host-chains.apply")}
-                    </Button>
- 
             </PopoverContent>
         </Popover>
     );
