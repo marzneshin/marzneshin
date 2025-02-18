@@ -22,6 +22,7 @@ aiohttp==3.11.11
 xxhash==3.4.1
 grpcio==1.69.0
 psycopg==3.1.18
+psycopg-binary==3.1.18
 v2share==0.1.0b30
 PyJWT~=2.8.0
 PyNaCl==1.5.0
