@@ -1,3 +1,47 @@
 [tool.black]
 line-length = 79
 extend-exclude = ".*_(grpc|pb2).pyi?"
+[project]
+name = "marzneshin-1"
+version = "0.1.0"
+description = "A fork of Marzban aiming for scalability"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "alembic==1.13.1",
+    "apscheduler==3.10.4",
+    "cryptography==43.0.1",
+    "fastapi-pagination==0.12.31",
+    "fastapi==0.115.6",
+    "grpclib==0.4.7",
+    "jdatetime==4.1.1",
+    "jinja2==3.1.4",
+    "passlib==1.7.4",
+    "protobuf==4.25.2",
+    "pydantic==2.10",
+    "pymysql==1.1.1",
+    "pyopenssl==24.2.1",
+    "python-decouple==3.8",
+    "python-dotenv==1.0.0",
+    "requests==2.32.2",
+    "sqlalchemy==2.0.37",
+    "typer==0.12.3",
+    "websockets==12.0",
+    "pyyaml==6.0.1",
+    "aiohttp==3.11.11",
+    "xxhash==3.4.1",
+    "grpcio==1.69.0",
+    "psycopg==3.1.18",
+    "psycopg-binary==3.1.18",
+    "v2share==0.1.0b30",
+    "pyjwt~=2.8.0",
+    "pynacl==1.5.0",
+    "starlette==0.41.3",
+    "uvicorn==0.30.4",
+    "rich==13.7.1",
+    "python-multipart==0.0.20",
+    "httptools==0.6.4",
+    "aiogram==3.17.0",
+    "bcrypt==4.2.1",
+    "aiohttp-socks==0.10.1",
+]

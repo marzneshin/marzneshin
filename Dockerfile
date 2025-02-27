@@ -6,6 +6,6 @@ WORKDIR /app
 
 COPY . /app
 
-RUN pip install --no-cache-dir -r /app/requirements.txt
+RUN pip install --no-cache-dir --upgrade uv
 
-CMD ["sh", "-c", "alembic upgrade head && python3 main.py"]
+CMD ["sh", "-c", "uv sync && uv run alembic upgrade head && uv run main.py"]

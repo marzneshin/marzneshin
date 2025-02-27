@@ -1,7 +1,8 @@
 
 start:
-	alembic upgrade head
-	python main.py
+	uv sync 
+	uv run alembic upgrade head
+	uv run main.py
 
 dashboard-deps:
 	pnpm install --prefix ./dashboard
