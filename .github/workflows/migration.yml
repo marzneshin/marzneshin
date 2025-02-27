@@ -21,9 +21,10 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements.txt
-        pip install pytest pytest-alembic
+        pip install uv
+        uv sync
+        uv add pytest pytest-alembic
 
     - name: Run Tests
       run: |
-        pytest tests/ -v
+        uv run pytest tests/ -v
