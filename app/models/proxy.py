@@ -18,6 +18,16 @@ class ProxyTypes(str, Enum):
     ShadowTLS = "shadowtls"
 
 
+class ClientsBlocked(BaseModel):
+    sing_box: bool | None = False
+    clash_meta: bool | None = False
+    clash: bool | None = False
+    xray: bool | None = False
+    v2ray: bool | None = False
+    links: bool | None = False
+    wireguard: bool | None = False
+
+
 class InboundHostSecurity(str, Enum):
     inbound_default = "inbound_default"
     none = "none"
@@ -145,6 +155,7 @@ class InboundHost(BaseModel):
     splithttp_settings: SplitHttpSettings | None = None
     early_data: int | None = None
     mux_settings: MuxSettings | None = None
+    clients_block: ClientsBlocked = Field(default_factory=ClientsBlocked)
     universal: bool = False
     service_ids: list[int] = Field(default_factory=list)
     weight: int = 1

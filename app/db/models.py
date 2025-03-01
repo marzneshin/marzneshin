@@ -33,6 +33,7 @@ from app.models.proxy import (
     InboundHostFingerprint,
     InboundHostSecurity,
     ProxyTypes,
+    ClientsBlocked,
 )
 from app.models.user import (
     UserDataUsageResetStrategy,
@@ -383,7 +384,7 @@ class InboundHost(Base):
     allowinsecure = Column(Boolean, default=False)
     is_disabled = Column(Boolean, default=False)
     weight = Column(Integer, default=1, nullable=False, server_default="1")
-
+    clients_block = Column(JSON, default=ClientsBlocked().model_dump())
     universal = Column(
         Boolean,
         default=False,
@@ -420,6 +421,18 @@ class InboundHost(Base):
     @property
     def noise(self):
         return self.udp_noises
+
+    @property
+    def blocked_list(self) -> list[str]:
+        if not self.clients_block:
+            return []
+
+        # replace sing_box to sing-box
+        return [
+            field.replace("_", "-")
+            for field, value in self.clients_block.items()
+            if value is True
+        ]
 
 
 class System(Base):
