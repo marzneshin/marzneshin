@@ -29,7 +29,7 @@ from app.models.node import (
     NodeModify,
     NodeStatus,
 )
-from app.models.proxy import InboundHost as InboundHostModify
+from app.models.proxy import InboundHost as InboundHostModify, ClientsBlocked
 from app.models.service import Service as ServiceModify, ServiceCreate
 from app.models.system import TrafficUsageSeries
 from app.models.user import (
@@ -255,6 +255,8 @@ def add_host(db: Session, inbound: Inbound | None, host: InboundHostModify):
         ),
         allowinsecure=host.allowinsecure,
         weight=host.weight,
+        clients_block=host.clients_block.model_dump()
+        or ClientsBlocked().model_dump(),
         universal=host.universal,
         services=(
             db.query(Service).filter(Service.id.in_(host.service_ids)).all()
@@ -331,6 +333,9 @@ def update_host(db: Session, db_host: InboundHost, host: InboundHostModify):
         db.query(Service).filter(Service.id.in_(host.service_ids)).all()
     )
     db_host.weight = host.weight
+    db_host.clients_block = (
+        host.clients_block.model_dump() or ClientsBlocked().model_dump()
+    )
     db.commit()
     db.refresh(db_host)
     return db_host
