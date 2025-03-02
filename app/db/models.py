@@ -383,7 +383,7 @@ class InboundHost(Base):
     allowinsecure = Column(Boolean, default=False)
     is_disabled = Column(Boolean, default=False)
     weight = Column(Integer, default=1, nullable=False, server_default="1")
-
+    clients_block = Column(String)
     universal = Column(
         Boolean,
         default=False,
@@ -420,6 +420,10 @@ class InboundHost(Base):
     @property
     def noise(self):
         return self.udp_noises
+
+    @property
+    def client_block_list(self):
+        return self.clients_block.split(",") if self.clients_block else []
 
 
 class System(Base):

@@ -1,6 +1,7 @@
 from enum import Enum
 
-from pydantic import ConfigDict, BaseModel, Field, field_validator
+from pydantic import ConfigDict, BaseModel, Field, field_validator, validator
+from .settings import ConfigTypes
 
 from app.models.node import Node
 
@@ -150,7 +151,7 @@ class InboundHost(BaseModel):
     weight: int = 1
     inbound_id: int | None = None
     chain_ids: list[int] = Field(default_factory=list)
-
+    clients_block: list[ConfigTypes] | None = []
     model_config = ConfigDict(from_attributes=True)
 
     @field_validator("remark", "address", "path")
@@ -169,6 +170,12 @@ class InboundHost(BaseModel):
         if not v:
             return InboundHostALPN.none
         return v
+
+    @validator("clients_block", pre=True)
+    def parse_clients_block(cls, value):
+        if isinstance(value, str):
+            return value.split(",") if value else []
+        return value
 
 
 class InboundHostResponse(InboundHost):
