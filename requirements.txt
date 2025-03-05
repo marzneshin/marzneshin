@@ -32,5 +32,5 @@ rich==13.7.1
 python-multipart==0.0.20
 httptools==0.6.4
 aiogram==3.17.0
-bcrypt==4.2.1
+bcrypt==4.0.1
 aiohttp-socks==0.10.1
