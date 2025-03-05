@@ -250,8 +250,8 @@ def add_host(db: Session, inbound: Inbound | None, host: InboundHostModify):
         mtu=host.mtu,
         dns_servers=host.dns_servers,
         allowed_ips=host.allowed_ips,
-        clients_block=(
-            ",".join(host.clients_block) if host.clients_block else None
+        exclude_on=(
+            ",".join(host.exclude_on) if host.exclude_on else None
         ),
         mux_settings=(
             host.mux_settings.model_dump() if host.mux_settings else None
@@ -313,8 +313,8 @@ def update_host(db: Session, db_host: InboundHost, host: InboundHostModify):
         else None
     )
     db_host.early_data = host.early_data
-    db_host.clients_block = (
-        ",".join(host.clients_block) if host.clients_block else None
+    db_host.exclude_on = (
+        ",".join(host.exclude_on) if host.exclude_on else None
     )
     chain_ids = [
         int(i[0])

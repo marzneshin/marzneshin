@@ -383,7 +383,7 @@ class InboundHost(Base):
     allowinsecure = Column(Boolean, default=False)
     is_disabled = Column(Boolean, default=False)
     weight = Column(Integer, default=1, nullable=False, server_default="1")
-    clients_block = Column(String)
+    exclude_on = Column(String)
     universal = Column(
         Boolean,
         default=False,
@@ -422,8 +422,8 @@ class InboundHost(Base):
         return self.udp_noises
 
     @property
-    def clients_block_list(self):
-        return self.clients_block.split(",") if self.clients_block else []
+    def exclude_on_list(self):
+        return self.exclude_on.split(",") if self.exclude_on else []
 
 
 class System(Base):

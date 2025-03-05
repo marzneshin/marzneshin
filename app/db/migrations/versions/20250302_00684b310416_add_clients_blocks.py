@@ -21,7 +21,7 @@ def upgrade() -> None:
     op.add_column(
         "hosts",
         sa.Column(
-            "clients_block",
+            "exclude_on",
             sa.String,
             nullable=True,
         ),
@@ -29,4 +29,4 @@ def upgrade() -> None:
 
 
 def downgrade() -> None:
-    op.drop_column("hosts", "clients_block")
+    op.drop_column("hosts", "exclude_on")
