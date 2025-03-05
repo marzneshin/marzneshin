@@ -5,7 +5,7 @@ from fastapi import Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from app.db import crud, User, GetDB
-from app.db.models import Service
+from app.db.models import Service, Node
 from app.models.admin import Admin, oauth2_scheme
 from app.utils.auth import get_admin_payload
 
@@ -120,6 +120,13 @@ def get_service(id: int, db: Annotated[Session, Depends(get_db)]):
     return service
 
 
+def get_node(node_id: int, db: Annotated[Session, Depends(get_db)]):
+    node = crud.get_node_by_id(db, node_id)
+    if not node:
+        raise HTTPException(status_code=404, detail="Node not found")
+    return node
+
+
 SubUserDep = Annotated[User, Depends(get_subscription_user)]
 UserDep = Annotated[User, Depends(get_user)]
 AdminDep = Annotated[Admin, Depends(get_current_admin)]
@@ -129,3 +136,4 @@ StartDateDep = Annotated[datetime, Depends(parse_start_date)]
 EndDateDep = Annotated[datetime, Depends(parse_end_date)]
 ModifyUsersAccess = Annotated[None, Depends(user_modification_access)]
 ServiceDep = Annotated[Service, Depends(get_service)]
+NodeDep = Annotated[Node, Depends(get_node)]
