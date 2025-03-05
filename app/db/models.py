@@ -422,7 +422,7 @@ class InboundHost(Base):
         return self.udp_noises
 
     @property
-    def client_block_list(self):
+    def clients_block_list(self):
         return self.clients_block.split(",") if self.clients_block else []
 
 
