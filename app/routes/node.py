@@ -138,8 +138,24 @@ async def remove_node(db_node: NodeDep, db: DBDep, admin: SudoAdminDep):
     return {}
 
 
-@router.post("/{node_id}/resync")
-async def reconnect_node(db_node: NodeDep, db: DBDep, admin: SudoAdminDep):
+@router.post("/{node_id}/{backend}/resync")
+async def reconnect_node(
+    node_id: int, backend: str, db: DBDep, admin: SudoAdminDep
+):
+    if not (node := marznode.nodes.get(node_id)):
+        raise HTTPException(status_code=404, detail="Node not found")
+
+    try:
+        await asyncio.wait_for(
+            node.restart_backend(
+                name=backend,
+            ),
+            5,
+        )
+    except:
+        raise HTTPException(
+            status_code=502, detail="No response from the node."
+        )
     return {}
 
 
