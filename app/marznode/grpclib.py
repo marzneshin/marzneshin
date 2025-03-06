@@ -163,14 +163,21 @@ class MarzNodeGRPCLIB(MarzNodeBase, MarzNodeDB):
                 yield response.line
 
     async def restart_backend(
-        self, name: str, config: str, config_format: int
+        self,
+        name: str,
+        config: str | None = None,
+        config_format: int | None = None,
     ):
         try:
             await self._stub.RestartBackend(
                 RestartBackendRequest(
                     backend_name=name,
-                    config=BackendConfig(
-                        configuration=config, config_format=config_format
+                    config=(
+                        BackendConfig(
+                            configuration=config, config_format=config_format
+                        )
+                        if config and config_format
+                        else None
                     ),
                 )
             )
