@@ -212,14 +212,24 @@ def setup_format_variables(extra_data: dict) -> dict:
         if data_left < 0:
             data_left = 0
         data_left = readable_size(data_left)
+        data_used_percent = round(
+            (extra_data["used_traffic"] / extra_data["data_limit"]) * 100, 2
+        )
+        data_left_percent = 100 - data_used_percent
     else:
-        data_limit, data_left = "∞" * 2
+        data_limit, data_left, data_left_percent, data_used_percent = "∞" * 4
 
     status_emoji = ACTIVITY_EMOJIS.get(extra_data.get("is_active")) or ""
-
     format_variables = defaultdict(
         lambda: "<missing>",
         {
+            "ID": extra_data["id"],
+            "DATA_LEFT_PRECENT": data_left_percent,
+            "DATA_USED_PRECENT": data_used_percent,
+            "NOTE": extra_data.get("note", ""),
+            "DATA_LIMIT_RESET_STRATEGY": extra_data[
+                "data_limit_reset_strategy"
+            ],
             "SERVER_IP": SERVER_IP,
             "USERNAME": extra_data.get("username", "{USERNAME}"),
             "DATA_USAGE": readable_size(extra_data.get("used_traffic")),
