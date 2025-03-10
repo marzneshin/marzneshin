@@ -271,7 +271,7 @@
       "host-chain": "Host Chain",
       "host-chains": {
         "add": "Add Host",
-        "apply": "Apply Selection"
+        "apply": "Apply"
       },
       "xmux-settings": "Xmux Settings",
       "split-http-settings": "Split HTTP Settings",
