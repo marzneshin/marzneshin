@@ -7,7 +7,11 @@ export async function fetchHostsByIds({
 }: {
     queryKey: [string, number[]];
 }): Promise<Array<HostType>> {
-    return queryKey[1].map((id) => fetch(`/inbounds/hosts/${id}`));
+    return fetch(`/inbounds/hosts`, {
+        query: {
+            ids: queryKey[1],
+        },
+    }).then((res: HostType[]) => res);
 }
 
 export const HostsByIdsQueryFetchKey = "hosts";

@@ -2,7 +2,11 @@ import { useContext, createContext, PropsWithChildren, useState } from "react";
 import { createStore, StoreApi } from "zustand";
 import { useStoreWithEqualityFn } from "zustand/traditional";
 import { HostType, useHostsByIdsQuery } from "@marzneshin/modules/hosts";
-import { FieldValues, UseFieldArrayReturn, UseFormReturn } from "react-hook-form";
+import {
+    FieldValues,
+    UseFieldArrayReturn,
+    UseFormReturn,
+} from "react-hook-form";
 
 export interface ChainedHostsStoreState {
     selectedHosts: HostType[];
@@ -16,11 +20,10 @@ export interface ChainedHostsStoreActions {
     removeHost: (id: number) => void;
 }
 
-export type ChainedHostsStore = ChainedHostsStoreState & ChainedHostsStoreActions;
+export type ChainedHostsStore = ChainedHostsStoreState &
+    ChainedHostsStoreActions;
 
-const ChainedHostsContext = createContext<
-    StoreApi<ChainedHostsStore> | null
->(
+const ChainedHostsContext = createContext<StoreApi<ChainedHostsStore> | null>(
     null,
 );
 
@@ -46,7 +49,7 @@ export const ChainedHostsProvider = ({
                 set({
                     selectedHosts: newChain,
                 });
-                form.setValue("chain_ids", newChain.map((host) => host.id));
+                fieldsArray.append(newHost.id);
             },
             removeHost: (id: number) => {
                 const newChain = get().selectedHosts.filter(
@@ -55,7 +58,7 @@ export const ChainedHostsProvider = ({
                 set({
                     selectedHosts: newChain,
                 });
-                form.setValue("chain_ids", newChain.map((host) => host.id));
+                fieldsArray.remove(id);
             },
         })),
     );
@@ -67,9 +70,9 @@ export const ChainedHostsProvider = ({
     );
 };
 
-export const useChainedHostsStore = (
-    selector: (state: ChainedHostsStore) => unknown,
-) => {
+export function useChainedHostsStore<T>(
+    selector: (state: ChainedHostsStore) => T,
+) {
     const store = useContext(ChainedHostsContext);
     if (!store) {
         throw new Error(
@@ -77,4 +80,4 @@ export const useChainedHostsStore = (
         );
     }
     return useStoreWithEqualityFn(store, selector);
-};
+}
