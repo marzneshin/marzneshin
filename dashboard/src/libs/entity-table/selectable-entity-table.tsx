@@ -49,7 +49,7 @@ export function SelectableEntityTable<T extends { id: number }>({
     const visibility = useVisibility();
     const { selectedRow, setSelectedRow } = rowSelection;
     const { setSelectedEntity } = entitySelection;
-    const { onPaginationChange, pageIndex, pageSize } = usePagination();
+    const { onPaginationChange, pageIndex, pageSize } = usePagination({ entityKey });
     const query: SelectableQueryKey = [
         parentEntityKey,
         parentEntityId,
@@ -110,8 +110,8 @@ export function SelectableEntityTable<T extends { id: number }>({
 
 
     const contextValue = useMemo(
-        () => ({ table, data: data.entities, primaryFilter: columnPrimaryFilter, filters, isLoading: isFetching }),
-        [table, data.entities, filters, columnPrimaryFilter, isFetching],
+        () => ({ entityKey, table, data: data.entities, primaryFilter: columnPrimaryFilter, filters, isLoading: isFetching }),
+        [entityKey, table, data.entities, filters, columnPrimaryFilter, isFetching],
     );
 
     return (

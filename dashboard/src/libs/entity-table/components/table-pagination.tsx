@@ -14,9 +14,13 @@ import {
 } from "@marzneshin/common/components";
 import { useTranslation } from "react-i18next";
 import { Table } from "@tanstack/react-table"
+import { useLocalStorage } from "@uidotdev/usehooks";
+import { useEntityTableContext } from "../contexts";
 
 export function DataTablePagination<TData>({ table }: { table: Table<TData> }) {
     const { t } = useTranslation();
+    const { entityKey } = useEntityTableContext();
+    const [,setRowPerPageLocal] = useLocalStorage<number>(`marzneshin-table-row-per-page-${entityKey}`, 10);
 
     return (
         <div className="flex justify-between items-center p-2 w-full">
@@ -36,6 +40,7 @@ export function DataTablePagination<TData>({ table }: { table: Table<TData> }) {
                         onValueChange={(value) => {
                             table.setPageSize(Number(value));
                             table.setPageIndex(1);
+                            setRowPerPageLocal(Number(value));
                         }}
                         aria-labelledby="rows-per-page-label"
                     >

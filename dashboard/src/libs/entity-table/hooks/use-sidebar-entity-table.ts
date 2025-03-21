@@ -58,7 +58,7 @@ export const useSidebarEntityTable = <T, S>({
     const sorting = useSorting();
     const visibility = useVisibility();
     const desktop = useScreenBreakpoint("md");
-    const { onPaginationChange, pageIndex, pageSize } = usePagination();
+    const { onPaginationChange, pageIndex, pageSize } = usePagination({entityKey});
 
     const query: SidebarQueryKey = [
         entityKey,
@@ -95,8 +95,8 @@ export const useSidebarEntityTable = <T, S>({
     });
 
     const entityTableContextValue = useMemo(
-        () => ({ table, data: data.entities, primaryFilter, filters, isLoading: isFetching }),
-        [table, data.entities, filters, primaryFilter, isFetching],
+        () => ({ entityKey, table, data: data.entities, primaryFilter, filters, isLoading: isFetching }),
+        [entityKey, table, data.entities, filters, primaryFilter, isFetching],
     );
 
     const sidebarEntityTableContextValue = useMemo(

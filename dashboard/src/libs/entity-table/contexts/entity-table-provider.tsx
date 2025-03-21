@@ -3,6 +3,7 @@ import { UseFiltersReturn, UsePrimaryFilterReturn } from "../hooks";
 import { Table } from "@tanstack/react-table";
 
 interface EntityTableContextProps<TData> {
+    entityKey: string
     table: Table<TData>
     data: TData[]
     primaryFilter: UsePrimaryFilterReturn
