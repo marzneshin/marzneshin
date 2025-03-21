@@ -43,7 +43,7 @@ export function EntityTable<T>({
     const filters = useFilters();
     const sorting = useSorting();
     const visibility = useVisibility();
-    const { onPaginationChange, pageIndex, pageSize } = usePagination();
+    const { onPaginationChange, pageIndex, pageSize } = usePagination({ entityKey });
 
     const query: QueryKey = [
         entityKey,
@@ -77,8 +77,8 @@ export function EntityTable<T>({
     });
 
     const contextValue = useMemo(
-        () => ({ table, data: data.entities, primaryFilter: columnPrimaryFilter, filters, isLoading: isFetching }),
-        [table, data.entities, filters, columnPrimaryFilter, isFetching],
+        () => ({ entityKey, table, data: data.entities, primaryFilter: columnPrimaryFilter, filters, isLoading: isFetching }),
+        [entityKey, table, data.entities, filters, columnPrimaryFilter, isFetching],
     );
 
     return (
