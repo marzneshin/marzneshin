@@ -149,7 +149,9 @@ def get_admin_users(username: str, db: DBDep, admin: SudoAdminDep):
     if not db_admin:
         raise HTTPException(status_code=404, detail="Admin not found")
 
-    query = db.query(User).where(User.admin_id == db_admin.id)
+    query = db.query(User).filter(
+        User.admin_id == db_admin.id, User.removed.is_(False)
+    )
 
     return paginate(query)
 
