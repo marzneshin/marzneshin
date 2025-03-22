@@ -17,7 +17,10 @@ class MarzNodeBase(ABC):
         pass
 
     async def restart_backend(
-        self, name: str, config: str, config_format: int
+        self,
+        name: str,
+        config: str | None = None,
+        config_format: int | None = None,
     ):
         pass
 
