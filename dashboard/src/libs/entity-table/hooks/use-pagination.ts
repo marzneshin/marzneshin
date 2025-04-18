@@ -1,8 +1,10 @@
 import { useState } from "react";
+import { useLocalStorage } from "@uidotdev/usehooks";
 
-export function usePagination() {
+export function usePagination({ entityKey}: { entityKey: string }) {
+    const [rowPerPageLocal] = useLocalStorage<number>(`marzneshin-table-row-per-page-${entityKey}`, 10);
     const [pagination, setPagination] = useState({
-        pageSize: 10,
+        pageSize: rowPerPageLocal,
         pageIndex: 1,
     });
     const { pageSize, pageIndex } = pagination;
