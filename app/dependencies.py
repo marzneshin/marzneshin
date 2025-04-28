@@ -91,7 +91,7 @@ def get_user(
 
 
 def user_modification_access(
-    admin: Annotated[Admin, Depends(get_current_admin)]
+    admin: Annotated[Admin, Depends(get_current_admin)],
 ):
     if not admin.is_sudo and not admin.modify_users_access:
         raise HTTPException(status_code=403, detail="You're not allowed")

@@ -1,10 +1,5 @@
 import logging
-
-from aiogram import Bot
-from aiogram.client.default import DefaultBotProperties
-from aiogram.client.session.aiohttp import AiohttpSession
-from aiogram.enums import ParseMode
-from aiogram.exceptions import TelegramAPIError
+import aiohttp
 
 from app.config import TELEGRAM_PROXY_URL
 from app.config.env import (
@@ -20,47 +15,58 @@ logger = logging.getLogger(__name__)
 
 class BotManager:
     _instance = None
+    BASE_URL = f"https://api.telegram.org/bot{TELEGRAM_API_TOKEN}/"
 
     @classmethod
     async def get_instance(cls):
         if cls._instance is None and TELEGRAM_API_TOKEN:
+            connector = None
             if TELEGRAM_PROXY_URL:
-                session = AiohttpSession(proxy=TELEGRAM_PROXY_URL)
-            else:
-                session = None
+                connector = aiohttp.TCPConnector(proxy=TELEGRAM_PROXY_URL)
 
-            cls._instance = Bot(
-                token=TELEGRAM_API_TOKEN,
-                default=DefaultBotProperties(parse_mode=ParseMode.HTML),
-                session=session,
-            )
+            cls._instance = aiohttp.ClientSession(connector=connector)
+
             try:
-                await cls._instance.get_me()
-            except:
-                logger.error("Telegram API token is not valid.")
+                async with cls._instance.get(f"{cls.BASE_URL}getMe") as resp:
+                    if resp.status != 200:
+                        logger.error("Telegram API token is not valid.")
+            except Exception as e:
+                logger.error(f"Failed to connect to Telegram API: {e}")
         return cls._instance
 
 
 async def send_message(
     message: str,
-    parse_mode=ParseMode.HTML,
+    parse_mode: str = "HTML",
 ):
-    if not (bot := await BotManager.get_instance()):
+    if not (session := await BotManager.get_instance()):
         return
 
-    for recipient_id in (TELEGRAM_ADMIN_ID or []) + [
-        TELEGRAM_LOGGER_CHANNEL_ID
-    ]:
+    recipient_ids = []
+    if TELEGRAM_ADMIN_ID:
+        recipient_ids.extend(TELEGRAM_ADMIN_ID)
+    if TELEGRAM_LOGGER_CHANNEL_ID:
+        recipient_ids.append(TELEGRAM_LOGGER_CHANNEL_ID)
+
+    for recipient_id in recipient_ids:
         if not recipient_id:
             continue
+
         try:
-            await bot.send_message(
-                recipient_id,
-                message,
-                parse_mode=parse_mode,
-            )
-        except TelegramAPIError as e:
-            logger.error(e)
+            params = {
+                "chat_id": recipient_id,
+                "text": message,
+                "parse_mode": parse_mode,
+            }
+
+            async with session.post(
+                f"{BotManager.BASE_URL}sendMessage", json=params
+            ) as resp:
+                if resp.status != 200:
+                    response_data = await resp.json()
+                    logger.error(f"Telegram API error: {response_data}")
+        except Exception as e:
+            logger.error(f"Failed to telegram send message: {e}")
 
 
 async def send_notification(notif: Notification):
