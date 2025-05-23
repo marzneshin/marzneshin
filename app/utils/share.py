@@ -131,6 +131,7 @@ def generate_subscription(
             user.id,
             format_variables,
             chaining_support=subscription_handler.chaining_support,
+            config_format=config_format,
         )
 
     subscription_handler.add_proxies(configs)
@@ -242,6 +243,7 @@ def generate_user_configs(
     user_id: int,
     format_variables: dict,
     chaining_support: bool,
+    config_format: str,
 ) -> Union[List, str]:
     salt = secrets.token_hex(8)
     configs = []
@@ -251,7 +253,9 @@ def generate_user_configs(
 
     for host in hosts:
         chained_hosts = [c.chained_host for c in host.chain]
-        if chained_hosts and not chaining_support:
+        if (
+            chained_hosts and not chaining_support
+        ) or config_format in host.client_block_list:
             continue
         data = create_config(
             host, key, format_variables, salt, user_id, chained_hosts
