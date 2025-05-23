@@ -145,6 +145,7 @@ client_type_mime_type = {
     "clash": "text/yaml",
     "xray": "application/json",
     "v2ray": "text/plain",
+    "links": "text/plain",
 }
 
 
