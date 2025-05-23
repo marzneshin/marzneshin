@@ -12,6 +12,7 @@ from app.models.notification import (
     UserSubscriptionRevoked,
     ReachedUsagePercent,
     UserUpdated,
+    ReachedDaysLeft,
 )
 
 webhooks_router = APIRouter()
@@ -74,5 +75,5 @@ def user_reached_usage_percent(body: ReachedUsagePercent):
 
 
 @webhooks_router.post("user-reached-days")
-def user_reached_days(ReachedDaysLeft):
+def user_reached_days(body: ReachedDaysLeft):
     pass
