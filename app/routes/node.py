@@ -18,6 +18,7 @@ from app.dependencies import (
     EndDateDep,
     StartDateDep,
     get_admin,
+    NodeDep,
 )
 from app.models.node import (
     NodeCreate,
@@ -77,11 +78,7 @@ def get_node_settings(db: DBDep, admin: SudoAdminDep):
 
 
 @router.get("/{node_id}", response_model=NodeResponse)
-def get_node(node_id: int, db: DBDep, admin: SudoAdminDep):
-    db_node = crud.get_node_by_id(db, node_id)
-    if not db_node:
-        raise HTTPException(status_code=404, detail="Node not found")
-
+def get_node(db_node: NodeDep, db: DBDep, admin: SudoAdminDep):
     return db_node
 
 
@@ -119,12 +116,8 @@ async def node_logs(
 
 @router.put("/{node_id}", response_model=NodeResponse)
 async def modify_node(
-    node_id: int, modified_node: NodeModify, db: DBDep, admin: SudoAdminDep
+    db_node: NodeDep, modified_node: NodeModify, db: DBDep, admin: SudoAdminDep
 ):
-    db_node = crud.get_node_by_id(db, node_id)
-    if not db_node:
-        raise HTTPException(status_code=404, detail="Node not found")
-
     db_node = crud.update_node(db, db_node, modified_node)
 
     await marznode.operations.remove_node(db_node.id)
@@ -137,30 +130,38 @@ async def modify_node(
 
 
 @router.delete("/{node_id}")
-async def remove_node(node_id: int, db: DBDep, admin: SudoAdminDep):
-    db_node = crud.get_node_by_id(db, node_id)
-    if not db_node:
-        raise HTTPException(status_code=404, detail="Node not found")
-
+async def remove_node(db_node: NodeDep, db: DBDep, admin: SudoAdminDep):
     crud.remove_node(db, db_node)
     await marznode.operations.remove_node(db_node.id)
 
-    logger.info(f"Node `%s` deleted", db_node.name)
+    logger.info("Node `%s` deleted", db_node.name)
     return {}
 
 
-@router.post("/{node_id}/resync")
-async def reconnect_node(node_id: int, db: DBDep, admin: SudoAdminDep):
-    db_node = crud.get_node_by_id(db, node_id)
-    if not db_node:
+@router.post("/{node_id}/{backend}/resync")
+async def reconnect_node(
+    node_id: int, backend: str, db: DBDep, admin: SudoAdminDep
+):
+    if not (node := marznode.nodes.get(node_id)):
         raise HTTPException(status_code=404, detail="Node not found")
 
+    try:
+        await asyncio.wait_for(
+            node.restart_backend(
+                name=backend,
+            ),
+            5,
+        )
+    except:
+        raise HTTPException(
+            status_code=502, detail="No response from the node."
+        )
     return {}
 
 
 @router.get("/{node_id}/usage", response_model=TrafficUsageSeries)
 def get_usage(
-    node_id: int,
+    db_node: NodeDep,
     db: DBDep,
     admin: SudoAdminDep,
     start_date: StartDateDep,
@@ -169,11 +170,7 @@ def get_usage(
     """
     Get nodes usage
     """
-    node = crud.get_node_by_id(db, node_id)
-    if not node:
-        raise HTTPException(status_code=404, detail="Node not found")
-
-    return crud.get_node_usage(db, start_date, end_date, node)
+    return crud.get_node_usage(db, start_date, end_date, db_node)
 
 
 @router.get("/{node_id}/{backend}/stats", response_model=BackendStats)
