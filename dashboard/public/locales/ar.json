@@ -1,0 +1,327 @@
+{
+  "view": "عرض",
+  "certificate": "شهادة",
+  "mux": "ماكس",
+  "fragment": "فرغمنت",
+  "enable": "تفعيل",
+  "enabled": "مفعّل",
+  "activated": "نشط",
+  "unlimited": "غير محدود",
+  "left": "متبقي",
+  "reached": "تم الوصول",
+  "inactive": "غير نشط",
+  "active": "نشط",
+  "disable": "تعطيل",
+  "close": "إغلاق",
+  "save": "حفظ",
+  "days": "أيام",
+  "cancel": "إلغاء",
+  "dark": "داكن",
+  "light": "فاتح",
+  "system": "نظام",
+  "disabled": "معطّل",
+  "advanced-options": "متقدم",
+  "language": "لغة",
+  "theme": "ثيم",
+  "pattern": "نمط",
+  "result": "نتيجة",
+  "support-us": {
+    "title": "دعمنا",
+    "desc": "مرزنشين برنامج مجاني ومفتوح المصدر. أظهر دعمك بالتبرع.",
+    "donate": "تبرع"
+  },
+  "deselect": "إلغاء التحديد",
+  "home": "الرئيسية",
+  "name": "اسم",
+  "status": "حالة",
+  "address": "عنوان",
+  "users": "مستخدمون",
+  "nodes": "عقد",
+  "services": "خدمات",
+  "hosts": "مضيف",
+  "username": "اسم المستخدم",
+  "password": "كلمة المرور",
+  "inbounds": "الواردات",
+  "submit": "إرسال",
+  "login": "تسجيل الدخول",
+  "edit": "تعديل",
+  "actions": "أنشطة",
+  "settings": "إعدادات",
+  "logs": "سجلات",
+  "note": "ملاحظة",
+  "config": "تكوين",
+  "tag": "وسم",
+  "protocol": "بروتوكول",
+  "online": "متصل",
+  "offline": "غير متصل",
+  "not_connected": "غير متصل",
+  "apply": "تطبيق",
+  "open": "فتح",
+  "delete": "حذف",
+  "port": "منفذ",
+  "create": "إنشاء",
+  "path": "مسار",
+  "host": "مضيف",
+  "alpn": "ALPN",
+  "admin_info": "معلومات المدير",
+  "change": "تغيير",
+  "admins": "مدراء",
+  "normal": "عادي",
+  "sudo": "مدير متميز",
+  "owner": "مالك",
+  "security": "أمان",
+  "user_info": "معلومات المستخدم",
+  "subscription": "اشتراك",
+  "subscription_link": "رابط الاشتراك",
+  "fingerprint": "بصمة",
+  "expired": "منتهي",
+  "finished": "منتهي",
+  "valid": "متبقي",
+  "page": {
+    "settings": {
+      "subscription-settings": {
+        "template-on-acceptance": "قالب عند القبول",
+        "placeholder-remark": "اسم التكوين البديل",
+        "placeholder-if-disabled": "تكوين بديل في حال التعطيل",
+        "shuffle-configs": "خلط التكوينات",
+        "profile-title": "عنوان الملف الشخصي",
+        "support-link": "رابط الدعم",
+        "update-interval": "فترة التحديث",
+        "add-rule": "إضافة قاعدة",
+        "reset-local-changes": "إعادة تعيين",
+        "title": "اشتراك",
+        "subscription-title": "قواعد الاشتراك",
+        "subscription-desc": "إدارة وتخصيص إعدادات الاشتراك بقواعد قابلة للتعديل وخيارات التحديث.",
+        "alert": {
+          "title": "لا توجد قواعد",
+          "desc": "لم يتم تعيين أي قواعد للاشتراك"
+        }
+      },
+      "certificate": {
+        "copy": "نسخ الشهادة",
+        "error": "الشهادة غير متاحة",
+        "copied": "تم نسخ الشهادة"
+      }
+    },
+    "login": {
+      "username": {
+        "error": {
+          "isRequired": "أدخل اسم المستخدم"
+        }
+      },
+      "password": {
+        "error": {
+          "is-required": "أدخل كلمة المرور"
+        }
+      }
+    },
+    "nodes": {
+      "settings": {
+        "no-backend-alert": {
+          "title": "لم يتم تعيين أي خلفية لهذه العقدة.",
+          "desc": "يرجى اتخاذ الإجراءات اللازمة لإضافة خلفية لهذه العقدة."
+        },
+        "title": "إعدادات العقدة",
+        "detail": "تفاصيل",
+        "log-container": {
+          "title": "سجل اكسري"
+        }
+      },
+      "dialogs": {
+        "creation": {
+          "title": "إضافة عقدة"
+        },
+        "deletion": {
+          "title": "حذف عقدة"
+        },
+        "edition": {
+          "title": "تعديل عقدة"
+        }
+      },
+      "usage_coefficient": "معامل الاستهلاك",
+      "connection_backend": "خلفية الاتصال",
+      "connection_backend_desc": "يحدد نوع الاتصال",
+      "certificate-alert": {
+        "title": "تكوين شهادة العقدة",
+        "desc": "إذا كنت تنوي استرداد شهادة العقدة، تحقق من صفحة الإعدادات",
+        "click": "انقر هنا"
+      }
+    },
+    "services": {
+      "settings": {
+        "title": "إعدادات الخدمة",
+        "detail": "تفاصيل"
+      },
+      "dialogs": {
+        "creation": {
+          "title": "إنشاء خدمة"
+        },
+        "deletion": {
+          "title": "حذف خدمة"
+        },
+        "edition": {
+          "title": "تعديل خدمة"
+        }
+      }
+    },
+    "users": {
+      "traffic": "حركة البيانات",
+      "never": "أبدًا",
+      "limited": "محدود",
+      "data_limit_method": "طريقة تحديد البيانات",
+      "fixed_date": "تاريخ محدد",
+      "on_first_use": "من أول استخدام",
+      "usage_duration": "مدة الاستخدام",
+      "activation_deadline": "تاريخ انتهاء التعليق",
+      "nodes-usage": "استهلاك العقد",
+      "data_limit_reached": "تم الوصول إلى حد البيانات",
+      "note-placeholder": "ملاحظة عن المستخدم",
+      "data_limit": "حد البيانات",
+      "used_traffic": "حركة البيانات المستخدمة",
+      "data_limit_reset_strategy": "فترة إعادة تعيين استهلاك البيانات",
+      "online_at": "آخر استخدام",
+      "expire_date": "تاريخ الانتهاء",
+      "unlimited": "غير محدود",
+      "determined_expire": "محدد",
+      "expire_method": "انتهاء",
+      "onhold_expire": "يبدأ من أول اتصال",
+      "reset_usage": "إعادة تعيين استهلاك البيانات",
+      "revoke_subscription": "إلغاء الاشتراك",
+      "on_hold_expire_duration": "مدة الزمن",
+      "on_hold_timeout": "انتهاء",
+      "settings": {
+        "nodes-usage": {
+          "last-days": "خلال {{count}} أيام الماضية",
+          "last-months": "خلال {{count}} أشهر الماضية",
+          "last-hours": "خلال {{count}} ساعات الماضية",
+          "title": "استهلاك العقد",
+          "desc": "مقدار استهلاك المستخدم من كل عقدة خلال فترة زمنية محددة."
+        },
+        "subscription_link": {
+          "copied": "تم نسخ رابط الاشتراك",
+          "copy": "نسخ رابط الاشتراك",
+          "error": "لم يتم نسخ رابط الاشتراك"
+        }
+      },
+      "services-alert": {
+        "title": "لم يتم العثور على خدمة",
+        "desc": "لإنشاء مستخدم، قم أولاً بإنشاء خدمة",
+        "click": "انقر هنا"
+      },
+      "dialogs": {
+        "edition": {
+          "title": "تعديل مستخدم"
+        },
+        "creation": {
+          "title": "إضافة مستخدم"
+        },
+        "deletion": {
+          "title": "حذف مستخدم"
+        },
+        "mutation": {
+          "note": {
+            "desc": "ملاحظة"
+          }
+        }
+      }
+    },
+    "hosts": {
+      "allowinsecure": "قبول الاتصال غير الآمن",
+      "dialogs": {
+        "edition": {
+          "title": "تعديل مضيف"
+        },
+        "creation": {
+          "title": "إضافة مضيف"
+        },
+        "deletion": {
+          "title": "حذف مضيف"
+        },
+        "mutation": {
+          "allowinsecure": {
+            "alert": "لا يُنصح بتفعيل هذا الخيار."
+          }
+        }
+      }
+    },
+    "admins": {
+      "permission": "أذونات",
+      "dialogs": {
+        "creation": {
+          "title": "إنشاء مدير"
+        },
+        "edition": {
+          "title": "تعديل مدير"
+        },
+        "deletion": {
+          "title": "حذف مدير"
+        }
+      },
+      "modify-users-access": "تغيير أذونات المستخدمين",
+      "subscription-url-prefix": "بادئة عنوان URL الاشتراك",
+      "sudo-privilage": "امتيازات المدير المتميز",
+      "all-services-access": "الوصول إلى جميع الخدمات",
+      "users-data-usage": "استهلاك بيانات المستخدمين"
+    }
+  },
+  "events": {
+    "delete": {
+      "error": "خطأ في حذف {{name}}",
+      "success": {
+        "title": "تم حذف {{name}} بنجاح",
+        "desc": ""
+      }
+    },
+    "create": {
+      "error": "خطأ في إنشاء {{name}}",
+      "success": {
+        "title": "تم إضافة {{name}} بنجاح",
+        "desc": ""
+      }
+    },
+    "update": {
+      "error": "خطأ في تحديث {{name}}",
+      "success": {
+        "title": "تم تحديث {{name}} بنجاح",
+        "desc": ""
+      }
+    },
+    "user_revoke": {
+      "error": "خطأ في إلغاء اشتراك {{name}}",
+      "success": {
+        "title": "تم إنشاؤه بنجاح.",
+        "desc": ""
+      }
+    },
+    "user_reset": {
+      "error": "فشل في إعادة تعيين استهلاك بيانات {{name}}",
+      "success": {
+        "title": "تم إعادة تعيين استهلاك بيانات {{name}} بنجاح",
+        "desc": ""
+      }
+    }
+  },
+  "delete-confirmation": {
+    "title": "هل أنت متأكد من القيام بذلك؟",
+    "desc": "حذف البيانات لا يمكن التراجع عنه."
+  },
+  "table": {
+    "row-per-page": "صفوف لكل صفحة",
+    "no-result": "بدون نتائج",
+    "selected": "محدد",
+    "toggle-column": "تبديل العمود",
+    "filter-placeholder": "تصفية {{name}}"
+  },
+  "statuses": {
+    "active": "نشطع",
+    "connected": "متصل",
+    "healthy": "سليم",
+    "disabled": "معطل",
+    "expired": "منتهي",
+    "on_hold": "يبدأ من أول اتصال",
+    "connecting": "جارٍ الاتصال",
+    "unhealthy": "غير سليم",
+    "limited": "محدودد",
+    "error": "خطأ"
+  }
+}
