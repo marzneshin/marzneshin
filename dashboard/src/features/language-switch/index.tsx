@@ -45,6 +45,7 @@ export const LanguageSwitchMenu: FC = () => {
                     <LanguageItem language="ckb" title="کوردی سورانی" />
                     <LanguageItem language="fa" title="فارسی" />
                     <LanguageItem language="ru" title="Русский" />
+                    <LanguageItem language="ar" title="العربیة" />
                 </DropdownMenuSubContent>
             </DropdownMenuPortal>
         </DropdownMenuSub>
