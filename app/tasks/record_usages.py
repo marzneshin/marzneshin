@@ -9,6 +9,7 @@ from app.db import GetDB
 from app.db.models import NodeUsage, NodeUserUsage, User
 from app.marznode import MarzNodeBase
 from app.tasks.data_usage_percent_reached import data_usage_percent_reached
+from app.morebot import Morebot
 
 
 def record_user_usage_logs(
@@ -161,7 +162,7 @@ async def record_user_usages():
     # record users usage
     with GetDB() as db:
         await data_usage_percent_reached(db, users_usage)
-
+        Morebot.report_admin_usage(db, users_usage=users_usage)
         stmt = update(User).values(
             used_traffic=User.used_traffic + bindparam("value"),
             lifetime_used_traffic=User.lifetime_used_traffic

@@ -5,6 +5,10 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+
+MOREBOT_SECRET = config("MOREBOT_SECRET", default="")
+MOREBOT_LICENSE = config("MOREBOT_LICENSE", default="")
+
 DASHBOARD_PATH = config("DASHBOARD_PATH", default="/dashboard/")
 
 SQLALCHEMY_DATABASE_URL = config(

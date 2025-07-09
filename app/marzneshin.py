@@ -22,7 +22,8 @@ from app.config.env import (
     UVICORN_SSL_KEYFILE,
     UVICORN_UDS,
     DASHBOARD_PATH,
-    TASKS_RECORD_USER_USAGES_INTERVAL,
+    MOREBOT_LICENSE,
+    MOREBOT_SECRET,
     TASKS_REVIEW_USERS_INTERVAL,
     TASKS_EXPIRE_DAYS_REACHED_INTERVAL,
     TASKS_RESET_USER_DATA_USAGE,
@@ -82,7 +83,7 @@ scheduler.add_job(
     record_user_usages,
     "interval",
     coalesce=True,
-    seconds=TASKS_RECORD_USER_USAGES_INTERVAL,
+    seconds=150,
 )
 scheduler.add_job(
     review_users,
@@ -120,6 +121,8 @@ def validation_exception_handler(
 
 
 async def main():
+    if not all([MOREBOT_SECRET, MOREBOT_LICENSE]):
+        raise RuntimeError("MOREBOT_SECRET/MOREBOT_LICENSE is not configured")
     if not DEBUG:
         app.mount(
             DASHBOARD_PATH,
