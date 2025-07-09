@@ -1,0 +1,30 @@
+name: Run Script on Locale Files
+
+on:
+  push:
+    branches:
+      - '*'
+  pull_request:
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        locale-file: ${{ fromJson(format('["{0}"]', join('","', steps.find-locales.outputs.files))) }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Find locale JSON files
+        id: find-locales
+        run: |
+          files=$(ls dashboard/public/locales/*.json | jq -R -s -c 'split("\n")[:-1]')
+          echo "files=$files" >> "$GITHUB_OUTPUT"
+
+      - name: Run script with locale file
+        run: |
+          bash tools/check_translations.sh "${{ matrix.locale-file }}"
+        shell: bash
