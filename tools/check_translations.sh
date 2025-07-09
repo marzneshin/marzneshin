@@ -1,3 +1,5 @@
+#!/bin/bash
+
 jq_pathify() {
   local key="$1"
   local jq_path=""
