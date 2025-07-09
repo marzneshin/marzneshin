@@ -28,4 +28,3 @@ jobs:
         run: |
           bash tools/check_translations.sh "${{ matrix.locale-file }}"
         shell: bash
-
