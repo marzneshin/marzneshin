@@ -35,4 +35,10 @@ done <<< "$extrakeys"
 
 extrakc=$(wc -l <<< $extrakeys)
 
-echo "missing keys: $missingkc, extra keys: $extrakc"
+
+if [[ $extrakc -gt 0 || $missingkc -gt 0 ]]; then
+  echo "Check failed. missing keys: $missingkc, extra keys: $extrakc"
+  exit 1
+else
+  echo "Check passed. No extra/missing keys."
+fi
