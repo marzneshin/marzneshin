@@ -1,10 +1,10 @@
 import requests
 import logging
-from typing import Optional, Dict, List, Any
+from typing import Dict, List, Any
 from collections import defaultdict
 from sqlalchemy.orm import Session
 from app.db.models import Admin, User
-from config import MOREBOT_LICENSE, MOREBOT_SECRET
+from app.config import MOREBOT_LICENSE, MOREBOT_SECRET
 
 logger = logging.getLogger("uvicorn.error")
 
