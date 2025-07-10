@@ -23,7 +23,7 @@ class Morebot:
         admin_usage = defaultdict(int)
         user_admin_map = dict(db.query(User.id, User.admin_id).all())
         for user_usage in users_usage:
-            user_id = int(user_usage["uid"])
+            user_id = int(user_usage["id"])
             admin_id = user_admin_map.get(user_id)
             if admin_id:
                 admin_usage[admin_id] += user_usage["value"]
