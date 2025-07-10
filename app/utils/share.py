@@ -277,8 +277,9 @@ def create_config(
     else:
         inbound, protocol, network = {}, host.host_protocol, host.host_network
         auth_uuid, auth_password = (
-            UUID(host.uuid) if host.uuid else None
-        ), host.password
+            (UUID(host.uuid) if host.uuid else None),
+            host.password,
+        )
 
     format_variables.update(
         {

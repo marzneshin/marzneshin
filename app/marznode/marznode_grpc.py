@@ -6,6 +6,7 @@ import typing
 
 import grpclib.const
 import grpclib.client
+
 if typing.TYPE_CHECKING:
     import grpclib.server
 
@@ -13,84 +14,107 @@ import app.marznode.marznode_pb2
 
 
 class MarzServiceBase(abc.ABC):
-
     @abc.abstractmethod
-    async def SyncUsers(self, stream: 'grpclib.server.Stream[app.marznode.marznode_pb2.UserData, app.marznode.marznode_pb2.Empty]') -> None:
+    async def SyncUsers(
+        self,
+        stream: "grpclib.server.Stream[app.marznode.marznode_pb2.UserData, app.marznode.marznode_pb2.Empty]",
+    ) -> None:
         pass
 
     @abc.abstractmethod
-    async def RepopulateUsers(self, stream: 'grpclib.server.Stream[app.marznode.marznode_pb2.UsersData, app.marznode.marznode_pb2.Empty]') -> None:
+    async def RepopulateUsers(
+        self,
+        stream: "grpclib.server.Stream[app.marznode.marznode_pb2.UsersData, app.marznode.marznode_pb2.Empty]",
+    ) -> None:
         pass
 
     @abc.abstractmethod
-    async def FetchBackends(self, stream: 'grpclib.server.Stream[app.marznode.marznode_pb2.Empty, app.marznode.marznode_pb2.BackendsResponse]') -> None:
+    async def FetchBackends(
+        self,
+        stream: "grpclib.server.Stream[app.marznode.marznode_pb2.Empty, app.marznode.marznode_pb2.BackendsResponse]",
+    ) -> None:
         pass
 
     @abc.abstractmethod
-    async def FetchUsersStats(self, stream: 'grpclib.server.Stream[app.marznode.marznode_pb2.Empty, app.marznode.marznode_pb2.UsersStats]') -> None:
+    async def FetchUsersStats(
+        self,
+        stream: "grpclib.server.Stream[app.marznode.marznode_pb2.Empty, app.marznode.marznode_pb2.UsersStats]",
+    ) -> None:
         pass
 
     @abc.abstractmethod
-    async def FetchBackendConfig(self, stream: 'grpclib.server.Stream[app.marznode.marznode_pb2.Backend, app.marznode.marznode_pb2.BackendConfig]') -> None:
+    async def FetchBackendConfig(
+        self,
+        stream: "grpclib.server.Stream[app.marznode.marznode_pb2.Backend, app.marznode.marznode_pb2.BackendConfig]",
+    ) -> None:
         pass
 
     @abc.abstractmethod
-    async def RestartBackend(self, stream: 'grpclib.server.Stream[app.marznode.marznode_pb2.RestartBackendRequest, app.marznode.marznode_pb2.Empty]') -> None:
+    async def RestartBackend(
+        self,
+        stream: "grpclib.server.Stream[app.marznode.marznode_pb2.RestartBackendRequest, app.marznode.marznode_pb2.Empty]",
+    ) -> None:
         pass
 
     @abc.abstractmethod
-    async def StreamBackendLogs(self, stream: 'grpclib.server.Stream[app.marznode.marznode_pb2.BackendLogsRequest, app.marznode.marznode_pb2.LogLine]') -> None:
+    async def StreamBackendLogs(
+        self,
+        stream: "grpclib.server.Stream[app.marznode.marznode_pb2.BackendLogsRequest, app.marznode.marznode_pb2.LogLine]",
+    ) -> None:
         pass
 
     @abc.abstractmethod
-    async def GetBackendStats(self, stream: 'grpclib.server.Stream[app.marznode.marznode_pb2.Backend, app.marznode.marznode_pb2.BackendStats]') -> None:
+    async def GetBackendStats(
+        self,
+        stream: "grpclib.server.Stream[app.marznode.marznode_pb2.Backend, app.marznode.marznode_pb2.BackendStats]",
+    ) -> None:
         pass
 
     def __mapping__(self) -> typing.Dict[str, grpclib.const.Handler]:
         return {
-            '/marznode.MarzService/SyncUsers': grpclib.const.Handler(
+            "/marznode.MarzService/SyncUsers": grpclib.const.Handler(
                 self.SyncUsers,
                 grpclib.const.Cardinality.STREAM_UNARY,
                 app.marznode.marznode_pb2.UserData,
                 app.marznode.marznode_pb2.Empty,
             ),
-            '/marznode.MarzService/RepopulateUsers': grpclib.const.Handler(
+            "/marznode.MarzService/RepopulateUsers": grpclib.const.Handler(
                 self.RepopulateUsers,
                 grpclib.const.Cardinality.UNARY_UNARY,
                 app.marznode.marznode_pb2.UsersData,
                 app.marznode.marznode_pb2.Empty,
             ),
-            '/marznode.MarzService/FetchBackends': grpclib.const.Handler(
+            "/marznode.MarzService/FetchBackends": grpclib.const.Handler(
                 self.FetchBackends,
                 grpclib.const.Cardinality.UNARY_UNARY,
                 app.marznode.marznode_pb2.Empty,
                 app.marznode.marznode_pb2.BackendsResponse,
             ),
-            '/marznode.MarzService/FetchUsersStats': grpclib.const.Handler(
+            "/marznode.MarzService/FetchUsersStats": grpclib.const.Handler(
                 self.FetchUsersStats,
                 grpclib.const.Cardinality.UNARY_UNARY,
                 app.marznode.marznode_pb2.Empty,
                 app.marznode.marznode_pb2.UsersStats,
             ),
-            '/marznode.MarzService/FetchBackendConfig': grpclib.const.Handler(
+            "/marznode.MarzService/FetchBackendConfig": grpclib.const.Handler(
                 self.FetchBackendConfig,
                 grpclib.const.Cardinality.UNARY_UNARY,
                 app.marznode.marznode_pb2.Backend,
                 app.marznode.marznode_pb2.BackendConfig,
             ),
-            '/marznode.MarzService/RestartBackend': grpclib.const.Handler(
+            "/marznode.MarzService/RestartBackend": grpclib.const.Handler(
                 self.RestartBackend,
                 grpclib.const.Cardinality.UNARY_UNARY,
                 app.marznode.marznode_pb2.RestartBackendRequest,
                 app.marznode.marznode_pb2.Empty,
             ),
-            '/marznode.MarzService/StreamBackendLogs': grpclib.const.Handler(
+            "/marznode.MarzService/StreamBackendLogs": grpclib.const.Handler(
                 self.StreamBackendLogs,
                 grpclib.const.Cardinality.UNARY_STREAM,
                 app.marznode.marznode_pb2.BackendLogsRequest,
                 app.marznode.marznode_pb2.LogLine,
             ),
-            '/marznode.MarzService/GetBackendStats': grpclib.const.Handler(
+            "/marznode.MarzService/GetBackendStats": grpclib.const.Handler(
                 self.GetBackendStats,
                 grpclib.const.Cardinality.UNARY_UNARY,
                 app.marznode.marznode_pb2.Backend,
@@ -100,53 +124,52 @@ class MarzServiceBase(abc.ABC):
 
 
 class MarzServiceStub:
-
     def __init__(self, channel: grpclib.client.Channel) -> None:
         self.SyncUsers = grpclib.client.StreamUnaryMethod(
             channel,
-            '/marznode.MarzService/SyncUsers',
+            "/marznode.MarzService/SyncUsers",
             app.marznode.marznode_pb2.UserData,
             app.marznode.marznode_pb2.Empty,
         )
         self.RepopulateUsers = grpclib.client.UnaryUnaryMethod(
             channel,
-            '/marznode.MarzService/RepopulateUsers',
+            "/marznode.MarzService/RepopulateUsers",
             app.marznode.marznode_pb2.UsersData,
             app.marznode.marznode_pb2.Empty,
         )
         self.FetchBackends = grpclib.client.UnaryUnaryMethod(
             channel,
-            '/marznode.MarzService/FetchBackends',
+            "/marznode.MarzService/FetchBackends",
             app.marznode.marznode_pb2.Empty,
             app.marznode.marznode_pb2.BackendsResponse,
         )
         self.FetchUsersStats = grpclib.client.UnaryUnaryMethod(
             channel,
-            '/marznode.MarzService/FetchUsersStats',
+            "/marznode.MarzService/FetchUsersStats",
             app.marznode.marznode_pb2.Empty,
             app.marznode.marznode_pb2.UsersStats,
         )
         self.FetchBackendConfig = grpclib.client.UnaryUnaryMethod(
             channel,
-            '/marznode.MarzService/FetchBackendConfig',
+            "/marznode.MarzService/FetchBackendConfig",
             app.marznode.marznode_pb2.Backend,
             app.marznode.marznode_pb2.BackendConfig,
         )
         self.RestartBackend = grpclib.client.UnaryUnaryMethod(
             channel,
-            '/marznode.MarzService/RestartBackend',
+            "/marznode.MarzService/RestartBackend",
             app.marznode.marznode_pb2.RestartBackendRequest,
             app.marznode.marznode_pb2.Empty,
         )
         self.StreamBackendLogs = grpclib.client.UnaryStreamMethod(
             channel,
-            '/marznode.MarzService/StreamBackendLogs',
+            "/marznode.MarzService/StreamBackendLogs",
             app.marznode.marznode_pb2.BackendLogsRequest,
             app.marznode.marznode_pb2.LogLine,
         )
         self.GetBackendStats = grpclib.client.UnaryUnaryMethod(
             channel,
-            '/marznode.MarzService/GetBackendStats',
+            "/marznode.MarzService/GetBackendStats",
             app.marznode.marznode_pb2.Backend,
             app.marznode.marznode_pb2.BackendStats,
         )

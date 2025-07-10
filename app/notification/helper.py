@@ -61,7 +61,7 @@ def prepare_data(notif: Notification) -> dict:
             else "Unlimited"
         ),
         "usage_percent": (
-            f"{round(min((user.used_traffic / user.data_limit) * 100, 100),2)}%"
+            f"{round(min((user.used_traffic / user.data_limit) * 100, 100), 2)}%"
             if isinstance(user.data_limit, int) and user.data_limit > 0
             else "0%"
         ),

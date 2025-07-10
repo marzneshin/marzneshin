@@ -58,7 +58,7 @@ class UserNotificationFactory(NotificationFactory):
         action: UserNotification.Action,
         user: UserResponse,
         by: Optional[Admin] = None,
-        **kwargs: Any
+        **kwargs: Any,
     ) -> UserNotification:
         notification_class = self.notification_classes.get(action)
         return notification_class(user=user, by=by, **kwargs)

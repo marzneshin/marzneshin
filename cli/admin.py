@@ -101,7 +101,7 @@ def create_admin(
 
 @app.command(name="update")
 def update_admin(
-    username: str = typer.Option(..., *utils.FLAGS["username"], prompt=True)
+    username: str = typer.Option(..., *utils.FLAGS["username"], prompt=True),
 ):
     """
     Updates the specified admin
@@ -146,7 +146,7 @@ def update_admin(
 def import_from_env(
     yes_to_all: bool = typer.Option(
         False, *utils.FLAGS["yes_to_all"], help="Skips confirmations"
-    )
+    ),
 ):
     """
     Imports the sudo admin from env
