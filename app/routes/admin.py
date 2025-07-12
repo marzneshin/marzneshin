@@ -7,10 +7,11 @@ from fastapi.security import OAuth2PasswordRequestForm
 from fastapi_pagination import Page
 from fastapi_pagination.ext.sqlalchemy import paginate
 
+from app import marznode
 from app.db import Session, crud
 from app.db.models import Admin as DBAdmin, Service, User
 from app.dependencies import AdminDep, SudoAdminDep, DBDep
-from app.marznode.operations import update_user
+from app.models.user import UserModify
 from app.models.admin import (
     Admin,
     AdminCreate,
@@ -168,7 +169,7 @@ async def disable_users(username: str, db: DBDep, admin: SudoAdminDep):
 
     for user in crud.get_users(db, admin=db_admin, enabled=True):
         if user.activated:
-            update_user(user, remove=True)
+            marznode.operations.update_user(user, remove=True)
         user.enabled = False
         user.activated = False
     db.commit()
@@ -191,7 +192,7 @@ async def enable_users(username: str, db: DBDep, admin: SudoAdminDep):
     for user in crud.get_users(db, admin=db_admin, enabled=False):
         user.enabled = True
         if user.is_active:
-            update_user(user)
+            marznode.operations.update_user(user)
             user.activated = True
     db.commit()
 
@@ -212,3 +213,43 @@ def remove_admin(username: str, db: DBDep, admin: SudoAdminDep):
 
     crud.remove_admin(db, dbadmin)
     return {}
+
+
+@router.post("/{username}/sync")
+async def sync_configs(username: str, db: DBDep, admin: SudoAdminDep):
+    """Sync user configs with admin's services"""
+    db_admin = crud.get_admin(db, username)
+    if not db_admin:
+        raise HTTPException(status_code=404, detail="Admin not found")
+
+    users = crud.get_users(db, admin=db_admin)
+    result = {"total": len(users), "success": 0, "failed": 0}
+
+    for user in users:
+        try:
+            old_inbounds = {
+                (i.node_id, i.protocol, i.tag) for i in user.inbounds
+            }
+
+            if {s.id for s in user.services} != set(db_admin.service_ids):
+                user = crud.update_user(
+                    db, user, UserModify(service_ids=db_admin.service_ids)
+                )
+                new_inbounds = {
+                    (i.node_id, i.protocol, i.tag) for i in user.inbounds
+                }
+
+                if old_inbounds != new_inbounds:
+                    marznode.operations.update_user(
+                        user, old_inbounds, remove=not user.is_active
+                    )
+
+                result["success"] += 1
+            else:
+                result["success"] += 1
+        except Exception as e:
+            db.rollback()
+            result["failed"] += 1
+            continue
+
+    return result
