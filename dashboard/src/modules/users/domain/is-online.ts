@@ -13,5 +13,5 @@ export const isUserOnline = (user: UserType): boolean => {
     const utcUserOnlineTime = new Date(user.online_at + 'Z');
     const currentTime = new Date();
     const timeDifference = Math.abs(currentTime.getTime() - utcUserOnlineTime.getTime());
-    return timeDifference < 30000;
+    return timeDifference < 180000;
 };

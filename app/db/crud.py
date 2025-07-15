@@ -597,7 +597,7 @@ def get_users_count(
         query = query.filter(User.enabled == enabled)
     if online is True:
         query = query.filter(
-            User.online_at > (datetime.utcnow() - timedelta(seconds=30))
+            User.online_at > (datetime.utcnow() - timedelta(seconds=180))
         )
     elif online is False:
         query = query.filter(
