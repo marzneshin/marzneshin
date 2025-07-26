@@ -27,9 +27,12 @@ PyJWT~=2.8.0
 PyNaCl==1.5.0
 starlette==0.41.3
 uvicorn==0.30.4
-rich==13.7.1
+rich~=14.1.0
 python-multipart==0.0.20
 httptools==0.6.4
 aiogram==3.17.0
 bcrypt==4.2.1
 aiohttp-socks==0.10.1
+
+pyotp~=2.9.0
+qrcode~=8.2

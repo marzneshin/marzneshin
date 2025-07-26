@@ -13,6 +13,9 @@ class Token(BaseModel):
     is_sudo: bool
     token_type: str = "bearer"
 
+class OTPTokenData(BaseModel):
+    token: str
+
 
 class Admin(BaseModel):
     id: int | None = None
@@ -23,6 +26,7 @@ class Admin(BaseModel):
     modify_users_access: bool = True
     service_ids: list = []
     subscription_url_prefix: str = ""
+    is_otp_enabled: bool = False
     model_config = ConfigDict(from_attributes=True)
 
 

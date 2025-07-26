@@ -75,6 +75,8 @@ class Admin(Base):
     id = Column(Integer, primary_key=True)
     username = Column(String(32), unique=True, index=True)
     hashed_password = Column(String(128))
+    otp_secret = Column(String(64), nullable=True)
+    is_otp_enabled = Column(Boolean, nullable=False, default=False, server_default=sqlalchemy.sql.false())
     users = relationship("User", back_populates="admin")
     services = relationship(
         "Service",
