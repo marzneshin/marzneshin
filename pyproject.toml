@@ -1,3 +1,6 @@
+[tool.pytest.ini_options]
+alembic_config_file = "alembic.ini"
+alembic_script_location = "alembic"
 [tool.black]
 line-length = 79
 extend-exclude = ".*_(grpc|pb2).pyi?"
