@@ -19,7 +19,8 @@
         "storybook": "storybook dev -p 6006 --config-dir ./.storybook",
         "build-storybook": "storybook build",
         "test-storybook": "test-storybook",
-        "chromatic": "npx chromatic"
+        "chromatic": "npx chromatic",
+        "generate": "pnpm tsr generate"
     },
     "overrides": {
         "esbuild": "0.24.0"
