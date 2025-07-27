@@ -46,9 +46,7 @@ def authenticate_admin(
 def admin_token(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: DBDep
 ):
-    dbadmin = authenticate_admin(
-        db, form_data.username, form_data.password
-    )
+    dbadmin = authenticate_admin(db, form_data.username, form_data.password)
     if not dbadmin:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -81,10 +79,11 @@ def admin_token(
 
 # --- NEW 2FA MANAGEMENT ENDPOINTS ---
 
+
 @router.post("/current/otp/enable", status_code=200)
 async def enable_admin_otp_setup(
-        db: DBDep,
-        current_admin: DBAdmin = Depends(get_current_admin),
+    db: DBDep,
+    current_admin: DBAdmin = Depends(get_current_admin),
 ):
     """
     Generate and return a QR code for setting up Admin 2FA.
@@ -109,9 +108,9 @@ async def enable_admin_otp_setup(
 
 @router.post("/current/otp/verify", status_code=200)
 async def verify_admin_otp_setup(
-        data: OTPTokenData,
-        db: DBDep,
-        current_admin: DBAdmin = Depends(get_current_admin),
+    data: OTPTokenData,
+    db: DBDep,
+    current_admin: DBAdmin = Depends(get_current_admin),
 ):
     """
     Verify the OTP token and finalize Admin 2FA setup.
@@ -120,7 +119,9 @@ async def verify_admin_otp_setup(
     db_admin = db.query(DBAdmin).filter(DBAdmin.id == current_admin.id).first()
 
     if not db_admin.otp_secret:
-        raise HTTPException(status_code=400, detail="2FA setup has not been initiated.")
+        raise HTTPException(
+            status_code=400, detail="2FA setup has not been initiated."
+        )
 
     if not otp_service.verify_otp(db_admin.otp_secret, data.token):
         raise HTTPException(status_code=400, detail="Invalid OTP token.")
@@ -134,9 +135,9 @@ async def verify_admin_otp_setup(
 
 @router.post("/current/otp/disable", status_code=200)
 async def disable_admin_otp(
-        data: OTPTokenData,
-        db: DBDep,
-        current_admin: DBAdmin = Depends(get_current_admin),
+    data: OTPTokenData,
+    db: DBDep,
+    current_admin: DBAdmin = Depends(get_current_admin),
 ):
     """
     Disable 2FA for the current admin after verifying a final OTP.
@@ -156,6 +157,7 @@ async def disable_admin_otp(
     db.commit()
 
     return {"message": "2FA for admin has been disabled successfully."}
+
 
 # --- EXISTING ADMIN ROUTES ---
 # (The rest of the file is unchanged)
@@ -179,7 +181,7 @@ def create_admin(new_admin: AdminCreate, db: DBDep, admin: SudoAdminDep):
 
 
 @router.get("/current", response_model=Admin)
-def get_current_admin_info(admin: AdminDep): # Renamed to avoid conflict
+def get_current_admin_info(admin: AdminDep):  # Renamed to avoid conflict
     return admin
 
 

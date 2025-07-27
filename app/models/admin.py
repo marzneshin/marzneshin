@@ -13,6 +13,7 @@ class Token(BaseModel):
     is_sudo: bool
     token_type: str = "bearer"
 
+
 class OTPTokenData(BaseModel):
     token: str
 
