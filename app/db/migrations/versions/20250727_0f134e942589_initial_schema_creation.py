@@ -12,7 +12,6 @@ from alembic import op
 import sqlalchemy as sa
 
 
-# revision identifiers, used by Alembic.
 revision: str = "0f134e942589"
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
@@ -20,7 +19,6 @@ depends_on: Union[str, Sequence[str], None] = None
 
 
 def upgrade() -> None:
-    # ### Create all tables ###
     op.create_table(
         "admins",
         sa.Column("id", sa.Integer(), nullable=False),
@@ -363,4 +361,3 @@ def downgrade() -> None:
     op.drop_table("jwt")
     op.drop_index(op.f("ix_admins_username"), table_name="admins")
     op.drop_table("admins")
-    # ### end Alembic commands ###

@@ -3,9 +3,7 @@ from passlib.context import CryptContext
 from pydantic import ConfigDict, BaseModel
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-oauth2_scheme = OAuth2PasswordBearer(
-    tokenUrl="/api/admins/token"
-)  # Admin view url
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/admins/token")
 
 
 class Token(BaseModel):

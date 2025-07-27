@@ -85,18 +85,14 @@ async def enable_admin_otp_setup(
     db: DBDep,
     current_admin: DBAdmin = Depends(get_current_admin),
 ):
-    """
-    Generate and return a QR code for setting up Admin 2FA.
-    """
+
     if current_admin.is_otp_enabled:
         raise HTTPException(status_code=400, detail="2FA is already enabled.")
 
     secret = otp_service.generate_otp_secret()
 
-    # --- MODIFIED: Explicitly update the database object ---
     db_admin = db.query(DBAdmin).filter(DBAdmin.id == current_admin.id).first()
     db_admin.otp_secret = secret
-    # ----------------------------------------------------
 
     db.commit()
 
@@ -112,10 +108,7 @@ async def verify_admin_otp_setup(
     db: DBDep,
     current_admin: DBAdmin = Depends(get_current_admin),
 ):
-    """
-    Verify the OTP token and finalize Admin 2FA setup.
-    """
-    # Fetch the live database object
+
     db_admin = db.query(DBAdmin).filter(DBAdmin.id == current_admin.id).first()
 
     if not db_admin.otp_secret:
@@ -126,7 +119,6 @@ async def verify_admin_otp_setup(
     if not otp_service.verify_otp(db_admin.otp_secret, data.token):
         raise HTTPException(status_code=400, detail="Invalid OTP token.")
 
-    # Modify the live database object
     db_admin.is_otp_enabled = True
     db.commit()
 
@@ -139,10 +131,7 @@ async def disable_admin_otp(
     db: DBDep,
     current_admin: DBAdmin = Depends(get_current_admin),
 ):
-    """
-    Disable 2FA for the current admin after verifying a final OTP.
-    """
-    # Fetch the live database object
+
     db_admin = db.query(DBAdmin).filter(DBAdmin.id == current_admin.id).first()
 
     if not db_admin.is_otp_enabled:
@@ -151,7 +140,6 @@ async def disable_admin_otp(
     if not otp_service.verify_otp(db_admin.otp_secret, data.token):
         raise HTTPException(status_code=400, detail="Invalid OTP token.")
 
-    # Modify the live database object
     db_admin.is_otp_enabled = False
     db_admin.otp_secret = None
     db.commit()
@@ -159,8 +147,6 @@ async def disable_admin_otp(
     return {"message": "2FA for admin has been disabled successfully."}
 
 
-# --- EXISTING ADMIN ROUTES ---
-# (The rest of the file is unchanged)
 @router.get("", response_model=Page[AdminResponse])
 def get_admins(db: DBDep, admin: SudoAdminDep, username: str | None = None):
     query = db.query(DBAdmin)

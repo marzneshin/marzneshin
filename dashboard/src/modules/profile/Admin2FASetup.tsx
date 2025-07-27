@@ -8,15 +8,13 @@ import {
   Input,
 } from '@marzneshin/common/components';
 import { fetch } from '@marzneshin/common/utils';
-import { useQuery } from '@tanstack/react-query'; // --- ADDED: For data fetching ---
+import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-// --- ADDED: Define a type for the admin data we expect from the API ---
 type AdminData = {
   is_otp_enabled: boolean;
   username: string;
-  // ... other admin properties if needed
 };
 
 export const Admin2FASetup = () => {
@@ -25,7 +23,6 @@ export const Admin2FASetup = () => {
   const [otp, setOtp] = useState('');
   const [error, setError] = useState<string | null>(null);
 
-  // --- MODIFIED: Use useQuery to fetch the current admin's data ---
   const {
     data: adminData,
     refetch,
@@ -34,7 +31,6 @@ export const Admin2FASetup = () => {
     queryKey: ['currentAdmin'],
     queryFn: () => fetch('/admins/current'),
   });
-  // -------------------------------------------------------------
 
   const is2FAEnabled = adminData?.is_otp_enabled || false;
 
@@ -59,7 +55,7 @@ export const Admin2FASetup = () => {
       });
       setQrCode(null);
       setOtp('');
-      refetch(); // --- This now comes from useQuery and will work ---
+      refetch();
       alert('2FA enabled successfully!');
     } catch (err: any) {
       setError(err.response?._data?.detail || 'Invalid OTP token. Please try again.');
@@ -78,14 +74,13 @@ export const Admin2FASetup = () => {
         body: { token: otp },
       });
       setOtp('');
-      refetch(); // --- This now comes from useQuery and will work ---
+      refetch();
       alert('2FA disabled successfully!');
     } catch (err: any) {
       setError(err.response?._data?.detail || 'Invalid OTP token. Please try again.');
     }
   };
 
-  // --- ADDED: A loading state while fetching admin data ---
   if (isLoading) {
     return (
       <Card>
@@ -98,7 +93,6 @@ export const Admin2FASetup = () => {
       </Card>
     );
   }
-  // --------------------------------------------------------
 
   return (
     <Card>

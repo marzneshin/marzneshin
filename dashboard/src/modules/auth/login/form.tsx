@@ -39,7 +39,6 @@ export const LoginForm = () => {
     formData.append('password', values.password);
     formData.append('grant_type', 'password');
 
-    // This part adds the 2FA code if the form is in OTP mode
     if (otpRequired && values.otp) {
       formData.append('client_secret', values.otp);
     }
@@ -53,10 +52,9 @@ export const LoginForm = () => {
       setSudo(is_sudo);
       navigate({ to: '/' });
     } catch (err: any) {
-      // This is the key logic that checks for the 2FA requirement
       const errorDetail = err.response?._data?.detail;
       if (errorDetail?.otp_required) {
-        setOtpRequired(true); // This tells the form to switch to OTP mode
+        setOtpRequired(true);
       } else {
         setError(errorDetail || 'An error occurred');
       }
