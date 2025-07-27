@@ -35,11 +35,9 @@
   "user_info": "User Info",
   "admin_info": "Admin Info",
   "subscription": "Subscription",
-  "subscription_link": "Subscription Link",
   "fingerprint": "Fingerprint",
   "mux": "Mux",
   "fragment": "Fragment",
-  "enable": "Enable",
   "enabled": "Enabled",
   "activated": "Activated",
   "unlimited": "Unlimited",
@@ -47,17 +45,12 @@
   "reached": "Reached",
   "inactive": "Inactive",
   "active": "Active",
-  "disable": "Disable",
   "close": "Close",
   "save": "Save",
   "days": "Days",
   "home": "Home",
   "cancel": "Cancel",
-  "dark": "Dark",
-  "light": "Light",
-  "system": "System",
   "disabled": "Disabled",
-  "advanced-options": "Advanced Options",
   "language": "Language",
   "theme": "Theme",
   "pattern": "Pattern",
@@ -73,9 +66,18 @@
   "normal": "Normal",
   "sudo": "Sudo",
   "owner": "Owner",
-  "running": "Running",
-  "down": "Down",
   "weight": "Weight",
+  "Loading...": "Loading...",
+  "Mode": "Mode",
+  "Noise": "Noise",
+  "remark": "Remark",
+  "running": "Running",
+  "sni": "SNI",
+  "split_http": "Split HTTP",
+  "unknown": "Unknown",
+  "wireguard": "WireGuard",
+  "down": "Down",
+  "never": "Never",
   "support-us": {
     "title": "Support Us",
     "desc": "Marzneshin is free and open-source software (FOSS), join us and show your support by donating.",
@@ -97,7 +99,6 @@
         "placeholder-remark": "Placeholder Remark",
         "placeholder-if-disabled": "Placeholder if Disabled",
         "shuffle-configs": "Shuffle Configs",
-        "url-prefix": "URL Prefix",
         "profile-title": "Profile Title",
         "support-link": "Support Link",
         "update-interval": "Update Interval",
@@ -107,6 +108,7 @@
         "description": "Manage and customize subscription settings with configurable rules and update options.",
         "subscription-title": "Subscription Rules",
         "subscription-desc": "Add your subscription rules in order of priority.",
+        "url-prefix": "URL Prefix",
         "alert": {
           "title": "No rules",
           "desc": "No rules have been defined for subscription"
@@ -120,34 +122,10 @@
     },
     "login": {
       "username": {
-        "error": {
-          "isRequired": "Username is required"
-        }
+        "error": {}
       },
       "password": {
-        "error": {
-          "is-required": "Password is required"
-        }
-      },
-      "Two-Factor Authentication": "Two-Factor Authentication",
-      "One-Time Code": "One-Time Code",
-      "Enter the code from your authenticator app.": "Enter the code from your authenticator app.",
-      "Verify & Login": "Verify & Login"
-    },
-    "security": {
-      "title": "Security Settings",
-      "2fa-card": {
-        "title": "Two-Factor Authentication (2FA)",
-        "desc": "Add an extra layer of security to your account by requiring a one-time code to log in.",
-        "enabled-message": "2FA is currently enabled on your account.",
-        "disable-label": "Enter code to disable",
-        "disable-button": "Disable 2FA",
-        "scan-title": "1. Scan QR Code",
-        "scan-desc": "Use an authenticator app like Google Authenticator or Authy.",
-        "verify-title": "2. Verify Code",
-        "verify-desc": "Enter the 6-digit code from your app to finish setup.",
-        "verify-button": "Verify & Activate",
-        "enable-button": "Enable 2FA"
+        "error": {}
       }
     },
     "nodes": {
@@ -156,14 +134,10 @@
         "desc": "Total traffic usage on this node"
       },
       "settings": {
+        "detail": "Details",
         "no-backend-alert": {
           "title": "No backend is configured for this node",
           "desc": "Please take required measures and configure a backend for this node."
-        },
-        "title": "Nodes Settings",
-        "detail": "Details",
-        "log-container": {
-          "title": "Xray logs"
         }
       },
       "dialogs": {
@@ -218,7 +192,6 @@
       "data_limit_reset_strategy": "Data Reset Period",
       "online_at": "Last Use",
       "expire_date": "Expire Date",
-      "unlimited": "Unlimited",
       "never": "Never",
       "limited": "Limited",
       "data_limit_method": "Data Limit",
@@ -230,6 +203,7 @@
       "usage_duration": "Usage Duration",
       "activation_deadline": "Activation Deadline",
       "nodes-usage": "Nodes Usage",
+      "unlimited": "Unlimited",
       "settings": {
         "nodes-usage": {
           "last-days": "Last {{count}} days",
@@ -316,10 +290,9 @@
         "interval": "Interval",
         "length": "Length",
         "packets": "Packets",
-        "length-error": "Length can not exceed 32 char and must be number-number",
-        "interval-error": "Interval can not exceed 32 char and must be number-number",
-        "packets-error": "Packets can not exceed 32 char and must be number-number or be tlshello"
+        "delay-error": "Delay can not exceed 32 char and must be number-number"
       },
+      "padding": "Padding",
       "popover-guide": {
         "title": "Using this setting, you are able to assign specific address for each inbound.",
         "desc": "Use these variables to make it dynamic",
@@ -410,7 +383,7 @@
     "user_revoke": {
       "error": "Failed to revoke {{name}} subscription",
       "success": {
-        "title": "{{name}} is successfully created",
+        "title": "{{name}} subscription has been successfully revoked",
         "desc": ""
       }
     },
