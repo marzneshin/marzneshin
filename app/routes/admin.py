@@ -83,8 +83,8 @@ def admin_token(
 
 @router.post("/current/otp/enable", status_code=200)
 async def enable_admin_otp_setup(
-    db: DBDep, # CORRECTED ORDER
-    current_admin: DBAdmin = Depends(get_current_admin),
+        db: DBDep,
+        current_admin: DBAdmin = Depends(get_current_admin),
 ):
     """
     Generate and return a QR code for setting up Admin 2FA.
@@ -93,7 +93,12 @@ async def enable_admin_otp_setup(
         raise HTTPException(status_code=400, detail="2FA is already enabled.")
 
     secret = otp_service.generate_otp_secret()
-    current_admin.otp_secret = secret
+
+    # --- MODIFIED: Explicitly update the database object ---
+    db_admin = db.query(DBAdmin).filter(DBAdmin.id == current_admin.id).first()
+    db_admin.otp_secret = secret
+    # ----------------------------------------------------
+
     db.commit()
 
     uri = otp_service.get_otp_provisioning_uri(current_admin.username, secret)
@@ -104,20 +109,24 @@ async def enable_admin_otp_setup(
 
 @router.post("/current/otp/verify", status_code=200)
 async def verify_admin_otp_setup(
-    data: OTPTokenData,
-    db: DBDep, # CORRECTED ORDER
-    current_admin: DBAdmin = Depends(get_current_admin),
+        data: OTPTokenData,
+        db: DBDep,
+        current_admin: DBAdmin = Depends(get_current_admin),
 ):
     """
     Verify the OTP token and finalize Admin 2FA setup.
     """
-    if not current_admin.otp_secret:
+    # Fetch the live database object
+    db_admin = db.query(DBAdmin).filter(DBAdmin.id == current_admin.id).first()
+
+    if not db_admin.otp_secret:
         raise HTTPException(status_code=400, detail="2FA setup has not been initiated.")
 
-    if not otp_service.verify_otp(current_admin.otp_secret, data.token):
+    if not otp_service.verify_otp(db_admin.otp_secret, data.token):
         raise HTTPException(status_code=400, detail="Invalid OTP token.")
 
-    current_admin.is_otp_enabled = True
+    # Modify the live database object
+    db_admin.is_otp_enabled = True
     db.commit()
 
     return {"message": "2FA for admin has been enabled successfully."}
@@ -125,21 +134,25 @@ async def verify_admin_otp_setup(
 
 @router.post("/current/otp/disable", status_code=200)
 async def disable_admin_otp(
-    data: OTPTokenData,
-    db: DBDep, # CORRECTED ORDER
-    current_admin: DBAdmin = Depends(get_current_admin),
+        data: OTPTokenData,
+        db: DBDep,
+        current_admin: DBAdmin = Depends(get_current_admin),
 ):
     """
     Disable 2FA for the current admin after verifying a final OTP.
     """
-    if not current_admin.is_otp_enabled:
+    # Fetch the live database object
+    db_admin = db.query(DBAdmin).filter(DBAdmin.id == current_admin.id).first()
+
+    if not db_admin.is_otp_enabled:
         raise HTTPException(status_code=400, detail="2FA is not enabled.")
 
-    if not otp_service.verify_otp(current_admin.otp_secret, data.token):
+    if not otp_service.verify_otp(db_admin.otp_secret, data.token):
         raise HTTPException(status_code=400, detail="Invalid OTP token.")
 
-    current_admin.is_otp_enabled = False
-    current_admin.otp_secret = None
+    # Modify the live database object
+    db_admin.is_otp_enabled = False
+    db_admin.otp_secret = None
     db.commit()
 
     return {"message": "2FA for admin has been disabled successfully."}
