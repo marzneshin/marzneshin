@@ -128,6 +128,26 @@
         "error": {
           "is-required": "Password is required"
         }
+      },
+      "Two-Factor Authentication": "Two-Factor Authentication",
+      "One-Time Code": "One-Time Code",
+      "Enter the code from your authenticator app.": "Enter the code from your authenticator app.",
+      "Verify & Login": "Verify & Login"
+    },
+    "security": {
+      "title": "Security Settings",
+      "2fa-card": {
+        "title": "Two-Factor Authentication (2FA)",
+        "desc": "Add an extra layer of security to your account by requiring a one-time code to log in.",
+        "enabled-message": "2FA is currently enabled on your account.",
+        "disable-label": "Enter code to disable",
+        "disable-button": "Disable 2FA",
+        "scan-title": "1. Scan QR Code",
+        "scan-desc": "Use an authenticator app like Google Authenticator or Authy.",
+        "verify-title": "2. Verify Code",
+        "verify-desc": "Enter the 6-digit code from your app to finish setup.",
+        "verify-button": "Verify & Activate",
+        "enable-button": "Enable 2FA"
       }
     },
     "nodes": {
