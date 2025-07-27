@@ -144,9 +144,6 @@
         "creation": {
           "title": "Add Node"
         },
-        "deletion": {
-          "title": "Remove Node"
-        },
         "edition": {
           "title": "Edit Node"
         }
@@ -161,16 +158,9 @@
       }
     },
     "services": {
-      "settings": {
-        "title": "Service Settings",
-        "detail": "Details"
-      },
       "dialogs": {
         "creation": {
           "title": "Create Service"
-        },
-        "deletion": {
-          "title": "Remove Service"
         },
         "edition": {
           "title": "Edit Service"
@@ -180,38 +170,14 @@
     "users": {
       "created_at": "Created At",
       "no_use": "No Use",
-      "data_limit_reached": "Data Limit Reached",
-      "sub_updated_at": "Last subscription update",
-      "sub_last_user_agent": "Last User Agent",
-      "traffic_reset_at": "Last traffic reset",
-      "lifetime_used_traffic": "Lifetime Used Traffic",
-      "note-placeholder": "Additional information about user",
-      "data_limit": "Data Limit",
-      "traffic": "Traffic",
-      "used_traffic": "Used Traffic",
       "data_limit_reset_strategy": "Data Reset Period",
       "online_at": "Last Use",
       "expire_date": "Expire Date",
-      "never": "Never",
-      "limited": "Limited",
-      "data_limit_method": "Data Limit",
       "fixed_date": "Fixed Date",
-      "expire_method": "Expiration",
       "on_first_use": "On first use",
       "reset_usage": "Reset Usage",
       "revoke_subscription": "Revoke Subscription",
-      "usage_duration": "Usage Duration",
-      "activation_deadline": "Activation Deadline",
-      "nodes-usage": "Nodes Usage",
-      "unlimited": "Unlimited",
       "settings": {
-        "nodes-usage": {
-          "last-days": "Last {{count}} days",
-          "last-months": "Last {{count}} months",
-          "last-hours": "Last {{count}} hours",
-          "title": "User Nodes Usage",
-          "desc": "The amount of user usage on each node in time."
-        },
         "subscription_link": {
           "copied": "Subscription Link Copied",
           "copy": "Subscription Link",
@@ -229,42 +195,16 @@
         },
         "creation": {
           "title": "Create User"
-        },
-        "deletion": {
-          "title": "Remove User"
-        },
-        "mutation": {
-          "note": {
-            "desc": "Leave a note about your user"
-          }
         }
       }
     },
     "admins": {
       "disable_users": "Disable users",
-      "enable_users": "Enable users",
-      "permission": "Permission",
-      "dialogs": {
-        "creation": {
-          "title": "Create admin"
-        },
-        "edition": {
-          "title": "Edit admin"
-        },
-        "deletion": {
-          "title": "Delete admin"
-        }
-      },
-      "modify-users-access": "Modify users access",
-      "subscription-url-prefix": "Subscription URL prefix",
-      "sudo-privilage": "Sudo privilage",
-      "all-services-access": "All services access",
-      "users-data-usage": "Users Data Usage"
+      "enable_users": "Enable users"
     },
     "hosts": {
       "xmux-settings": "Xmux Settings",
       "split-http-settings": "Split HTTP Settings",
-      "no-grpc-header": "No GRPC Header",
       "early-data": "Early Data",
       "http_headers": "HTTP Headers",
       "no-http-headers": "No HTTP headers",
@@ -287,47 +227,9 @@
         "packets-error": "Packets can not exceed 32 char and must be number-number or be tlshello"
       },
       "noise": {
-        "interval": "Interval",
-        "length": "Length",
-        "packets": "Packets",
         "delay-error": "Delay can not exceed 32 char and must be number-number"
       },
       "padding": "Padding",
-      "popover-guide": {
-        "title": "Using this setting, you are able to assign specific address for each inbound.",
-        "desc": "Use these variables to make it dynamic",
-        "username": "Username of the user",
-        "dataUsage": "Current usage of the user",
-        "remainingData": "Remaining data of the user",
-        "dataLimit": "Data limit of the user",
-        "remainingDays": "Remaining days of the user",
-        "expireDate": "Expiry date of the user",
-        "jalaliExpireDate": "Expiry date of the user in jalali calendar",
-        "remainingTime": "Remaining time of the user",
-        "statusEmoji": "User status as an emoji (✅,⌛,🪫,❌,🔌)",
-        "proxyProtocol": "Proxy protocol (e.g. VMess)",
-        "proxyMethod": "Proxy transport method (e.g. ws)",
-        "currentServer": "Marzneshin server ip address",
-        "security": "Security Layer",
-        "host": "Request Host",
-        "port": "Port",
-        "path": "Path",
-        "sni": "SNI",
-        "advancedOptions": "Advanced options",
-        "addHost": "Add host",
-        "savedSuccess": "Host has been saved successfully",
-        "loading": "loading...",
-        "apply": "Apply",
-        "port.info": "By default, the inbound port is advertised to the user. You can set a custom port in case this host forwards traffic from another port to your inbound. For example, the server may forward traffic from port 8443 to the default port of your inbound server.",
-        "path.info": "Set a path for host users, useful behind a reverse proxy.",
-        "sni.info": "By default, a host uses the SNI from the inbound. You can set a custom SNI in case this host is a server that has a different SNI. For example, the server may receive traffic with a different SSL certificate, perform SSL termination, and forward it to your inbound server.",
-        "host.info": "By default, if a request host is set in the Xray config, this host is used. However, you can set a custom request host here if needed.",
-        "security.info": "If the middleware server of this host uses a different security layer than the inbound's default, you can set a custom security layer here.",
-        "alpn": "ALPN",
-        "fingerprint": "Fingerprint",
-        "host.multiHost": "To set multiple addresses, separate them with <badge>,</badge> Each time an address is chosen randomly.",
-        "host.wildcard": "Use <badge>*</badge> to generate a random string (works for wildcard domain names)"
-      },
       "mux": {
         "title": "Connection multiplexing",
         "desc": "Currently supported by v2rayng while using custom config"
@@ -336,26 +238,7 @@
         "title": "No inbound is selected",
         "desc": "You must select an inbound in order to add a host."
       },
-      "settings": {
-        "title": "Host Settings"
-      },
-      "allowinsecure": "Allow Insecure",
-      "dialogs": {
-        "edition": {
-          "title": "Edit Host"
-        },
-        "creation": {
-          "title": "Add Host"
-        },
-        "deletion": {
-          "title": "Remove Host"
-        },
-        "mutation": {
-          "allowinsecure": {
-            "alert": "Due to security concerns, it's not recommended to enable Allow Insecure"
-          }
-        }
-      }
+      "allowinsecure": "Allow Insecure"
     }
   },
   "events": {
@@ -413,17 +296,5 @@
     "selected": "Selected",
     "toggle-column": "Toggle columns",
     "filter-placeholder": "Filter {{name}}"
-  },
-  "statuses": {
-    "active": "Active",
-    "connected": "Connected",
-    "healthy": "Healthy",
-    "disabled": "Disabled",
-    "expired": "Expired",
-    "on_hold": "On Hold",
-    "connecting": "Connecting",
-    "unhealthy": "Unhealthy",
-    "limited": "Limited",
-    "error": "Error"
   }
 }
