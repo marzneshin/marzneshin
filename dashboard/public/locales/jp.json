@@ -1,0 +1,436 @@
+{
+  "name": "名前",
+  "info": "情報",
+  "status": "状態",
+  "address": "住所",
+  "users": "ユーザー",
+  "nodes": "ノード",
+  "services": "サービス",
+  "hosts": "ホスト",
+  "username": "ユーザー名",
+  "password": "パスワード",
+  "inbounds": "インバウンド",
+  "submit": "送信",
+  "login": "ログイン",
+  "edit": "編集",
+  "actions": "アクション",
+  "settings": "設定",
+  "logs": "ログ",
+  "note": "メモ",
+  "config": "構成",
+  "tag": "タグ",
+  "protocol": "プロトコル",
+  "online": "オンライン",
+  "offline": "オフライン",
+  "not_connected": "未接続",
+  "apply": "適用",
+  "open": "開く",
+  "delete": "削除",
+  "port": "ポート",
+  "create": "作成",
+  "path": "パス",
+  "host": "ホスト",
+  "alpn": "ALPN",
+  "security": "セキュリティ",
+  "user_info": "ユーザー情報",
+  "admin_info": "管理者情報",
+  "subscription": "サブスクリプション",
+  "subscription_link": "サブスクリプションリンク",
+  "fingerprint": "フィンガープリント",
+  "mux": "多重化",
+  "fragment": "フラグメント",
+  "enable": "有効化",
+  "enabled": "有効",
+  "activated": "アクティブ",
+  "unlimited": "無制限",
+  "left": "残り",
+  "reached": "到達",
+  "inactive": "非アクティブ",
+  "active": "アクティブ",
+  "disable": "無効化",
+  "close": "閉じる",
+  "save": "保存",
+  "days": "日",
+  "home": "ホーム",
+  "cancel": "キャンセル",
+  "dark": "ダーク",
+  "light": "ライト",
+  "system": "システム",
+  "disabled": "無効",
+  "advanced-options": "高度なオプション",
+  "language": "言語",
+  "theme": "テーマ",
+  "pattern": "パターン",
+  "result": "結果",
+  "deselect": "選択解除",
+  "view": "表示",
+  "certificate": "証明書",
+  "valid": "有効",
+  "finished": "終了",
+  "expired": "期限切れ",
+  "change": "変更",
+  "admins": "管理者",
+  "normal": "通常",
+  "sudo": "特権管理者",
+  "owner": "所有者",
+  "running": "実行中",
+  "down": "停止",
+  "weight": "重み",
+  "support-us": {
+    "title": "サポートしてください",
+    "desc": "マルズンシーンは無料でオープンソース（FOSS）のプログラムです。参加して、寄付でサポートを示してください。",
+    "donate": "寄付"
+  },
+  "page": {
+    "home": {
+      "users-stats": {
+        "desc": "ユーザー状態の概要"
+      },
+      "total-traffics": {
+        "title": "システム全体のトラフィック",
+        "desc": "すべてのノードから集計されたデータトラフィック"
+      }
+    },
+    "settings": {
+      "subscription-settings": {
+        "template-on-acceptance": "承認時のテンプレート",
+        "placeholder-remark": "代替メモ",
+        "placeholder-if-disabled": "無効の場合の代替",
+        "shuffle-configs": "構成のシャッフル",
+        "url-prefix": "URLプレフィックス",
+        "profile-title": "プロフィールタイトル",
+        "support-link": "サポートリンク",
+        "update-interval": "更新間隔",
+        "add-rule": "ルールの追加",
+        "reset-local-changes": "ローカル変更のリセット",
+        "title": "サブスクリプション",
+        "description": "調整可能なルールと更新オプションでサブスクリプション設定を管理およびカスタマイズ。",
+        "subscription-title": "サブスクリプションルール",
+        "subscription-desc": "優先順位に基づいてサブスクリプションルールを追加。",
+        "alert": {
+          "title": "ルールがありません",
+          "desc": "サブスクリプションのルールが設定されていません"
+        }
+      },
+      "certificate": {
+        "copy": "証明書のコピー",
+        "error": "証明書が利用できません",
+        "copied": "証明書がコピーされました"
+      }
+    },
+    "login": {
+      "username": {
+        "error": {
+          "isRequired": "ユーザー名が必要です"
+        }
+      },
+      "password": {
+        "error": {
+          "is-required": "パスワードが必要です"
+        }
+      }
+    },
+    "nodes": {
+      "nodes-usage-widget": {
+        "title": "ノードトラフィックの使用",
+        "desc": "このノードでのデータトラフィックの総使用量"
+      },
+      "settings": {
+        "no-backend-alert": {
+          "title": "このノードにバックエンドが設定されていません",
+          "desc": "必要なアクションを実行し、このノードのバックエンドを設定してください。"
+        },
+        "title": "ノード設定",
+        "detail": "詳細",
+        "log-container": {
+          "title": "エクスレイログ"
+        }
+      },
+      "dialogs": {
+        "creation": {
+          "title": "ノードの追加"
+        },
+        "deletion": {
+          "title": "ノードの削除"
+        },
+        "edition": {
+          "title": "ノードの編集"
+        }
+      },
+      "usage_coefficient": "使用係数",
+      "connection_backend": "接続バックエンド",
+      "connection_backend_desc": "リモート接続に使用",
+      "certificate-alert": {
+        "title": "ノード証明書の設定",
+        "desc": "ノード証明書を設定する場合は、設定ページを確認してください。",
+        "click": "ここをクリック"
+      }
+    },
+    "services": {
+      "settings": {
+        "title": "サービス設定",
+        "detail": "詳細"
+      },
+      "dialogs": {
+        "creation": {
+          "title": "サービスの作成"
+        },
+        "deletion": {
+          "title": "サービスの削除"
+        },
+        "edition": {
+          "title": "サービスの編集"
+        }
+      }
+    },
+    "users": {
+      "created_at": "作成日",
+      "no_use": "未使用",
+      "data_limit_reached": "データ制限に達しました",
+      "sub_updated_at": "サブスクリプションの最終更新",
+      "sub_last_user_agent": "最後のユーザーエージェント",
+      "traffic_reset_at": "データトラフィックのリセット日",
+      "lifetime_used_traffic": "生涯使用データトラフィック",
+      "note-placeholder": "ユーザーに関する追加情報",
+      "data_limit": "データ制限",
+      "traffic": "データトラフィック",
+      "used_traffic": "使用済みデータトラフィック",
+      "data_limit_reset_strategy": "データリセット期間",
+      "online_at": "最終使用",
+      "expire_date": "有効期限",
+      "unlimited": "無制限",
+      "never": "無期限",
+      "limited": "制限あり",
+      "data_limit_method": "データ制限",
+      "fixed_date": "固定日",
+      "expire_method": "有効期限",
+      "on_first_use": "初回使用時",
+      "reset_usage": "使用リセット",
+      "revoke_subscription": "サブスクリプションの取り消し",
+      "usage_duration": "使用期間",
+      "activation_deadline": "アクティベーション期限",
+      "nodes-usage": "ノード使用",
+      "settings": {
+        "nodes-usage": {
+          "last-days": "過去{{count}}日",
+          "last-months": "過去{{count}}か月",
+          "last-hours": "過去{{count}}時間",
+          "title": "ユーザーノード使用",
+          "desc": "指定された時間内での各ノードのユーザーの使用量。"
+        },
+        "subscription_link": {
+          "copied": "サブスクリプションリンクがコピーされました",
+          "copy": "サブスクリプションリンク",
+          "error": "サブスクリプションリンクをコピーできません"
+        }
+      },
+      "services-alert": {
+        "title": "サービスが見つかりません",
+        "desc": "ユーザーがインバウンドに接続できるようにサービスを作成してください。",
+        "click": "ここをクリック"
+      },
+      "dialogs": {
+        "edition": {
+          "title": "ユーザーの編集"
+        },
+        "creation": {
+          "titles": "ユーザーの作成"
+        },
+        "deletion": {
+          "title": "ユーザーの削除"
+        },
+        "mutation": {
+          "note": {
+            "desc": "ユーザーに関するメモを残す"
+          }
+        }
+      }
+    },
+    "admins": {
+      "disable_users": "ユーザーの無効化",
+      "enable_users": "ユーザーの有効化",
+      "permission": "権限",
+      "dialogs": {
+        "creation": {
+          "title": "管理者の作成"
+        },
+        "edition": {
+          "title": "管理者の編集"
+        },
+        "deletion": {
+          "title": "管理者の削除"
+        }
+      },
+      "modify-users-access": "ユーザーアクセスの変更",
+      "subscription-url-prefix": "サブスクリプションURLプレフィックス",
+      "sudo-privilage": "特権管理者権限",
+      "all-services-access": "すべてのサービスへのアクセス",
+      "users-data-usage": "ユーザーデータ使用"
+    },
+    "hosts": {
+      "xmux-settings": "エクスムックス設定",
+      "split-http-settings": "分割HTTP設定",
+      "no-grpc-header": "GRPCヘッダーなし",
+      "early-data": "早期データ",
+      "http_headers": "HTTPヘッダー",
+      "no-http-headers": "HTTPヘッダーなし",
+      "mux-settings": "多重化設定",
+      "dns-servers": "DNSサーバー",
+      "obfuscation-password": "難読化パスワード",
+      "server-public-key": "サーバー公開鍵",
+      "tls-config": "TLS構成",
+      "network-settings": "ネットワーク設定",
+      "security-settings": "セキュリティ設定",
+      "allowed-ips": "許可されたIPアドレス",
+      "allowed-ips-placeholder": "127.0.0.1,...",
+      "camouflage-settings": "カモフラージュ設定",
+      "fragment": {
+        "interval": "間隔",
+        "length": "長さ",
+        "packets": "パケット",
+        "length-error": "長さは32文字を超えることはできず、数字-数字の形式である必要があります",
+        "interval-error": "間隔は32文字を超えることはできず、数字-数字の形式である必要があります",
+        "packets-error": "パケットは32文字を超えることはできず、数字-数字の形式またはtlshelloである必要があります"
+      },
+      "noise": {
+        "interval": "間隔",
+        "length": "長さ",
+        "packets": "パケット",
+        "length-error": "長さは32文字を超えることはできず、数字-数字の形式である必要があります",
+        "interval-error": "間隔は32文字を超えることはできず、数字-数字の形式である必要があります",
+        "packets-error": "パケットは32文字を超えることはできず、数字-数字の形式またはtlshelloである必要があります"
+      },
+      "popover-guide": {
+        "title": "この設定を使用して、各インバウンドに特定のアドレスを設定できます。",
+        "desc": "動的にするためにこれらの変数を使用",
+        "username": "ユーザーのユーザー名",
+        "dataUsage": "ユーザーの現在の使用量",
+        "remainingData": "ユーザーの残りのデータ",
+        "dataLimit": "ユーザーのデータ制限",
+        "remainingDays": "ユーザーの残りの日数",
+        "expireDate": "ユーザーの有効期限",
+        "jalaliExpireDate": "ヒジュラ暦でのユーザーの有効期限",
+        "remainingTime": "ユーザーの残り時間",
+        "statusEmoji": "ユーザーの状態を絵文字で表示（✅,⌛,🪫,❌,🔌）",
+        "proxyProtocol": "プロキシプロトコル（例：VMess）",
+        "proxyMethod": "プロキシ転送方式（例：ws）",
+        "currentServer": "マルズンシーンのサーバーIPアドレス",
+        "security": "セキュリティ層",
+        "host": "要求されたホスト",
+        "port": "ポート",
+        "path": "パス",
+        "sni": "SNI",
+        "advancedOptions": "高度なオプション",
+        "addHost": "ホストの追加",
+        "savedSuccess": "ホストが正常に保存されました",
+        "loading": "読み込み中...",
+        "apply": "適用",
+        "port.info": "デフォルトでは、ユーザーにインバウンドのポートが通知されます。このホストが別のポートからあなたのインバウンドサーバーのデフォルトポートにデータトラフィックを転送する場合、カスタムポートを設定できます。たとえば、サーバーがポート8443からあなたのインバウンドサーバーのデフォルトポートにデータトラフィックを転送する場合があります。",
+        "path.info": "ホストユーザー向けのパスを設定、リバースプロキシの背後で役立ちます。",
+        "sni.info": "デフォルトでは、ホストはインバウンドのSNIを使用します。このホストが異なるSNIを持つサーバーである場合、カスタムSNIを設定できます。たとえば、サーバーが異なるSSL証明書でデータトラフィックを受信し、SSLを終了してあなたのインバウンドサーバーに転送する場合があります。",
+        "host.info": "デフォルトでは、Xray構成でリクエストホストが設定されている場合、そのホストが使用されます。ただし、必要に応じてここでカスタムリクエストホストを設定できます。",
+        "security.info": "このホストのプロキシサーバーがインバウンドのデフォルトとは異なるセキュリティ層を使用する場合、ここでカスタムセキュリティ層を設定できます。",
+        "alpn": "ALPN",
+        "fingerprint": "フィンガープリント",
+        "host.multiHost": "複数のアドレスを設定するには、<badge>,</badge>で区切ります。アドレスは毎回ランダムに選択されます。",
+        "host.wildcard": "<badge>*</badge>を使用してランダムな文字列を生成（ワイルドカードドメインに機能）"
+      },
+      "mux": {
+        "title": "接続多重化",
+        "desc": "カスタム構成を使用している場合、現在v2rayngでサポートされています"
+      },
+      "no-inbound-selection-alert": {
+        "title": "インバウンドが選択されていません",
+        "desc": "ホストを追加するにはインバウンドを選択する必要があります。"
+      },
+      "settings": {
+        "title": "ホスト設定"
+      },
+      "allowinsecure": "安全でない接続の許可",
+      "dialogs": {
+        "edition": {
+          "title": "ホストの編集"
+        },
+        "creation": {
+          "title": "ホストの追加"
+        },
+        "deletion": {
+          "title": "ホストの削除"
+        },
+        "mutation": {
+          "allowinsecure": {
+            "alert": "セキュリティ上の懸念から、安全でない接続の許可を有効にすることは推奨されません"
+          }
+        }
+      }
+    }
+  },
+  "events": {
+    "delete": {
+      "error": "{{name}}の削除に失敗しました",
+      "success": {
+        "title": "{{name}}が正常に削除されました",
+        "desc": ""
+      }
+    },
+    "create": {
+      "error": "{{name}}の作成に失敗しました",
+      "success": {
+        "title": "{{name}}が正常に作成されました",
+        "desc": ""
+      }
+    },
+    "update": {
+      "error": "{{name}}の更新に失敗しました",
+      "success": {
+        "title": "{{name}}が正常に更新されました",
+        "desc": ""
+      }
+    },
+    "user_revoke": {
+      "error": "{{name}}のサブスクリプション取り消しに失敗しました",
+      "success": {
+        "title": "{{name}}が正常に作成されました",
+        "desc": ""
+      }
+    },
+    "user_reset": {
+      "error": "{{name}}のデータ使用リセットに失敗しました",
+      "success": {
+        "title": "{{name}}のデータ使用が正常にリセットされました",
+        "desc": ""
+      }
+    },
+    "user_status": {
+      "error": "{{name}}の有効状態の切り替えに失敗しました",
+      "success": {
+        "title": "{{name}}の有効状態が正常に更新されました",
+        "desc": ""
+      }
+    }
+  },
+  "delete-confirmation": {
+    "title": "これでよろしいですか？",
+    "desc": "この操作は元に戻せません。"
+  },
+  "table": {
+    "no-result-found": "結果が見つかりませんでした。",
+    "row-per-page": "ページごとの行数",
+    "no-result": "結果なし",
+    "selected": "選択済み",
+    "toggle-column": "列の切り替え",
+    "filter-placeholder": "{{name}}のフィルター"
+  },
+  "statuses": {
+    "active": "アクティブ",
+    "connected": "接続済み",
+    "healthy": "健全",
+    "disabled": "無効",
+    "expired": "期限切れ",
+    "on_hold": "保留中",
+    "connecting": "接続中",
+    "unhealthy": "不健全",
+    "limited": "制限あり",
+    "error": "エラー"
+  }
+}
