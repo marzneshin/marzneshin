@@ -88,6 +88,8 @@ Marzneshin documentation may be found [here](https://docs.marzneshin.org).
 - English
 - Kurdish (Soranî, Kurmancî)
 - Persian
+- Arabic
+- Simplified Chinese
 
 # marznode
 
