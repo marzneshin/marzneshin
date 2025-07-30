@@ -30,7 +30,7 @@ i18n
         backend: {
             loadPath: `/locales/{{lng}}.json`,
         },
-        supportedLngs: ['en', 'kur', 'kmr', 'ckb', 'fa', 'ru', 'ar'],
+        supportedLngs: ['en', 'kur', 'kmr', 'ckb', 'fa', 'ru', 'ar', 'jp'],
     })
     .then(() => {
         dayjs.locale(i18n.language);
