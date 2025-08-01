@@ -90,6 +90,7 @@
         "i18next-browser-languagedetector": "^7.2.2",
         "i18next-http-backend": "^2.7.3",
         "lodash": "^4.17.21",
+        "lodash.debounce": "^4.0.8",
         "lucide-react": "^0.359.0",
         "next-themes": "^0.3.0",
         "ofetch": "^1.4.1",

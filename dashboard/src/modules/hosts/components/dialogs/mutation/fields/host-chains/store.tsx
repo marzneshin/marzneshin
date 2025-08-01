@@ -51,14 +51,14 @@ export const ChainedHostsProvider = ({
                 });
                 fieldsArray.append(newHost.id);
             },
-            removeHost: (id: number) => {
-                const newChain = get().selectedHosts.filter(
-                    (host) => host.id !== id,
-                );
+            removeHost: (hostId: number) => {
+                const fields = get().fieldsArray.fields;
+                const idx = fields.findIndex(f => f.value === hostId);
+                if (idx < 0) return;
+                fieldsArray.remove(idx);
                 set({
-                    selectedHosts: newChain,
+                    selectedHosts: get().selectedHosts.filter(h => h.id !== hostId),
                 });
-                fieldsArray.remove(id);
             },
         })),
     );

@@ -56,10 +56,9 @@ const HostChainsFormField = ({
                 <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow">
                     <FormControl {...field}>
                         <ScrollArea className="vstack w-full max-h-48 h-32 gap-2">
-                            {fieldsArray.fields.map((field, value) => {
-                                const hostItemData = selectedHosts.find(
-                                    (host) => host.id === value,
-                                );
+                            {fieldsArray.fields.map((field, index) => {
+                                const hostId = (field as any).value as number;
+                                const hostItemData = selectedHosts.find((host) => host.id === hostId);
                                 console.log("hostItemdata:" + hostItemData);
                                 console.log(fieldsArray.fields);
                                 return (
@@ -88,7 +87,7 @@ const HostChainsFormField = ({
                                                     size="icon"
                                                     className="size-8 shrink-0"
                                                     onClick={() =>
-                                                        removeHost(value)
+                                                        removeHost(index)
                                                     }
                                                 >
                                                     <TrashIcon

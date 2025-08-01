@@ -11,11 +11,12 @@ import {
     Badge,
 } from "@marzneshin/common/components";
 import { PlusIcon } from "lucide-react";
-import { useHostsQuery } from "../../../../../api";
+import { useHostsQuery } from "@marzneshin/modules/hosts/api";
 import { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { HostType } from "@marzneshin/modules/hosts/domain";
 import { ChainedHostsStore, useChainedHostsStore } from "./store";
+import { useFormContext } from "react-hook-form";
 
 const HostListItem: FC<{
     host: HostType;
@@ -45,8 +46,9 @@ export const HostsSelectionQuery: FC = () => {
             removeHost: state.removeHost,
         }),
     );
-
+    const form = useFormContext();
     const [hostSearchQuery, setHostSearchQuery] = useState("");
+    const selectedHostIds = form.watch("chain_ids")?.map((hostId: number) => hostId)
     const [open, setOpen] = useState(false);
     const { t } = useTranslation();
 
@@ -94,7 +96,7 @@ export const HostsSelectionQuery: FC = () => {
                         <HostListItem
                             key={host.id}
                             host={host}
-                            isSelected={selectedHosts.includes(host)}
+                            isSelected={selectedHostIds.includes(host.id)}
                             onToggleSelection={toggleHostSelection}
                         />
                     ))}
