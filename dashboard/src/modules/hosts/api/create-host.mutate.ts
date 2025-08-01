@@ -1,6 +1,6 @@
 import { HostType } from "@marzneshin/modules/hosts";
 import { useMutation } from "@tanstack/react-query";
-import { fetch, queryClient } from "@marzneshin/common/utils";
+import { fetch, queryClient, handleApiErrorWithContext, type ApiError } from "@marzneshin/common/utils";
 import { toast } from "sonner";
 import i18n from "@marzneshin/features/i18n";
 import { HostRequestDto } from "./host-mutation.dto";
@@ -10,12 +10,12 @@ export async function fetchCreateHost({ inboundId, host }: HostRequestDto): Prom
         { method: 'post', body: host }).then((host: HostType) => ({ inboundId, host }));
 }
 
-const handleError = (error: Error, value: HostRequestDto) => {
-    toast.error(
-        i18n.t('events.create.error', { name: value.host.remark }),
-        {
-            description: error.message
-        })
+const handleError = (error: ApiError, value: HostRequestDto) => {
+    handleApiErrorWithContext(error, {
+        action: 'create',
+        entityName: 'host',
+        entityValue: value.host.remark
+    });
 }
 
 const handleSuccess = (value: HostRequestDto) => {

@@ -1,6 +1,6 @@
 import { HostType } from "@marzneshin/modules/hosts";
 import { useMutation } from "@tanstack/react-query";
-import { fetch, queryClient } from "@marzneshin/common/utils";
+import { fetch, queryClient, handleApiErrorWithContext, type ApiError } from "@marzneshin/common/utils";
 import { toast } from "sonner";
 import i18n from "@marzneshin/features/i18n";
 import { HostUpdateRequestDto } from "./host-mutation.dto";
@@ -10,12 +10,12 @@ export async function fetchHostsUpdateMutation({ hostId, host }: HostUpdateReque
         { method: 'put', body: host }).then((host: HostType) => ({ hostId, host }));
 }
 
-const handleError = (error: Error, value: HostUpdateRequestDto) => {
-    toast.error(
-        i18n.t('events.update.error', { name: value.host.remark }),
-        {
-            description: error.message
-        })
+const handleError = (error: ApiError, value: HostUpdateRequestDto) => {
+    handleApiErrorWithContext(error, {
+        action: 'update',
+        entityName: 'host',
+        entityValue: value.host.remark
+    });
 }
 
 const handleSuccess = (value: HostUpdateRequestDto) => {
