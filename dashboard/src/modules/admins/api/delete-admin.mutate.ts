@@ -1,6 +1,6 @@
 import { AdminType, AdminsQueryFetchKey } from "@marzneshin/modules/admins";
 import { useMutation } from "@tanstack/react-query";
-import { fetch, queryClient } from "@marzneshin/common/utils";
+import { fetch, queryClient, handleApiErrorWithContext, type ApiError } from "@marzneshin/common/utils";
 import { toast } from "sonner";
 import i18n from "@marzneshin/features/i18n";
 
@@ -13,12 +13,12 @@ export async function fetchDeleteAdmin(admin: AdminType): Promise<AdminType> {
 const AdminsDeleteFetchKey = "admins";
 
 
-const handleError = (error: Error, value: AdminType) => {
-    toast.error(
-        i18n.t('events.delete.error', { name: value.username }),
-        {
-            description: error.message
-        })
+const handleError = (error: ApiError, value: AdminType) => {
+    handleApiErrorWithContext(error, {
+        action: 'delete',
+        entityName: 'admin',
+        entityValue: value.username
+    });
 }
 
 const handleSuccess = (value: AdminType) => {
