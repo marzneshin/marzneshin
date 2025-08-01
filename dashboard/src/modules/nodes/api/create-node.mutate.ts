@@ -1,6 +1,6 @@
 import { NodeType, NodesQueryFetchKey } from "@marzneshin/modules/nodes";
 import { useMutation } from "@tanstack/react-query";
-import { fetch, queryClient } from "@marzneshin/common/utils";
+import { fetch, queryClient, handleApiErrorWithContext, type ApiError } from "@marzneshin/common/utils";
 import { toast } from "sonner";
 import i18n from "@marzneshin/features/i18n";
 
@@ -10,12 +10,12 @@ export async function fetchCreateNode(node: NodeType): Promise<NodeType> {
     });
 }
 
-const handleError = (error: Error, value: NodeType) => {
-    toast.error(
-        i18n.t('events.create.error', { name: value.name }),
-        {
-            description: error.message
-        })
+const handleError = (error: ApiError, value: NodeType) => {
+    handleApiErrorWithContext(error, {
+        action: 'create',
+        entityName: 'node',
+        entityValue: value.name
+    });
 }
 
 const handleSuccess = (value: NodeType) => {
