@@ -126,7 +126,7 @@
         }
       },
       "usage_coefficient": "使用系数",
-      " OtoString("connection_backend"): "连接后端",
+      "connection_backend": "连接后端",
       "connection_backend_desc": "用于远程连接",
       "certificate-alert": {
         "title": "配置节点证书",
