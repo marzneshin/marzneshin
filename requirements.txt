@@ -33,3 +33,5 @@ httptools==0.6.4
 aiogram==3.17.0
 bcrypt==4.2.1
 aiohttp-socks==0.10.1
+pyotp~=2.9.0
+qrcode~=8.2
