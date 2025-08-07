@@ -576,6 +576,11 @@ usage() {
     echo "  uninstall       Uninstall Marzneshin"
     echo "  install-script  Install Marzneshin script"
     echo
+    echo "Configuration Paths:"
+    echo "  Docker Compose:  /etc/opt/marzneshin/docker-compose.yml"
+    echo "  Environment:     /etc/opt/marzneshin/.env"
+    echo "  Data Directory:  /var/lib/marzneshin"
+    echo
 }
 
 case "$1" in
