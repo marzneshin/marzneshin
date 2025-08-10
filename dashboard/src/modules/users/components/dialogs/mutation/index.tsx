@@ -19,7 +19,7 @@ import {
     UsernameField,
     type UserMutationType,
 } from "@marzneshin/modules/users";
-import { ServicesField } from "@marzneshin/modules/services";
+import { ServicesField, useServicesQuery, type ServiceType } from "@marzneshin/modules/services";
 import { NoteField } from "./fields";
 import { type MutationDialogProps, useMutationDialog } from "@marzneshin/common/hooks";
 import { DataLimitFields, ExpirationMethodFields } from "./sections";
@@ -29,9 +29,11 @@ export const UsersMutationDialog: FC<MutationDialogProps<UserMutationType>> = ({
     onClose,
 }) => {
     const { t } = useTranslation();
+    const { data: servicesData } = useServicesQuery({ page: 1, size: 100 });
+    
     const defaultValue = useMemo(
         () => ({
-            service_ids: [],
+            service_ids: entity ? [] : (servicesData?.entities.map((service: ServiceType) => service.id) || []),
             username: "",
             data_limit_reset_strategy: "no_reset",
             data_limit: undefined,
@@ -39,7 +41,7 @@ export const UsersMutationDialog: FC<MutationDialogProps<UserMutationType>> = ({
             expire_date: "",
             expire_strategy: "fixed_date",
         }),
-        [],
+        [entity, servicesData],
     );
 
     const { open, onOpenChange, form, handleSubmit } = useMutationDialog({
