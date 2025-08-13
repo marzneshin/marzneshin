@@ -12,7 +12,8 @@ logger = logging.getLogger("uvicorn.error")
 class Morebot:
     _base_url = f"https://{MOREBOT_LICENSE}.morebot.top/api/subscriptions/{MOREBOT_SECRET}"
     _timeout = 3
-    _failed_reports = []
+    _failed_reports = defaultdict(int)
+
 
     @classmethod
     def report_admin_usage(
@@ -28,29 +29,23 @@ class Morebot:
             if admin_id:
                 admin_usage[admin_id] += user_usage["value"]
 
+        for admin_id, failed_usage in cls._failed_reports.items():
+            admin_usage[admin_id] += failed_usage
+
         admins = dict(db.query(Admin.id, Admin.username).all())
+
         report_data = [
             {"username": admins.get(admin_id, "Unknown"), "usage": int(value)}
             for admin_id, value in admin_usage.items()
+            if value > 0
         ]
 
-        merged_data = report_data.copy()
-        if cls._failed_reports:
-            for failed_report in cls._failed_reports:
-                found = False
-                for report in merged_data:
-                    if report["username"] == failed_report["username"]:
-                        report["usage"] += failed_report["usage"]
-                        found = True
-                        break
-                if not found:
-                    merged_data.append(failed_report)
+        if not report_data:
+            return True
 
         try:
             response = requests.post(
-                f"{cls._base_url}/usages",
-                json=merged_data,
-                timeout=cls._timeout,
+                f"{cls._base_url}/usages", json=report_data, timeout=cls._timeout
             )
             response.raise_for_status()
             logger.info("Admin usage report successfully.")
@@ -58,9 +53,5 @@ class Morebot:
             return True
         except requests.RequestException as e:
             logger.error(f"Failed to upsert admin usage report: {str(e)}")
-            cls._save_failed_report(report_data)
+            cls._failed_reports = admin_usage
             return False
-
-    @classmethod
-    def _save_failed_report(cls, data: List[Dict[str, Any]]):
-        cls._failed_reports.extend(data)
