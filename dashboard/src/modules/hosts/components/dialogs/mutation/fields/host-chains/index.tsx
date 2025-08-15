@@ -62,15 +62,15 @@ const HostChainsFormField = ({
                                 const hostItemData = selectedHosts.find(
                                     (host) => host.id === hostId,
                                 );
+                                console.log(hostItemData)
                                 return (
                                     hostItemData &&
                                     hostItemData.id !== undefined && (
-                                        <SortableItem
-                                            key={field.id}
+                                        <SortableItem key={field.id}
                                             value={field.id}
                                             asChild
                                         >
-                                            <div className="grid grid-cols-[2fr,1.3fr,0.25fr] items-center justify-start gap-2 my-2">
+                                            <div className="grid grid-cols-[0.25fr,2fr,0.25fr] items-center justify-start gap-2 my-2">
                                                 <SortableDragHandle
                                                     variant="outline"
                                                     size="icon"
