@@ -32,14 +32,15 @@ const HostChainsFormField = ({
     field: ControllerRenderProps<FieldValues, "chain_ids">;
 }) => {
     const { t } = useTranslation();
-    const { fieldsArray, removeHost, selectedHosts } = useChainedHostsStore(
-        (state: ChainedHostsStore) => ({
+    const { fieldsArray, removeHost, selectedHosts, form } =
+        useChainedHostsStore((state: ChainedHostsStore) => ({
             selectedHosts: state.selectedHosts,
             fieldsArray: state.fieldsArray,
             addHost: state.addHost,
             removeHost: state.removeHost,
-        }),
-    );
+            form: state.form,
+        }));
+    const chainIds = form.watch("chain_ids") as number[];
 
     return (
         <>
@@ -57,10 +58,10 @@ const HostChainsFormField = ({
                     <FormControl {...field}>
                         <ScrollArea className="vstack w-full max-h-48 h-32 gap-2">
                             {fieldsArray.fields.map((field, index) => {
-                                const hostId = (field as any).value as number;
-                                const hostItemData = selectedHosts.find((host) => host.id === hostId);
-                                console.log("hostItemdata:" + hostItemData);
-                                console.log(fieldsArray.fields);
+                                const hostId = chainIds[index];
+                                const hostItemData = selectedHosts.find(
+                                    (host) => host.id === hostId,
+                                );
                                 return (
                                     hostItemData &&
                                     hostItemData.id !== undefined && (
@@ -86,9 +87,7 @@ const HostChainsFormField = ({
                                                     variant="outline"
                                                     size="icon"
                                                     className="size-8 shrink-0"
-                                                    onClick={() =>
-                                                        removeHost(index)
-                                                    }
+                                                    onClick={() => removeHost(index)}
                                                 >
                                                     <TrashIcon
                                                         className="size-4 text-destructive"
