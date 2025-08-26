@@ -17,7 +17,8 @@ export const UserSchema = z.object({
         .nullable()
         .optional(),
     expire_strategy: z.enum(["never", "fixed_date", "start_on_first_use"]),
-    usage_duration: z.number().nullable().optional(),
+    usage_duration: z.number().max(9999 * 365 * 24 * 60 * 60, { message: "usage_duration must be less than 3649635" })
+        .nullable().optional(),
     activation_deadline: z.string().or(z.date()).nullable().optional(),
     expire_date: z.string().or(z.date()).nullable().optional(),
     service_ids: z
