@@ -1,4 +1,8 @@
 import dayjs from 'dayjs';
+import "dayjs/locale/fa";
+import "dayjs/locale/ru";
+import "dayjs/locale/zh-cn";
+import "dayjs/locale/ar";
 import i18n from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import HttpApi from 'i18next-http-backend';
