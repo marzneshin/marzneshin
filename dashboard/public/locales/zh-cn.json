@@ -1,0 +1,303 @@
+{
+  "name": "名称",
+  "info": "信息",
+  "status": "状态",
+  "address": "地址",
+  "users": "用户",
+  "nodes": "节点",
+  "services": "服务",
+  "hosts": "主机",
+  "username": "用户名",
+  "password": "密码",
+  "inbounds": "入站",
+  "submit": "提交",
+  "login": "登录",
+  "edit": "编辑",
+  "actions": "操作",
+  "settings": "设置",
+  "logs": "日志",
+  "note": "备注",
+  "config": "配置",
+  "tag": "标签",
+  "protocol": "协议",
+  "online": "在线",
+  "offline": "离线",
+  "not_connected": "未连接",
+  "apply": "应用",
+  "open": "打开",
+  "delete": "删除",
+  "port": "端口",
+  "create": "创建",
+  "path": "路径",
+  "host": "主机",
+  "alpn": "ALPN",
+  "security": "安全",
+  "user_info": "用户信息",
+  "admin_info": "管理员信息",
+  "subscription": "订阅",
+  "fingerprint": "指纹",
+  "mux": "多路复用",
+  "fragment": "分片",
+  "enabled": "已启用",
+  "activated": "已激活",
+  "unlimited": "无限制",
+  "left": "剩余",
+  "reached": "已达到",
+  "inactive": "未激活",
+  "active": "激活",
+  "close": "关闭",
+  "save": "保存",
+  "days": "天",
+  "home": "首页",
+  "cancel": "取消",
+  "view": "查看",
+  "certificate": "证书",
+  "valid": "有效",
+  "finished": "已完成",
+  "expired": "已过期",
+  "change": "更改",
+  "admins": "管理员",
+  "normal": "普通",
+  "sudo": "超级管理员",
+  "owner": "所有者",
+  "running": "运行中",
+  "down": "停止",
+  "weight": "权重",
+  "support-us": {
+    "title": "支持我们",
+    "desc": "Marzneshin 是一个免费的开源软件（FOSS），加入我们，通过捐款表达您的支持。",
+    "donate": "捐款"
+  },
+  "page": {
+    "home": {
+      "users-stats": {
+        "desc": "用户状态概览"
+      },
+      "total-traffics": {
+        "title": "系统总流量",
+        "desc": "所有节点的总数据流量"
+      }
+    },
+    "settings": {
+      "subscription-settings": {
+        "template-on-acceptance": "接受时的模板",
+        "placeholder-remark": "备注占位符",
+        "placeholder-if-disabled": "禁用时的占位符",
+        "shuffle-configs": "随机配置",
+        "url-prefix": "URL前缀",
+        "profile-title": "配置文件标题",
+        "support-link": "支持链接",
+        "update-interval": "更新间隔",
+        "add-rule": "添加规则",
+        "reset-local-changes": "重置本地更改",
+        "title": "订阅",
+        "description": "管理和自定义订阅设置，包含可调整的规则和更新选项。",
+        "subscription-title": "订阅规则",
+        "subscription-desc": "按优先级添加订阅规则。",
+        "alert": {
+          "title": "无规则",
+          "desc": "未定义订阅规则"
+        }
+      },
+      "certificate": {
+        "copy": "复制证书",
+        "error": "证书不可用",
+        "copied": "证书已复制"
+      }
+    },
+    "nodes": {
+      "nodes-usage-widget": {
+        "title": "节点流量使用",
+        "desc": "该节点的总数据流量使用情况"
+      },
+      "settings": {
+        "no-backend-alert": {
+          "title": "此节点未配置后端",
+          "desc": "请采取必要措施为此节点配置后端。"
+        },
+        "detail": "详情"
+      },
+      "dialogs": {
+        "creation": {
+          "title": "添加节点"
+        },
+        "edition": {
+          "title": "编辑节点"
+        }
+      },
+      "usage_coefficient": "使用系数",
+      "connection_backend": "连接后端",
+      "connection_backend_desc": "用于远程连接",
+      "certificate-alert": {
+        "title": "配置节点证书",
+        "desc": "如果您希望配置节点证书，请查看设置页面。",
+        "click": "点击此处"
+      }
+    },
+    "services": {
+      "dialogs": {
+        "creation": {
+          "title": "创建服务"
+        },
+        "edition": {
+          "title": "编辑服务"
+        }
+      }
+    },
+    "users": {
+      "created_at": "创建日期",
+      "no_use": "未使用",
+      "data_limit_reached": "已达到数据限制",
+      "sub_updated_at": "订阅最后更新",
+      "sub_last_user_agent": "最后用户代理",
+      "traffic_reset_at": "最后流量重置",
+      "lifetime_used_traffic": "终身使用流量",
+      "note-placeholder": "用户附加信息",
+      "traffic": "流量",
+      "used_traffic": "已使用流量",
+      "data_limit_reset_strategy": "数据重置周期",
+      "online_at": "最后使用时间",
+      "expire_date": "到期日期",
+      "unlimited": "无限制",
+      "never": "永不",
+      "data_limit_method": "数据限制",
+      "fixed_date": "固定日期",
+      "expire_method": "到期方式",
+      "on_first_use": "首次使用时",
+      "reset_usage": "重置使用量",
+      "revoke_subscription": "取消订阅",
+      "usage_duration": "使用时长",
+      "nodes-usage": "节点使用",
+      "settings": {
+        "subscription_link": {
+          "copied": "订阅链接已复制",
+          "copy": "订阅链接",
+          "error": "无法复制订阅链接"
+        }
+      },
+      "services-alert": {
+        "title": "未找到服务",
+        "desc": "请确保创建服务以启用用户连接入站。",
+        "click": "点击此处"
+      },
+      "dialogs": {
+        "edition": {
+          "title": "编辑用户"
+        }
+      }
+    },
+    "admins": {
+      "disable_users": "禁用用户",
+      "enable_users": "启用用户",
+      "permission": "权限",
+      "modify-users-access": "修改用户访问",
+      "subscription-url-prefix": "订阅URL前缀",
+      "sudo-privilage": "超级管理员权限",
+      "all-services-access": "访问所有服务",
+      "users-data-usage": "用户数据使用量"
+    },
+    "hosts": {
+      "xmux-settings": "Xmux设置",
+      "split-http-settings": "分拆HTTP设置",
+      "early-data": "早期数据",
+      "http_headers": "HTTP头部",
+      "no-http-headers": "无HTTP头部",
+      "mux-settings": "多路复用设置",
+      "dns-servers": "DNS服务器",
+      "obfuscation-password": "混淆密码",
+      "server-public-key": "服务器公钥",
+      "tls-config": "TLS配置",
+      "network-settings": "网络设置",
+      "security-settings": "安全设置",
+      "allowed-ips": "允许的IP地址",
+      "allowed-ips-placeholder": "127.0.0.1,...",
+      "camouflage-settings": "伪装设置",
+      "fragment": {
+        "interval": "间隔",
+        "length": "长度",
+        "packets": "数据包",
+        "length-error": "长度不能超过32个字符，且必须为数字-数字格式",
+        "interval-error": "间隔不能超过32个字符，且必须为数字-数字格式",
+        "packets-error": "数据包不能超过32个字符，且必须为数字-数字格式或tlshello"
+      },
+      "mux": {
+        "title": "连接多路复用",
+        "desc": "目前由v2rayng支持，使用自定义配置时"
+      },
+      "no-inbound-selection-alert": {
+        "title": "未选择入站",
+        "desc": "必须选择入站才能添加主机。"
+      },
+      "allowinsecure": "允许不安全连接",
+      "dialogs": {
+        "edition": {
+          "title": "编辑主机"
+        },
+        "creation": {
+          "title": "添加主机"
+        },
+        "mutation": {
+          "allowinsecure": {
+            "alert": "出于安全考虑，不建议启用允许不安全连接"
+          }
+        }
+      }
+    }
+  },
+  "events": {
+    "delete": {
+      "error": "删除{{name}}失败",
+      "success": {
+        "title": "{{name}}已成功删除",
+        "desc": ""
+      }
+    },
+    "create": {
+      "error": "创建{{name}}失败",
+      "success": {
+        "title": "{{name}}已成功创建",
+        "desc": ""
+      }
+    },
+    "update": {
+      "error": "更新{{name}}失败",
+      "success": {
+        "title": "{{name}}已成功更新",
+        "desc": ""
+      }
+    },
+    "user_revoke": {
+      "error": "取消{{name}}的订阅失败",
+      "success": {
+        "title": "{{name}}已成功创建",
+        "desc": ""
+      }
+    },
+    "user_reset": {
+      "error": "重置{{name}}的数据使用量失败",
+      "success": {
+        "title": "{{name}}的数据使用量已成功重置",
+        "desc": ""
+      }
+    },
+    "user_status": {
+      "error": "切换{{name}}的激活状态失败",
+      "success": {
+        "title": "{{name}}的激活状态已成功更新",
+        "desc": ""
+      }
+    }
+  },
+  "delete-confirmation": {
+    "title": "您确定要执行此操作吗？",
+    "desc": "此操作不可撤销。"
+  },
+  "table": {
+    "no-result-found": "未找到结果。",
+    "row-per-page": "每页行数",
+    "no-result": "无结果",
+    "selected": "已选择",
+    "toggle-column": "切换列",
+    "filter-placeholder": "过滤{{name}}"
+  }
+}
