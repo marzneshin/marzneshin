@@ -1,9 +1,9 @@
 
+import { FieldValues, useForm } from 'react-hook-form';
 import { fetch } from "@marzneshin/common/utils"
 import { LoginSchema, useAuth } from "@marzneshin/modules/auth";
 import { useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { FieldValues, useForm } from "react-hook-form";
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
     Button,
@@ -25,10 +25,12 @@ export const LoginForm = () => {
         defaultValues: {
             username: '',
             password: '',
-        }
-    })
+            otp: '',
+       },
+    });
     const navigate = useNavigate({ from: '/login' });
     const [error, setError] = useState<string>('');
+    const [otpRequired, setOtpRequired] = useState(false);
     const { t } = useTranslation();
 
     const submit = async (values: FieldValues) => {
@@ -38,19 +40,54 @@ export const LoginForm = () => {
         formData.append('password', values.password);
         formData.append('grant_type', 'password');
 
+            if (otpRequired && values.otp) {
+      formData.append('client_secret', values.otp);
+    }
+
         try {
-            const { access_token, is_sudo } = await fetch('/admins/token', { method: 'post', body: formData });
-            setAuthToken(access_token);
+      const { access_token, is_sudo } = await fetch('/admins/token', {
+        method: 'post',
+        body: formData,
+      });            setAuthToken(access_token);
             setSudo(is_sudo);
             navigate({ to: '/' });
         } catch (err: any) {
-            setError(err.response._data?.detail || 'An error occurred');
+            const errorDetail = err.response?._data?.detail;
+            if (errorDetail?.otp_required) {
+                setOtpRequired(true);
+            } else {
+                setError(errorDetail || 'An error occurred');
+            }
         }
     };
 
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(submit)}>
+                        {/* This is the logic that shows/hides the OTP field */}
+        {otpRequired ? (
+          <FormField
+            control={form.control}
+            name="otp"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="font-semibold text-primary">
+                  {t('One-Time Code')}
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    type="text"
+                    placeholder="123456"
+                    autoComplete="one-time-code"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        ) : (
+          <>
                 <FormField
                     control={form.control}
                     name="username"
@@ -75,11 +112,22 @@ export const LoginForm = () => {
                             </FormControl>
                             <FormMessage />
                         </FormItem>
-                    )}
-                />
-                <Button className="mt-3 w-full" type="submit">{t('login')}</Button>
-                {error && <FormError className="mt-2" title='Submission failed' desc={error} />}
-            </form>
-        </Form>
-    )
+              )}
+            />
+          </>
+        )}
+
+        <Button className="mt-3 w-full" type="submit">
+          {t(otpRequired ? 'Verify & Login' : 'login')}
+        </Button>
+        {error && (
+          <FormError
+            className="mt-2"
+            title="Submission failed"
+            desc={error}
+          />
+        )}
+      </form>
+    </Form>
+  )
 }
