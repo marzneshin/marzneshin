@@ -38,7 +38,7 @@ export const DateField: FC<DateFieldProps> = ({ name, label }) => {
     useEffect(() => {
         const newValue = selectedDate?.toISOString().slice(0, -5);
         const prevValue = form.getValues(name);
-        if (newValue !== prevValue) {
+        if (newValue && newValue !== prevValue) {
             form.setValue(name, newValue, {
                 shouldValidate: true,
                 shouldTouch: true,

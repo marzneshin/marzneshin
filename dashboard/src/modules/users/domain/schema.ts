@@ -25,6 +25,21 @@ export const UserSchema = z.object({
         .array(z.number().or(z.string()))
         .nonempty({ message: "At least one service is required" })
         .transform((v) => v.map(Number)),
-});
+}).refine(
+    (data) =>
+        data.expire_strategy !== "start_on_first_use" || data.usage_duration || data.usage_duration != 0,
+    {
+        message: "usage_duration is required when expire_strategy is 'start_on_first_use'",
+        path: ["usage_duration"],
+    }
+)
+    .refine(
+        (data) =>
+            data.expire_strategy !== "fixed_date" || data.expire_date,
+        {
+            message: "expire_date is required when expire_strategy is 'fixed_date'",
+            path: ["expire_date"],
+        }
+    );
 
 export type UserMutationType = z.infer<typeof UserSchema>;
