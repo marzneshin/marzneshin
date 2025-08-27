@@ -3,6 +3,10 @@ import { ChartDateInterval } from "../types";
 export const dateXAxisTicks = (value: string, timeRange: ChartDateInterval) => {
     const date = new Date(value);
     const format = {
+        "Total": {
+            month: "short",
+            year: "numeric"
+        },
         "90d": {
             day: "numeric",
             month: "short",

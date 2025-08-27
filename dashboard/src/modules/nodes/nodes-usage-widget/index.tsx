@@ -8,7 +8,7 @@ import {
     ChartTooltipContent,
     ChartConfig,
 } from "@marzneshin/common/components";
-import { XAxis, BarChart, YAxis, CartesianGrid, Bar } from "recharts"
+import { XAxis,  YAxis, CartesianGrid,  LineChart, Line } from "recharts"
 import { format as formatByte } from '@chbphone55/pretty-bytes';
 import { useNodesUsageQuery, NodeType } from "@marzneshin/modules/nodes";
 import {
@@ -62,8 +62,8 @@ export const NodesUsageWidget: FC<{ node: NodeType }> = ({ node }) => {
                         config={chartConfig}
                         className="aspect-auto h-[320px] w-full"
                     >
-                        <BarChart
-                            accessibilityLayer
+                        <LineChart
+                            
                             data={chartData}
                             margin={{
                                 left: 12,
@@ -107,8 +107,8 @@ export const NodesUsageWidget: FC<{ node: NodeType }> = ({ node }) => {
                                     />
                                 }
                             />
-                            <Bar dataKey="traffic" fill={`var(--color-traffic)`} />
-                        </BarChart>
+                            <Line dataKey="traffic" fill={`var(--color-traffic)`} stroke={`var(--color-traffic)`} strokeWidth={2}/>
+                        </LineChart>
                     </ChartContainer>
                 </SectionWidget>
             }

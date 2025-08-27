@@ -8,7 +8,7 @@ import {
     ChartTooltipContent,
     ChartConfig,
 } from "@marzneshin/common/components";
-import { XAxis, BarChart, YAxis, CartesianGrid, Bar } from "recharts"
+import { XAxis, YAxis, CartesianGrid, Line, LineChart } from "recharts"
 import { format as formatByte } from '@chbphone55/pretty-bytes';
 import { useTotalTrafficQuery } from "./api";
 import { UsageGraphSkeleton } from "./components";
@@ -63,7 +63,7 @@ export const TotalTrafficsWidget: FC = () => {
                         config={chartConfig}
                         className="aspect-auto h-[320px] w-full"
                     >
-                        <BarChart
+                        <LineChart
                             accessibilityLayer
                             data={chartData}
                             margin={{
@@ -108,8 +108,8 @@ export const TotalTrafficsWidget: FC = () => {
                                     />
                                 }
                             />
-                            <Bar dataKey="traffic" fill={`var(--color-traffic)`} />
-                        </BarChart>
+                            <Line dataKey="traffic" fill={`var(--color-traffic)`} stroke={`var(--color-traffic)`} strokeWidth={2}/>
+                        </LineChart>
                     </ChartContainer>
                 </SectionWidget>
             }

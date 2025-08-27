@@ -99,9 +99,7 @@ def user_modification_access(
 
 def parse_start_date(start: str | None = None):
     if not start:
-        return datetime.fromtimestamp(
-            datetime.utcnow().timestamp() - 30 * 24 * 3600
-        )
+        return None
     else:
         return datetime.fromisoformat(start)
 
