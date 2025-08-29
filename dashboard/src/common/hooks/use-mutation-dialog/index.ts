@@ -54,11 +54,46 @@ export const useMutationDialog = <TData, TError = unknown, TVariables = unknown>
 
     const submit: SubmitHandler<FieldValues> = async (values) => {
         if (entity) {
-            updateMutation.mutate(values as TVariables);
+            updateMutation.mutate(values as TVariables, {
+                onSuccess: () => {
+                    onOpenChange(false);
+                },
+                onError: (error: any) => {
+                    // Keep dialog open on error so user can see validation errors
+                    // Try to map API validation errors to form fields
+                    if (error?.response?.data?.errors && Array.isArray(error.response.data.errors)) {
+                        error.response.data.errors.forEach((err: any) => {
+                            if (err.field && err.message) {
+                                form.setError(err.field, {
+                                    type: 'server',
+                                    message: err.message
+                                });
+                            }
+                        });
+                    }
+                }
+            });
         } else {
-            createMutation.mutate(values as TVariables);
+            createMutation.mutate(values as TVariables, {
+                onSuccess: () => {
+                    onOpenChange(false);
+                },
+                onError: (error: any) => {
+                    // Keep dialog open on error so user can see validation errors
+                    // Try to map API validation errors to form fields
+                    if (error?.response?.data?.errors && Array.isArray(error.response.data.errors)) {
+                        error.response.data.errors.forEach((err: any) => {
+                            if (err.field && err.message) {
+                                form.setError(err.field, {
+                                    type: 'server',
+                                    message: err.message
+                                });
+                            }
+                        });
+                    }
+                }
+            });
         }
-        onOpenChange(false);
     };
 
     useEffect(() => {

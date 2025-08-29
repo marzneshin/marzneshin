@@ -1,21 +1,21 @@
 import { UserMutationType, UsersQueryFetchKey } from "@marzneshin/modules/users";
 import { useMutation } from "@tanstack/react-query";
-import { fetch, queryClient } from "@marzneshin/common/utils";
+import { fetch, queryClient, handleApiErrorWithContext, type ApiError } from "@marzneshin/common/utils";
 import { toast } from "sonner";
 import i18n from "@marzneshin/features/i18n";
 
 export async function fetchCreateUser(user: UserMutationType): Promise<UserMutationType> {
-    return fetch('/users', { method: 'post', body: user }).then((user) => {
-        return user;
-    });
+    return fetch('/users', { method: 'post', body: user }).then((user) =>  user);
 }
 
-const handleError = (error: Error, value: UserMutationType) => {
-    toast.error(
-        i18n.t('events.create.error', { name: value.username }),
-        {
-            description: error.message
-        })
+const handleError = (error: ApiError, value: any) => {
+    const payload = error?.data;
+    console.log("Server error payload:", payload);
+    handleApiErrorWithContext(error, {
+        action: 'create',
+        entityName: 'user',
+        entityValue: value.username
+    });
 }
 
 const handleSuccess = (value: UserMutationType) => {
