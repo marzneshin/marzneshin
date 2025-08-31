@@ -61,7 +61,7 @@ export const HostsSelectionQuery: FC = () => {
     const toggleHostSelection = (host: HostType) => {
         const exist = selectedHosts.find((hostData) => hostData.id === host.id);
         if (!exist) addHost(host);
-        if (exist && host.id) removeHost(host.id);
+        else if (exist && host.id) removeHost(host.id);
     };
 
     const applySelection = () => {

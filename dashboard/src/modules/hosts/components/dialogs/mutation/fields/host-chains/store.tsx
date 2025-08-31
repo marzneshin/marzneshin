@@ -43,19 +43,16 @@ export const ChainedHostsProvider = ({
         createStore<ChainedHostsStore>((set, get) => ({
             form,
             fieldsArray,
-            selectedHosts: data,
+            selectedHosts: data.items.map(i => selectedHostsIds.includes(i.id)),
             addHost: (newHost: HostType) => {
                 const newChain = [...get().selectedHosts, newHost];
                 set({
                     selectedHosts: newChain,
                 });
                 fieldsArray.append(newHost.id);
+                form.setValue('chain_ids',newChain.map(i => i.id), {shouldDirty: true, shouldValidate: true, shouldTouch: true});
             },
             removeHost: (hostId: number) => {
-                const fields = get().fieldsArray.fields;
-                const idx = fields.findIndex(f => f.value === hostId);
-                if (idx < 0) return;
-                fieldsArray.remove(idx);
                 set({
                     selectedHosts: get().selectedHosts.filter(h => h.id !== hostId),
                 });
