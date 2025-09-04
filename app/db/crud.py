@@ -725,12 +725,15 @@ def revoke_user_sub(db: Session, dbuser: User):
 
 
 def update_user_sub(db: Session, dbuser: User, user_agent: str):
-    dbuser.sub_updated_at = datetime.utcnow()
-    dbuser.sub_last_user_agent = user_agent
-
-    db.commit()
-    db.refresh(dbuser)
-    return dbuser
+    with db.get_bind().begin() as conn:
+        conn.execute(
+            update(User)
+            .where(User.id == dbuser.id)
+            .values(
+                sub_updated_at=datetime.utcnow(),
+                sub_last_user_agent=user_agent,
+            )
+        )
 
 
 def reset_all_users_data_usage(db: Session, admin: Optional[Admin] = None):
