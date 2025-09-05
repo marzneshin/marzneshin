@@ -12,14 +12,12 @@ jobs:
       - name: Send Telegram notification
         env:
           BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REPO_NAME: ${{ github.repository }}
         run: |
-
-          PR_TITLE="${{ github.event.pull_request.title }}"
-          PR_AUTHOR="${{ github.event.pull_request.user.login }}"
-          PR_URL="${{ github.event.pull_request.html_url }}"
-          PR_NUMBER="${{ github.event.pull_request.number }}"
-          REPO_NAME="${{ github.repository }}"
-          
 
           MESSAGE="🔄 *New Pull Request*\\n📝 *Title:* ${PR_TITLE}\\n👤 *Author:* ${PR_AUTHOR}\\n🔢 *PR #${PR_NUMBER}*\\n🏷️ *Repo:* ${REPO_NAME}\\n🔗 [View Pull Request](${PR_URL})"
 
