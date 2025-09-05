@@ -1,5 +1,5 @@
 from datetime import datetime as dt
-from enum import Enum
+from enum import StrEnum
 from typing import Optional
 
 from pydantic import BaseModel
@@ -19,7 +19,7 @@ class AdminNotif(Notification):
 class UserNotification(Notification):
     user: UserResponse
 
-    class Action(str, Enum):
+    class Action(StrEnum):
         user_created = "user_created"
         user_updated = "user_updated"
         user_activated = "user_activated"
