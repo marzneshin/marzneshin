@@ -37,6 +37,7 @@ jobs:
           http_code=${response: -3}
           if [ "$http_code" -ne 200 ]; then
             echo "Error: Failed to send Telegram notification (HTTP $http_code)"
+            echo "Response: ${response%???}"
             exit 1
           else
             echo "Telegram notification sent successfully"
