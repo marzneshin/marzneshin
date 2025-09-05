@@ -1,7 +1,7 @@
 import asyncio
 import logging
 from datetime import datetime, timedelta
-from enum import Enum
+from enum import StrEnum
 
 import sqlalchemy
 from fastapi import APIRouter
@@ -35,7 +35,7 @@ logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/users", tags=["User"])
 
 
-class UsersSortingOptions(str, Enum):
+class UsersSortingOptions(StrEnum):
     USERNAME = "username"
     USED_TRAFFIC = "used_traffic"
     DATA_LIMIT = "data_limit"

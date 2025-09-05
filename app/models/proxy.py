@@ -1,11 +1,11 @@
-from enum import Enum
+from enum import StrEnum, Enum
 
 from pydantic import ConfigDict, BaseModel, Field, field_validator
 
 from app.models.node import Node
 
 
-class ProxyTypes(str, Enum):
+class ProxyTypes(StrEnum):
     # proxy_type = protocol
     VMess = "vmess"
     VLESS = "vless"
@@ -18,7 +18,7 @@ class ProxyTypes(str, Enum):
     ShadowTLS = "shadowtls"
 
 
-class InboundHostSecurity(str, Enum):
+class InboundHostSecurity(StrEnum):
     inbound_default = "inbound_default"
     none = "none"
     tls = "tls"
