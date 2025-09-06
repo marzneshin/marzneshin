@@ -1,10 +1,10 @@
-from enum import Enum
+from enum import StrEnum
 from typing import Pattern
 
 from pydantic import BaseModel
 
 
-class ConfigTypes(str, Enum):
+class ConfigTypes(StrEnum):
     links = "links"
     base64_links = "base64-links"
     xray = "xray"

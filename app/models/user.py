@@ -1,6 +1,6 @@
 import secrets
 from datetime import datetime
-from enum import Enum
+from enum import StrEnum
 from typing import Annotated
 
 from pydantic import (
@@ -14,12 +14,12 @@ from pydantic import (
 USERNAME_REGEXP = r"^\w{3,32}$"
 
 
-class UserStatus(str, Enum):
+class UserStatus(StrEnum):
     ACTIVE = "active"
     INACTIVE = "inactive"
 
 
-class UserDataUsageResetStrategy(str, Enum):
+class UserDataUsageResetStrategy(StrEnum):
     no_reset = "no_reset"
     day = "day"
     week = "week"
@@ -27,7 +27,7 @@ class UserDataUsageResetStrategy(str, Enum):
     year = "year"
 
 
-class UserExpireStrategy(str, Enum):
+class UserExpireStrategy(StrEnum):
     NEVER = "never"
     FIXED_DATE = "fixed_date"
     START_ON_FIRST_USE = "start_on_first_use"
