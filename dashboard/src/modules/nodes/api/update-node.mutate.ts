@@ -1,6 +1,6 @@
 import { NodeType } from "@marzneshin/modules/nodes";
 import { useMutation } from "@tanstack/react-query";
-import { fetch, queryClient } from "@marzneshin/common/utils";
+import { fetch, queryClient, handleApiErrorWithContext, type ApiError } from "@marzneshin/common/utils";
 import { toast } from "sonner";
 import i18n from "@marzneshin/features/i18n";
 import { NodesQueryFetchKey } from "./nodes.query";
@@ -11,12 +11,12 @@ export async function fetchUpdateNode(node: NodeType): Promise<NodeType> {
     });
 }
 
-const handleError = (error: Error, value: NodeType) => {
-    toast.error(
-        i18n.t('events.update.error', { name: value.name }),
-        {
-            description: error.message
-        })
+const handleError = (error: ApiError, value: NodeType) => {
+    handleApiErrorWithContext(error, {
+        action: 'update',
+        entityName: 'node',
+        entityValue: value.name
+    });
 }
 
 const handleSuccess = (value: NodeType) => {

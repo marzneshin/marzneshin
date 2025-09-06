@@ -1,5 +1,5 @@
 
-import { fetch } from "@marzneshin/common/utils"
+import { fetch, handleApiError, type ApiError } from "@marzneshin/common/utils"
 import { LoginSchema, useAuth } from "@marzneshin/modules/auth";
 import { useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
@@ -44,7 +44,13 @@ export const LoginForm = () => {
             setSudo(is_sudo);
             navigate({ to: '/' });
         } catch (err: any) {
-            setError(err.response._data?.detail || 'An error occurred');
+            const apiError = err as ApiError;
+            const backendError = handleApiError(apiError, 'Login failed');
+            if (backendError) {
+                setError(backendError.message);
+            } else {
+                setError('An error occurred during login');
+            }
         }
     };
 
