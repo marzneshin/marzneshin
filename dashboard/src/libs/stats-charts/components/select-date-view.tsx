@@ -34,6 +34,7 @@ export const SelectDateView = (
             <SelectDateViewItem interval="7d"> 7D</SelectDateViewItem>
             <SelectDateViewItem interval="30d"> 30D</SelectDateViewItem>
             <SelectDateViewItem interval="90d"> 3M</SelectDateViewItem>
+            <SelectDateViewItem interval="Total"> Total</SelectDateViewItem>
         </RadioGroup>
     )
 };
