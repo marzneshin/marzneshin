@@ -7,7 +7,7 @@ export function useFromNowInterval(interval: ChartDateInterval) {
     end.setMinutes(0, 0, 0);
     start.setMinutes(0, 0, 0);
     return {
-        start: start.toISOString(),
+        start: interval != 'total' && start.toISOString() || undefined,
         end: end.toISOString()
     }
 }

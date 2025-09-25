@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { fetch } from "@marzneshin/common/utils";
 import { UsersQueryFetchKey } from "../..";
+import { sumTraffic } from "@marzneshin/common/utils/traffic";
 
 type UsageMetric = number[];
 
@@ -37,6 +38,10 @@ export async function fetchUserNodeUsages({ queryKey }: { queryKey: UserNodeUsag
             end: queryKey[2].end
         }
     }).then((result) => {
+        const per = Math.floor(queryKey[2].start && (new Date(queryKey[2].end ?? '').getTime() - new Date(queryKey[2].start ?? '').getTime()) / 1000 / 24 || 1296000)
+        result.node_usages.forEach((nu: any) => {
+            nu.usages = sumTraffic(nu.usages, per).usages
+        })
         return result;
     });
 }
