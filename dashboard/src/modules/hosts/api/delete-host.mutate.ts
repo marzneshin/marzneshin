@@ -1,6 +1,6 @@
 import { HostType } from "@marzneshin/modules/hosts";
 import { useMutation } from "@tanstack/react-query";
-import { fetch, queryClient } from "@marzneshin/common/utils";
+import { fetch, queryClient, handleApiErrorWithContext, type ApiError } from "@marzneshin/common/utils";
 import { toast } from "sonner";
 import i18n from "@marzneshin/features/i18n";
 
@@ -13,12 +13,12 @@ export async function fetchDeleteHost(host: HostType): Promise<HostType> {
 const HostsDeleteFetchKey = "hosts";
 
 
-const handleError = (error: Error, value: HostType) => {
-    toast.error(
-        i18n.t('events.delete.error', { name: value.remark }),
-        {
-            description: error.message
-        })
+const handleError = (error: ApiError, value: HostType) => {
+    handleApiErrorWithContext(error, {
+        action: 'delete',
+        entityName: 'host',
+        entityValue: value.remark
+    });
 }
 
 const handleSuccess = (value: HostType) => {

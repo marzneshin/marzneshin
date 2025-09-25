@@ -1,6 +1,6 @@
 import { ServiceType, ServicesQueryFetchKey } from "@marzneshin/modules/services";
 import { useMutation } from "@tanstack/react-query";
-import { fetch, queryClient } from "@marzneshin/common/utils";
+import { fetch, queryClient, handleApiErrorWithContext, type ApiError } from "@marzneshin/common/utils";
 import { toast } from "sonner";
 import i18n from "@marzneshin/features/i18n";
 
@@ -13,12 +13,12 @@ export async function fetchDeleteService(service: ServiceType): Promise<ServiceT
 const ServicesDeleteFetchKey = "services-delete-fetch-key";
 
 
-const handleError = (error: Error, value: ServiceType) => {
-    toast.error(
-        i18n.t('events.delete.error', { name: value.name }),
-        {
-            description: error.message
-        })
+const handleError = (error: ApiError, value: ServiceType) => {
+    handleApiErrorWithContext(error, {
+        action: 'delete',
+        entityName: 'service',
+        entityValue: value.name
+    });
 }
 
 const handleSuccess = (value: ServiceType) => {
