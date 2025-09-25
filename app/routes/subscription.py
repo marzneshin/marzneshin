@@ -132,7 +132,8 @@ def user_get_usage(
     start_date: StartDateDep,
     end_date: EndDateDep,
 ):
-    per_day = (end_date - start_date).total_seconds() > 3 * 86400
+    per_day = not start_date or (
+        end_date - start_date).total_seconds() > 3 * 86400
     return crud.get_user_total_usage(
         db, db_user, start_date, end_date, per_day=per_day
     )
