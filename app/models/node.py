@@ -1,9 +1,9 @@
-from enum import Enum
+from enum import StrEnum, IntEnum
 
 from pydantic import ConfigDict, BaseModel, Field
 
 
-class BackendConfigFormat(Enum):
+class BackendConfigFormat(IntEnum):
     PLAIN = 0
     JSON = 1
     YAML = 2
@@ -25,13 +25,13 @@ class Backend(BaseModel):
     running: bool
 
 
-class NodeStatus(str, Enum):
+class NodeStatus(StrEnum):
     healthy = "healthy"
     unhealthy = "unhealthy"
     disabled = "disabled"
 
 
-class NodeConnectionBackend(str, Enum):
+class NodeConnectionBackend(StrEnum):
     grpcio = "grpcio"
     grpclib = "grpclib"
 

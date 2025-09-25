@@ -1,5 +1,5 @@
 import typer
-from enum import Enum
+from enum import StrEnum
 from typing import Optional
 from rich.console import Console
 
@@ -13,7 +13,7 @@ app = typer.Typer(no_args_is_help=True)
 console = Console()
 
 
-class ConfigFormat(str, Enum):
+class ConfigFormat(StrEnum):
     v2ray = "v2ray"
     clash = "clash"
 
