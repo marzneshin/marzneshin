@@ -65,10 +65,14 @@ def prepare_data(notif: Notification) -> dict:
             if isinstance(user.data_limit, int) and user.data_limit > 0
             else "0%"
         ),
-        "expire_date": (
-            user.expire_date.strftime("%H:%M:%S %Y-%m-%d") if user.expire_date
-            else f"{user.usage_duration // 86400} Days After First Use" if user.expire_strategy == UserExpireStrategy.START_ON_FIRST_USE
-            else "Never"
+        expire_date = (
+            user.expire_date.strftime("%H:%M:%S %Y-%m-%d")
+            if user.expire_date
+            else (
+                f"{user.usage_duration // 86400} Days After First Use"
+                if user.expire_strategy == UserExpireStrategy.START_ON_FIRST_USE
+                else "Never"
+            )
         ),
         "remaining_days": (
             (user.expire_date - datetime.now()).days
