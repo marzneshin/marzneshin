@@ -7,7 +7,6 @@ from fastapi import APIRouter, Body, Query
 from fastapi import HTTPException, WebSocket
 from fastapi_pagination.ext.sqlalchemy import paginate
 from fastapi_pagination.links import Page
-from fastapi.websockets import WebSocketState
 from starlette.websockets import WebSocketDisconnect
 
 from app import marznode
