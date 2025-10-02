@@ -7,6 +7,7 @@ from fastapi import APIRouter, Body, Query
 from fastapi import HTTPException, WebSocket
 from fastapi_pagination.ext.sqlalchemy import paginate
 from fastapi_pagination.links import Page
+from fastapi.websockets import WebSocketState
 from starlette.websockets import WebSocketDisconnect
 
 from app import marznode
@@ -114,7 +115,8 @@ async def node_logs(
             except WebSocketDisconnect:
                 break
     finally:
-        await websocket.close()
+        if websocket.client_state.CONNECTED:
+            await websocket.close()
 
 
 @router.put("/{node_id}", response_model=NodeResponse)
