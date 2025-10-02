@@ -7,7 +7,8 @@ from fastapi import APIRouter, Body, Query
 from fastapi import HTTPException, WebSocket
 from fastapi_pagination.ext.sqlalchemy import paginate
 from fastapi_pagination.links import Page
-from starlette.websockets import WebSocketDisconnect
+from starlette.websockets import WebSocketDisconnect, WebSocketState
+from grpclib.exceptions import StreamTerminatedError, GRPCError
 
 from app import marznode
 from app.db import crud, get_tls_certificate
@@ -109,12 +110,13 @@ async def node_logs(
         async for line in marznode.nodes[node_id].get_logs(
             name=backend, include_buffer=include_buffer
         ):
-            try:
-                await websocket.send_text(line)
-            except WebSocketDisconnect:
-                break
+            await websocket.send_text(line)
+    except WebSocketDisconnect:
+        logger.debug("websocket disconnected")
+    except (StreamTerminatedError, GRPCError):
+        logger.info("node %i detached", node_id)
     finally:
-        if websocket.client_state.CONNECTED:
+        if websocket.state == WebSocketState.CONNECTED:
             await websocket.close()
 
 
