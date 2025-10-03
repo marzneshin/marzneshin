@@ -27,6 +27,7 @@ export * from "./sheet";
 export * from "./tabs";
 export * from "./progress";
 export * from "./calendar";
+export * from "./persian-calendar";
 export * from "./scroll-area";
 export * from "./toggle-group";
 export * from "./textarea";
