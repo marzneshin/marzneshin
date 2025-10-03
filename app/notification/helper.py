@@ -1,11 +1,11 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Dict, Optional
 
 from aiogram import html
 
 from app.models.admin import Admin
 from app.models.notification import Notification, UserNotification
-from app.models.user import UserResponse
+from app.models.user import UserResponse, UserExpireStrategy
 from app.utils.system import readable_size
 
 
@@ -68,7 +68,11 @@ def prepare_data(notif: Notification) -> dict:
         "expire_date": (
             user.expire_date.strftime("%H:%M:%S %Y-%m-%d")
             if user.expire_date
-            else "Never"
+            else (
+                f"{user.usage_duration // 86400} Days After First Use"
+                if user.expire_strategy == UserExpireStrategy.START_ON_FIRST_USE
+                else "Never"
+            )
         ),
         "remaining_days": (
             (user.expire_date - datetime.now()).days
