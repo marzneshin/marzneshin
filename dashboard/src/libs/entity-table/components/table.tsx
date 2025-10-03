@@ -1,7 +1,4 @@
-import {
-    ColumnDef,
-    flexRender,
-} from "@tanstack/react-table";
+import { ColumnDef, flexRender } from "@tanstack/react-table";
 import {
     Table,
     TableBody,
@@ -9,52 +6,57 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-    Skeleton
+    Skeleton,
 } from "@marzneshin/common/components";
 import { useTranslation } from "react-i18next";
 import { useEntityTableContext } from "@marzneshin/libs/entity-table/contexts";
 import { type FC } from "react";
 
 interface DataTableProps<TData, TValue> {
-    columns: ColumnDef<TData, TValue>[]
-    onRowClick?: (object: TData) => void
+    columns: ColumnDef<TData, TValue>[];
+    onRowClick?: (object: TData) => void;
 }
 
 const Headers = () => {
     const { table } = useEntityTableContext();
-    return (
-        table?.getHeaderGroups()?.map(headerGroup => (
-            <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map(header => (
-                    <TableHead key={header.id}>
-                        {!header.isPlaceholder && flexRender(header.column.columnDef.header, header.getContext())}
-                    </TableHead>
-                ))}
-            </TableRow>
-        ))
-    )
+    return table?.getHeaderGroups()?.map((headerGroup) => (
+        <TableRow key={headerGroup.id}>
+            {headerGroup.headers.map((header) => (
+                <TableHead key={header.id}>
+                    {!header.isPlaceholder &&
+                        flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                        )}
+                </TableHead>
+            ))}
+        </TableRow>
+    ));
 };
 
 const Rows: FC<Readonly<DataTableProps<any, any>>> = ({
     columns,
-    onRowClick
+    onRowClick,
 }) => {
     const { table } = useEntityTableContext();
     const { t } = useTranslation();
 
     const rows = table?.getRowModel()?.rows;
-    
-    return (rows?.length ? (
-        rows.map(row => (
+
+    return rows?.length ? (
+        rows.map((row) => (
             <TableRow
                 key={row.id}
                 data-state={row.getIsSelected() ? "selected" : undefined}
                 data-testid="entity-table-row"
                 onClick={() => onRowClick?.(row.original)}
             >
-                {row.getVisibleCells().map(cell => (
+                {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                        {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                        )}
                     </TableCell>
                 ))}
             </TableRow>
@@ -62,10 +64,10 @@ const Rows: FC<Readonly<DataTableProps<any, any>>> = ({
     ) : (
         <TableRow>
             <TableCell colSpan={columns.length} className="h-24 text-center">
-                {t('table.no-result')}
+                {t("table.no-result")}
             </TableCell>
         </TableRow>
-    ))
+    );
 };
 
 const Loading = () => (
@@ -100,9 +102,16 @@ export function EntityDataTable<TData, TValue>({
 
     return (
         <Table className="w-full">
-            <TableHeader> <Headers /> </TableHeader>
+            <TableHeader>
+                {" "}
+                <Headers />{" "}
+            </TableHeader>
             <TableBody>
-                {isLoading ? <Loading /> : <Rows onRowClick={onRowClick} columns={columns} />}
+                {isLoading ? (
+                    <Loading />
+                ) : (
+                    <Rows onRowClick={onRowClick} columns={columns} />
+                )}
             </TableBody>
         </Table>
     );
