@@ -23,7 +23,7 @@ interface DataTableProps<TData, TValue> {
 const Headers = () => {
     const { table } = useEntityTableContext();
     return (
-        table.getHeaderGroups().map(headerGroup => (
+        table?.getHeaderGroups()?.map(headerGroup => (
             <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map(header => (
                     <TableHead key={header.id}>
@@ -42,8 +42,10 @@ const Rows: FC<Readonly<DataTableProps<any, any>>> = ({
     const { table } = useEntityTableContext();
     const { t } = useTranslation();
 
-    return (table.getRowModel().rows?.length ? (
-        table.getRowModel().rows.map(row => (
+    const rows = table?.getRowModel()?.rows;
+    
+    return (rows?.length ? (
+        rows.map(row => (
             <TableRow
                 key={row.id}
                 data-state={row.getIsSelected() ? "selected" : undefined}

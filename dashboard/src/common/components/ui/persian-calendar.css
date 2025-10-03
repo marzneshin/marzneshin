@@ -1,0 +1,72 @@
+/* Persian Calendar RTL Support */
+.persian-calendar {
+  direction: rtl;
+  padding: 0.5rem;
+}
+
+.persian-calendar .rdp-month {
+  text-align: center;
+  padding: 0;
+}
+
+.persian-calendar .rdp-caption {
+  padding: 0.5rem 0;
+  margin-bottom: 0.5rem;
+  position: relative;
+  z-index: 10;
+  background: var(--background);
+}
+
+.persian-calendar .rdp-table {
+  direction: rtl;
+  width: 100%;
+  table-layout: fixed;
+  margin: 0;
+}
+
+.persian-calendar .rdp-head_cell,
+.persian-calendar .rdp-cell {
+  text-align: center;
+  padding: 0.25rem;
+  height: 2.25rem;
+}
+
+.persian-calendar .rdp-nav {
+  direction: ltr; /* Keep navigation in LTR for normal behavior */
+}
+
+/* Ensure popover content has proper dimensions with scroll */
+.persian-calendar-popover {
+  min-width: 280px;
+  max-width: 320px;
+  max-height: 400px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Ensure calendar fits within popover */
+.persian-calendar .rdp {
+  width: 100%;
+  min-height: 280px;
+}
+
+/* Fix caption positioning */
+.persian-calendar .rdp-caption {
+  position: sticky;
+  top: 0;
+  background: var(--background);
+  border-bottom: 1px solid var(--border);
+  z-index: 10;
+  padding: 0.5rem 0;
+}
+
+/* Keep original navigation behavior */
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .persian-calendar-popover {
+    min-width: 260px;
+    max-width: 280px;
+    max-height: 350px;
+  }
+}

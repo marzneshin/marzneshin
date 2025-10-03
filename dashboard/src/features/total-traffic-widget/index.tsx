@@ -32,8 +32,8 @@ export const TotalTrafficsWidget: FC = () => {
     const [timeRange, setTimeRange] = useState("1d")
     const { start, end } = useFromNowInterval(timeRange as ChartDateInterval);
     const { data, isPending } = useTotalTrafficQuery({ start, end })
-    const chartData = useTransformDateUsageData(data.usages);
-    const [totalAmount, totalMetric] = formatByte(data.total);
+    const chartData = useTransformDateUsageData(data?.usages);
+    const [totalAmount, totalMetric] = formatByte(data?.total || 0);
 
     return (
         <Awaiting

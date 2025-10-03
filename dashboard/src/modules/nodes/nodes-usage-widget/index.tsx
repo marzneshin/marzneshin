@@ -31,8 +31,8 @@ export const NodesUsageWidget: FC<{ node: NodeType }> = ({ node }) => {
     const [timeRange, setTimeRange] = useState("1d")
     const { start, end } = useFromNowInterval(timeRange as ChartDateInterval);
     const { data } = useNodesUsageQuery({ nodeId: node.id, start, end })
-    const chartData = useTransformDateUsageData(data.usages);
-    const [totalAmount, totalMetric] = formatByte(data.total);
+    const chartData = useTransformDateUsageData(data?.usages);
+    const [totalAmount, totalMetric] = formatByte(data?.total || 0);
 
     return (
         <Awaiting

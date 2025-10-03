@@ -84,6 +84,8 @@ export function SelectableEntityTable<T extends { id: number }>({
     });
 
     useEffect(() => {
+        if (!data?.entities) return;
+        
         setSelectedRow((selected) => {
             const updatedSelected: RowSelectionState = { ...selected };
             for (const [i, fetchedEntity] of data.entities.entries()) {
@@ -99,6 +101,8 @@ export function SelectableEntityTable<T extends { id: number }>({
     }, [data, setSelectedRow, existingEntityIds]);
 
     useEffect(() => {
+        if (!data?.entities) return;
+        
         const selectedRowId = Object.keys(selectedRow).filter(key => selectedRow[key] === true).map(Number);
 
         setSelectedEntity(
