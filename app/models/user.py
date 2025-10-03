@@ -49,7 +49,7 @@ class User(BaseModel):
             ),
         ]
         | None
-    ) = (None,)
+    ) = None
     activation_deadline: datetime | None = Field(None)
     key: str = Field(default_factory=lambda: secrets.token_hex(16))
     data_limit: int | None = Field(
