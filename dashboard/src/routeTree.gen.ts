@@ -10,541 +10,715 @@
 
 import { createFileRoute } from '@tanstack/react-router'
 
-// Import Routes
+import { Route as rootRouteImport } from './routes/__root'
+import { Route as DashboardRouteImport } from './routes/_dashboard'
+import { Route as AuthRouteImport } from './routes/_auth'
+import { Route as AuthLoginRouteImport } from './routes/_auth/login'
+import { Route as DashboardUsersCreateRouteImport } from './routes/_dashboard/users/create'
+import { Route as DashboardUsersUserIdRouteImport } from './routes/_dashboard/users/$userId'
+import { Route as DashboardServicesCreateRouteImport } from './routes/_dashboard/services/create'
+import { Route as DashboardServicesServiceIdRouteImport } from './routes/_dashboard/services/$serviceId'
+import { Route as DashboardNodesCreateRouteImport } from './routes/_dashboard/nodes/create'
+import { Route as DashboardNodesNodeIdRouteImport } from './routes/_dashboard/nodes/$nodeId'
+import { Route as DashboardHostsHostIdRouteImport } from './routes/_dashboard/hosts/$hostId'
+import { Route as DashboardAdminsCreateRouteImport } from './routes/_dashboard/admins/create'
+import { Route as DashboardAdminsAdminIdRouteImport } from './routes/_dashboard/admins/$adminId'
+import { Route as DashboardUsersUserIdIndexRouteImport } from './routes/_dashboard/users/$userId/index'
+import { Route as DashboardServicesServiceIdIndexRouteImport } from './routes/_dashboard/services/$serviceId/index'
+import { Route as DashboardNodesNodeIdIndexRouteImport } from './routes/_dashboard/nodes/$nodeId/index'
+import { Route as DashboardHostsHostIdIndexRouteImport } from './routes/_dashboard/hosts/$hostId/index'
+import { Route as DashboardAdminsAdminIdIndexRouteImport } from './routes/_dashboard/admins/$adminId/index'
+import { Route as DashboardUsersUserIdEditRouteImport } from './routes/_dashboard/users/$userId/edit'
+import { Route as DashboardUsersUserIdDeleteRouteImport } from './routes/_dashboard/users/$userId/delete'
+import { Route as DashboardServicesServiceIdEditRouteImport } from './routes/_dashboard/services/$serviceId/edit'
+import { Route as DashboardServicesServiceIdDeleteRouteImport } from './routes/_dashboard/services/$serviceId/delete'
+import { Route as DashboardNodesNodeIdEditRouteImport } from './routes/_dashboard/nodes/$nodeId/edit'
+import { Route as DashboardNodesNodeIdDeleteRouteImport } from './routes/_dashboard/nodes/$nodeId/delete'
+import { Route as DashboardHostsInboundIdCreateRouteImport } from './routes/_dashboard/hosts/$inboundId/create'
+import { Route as DashboardHostsHostIdEditRouteImport } from './routes/_dashboard/hosts/$hostId/edit'
+import { Route as DashboardHostsHostIdDeleteRouteImport } from './routes/_dashboard/hosts/$hostId/delete'
+import { Route as DashboardAdminsAdminIdEditRouteImport } from './routes/_dashboard/admins/$adminId/edit'
+import { Route as DashboardAdminsAdminIdDeleteRouteImport } from './routes/_dashboard/admins/$adminId/delete'
 
-import { Route as rootRoute } from './routes/__root'
-import { Route as DashboardImport } from './routes/_dashboard'
-import { Route as AuthImport } from './routes/_auth'
-import { Route as AuthLoginImport } from './routes/_auth/login'
-import { Route as DashboardUsersCreateImport } from './routes/_dashboard/users/create'
-import { Route as DashboardUsersUserIdImport } from './routes/_dashboard/users/$userId'
-import { Route as DashboardServicesCreateImport } from './routes/_dashboard/services/create'
-import { Route as DashboardServicesServiceIdImport } from './routes/_dashboard/services/$serviceId'
-import { Route as DashboardNodesCreateImport } from './routes/_dashboard/nodes/create'
-import { Route as DashboardNodesNodeIdImport } from './routes/_dashboard/nodes/$nodeId'
-import { Route as DashboardHostsHostIdImport } from './routes/_dashboard/hosts/$hostId'
-import { Route as DashboardAdminsCreateImport } from './routes/_dashboard/admins/create'
-import { Route as DashboardAdminsAdminIdImport } from './routes/_dashboard/admins/$adminId'
-import { Route as DashboardUsersUserIdIndexImport } from './routes/_dashboard/users/$userId/index'
-import { Route as DashboardServicesServiceIdIndexImport } from './routes/_dashboard/services/$serviceId/index'
-import { Route as DashboardNodesNodeIdIndexImport } from './routes/_dashboard/nodes/$nodeId/index'
-import { Route as DashboardHostsHostIdIndexImport } from './routes/_dashboard/hosts/$hostId/index'
-import { Route as DashboardAdminsAdminIdIndexImport } from './routes/_dashboard/admins/$adminId/index'
-import { Route as DashboardUsersUserIdEditImport } from './routes/_dashboard/users/$userId/edit'
-import { Route as DashboardUsersUserIdDeleteImport } from './routes/_dashboard/users/$userId/delete'
-import { Route as DashboardServicesServiceIdEditImport } from './routes/_dashboard/services/$serviceId/edit'
-import { Route as DashboardServicesServiceIdDeleteImport } from './routes/_dashboard/services/$serviceId/delete'
-import { Route as DashboardNodesNodeIdEditImport } from './routes/_dashboard/nodes/$nodeId/edit'
-import { Route as DashboardNodesNodeIdDeleteImport } from './routes/_dashboard/nodes/$nodeId/delete'
-import { Route as DashboardHostsInboundIdCreateImport } from './routes/_dashboard/hosts/$inboundId/create'
-import { Route as DashboardHostsHostIdEditImport } from './routes/_dashboard/hosts/$hostId/edit'
-import { Route as DashboardHostsHostIdDeleteImport } from './routes/_dashboard/hosts/$hostId/delete'
-import { Route as DashboardAdminsAdminIdEditImport } from './routes/_dashboard/admins/$adminId/edit'
-import { Route as DashboardAdminsAdminIdDeleteImport } from './routes/_dashboard/admins/$adminId/delete'
+const DashboardIndexLazyRouteImport = createFileRoute('/_dashboard/')()
+const DashboardUsersLazyRouteImport = createFileRoute('/_dashboard/users')()
+const DashboardSettingsLazyRouteImport = createFileRoute(
+  '/_dashboard/settings',
+)()
+const DashboardServicesLazyRouteImport = createFileRoute(
+  '/_dashboard/services',
+)()
+const DashboardNodesLazyRouteImport = createFileRoute('/_dashboard/nodes')()
+const DashboardHostsLazyRouteImport = createFileRoute('/_dashboard/hosts')()
+const DashboardAdminsLazyRouteImport = createFileRoute('/_dashboard/admins')()
 
-// Create Virtual Routes
-
-const DashboardIndexLazyImport = createFileRoute('/_dashboard/')()
-const DashboardUsersLazyImport = createFileRoute('/_dashboard/users')()
-const DashboardSettingsLazyImport = createFileRoute('/_dashboard/settings')()
-const DashboardServicesLazyImport = createFileRoute('/_dashboard/services')()
-const DashboardNodesLazyImport = createFileRoute('/_dashboard/nodes')()
-const DashboardHostsLazyImport = createFileRoute('/_dashboard/hosts')()
-const DashboardAdminsLazyImport = createFileRoute('/_dashboard/admins')()
-
-// Create/Update Routes
-
-const DashboardRoute = DashboardImport.update({
+const DashboardRoute = DashboardRouteImport.update({
   id: '/_dashboard',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const AuthRoute = AuthImport.update({
+const AuthRoute = AuthRouteImport.update({
   id: '/_auth',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const DashboardIndexLazyRoute = DashboardIndexLazyImport.update({
+const DashboardIndexLazyRoute = DashboardIndexLazyRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => DashboardRoute,
 } as any).lazy(() =>
   import('./routes/_dashboard/index.lazy').then((d) => d.Route),
 )
-
-const DashboardUsersLazyRoute = DashboardUsersLazyImport.update({
+const DashboardUsersLazyRoute = DashboardUsersLazyRouteImport.update({
   id: '/users',
   path: '/users',
   getParentRoute: () => DashboardRoute,
 } as any).lazy(() =>
   import('./routes/_dashboard/users.lazy').then((d) => d.Route),
 )
-
-const DashboardSettingsLazyRoute = DashboardSettingsLazyImport.update({
+const DashboardSettingsLazyRoute = DashboardSettingsLazyRouteImport.update({
   id: '/settings',
   path: '/settings',
   getParentRoute: () => DashboardRoute,
 } as any).lazy(() =>
   import('./routes/_dashboard/settings.lazy').then((d) => d.Route),
 )
-
-const DashboardServicesLazyRoute = DashboardServicesLazyImport.update({
+const DashboardServicesLazyRoute = DashboardServicesLazyRouteImport.update({
   id: '/services',
   path: '/services',
   getParentRoute: () => DashboardRoute,
 } as any).lazy(() =>
   import('./routes/_dashboard/services.lazy').then((d) => d.Route),
 )
-
-const DashboardNodesLazyRoute = DashboardNodesLazyImport.update({
+const DashboardNodesLazyRoute = DashboardNodesLazyRouteImport.update({
   id: '/nodes',
   path: '/nodes',
   getParentRoute: () => DashboardRoute,
 } as any).lazy(() =>
   import('./routes/_dashboard/nodes.lazy').then((d) => d.Route),
 )
-
-const DashboardHostsLazyRoute = DashboardHostsLazyImport.update({
+const DashboardHostsLazyRoute = DashboardHostsLazyRouteImport.update({
   id: '/hosts',
   path: '/hosts',
   getParentRoute: () => DashboardRoute,
 } as any).lazy(() =>
   import('./routes/_dashboard/hosts.lazy').then((d) => d.Route),
 )
-
-const DashboardAdminsLazyRoute = DashboardAdminsLazyImport.update({
+const DashboardAdminsLazyRoute = DashboardAdminsLazyRouteImport.update({
   id: '/admins',
   path: '/admins',
   getParentRoute: () => DashboardRoute,
 } as any).lazy(() =>
   import('./routes/_dashboard/admins.lazy').then((d) => d.Route),
 )
-
-const AuthLoginRoute = AuthLoginImport.update({
+const AuthLoginRoute = AuthLoginRouteImport.update({
   id: '/login',
   path: '/login',
   getParentRoute: () => AuthRoute,
 } as any)
-
-const DashboardUsersCreateRoute = DashboardUsersCreateImport.update({
+const DashboardUsersCreateRoute = DashboardUsersCreateRouteImport.update({
   id: '/create',
   path: '/create',
   getParentRoute: () => DashboardUsersLazyRoute,
 } as any)
-
-const DashboardUsersUserIdRoute = DashboardUsersUserIdImport.update({
+const DashboardUsersUserIdRoute = DashboardUsersUserIdRouteImport.update({
   id: '/$userId',
   path: '/$userId',
   getParentRoute: () => DashboardUsersLazyRoute,
 } as any)
-
-const DashboardServicesCreateRoute = DashboardServicesCreateImport.update({
+const DashboardServicesCreateRoute = DashboardServicesCreateRouteImport.update({
   id: '/create',
   path: '/create',
   getParentRoute: () => DashboardServicesLazyRoute,
 } as any)
-
-const DashboardServicesServiceIdRoute = DashboardServicesServiceIdImport.update(
-  {
+const DashboardServicesServiceIdRoute =
+  DashboardServicesServiceIdRouteImport.update({
     id: '/$serviceId',
     path: '/$serviceId',
     getParentRoute: () => DashboardServicesLazyRoute,
-  } as any,
-)
-
-const DashboardNodesCreateRoute = DashboardNodesCreateImport.update({
+  } as any)
+const DashboardNodesCreateRoute = DashboardNodesCreateRouteImport.update({
   id: '/create',
   path: '/create',
   getParentRoute: () => DashboardNodesLazyRoute,
 } as any)
-
-const DashboardNodesNodeIdRoute = DashboardNodesNodeIdImport.update({
+const DashboardNodesNodeIdRoute = DashboardNodesNodeIdRouteImport.update({
   id: '/$nodeId',
   path: '/$nodeId',
   getParentRoute: () => DashboardNodesLazyRoute,
 } as any)
-
-const DashboardHostsHostIdRoute = DashboardHostsHostIdImport.update({
+const DashboardHostsHostIdRoute = DashboardHostsHostIdRouteImport.update({
   id: '/$hostId',
   path: '/$hostId',
   getParentRoute: () => DashboardHostsLazyRoute,
 } as any)
-
-const DashboardAdminsCreateRoute = DashboardAdminsCreateImport.update({
+const DashboardAdminsCreateRoute = DashboardAdminsCreateRouteImport.update({
   id: '/create',
   path: '/create',
   getParentRoute: () => DashboardAdminsLazyRoute,
 } as any)
-
-const DashboardAdminsAdminIdRoute = DashboardAdminsAdminIdImport.update({
+const DashboardAdminsAdminIdRoute = DashboardAdminsAdminIdRouteImport.update({
   id: '/$adminId',
   path: '/$adminId',
   getParentRoute: () => DashboardAdminsLazyRoute,
 } as any)
-
-const DashboardUsersUserIdIndexRoute = DashboardUsersUserIdIndexImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => DashboardUsersUserIdRoute,
-} as any)
-
+const DashboardUsersUserIdIndexRoute =
+  DashboardUsersUserIdIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => DashboardUsersUserIdRoute,
+  } as any)
 const DashboardServicesServiceIdIndexRoute =
-  DashboardServicesServiceIdIndexImport.update({
+  DashboardServicesServiceIdIndexRouteImport.update({
     id: '/',
     path: '/',
     getParentRoute: () => DashboardServicesServiceIdRoute,
   } as any)
-
-const DashboardNodesNodeIdIndexRoute = DashboardNodesNodeIdIndexImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => DashboardNodesNodeIdRoute,
-} as any)
-
-const DashboardHostsHostIdIndexRoute = DashboardHostsHostIdIndexImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => DashboardHostsHostIdRoute,
-} as any)
-
+const DashboardNodesNodeIdIndexRoute =
+  DashboardNodesNodeIdIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => DashboardNodesNodeIdRoute,
+  } as any)
+const DashboardHostsHostIdIndexRoute =
+  DashboardHostsHostIdIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => DashboardHostsHostIdRoute,
+  } as any)
 const DashboardAdminsAdminIdIndexRoute =
-  DashboardAdminsAdminIdIndexImport.update({
+  DashboardAdminsAdminIdIndexRouteImport.update({
     id: '/',
     path: '/',
     getParentRoute: () => DashboardAdminsAdminIdRoute,
   } as any)
-
-const DashboardUsersUserIdEditRoute = DashboardUsersUserIdEditImport.update({
-  id: '/edit',
-  path: '/edit',
-  getParentRoute: () => DashboardUsersUserIdRoute,
-} as any)
-
-const DashboardUsersUserIdDeleteRoute = DashboardUsersUserIdDeleteImport.update(
-  {
+const DashboardUsersUserIdEditRoute =
+  DashboardUsersUserIdEditRouteImport.update({
+    id: '/edit',
+    path: '/edit',
+    getParentRoute: () => DashboardUsersUserIdRoute,
+  } as any)
+const DashboardUsersUserIdDeleteRoute =
+  DashboardUsersUserIdDeleteRouteImport.update({
     id: '/delete',
     path: '/delete',
     getParentRoute: () => DashboardUsersUserIdRoute,
-  } as any,
-)
-
+  } as any)
 const DashboardServicesServiceIdEditRoute =
-  DashboardServicesServiceIdEditImport.update({
+  DashboardServicesServiceIdEditRouteImport.update({
     id: '/edit',
     path: '/edit',
     getParentRoute: () => DashboardServicesServiceIdRoute,
   } as any)
-
 const DashboardServicesServiceIdDeleteRoute =
-  DashboardServicesServiceIdDeleteImport.update({
+  DashboardServicesServiceIdDeleteRouteImport.update({
     id: '/delete',
     path: '/delete',
     getParentRoute: () => DashboardServicesServiceIdRoute,
   } as any)
-
-const DashboardNodesNodeIdEditRoute = DashboardNodesNodeIdEditImport.update({
-  id: '/edit',
-  path: '/edit',
-  getParentRoute: () => DashboardNodesNodeIdRoute,
-} as any)
-
-const DashboardNodesNodeIdDeleteRoute = DashboardNodesNodeIdDeleteImport.update(
-  {
+const DashboardNodesNodeIdEditRoute =
+  DashboardNodesNodeIdEditRouteImport.update({
+    id: '/edit',
+    path: '/edit',
+    getParentRoute: () => DashboardNodesNodeIdRoute,
+  } as any)
+const DashboardNodesNodeIdDeleteRoute =
+  DashboardNodesNodeIdDeleteRouteImport.update({
     id: '/delete',
     path: '/delete',
     getParentRoute: () => DashboardNodesNodeIdRoute,
-  } as any,
-)
-
+  } as any)
 const DashboardHostsInboundIdCreateRoute =
-  DashboardHostsInboundIdCreateImport.update({
+  DashboardHostsInboundIdCreateRouteImport.update({
     id: '/$inboundId/create',
     path: '/$inboundId/create',
     getParentRoute: () => DashboardHostsLazyRoute,
   } as any)
-
-const DashboardHostsHostIdEditRoute = DashboardHostsHostIdEditImport.update({
-  id: '/edit',
-  path: '/edit',
-  getParentRoute: () => DashboardHostsHostIdRoute,
-} as any)
-
-const DashboardHostsHostIdDeleteRoute = DashboardHostsHostIdDeleteImport.update(
-  {
+const DashboardHostsHostIdEditRoute =
+  DashboardHostsHostIdEditRouteImport.update({
+    id: '/edit',
+    path: '/edit',
+    getParentRoute: () => DashboardHostsHostIdRoute,
+  } as any)
+const DashboardHostsHostIdDeleteRoute =
+  DashboardHostsHostIdDeleteRouteImport.update({
     id: '/delete',
     path: '/delete',
     getParentRoute: () => DashboardHostsHostIdRoute,
-  } as any,
-)
-
-const DashboardAdminsAdminIdEditRoute = DashboardAdminsAdminIdEditImport.update(
-  {
+  } as any)
+const DashboardAdminsAdminIdEditRoute =
+  DashboardAdminsAdminIdEditRouteImport.update({
     id: '/edit',
     path: '/edit',
     getParentRoute: () => DashboardAdminsAdminIdRoute,
-  } as any,
-)
-
+  } as any)
 const DashboardAdminsAdminIdDeleteRoute =
-  DashboardAdminsAdminIdDeleteImport.update({
+  DashboardAdminsAdminIdDeleteRouteImport.update({
     id: '/delete',
     path: '/delete',
     getParentRoute: () => DashboardAdminsAdminIdRoute,
   } as any)
 
-// Populate the FileRoutesByPath interface
+export interface FileRoutesByFullPath {
+  '/login': typeof AuthLoginRoute
+  '/admins': typeof DashboardAdminsLazyRouteWithChildren
+  '/hosts': typeof DashboardHostsLazyRouteWithChildren
+  '/nodes': typeof DashboardNodesLazyRouteWithChildren
+  '/services': typeof DashboardServicesLazyRouteWithChildren
+  '/settings': typeof DashboardSettingsLazyRoute
+  '/users': typeof DashboardUsersLazyRouteWithChildren
+  '/': typeof DashboardIndexLazyRoute
+  '/admins/$adminId': typeof DashboardAdminsAdminIdRouteWithChildren
+  '/admins/create': typeof DashboardAdminsCreateRoute
+  '/hosts/$hostId': typeof DashboardHostsHostIdRouteWithChildren
+  '/nodes/$nodeId': typeof DashboardNodesNodeIdRouteWithChildren
+  '/nodes/create': typeof DashboardNodesCreateRoute
+  '/services/$serviceId': typeof DashboardServicesServiceIdRouteWithChildren
+  '/services/create': typeof DashboardServicesCreateRoute
+  '/users/$userId': typeof DashboardUsersUserIdRouteWithChildren
+  '/users/create': typeof DashboardUsersCreateRoute
+  '/admins/$adminId/delete': typeof DashboardAdminsAdminIdDeleteRoute
+  '/admins/$adminId/edit': typeof DashboardAdminsAdminIdEditRoute
+  '/hosts/$hostId/delete': typeof DashboardHostsHostIdDeleteRoute
+  '/hosts/$hostId/edit': typeof DashboardHostsHostIdEditRoute
+  '/hosts/$inboundId/create': typeof DashboardHostsInboundIdCreateRoute
+  '/nodes/$nodeId/delete': typeof DashboardNodesNodeIdDeleteRoute
+  '/nodes/$nodeId/edit': typeof DashboardNodesNodeIdEditRoute
+  '/services/$serviceId/delete': typeof DashboardServicesServiceIdDeleteRoute
+  '/services/$serviceId/edit': typeof DashboardServicesServiceIdEditRoute
+  '/users/$userId/delete': typeof DashboardUsersUserIdDeleteRoute
+  '/users/$userId/edit': typeof DashboardUsersUserIdEditRoute
+  '/admins/$adminId/': typeof DashboardAdminsAdminIdIndexRoute
+  '/hosts/$hostId/': typeof DashboardHostsHostIdIndexRoute
+  '/nodes/$nodeId/': typeof DashboardNodesNodeIdIndexRoute
+  '/services/$serviceId/': typeof DashboardServicesServiceIdIndexRoute
+  '/users/$userId/': typeof DashboardUsersUserIdIndexRoute
+}
+export interface FileRoutesByTo {
+  '/login': typeof AuthLoginRoute
+  '/admins': typeof DashboardAdminsLazyRouteWithChildren
+  '/hosts': typeof DashboardHostsLazyRouteWithChildren
+  '/nodes': typeof DashboardNodesLazyRouteWithChildren
+  '/services': typeof DashboardServicesLazyRouteWithChildren
+  '/settings': typeof DashboardSettingsLazyRoute
+  '/users': typeof DashboardUsersLazyRouteWithChildren
+  '/': typeof DashboardIndexLazyRoute
+  '/admins/create': typeof DashboardAdminsCreateRoute
+  '/nodes/create': typeof DashboardNodesCreateRoute
+  '/services/create': typeof DashboardServicesCreateRoute
+  '/users/create': typeof DashboardUsersCreateRoute
+  '/admins/$adminId/delete': typeof DashboardAdminsAdminIdDeleteRoute
+  '/admins/$adminId/edit': typeof DashboardAdminsAdminIdEditRoute
+  '/hosts/$hostId/delete': typeof DashboardHostsHostIdDeleteRoute
+  '/hosts/$hostId/edit': typeof DashboardHostsHostIdEditRoute
+  '/hosts/$inboundId/create': typeof DashboardHostsInboundIdCreateRoute
+  '/nodes/$nodeId/delete': typeof DashboardNodesNodeIdDeleteRoute
+  '/nodes/$nodeId/edit': typeof DashboardNodesNodeIdEditRoute
+  '/services/$serviceId/delete': typeof DashboardServicesServiceIdDeleteRoute
+  '/services/$serviceId/edit': typeof DashboardServicesServiceIdEditRoute
+  '/users/$userId/delete': typeof DashboardUsersUserIdDeleteRoute
+  '/users/$userId/edit': typeof DashboardUsersUserIdEditRoute
+  '/admins/$adminId': typeof DashboardAdminsAdminIdIndexRoute
+  '/hosts/$hostId': typeof DashboardHostsHostIdIndexRoute
+  '/nodes/$nodeId': typeof DashboardNodesNodeIdIndexRoute
+  '/services/$serviceId': typeof DashboardServicesServiceIdIndexRoute
+  '/users/$userId': typeof DashboardUsersUserIdIndexRoute
+}
+export interface FileRoutesById {
+  __root__: typeof rootRouteImport
+  '/_auth': typeof AuthRouteWithChildren
+  '/_dashboard': typeof DashboardRouteWithChildren
+  '/_auth/login': typeof AuthLoginRoute
+  '/_dashboard/admins': typeof DashboardAdminsLazyRouteWithChildren
+  '/_dashboard/hosts': typeof DashboardHostsLazyRouteWithChildren
+  '/_dashboard/nodes': typeof DashboardNodesLazyRouteWithChildren
+  '/_dashboard/services': typeof DashboardServicesLazyRouteWithChildren
+  '/_dashboard/settings': typeof DashboardSettingsLazyRoute
+  '/_dashboard/users': typeof DashboardUsersLazyRouteWithChildren
+  '/_dashboard/': typeof DashboardIndexLazyRoute
+  '/_dashboard/admins/$adminId': typeof DashboardAdminsAdminIdRouteWithChildren
+  '/_dashboard/admins/create': typeof DashboardAdminsCreateRoute
+  '/_dashboard/hosts/$hostId': typeof DashboardHostsHostIdRouteWithChildren
+  '/_dashboard/nodes/$nodeId': typeof DashboardNodesNodeIdRouteWithChildren
+  '/_dashboard/nodes/create': typeof DashboardNodesCreateRoute
+  '/_dashboard/services/$serviceId': typeof DashboardServicesServiceIdRouteWithChildren
+  '/_dashboard/services/create': typeof DashboardServicesCreateRoute
+  '/_dashboard/users/$userId': typeof DashboardUsersUserIdRouteWithChildren
+  '/_dashboard/users/create': typeof DashboardUsersCreateRoute
+  '/_dashboard/admins/$adminId/delete': typeof DashboardAdminsAdminIdDeleteRoute
+  '/_dashboard/admins/$adminId/edit': typeof DashboardAdminsAdminIdEditRoute
+  '/_dashboard/hosts/$hostId/delete': typeof DashboardHostsHostIdDeleteRoute
+  '/_dashboard/hosts/$hostId/edit': typeof DashboardHostsHostIdEditRoute
+  '/_dashboard/hosts/$inboundId/create': typeof DashboardHostsInboundIdCreateRoute
+  '/_dashboard/nodes/$nodeId/delete': typeof DashboardNodesNodeIdDeleteRoute
+  '/_dashboard/nodes/$nodeId/edit': typeof DashboardNodesNodeIdEditRoute
+  '/_dashboard/services/$serviceId/delete': typeof DashboardServicesServiceIdDeleteRoute
+  '/_dashboard/services/$serviceId/edit': typeof DashboardServicesServiceIdEditRoute
+  '/_dashboard/users/$userId/delete': typeof DashboardUsersUserIdDeleteRoute
+  '/_dashboard/users/$userId/edit': typeof DashboardUsersUserIdEditRoute
+  '/_dashboard/admins/$adminId/': typeof DashboardAdminsAdminIdIndexRoute
+  '/_dashboard/hosts/$hostId/': typeof DashboardHostsHostIdIndexRoute
+  '/_dashboard/nodes/$nodeId/': typeof DashboardNodesNodeIdIndexRoute
+  '/_dashboard/services/$serviceId/': typeof DashboardServicesServiceIdIndexRoute
+  '/_dashboard/users/$userId/': typeof DashboardUsersUserIdIndexRoute
+}
+export interface FileRouteTypes {
+  fileRoutesByFullPath: FileRoutesByFullPath
+  fullPaths:
+    | '/login'
+    | '/admins'
+    | '/hosts'
+    | '/nodes'
+    | '/services'
+    | '/settings'
+    | '/users'
+    | '/'
+    | '/admins/$adminId'
+    | '/admins/create'
+    | '/hosts/$hostId'
+    | '/nodes/$nodeId'
+    | '/nodes/create'
+    | '/services/$serviceId'
+    | '/services/create'
+    | '/users/$userId'
+    | '/users/create'
+    | '/admins/$adminId/delete'
+    | '/admins/$adminId/edit'
+    | '/hosts/$hostId/delete'
+    | '/hosts/$hostId/edit'
+    | '/hosts/$inboundId/create'
+    | '/nodes/$nodeId/delete'
+    | '/nodes/$nodeId/edit'
+    | '/services/$serviceId/delete'
+    | '/services/$serviceId/edit'
+    | '/users/$userId/delete'
+    | '/users/$userId/edit'
+    | '/admins/$adminId/'
+    | '/hosts/$hostId/'
+    | '/nodes/$nodeId/'
+    | '/services/$serviceId/'
+    | '/users/$userId/'
+  fileRoutesByTo: FileRoutesByTo
+  to:
+    | '/login'
+    | '/admins'
+    | '/hosts'
+    | '/nodes'
+    | '/services'
+    | '/settings'
+    | '/users'
+    | '/'
+    | '/admins/create'
+    | '/nodes/create'
+    | '/services/create'
+    | '/users/create'
+    | '/admins/$adminId/delete'
+    | '/admins/$adminId/edit'
+    | '/hosts/$hostId/delete'
+    | '/hosts/$hostId/edit'
+    | '/hosts/$inboundId/create'
+    | '/nodes/$nodeId/delete'
+    | '/nodes/$nodeId/edit'
+    | '/services/$serviceId/delete'
+    | '/services/$serviceId/edit'
+    | '/users/$userId/delete'
+    | '/users/$userId/edit'
+    | '/admins/$adminId'
+    | '/hosts/$hostId'
+    | '/nodes/$nodeId'
+    | '/services/$serviceId'
+    | '/users/$userId'
+  id:
+    | '__root__'
+    | '/_auth'
+    | '/_dashboard'
+    | '/_auth/login'
+    | '/_dashboard/admins'
+    | '/_dashboard/hosts'
+    | '/_dashboard/nodes'
+    | '/_dashboard/services'
+    | '/_dashboard/settings'
+    | '/_dashboard/users'
+    | '/_dashboard/'
+    | '/_dashboard/admins/$adminId'
+    | '/_dashboard/admins/create'
+    | '/_dashboard/hosts/$hostId'
+    | '/_dashboard/nodes/$nodeId'
+    | '/_dashboard/nodes/create'
+    | '/_dashboard/services/$serviceId'
+    | '/_dashboard/services/create'
+    | '/_dashboard/users/$userId'
+    | '/_dashboard/users/create'
+    | '/_dashboard/admins/$adminId/delete'
+    | '/_dashboard/admins/$adminId/edit'
+    | '/_dashboard/hosts/$hostId/delete'
+    | '/_dashboard/hosts/$hostId/edit'
+    | '/_dashboard/hosts/$inboundId/create'
+    | '/_dashboard/nodes/$nodeId/delete'
+    | '/_dashboard/nodes/$nodeId/edit'
+    | '/_dashboard/services/$serviceId/delete'
+    | '/_dashboard/services/$serviceId/edit'
+    | '/_dashboard/users/$userId/delete'
+    | '/_dashboard/users/$userId/edit'
+    | '/_dashboard/admins/$adminId/'
+    | '/_dashboard/hosts/$hostId/'
+    | '/_dashboard/nodes/$nodeId/'
+    | '/_dashboard/services/$serviceId/'
+    | '/_dashboard/users/$userId/'
+  fileRoutesById: FileRoutesById
+}
+export interface RootRouteChildren {
+  AuthRoute: typeof AuthRouteWithChildren
+  DashboardRoute: typeof DashboardRouteWithChildren
+}
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/_auth': {
-      id: '/_auth'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof AuthImport
-      parentRoute: typeof rootRoute
-    }
     '/_dashboard': {
       id: '/_dashboard'
       path: ''
       fullPath: ''
-      preLoaderRoute: typeof DashboardImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/_auth/login': {
-      id: '/_auth/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof AuthLoginImport
-      parentRoute: typeof AuthImport
-    }
-    '/_dashboard/admins': {
-      id: '/_dashboard/admins'
-      path: '/admins'
-      fullPath: '/admins'
-      preLoaderRoute: typeof DashboardAdminsLazyImport
-      parentRoute: typeof DashboardImport
-    }
-    '/_dashboard/hosts': {
-      id: '/_dashboard/hosts'
-      path: '/hosts'
-      fullPath: '/hosts'
-      preLoaderRoute: typeof DashboardHostsLazyImport
-      parentRoute: typeof DashboardImport
-    }
-    '/_dashboard/nodes': {
-      id: '/_dashboard/nodes'
-      path: '/nodes'
-      fullPath: '/nodes'
-      preLoaderRoute: typeof DashboardNodesLazyImport
-      parentRoute: typeof DashboardImport
-    }
-    '/_dashboard/services': {
-      id: '/_dashboard/services'
-      path: '/services'
-      fullPath: '/services'
-      preLoaderRoute: typeof DashboardServicesLazyImport
-      parentRoute: typeof DashboardImport
-    }
-    '/_dashboard/settings': {
-      id: '/_dashboard/settings'
-      path: '/settings'
-      fullPath: '/settings'
-      preLoaderRoute: typeof DashboardSettingsLazyImport
-      parentRoute: typeof DashboardImport
-    }
-    '/_dashboard/users': {
-      id: '/_dashboard/users'
-      path: '/users'
-      fullPath: '/users'
-      preLoaderRoute: typeof DashboardUsersLazyImport
-      parentRoute: typeof DashboardImport
+    '/_auth': {
+      id: '/_auth'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_dashboard/': {
       id: '/_dashboard/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof DashboardIndexLazyImport
-      parentRoute: typeof DashboardImport
+      preLoaderRoute: typeof DashboardIndexLazyRouteImport
+      parentRoute: typeof DashboardRoute
     }
-    '/_dashboard/admins/$adminId': {
-      id: '/_dashboard/admins/$adminId'
-      path: '/$adminId'
-      fullPath: '/admins/$adminId'
-      preLoaderRoute: typeof DashboardAdminsAdminIdImport
-      parentRoute: typeof DashboardAdminsLazyImport
+    '/_dashboard/users': {
+      id: '/_dashboard/users'
+      path: '/users'
+      fullPath: '/users'
+      preLoaderRoute: typeof DashboardUsersLazyRouteImport
+      parentRoute: typeof DashboardRoute
     }
-    '/_dashboard/admins/create': {
-      id: '/_dashboard/admins/create'
-      path: '/create'
-      fullPath: '/admins/create'
-      preLoaderRoute: typeof DashboardAdminsCreateImport
-      parentRoute: typeof DashboardAdminsLazyImport
+    '/_dashboard/settings': {
+      id: '/_dashboard/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof DashboardSettingsLazyRouteImport
+      parentRoute: typeof DashboardRoute
     }
-    '/_dashboard/hosts/$hostId': {
-      id: '/_dashboard/hosts/$hostId'
-      path: '/$hostId'
-      fullPath: '/hosts/$hostId'
-      preLoaderRoute: typeof DashboardHostsHostIdImport
-      parentRoute: typeof DashboardHostsLazyImport
+    '/_dashboard/services': {
+      id: '/_dashboard/services'
+      path: '/services'
+      fullPath: '/services'
+      preLoaderRoute: typeof DashboardServicesLazyRouteImport
+      parentRoute: typeof DashboardRoute
     }
-    '/_dashboard/nodes/$nodeId': {
-      id: '/_dashboard/nodes/$nodeId'
-      path: '/$nodeId'
-      fullPath: '/nodes/$nodeId'
-      preLoaderRoute: typeof DashboardNodesNodeIdImport
-      parentRoute: typeof DashboardNodesLazyImport
+    '/_dashboard/nodes': {
+      id: '/_dashboard/nodes'
+      path: '/nodes'
+      fullPath: '/nodes'
+      preLoaderRoute: typeof DashboardNodesLazyRouteImport
+      parentRoute: typeof DashboardRoute
     }
-    '/_dashboard/nodes/create': {
-      id: '/_dashboard/nodes/create'
-      path: '/create'
-      fullPath: '/nodes/create'
-      preLoaderRoute: typeof DashboardNodesCreateImport
-      parentRoute: typeof DashboardNodesLazyImport
+    '/_dashboard/hosts': {
+      id: '/_dashboard/hosts'
+      path: '/hosts'
+      fullPath: '/hosts'
+      preLoaderRoute: typeof DashboardHostsLazyRouteImport
+      parentRoute: typeof DashboardRoute
     }
-    '/_dashboard/services/$serviceId': {
-      id: '/_dashboard/services/$serviceId'
-      path: '/$serviceId'
-      fullPath: '/services/$serviceId'
-      preLoaderRoute: typeof DashboardServicesServiceIdImport
-      parentRoute: typeof DashboardServicesLazyImport
+    '/_dashboard/admins': {
+      id: '/_dashboard/admins'
+      path: '/admins'
+      fullPath: '/admins'
+      preLoaderRoute: typeof DashboardAdminsLazyRouteImport
+      parentRoute: typeof DashboardRoute
     }
-    '/_dashboard/services/create': {
-      id: '/_dashboard/services/create'
-      path: '/create'
-      fullPath: '/services/create'
-      preLoaderRoute: typeof DashboardServicesCreateImport
-      parentRoute: typeof DashboardServicesLazyImport
-    }
-    '/_dashboard/users/$userId': {
-      id: '/_dashboard/users/$userId'
-      path: '/$userId'
-      fullPath: '/users/$userId'
-      preLoaderRoute: typeof DashboardUsersUserIdImport
-      parentRoute: typeof DashboardUsersLazyImport
+    '/_auth/login': {
+      id: '/_auth/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof AuthLoginRouteImport
+      parentRoute: typeof AuthRoute
     }
     '/_dashboard/users/create': {
       id: '/_dashboard/users/create'
       path: '/create'
       fullPath: '/users/create'
-      preLoaderRoute: typeof DashboardUsersCreateImport
-      parentRoute: typeof DashboardUsersLazyImport
+      preLoaderRoute: typeof DashboardUsersCreateRouteImport
+      parentRoute: typeof DashboardUsersLazyRoute
     }
-    '/_dashboard/admins/$adminId/delete': {
-      id: '/_dashboard/admins/$adminId/delete'
-      path: '/delete'
-      fullPath: '/admins/$adminId/delete'
-      preLoaderRoute: typeof DashboardAdminsAdminIdDeleteImport
-      parentRoute: typeof DashboardAdminsAdminIdImport
+    '/_dashboard/users/$userId': {
+      id: '/_dashboard/users/$userId'
+      path: '/$userId'
+      fullPath: '/users/$userId'
+      preLoaderRoute: typeof DashboardUsersUserIdRouteImport
+      parentRoute: typeof DashboardUsersLazyRoute
     }
-    '/_dashboard/admins/$adminId/edit': {
-      id: '/_dashboard/admins/$adminId/edit'
-      path: '/edit'
-      fullPath: '/admins/$adminId/edit'
-      preLoaderRoute: typeof DashboardAdminsAdminIdEditImport
-      parentRoute: typeof DashboardAdminsAdminIdImport
+    '/_dashboard/services/create': {
+      id: '/_dashboard/services/create'
+      path: '/create'
+      fullPath: '/services/create'
+      preLoaderRoute: typeof DashboardServicesCreateRouteImport
+      parentRoute: typeof DashboardServicesLazyRoute
     }
-    '/_dashboard/hosts/$hostId/delete': {
-      id: '/_dashboard/hosts/$hostId/delete'
-      path: '/delete'
-      fullPath: '/hosts/$hostId/delete'
-      preLoaderRoute: typeof DashboardHostsHostIdDeleteImport
-      parentRoute: typeof DashboardHostsHostIdImport
+    '/_dashboard/services/$serviceId': {
+      id: '/_dashboard/services/$serviceId'
+      path: '/$serviceId'
+      fullPath: '/services/$serviceId'
+      preLoaderRoute: typeof DashboardServicesServiceIdRouteImport
+      parentRoute: typeof DashboardServicesLazyRoute
     }
-    '/_dashboard/hosts/$hostId/edit': {
-      id: '/_dashboard/hosts/$hostId/edit'
-      path: '/edit'
-      fullPath: '/hosts/$hostId/edit'
-      preLoaderRoute: typeof DashboardHostsHostIdEditImport
-      parentRoute: typeof DashboardHostsHostIdImport
+    '/_dashboard/nodes/create': {
+      id: '/_dashboard/nodes/create'
+      path: '/create'
+      fullPath: '/nodes/create'
+      preLoaderRoute: typeof DashboardNodesCreateRouteImport
+      parentRoute: typeof DashboardNodesLazyRoute
     }
-    '/_dashboard/hosts/$inboundId/create': {
-      id: '/_dashboard/hosts/$inboundId/create'
-      path: '/$inboundId/create'
-      fullPath: '/hosts/$inboundId/create'
-      preLoaderRoute: typeof DashboardHostsInboundIdCreateImport
-      parentRoute: typeof DashboardHostsLazyImport
+    '/_dashboard/nodes/$nodeId': {
+      id: '/_dashboard/nodes/$nodeId'
+      path: '/$nodeId'
+      fullPath: '/nodes/$nodeId'
+      preLoaderRoute: typeof DashboardNodesNodeIdRouteImport
+      parentRoute: typeof DashboardNodesLazyRoute
     }
-    '/_dashboard/nodes/$nodeId/delete': {
-      id: '/_dashboard/nodes/$nodeId/delete'
-      path: '/delete'
-      fullPath: '/nodes/$nodeId/delete'
-      preLoaderRoute: typeof DashboardNodesNodeIdDeleteImport
-      parentRoute: typeof DashboardNodesNodeIdImport
+    '/_dashboard/hosts/$hostId': {
+      id: '/_dashboard/hosts/$hostId'
+      path: '/$hostId'
+      fullPath: '/hosts/$hostId'
+      preLoaderRoute: typeof DashboardHostsHostIdRouteImport
+      parentRoute: typeof DashboardHostsLazyRoute
     }
-    '/_dashboard/nodes/$nodeId/edit': {
-      id: '/_dashboard/nodes/$nodeId/edit'
-      path: '/edit'
-      fullPath: '/nodes/$nodeId/edit'
-      preLoaderRoute: typeof DashboardNodesNodeIdEditImport
-      parentRoute: typeof DashboardNodesNodeIdImport
+    '/_dashboard/admins/create': {
+      id: '/_dashboard/admins/create'
+      path: '/create'
+      fullPath: '/admins/create'
+      preLoaderRoute: typeof DashboardAdminsCreateRouteImport
+      parentRoute: typeof DashboardAdminsLazyRoute
     }
-    '/_dashboard/services/$serviceId/delete': {
-      id: '/_dashboard/services/$serviceId/delete'
-      path: '/delete'
-      fullPath: '/services/$serviceId/delete'
-      preLoaderRoute: typeof DashboardServicesServiceIdDeleteImport
-      parentRoute: typeof DashboardServicesServiceIdImport
-    }
-    '/_dashboard/services/$serviceId/edit': {
-      id: '/_dashboard/services/$serviceId/edit'
-      path: '/edit'
-      fullPath: '/services/$serviceId/edit'
-      preLoaderRoute: typeof DashboardServicesServiceIdEditImport
-      parentRoute: typeof DashboardServicesServiceIdImport
-    }
-    '/_dashboard/users/$userId/delete': {
-      id: '/_dashboard/users/$userId/delete'
-      path: '/delete'
-      fullPath: '/users/$userId/delete'
-      preLoaderRoute: typeof DashboardUsersUserIdDeleteImport
-      parentRoute: typeof DashboardUsersUserIdImport
-    }
-    '/_dashboard/users/$userId/edit': {
-      id: '/_dashboard/users/$userId/edit'
-      path: '/edit'
-      fullPath: '/users/$userId/edit'
-      preLoaderRoute: typeof DashboardUsersUserIdEditImport
-      parentRoute: typeof DashboardUsersUserIdImport
-    }
-    '/_dashboard/admins/$adminId/': {
-      id: '/_dashboard/admins/$adminId/'
-      path: '/'
-      fullPath: '/admins/$adminId/'
-      preLoaderRoute: typeof DashboardAdminsAdminIdIndexImport
-      parentRoute: typeof DashboardAdminsAdminIdImport
-    }
-    '/_dashboard/hosts/$hostId/': {
-      id: '/_dashboard/hosts/$hostId/'
-      path: '/'
-      fullPath: '/hosts/$hostId/'
-      preLoaderRoute: typeof DashboardHostsHostIdIndexImport
-      parentRoute: typeof DashboardHostsHostIdImport
-    }
-    '/_dashboard/nodes/$nodeId/': {
-      id: '/_dashboard/nodes/$nodeId/'
-      path: '/'
-      fullPath: '/nodes/$nodeId/'
-      preLoaderRoute: typeof DashboardNodesNodeIdIndexImport
-      parentRoute: typeof DashboardNodesNodeIdImport
-    }
-    '/_dashboard/services/$serviceId/': {
-      id: '/_dashboard/services/$serviceId/'
-      path: '/'
-      fullPath: '/services/$serviceId/'
-      preLoaderRoute: typeof DashboardServicesServiceIdIndexImport
-      parentRoute: typeof DashboardServicesServiceIdImport
+    '/_dashboard/admins/$adminId': {
+      id: '/_dashboard/admins/$adminId'
+      path: '/$adminId'
+      fullPath: '/admins/$adminId'
+      preLoaderRoute: typeof DashboardAdminsAdminIdRouteImport
+      parentRoute: typeof DashboardAdminsLazyRoute
     }
     '/_dashboard/users/$userId/': {
       id: '/_dashboard/users/$userId/'
       path: '/'
       fullPath: '/users/$userId/'
-      preLoaderRoute: typeof DashboardUsersUserIdIndexImport
-      parentRoute: typeof DashboardUsersUserIdImport
+      preLoaderRoute: typeof DashboardUsersUserIdIndexRouteImport
+      parentRoute: typeof DashboardUsersUserIdRoute
+    }
+    '/_dashboard/services/$serviceId/': {
+      id: '/_dashboard/services/$serviceId/'
+      path: '/'
+      fullPath: '/services/$serviceId/'
+      preLoaderRoute: typeof DashboardServicesServiceIdIndexRouteImport
+      parentRoute: typeof DashboardServicesServiceIdRoute
+    }
+    '/_dashboard/nodes/$nodeId/': {
+      id: '/_dashboard/nodes/$nodeId/'
+      path: '/'
+      fullPath: '/nodes/$nodeId/'
+      preLoaderRoute: typeof DashboardNodesNodeIdIndexRouteImport
+      parentRoute: typeof DashboardNodesNodeIdRoute
+    }
+    '/_dashboard/hosts/$hostId/': {
+      id: '/_dashboard/hosts/$hostId/'
+      path: '/'
+      fullPath: '/hosts/$hostId/'
+      preLoaderRoute: typeof DashboardHostsHostIdIndexRouteImport
+      parentRoute: typeof DashboardHostsHostIdRoute
+    }
+    '/_dashboard/admins/$adminId/': {
+      id: '/_dashboard/admins/$adminId/'
+      path: '/'
+      fullPath: '/admins/$adminId/'
+      preLoaderRoute: typeof DashboardAdminsAdminIdIndexRouteImport
+      parentRoute: typeof DashboardAdminsAdminIdRoute
+    }
+    '/_dashboard/users/$userId/edit': {
+      id: '/_dashboard/users/$userId/edit'
+      path: '/edit'
+      fullPath: '/users/$userId/edit'
+      preLoaderRoute: typeof DashboardUsersUserIdEditRouteImport
+      parentRoute: typeof DashboardUsersUserIdRoute
+    }
+    '/_dashboard/users/$userId/delete': {
+      id: '/_dashboard/users/$userId/delete'
+      path: '/delete'
+      fullPath: '/users/$userId/delete'
+      preLoaderRoute: typeof DashboardUsersUserIdDeleteRouteImport
+      parentRoute: typeof DashboardUsersUserIdRoute
+    }
+    '/_dashboard/services/$serviceId/edit': {
+      id: '/_dashboard/services/$serviceId/edit'
+      path: '/edit'
+      fullPath: '/services/$serviceId/edit'
+      preLoaderRoute: typeof DashboardServicesServiceIdEditRouteImport
+      parentRoute: typeof DashboardServicesServiceIdRoute
+    }
+    '/_dashboard/services/$serviceId/delete': {
+      id: '/_dashboard/services/$serviceId/delete'
+      path: '/delete'
+      fullPath: '/services/$serviceId/delete'
+      preLoaderRoute: typeof DashboardServicesServiceIdDeleteRouteImport
+      parentRoute: typeof DashboardServicesServiceIdRoute
+    }
+    '/_dashboard/nodes/$nodeId/edit': {
+      id: '/_dashboard/nodes/$nodeId/edit'
+      path: '/edit'
+      fullPath: '/nodes/$nodeId/edit'
+      preLoaderRoute: typeof DashboardNodesNodeIdEditRouteImport
+      parentRoute: typeof DashboardNodesNodeIdRoute
+    }
+    '/_dashboard/nodes/$nodeId/delete': {
+      id: '/_dashboard/nodes/$nodeId/delete'
+      path: '/delete'
+      fullPath: '/nodes/$nodeId/delete'
+      preLoaderRoute: typeof DashboardNodesNodeIdDeleteRouteImport
+      parentRoute: typeof DashboardNodesNodeIdRoute
+    }
+    '/_dashboard/hosts/$inboundId/create': {
+      id: '/_dashboard/hosts/$inboundId/create'
+      path: '/$inboundId/create'
+      fullPath: '/hosts/$inboundId/create'
+      preLoaderRoute: typeof DashboardHostsInboundIdCreateRouteImport
+      parentRoute: typeof DashboardHostsLazyRoute
+    }
+    '/_dashboard/hosts/$hostId/edit': {
+      id: '/_dashboard/hosts/$hostId/edit'
+      path: '/edit'
+      fullPath: '/hosts/$hostId/edit'
+      preLoaderRoute: typeof DashboardHostsHostIdEditRouteImport
+      parentRoute: typeof DashboardHostsHostIdRoute
+    }
+    '/_dashboard/hosts/$hostId/delete': {
+      id: '/_dashboard/hosts/$hostId/delete'
+      path: '/delete'
+      fullPath: '/hosts/$hostId/delete'
+      preLoaderRoute: typeof DashboardHostsHostIdDeleteRouteImport
+      parentRoute: typeof DashboardHostsHostIdRoute
+    }
+    '/_dashboard/admins/$adminId/edit': {
+      id: '/_dashboard/admins/$adminId/edit'
+      path: '/edit'
+      fullPath: '/admins/$adminId/edit'
+      preLoaderRoute: typeof DashboardAdminsAdminIdEditRouteImport
+      parentRoute: typeof DashboardAdminsAdminIdRoute
+    }
+    '/_dashboard/admins/$adminId/delete': {
+      id: '/_dashboard/admins/$adminId/delete'
+      path: '/delete'
+      fullPath: '/admins/$adminId/delete'
+      preLoaderRoute: typeof DashboardAdminsAdminIdDeleteRouteImport
+      parentRoute: typeof DashboardAdminsAdminIdRoute
     }
   }
 }
-
-// Create and export the route tree
 
 interface AuthRouteChildren {
   AuthLoginRoute: typeof AuthLoginRoute
@@ -729,441 +903,10 @@ const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
   DashboardRouteChildren,
 )
 
-export interface FileRoutesByFullPath {
-  '': typeof DashboardRouteWithChildren
-  '/login': typeof AuthLoginRoute
-  '/admins': typeof DashboardAdminsLazyRouteWithChildren
-  '/hosts': typeof DashboardHostsLazyRouteWithChildren
-  '/nodes': typeof DashboardNodesLazyRouteWithChildren
-  '/services': typeof DashboardServicesLazyRouteWithChildren
-  '/settings': typeof DashboardSettingsLazyRoute
-  '/users': typeof DashboardUsersLazyRouteWithChildren
-  '/': typeof DashboardIndexLazyRoute
-  '/admins/$adminId': typeof DashboardAdminsAdminIdRouteWithChildren
-  '/admins/create': typeof DashboardAdminsCreateRoute
-  '/hosts/$hostId': typeof DashboardHostsHostIdRouteWithChildren
-  '/nodes/$nodeId': typeof DashboardNodesNodeIdRouteWithChildren
-  '/nodes/create': typeof DashboardNodesCreateRoute
-  '/services/$serviceId': typeof DashboardServicesServiceIdRouteWithChildren
-  '/services/create': typeof DashboardServicesCreateRoute
-  '/users/$userId': typeof DashboardUsersUserIdRouteWithChildren
-  '/users/create': typeof DashboardUsersCreateRoute
-  '/admins/$adminId/delete': typeof DashboardAdminsAdminIdDeleteRoute
-  '/admins/$adminId/edit': typeof DashboardAdminsAdminIdEditRoute
-  '/hosts/$hostId/delete': typeof DashboardHostsHostIdDeleteRoute
-  '/hosts/$hostId/edit': typeof DashboardHostsHostIdEditRoute
-  '/hosts/$inboundId/create': typeof DashboardHostsInboundIdCreateRoute
-  '/nodes/$nodeId/delete': typeof DashboardNodesNodeIdDeleteRoute
-  '/nodes/$nodeId/edit': typeof DashboardNodesNodeIdEditRoute
-  '/services/$serviceId/delete': typeof DashboardServicesServiceIdDeleteRoute
-  '/services/$serviceId/edit': typeof DashboardServicesServiceIdEditRoute
-  '/users/$userId/delete': typeof DashboardUsersUserIdDeleteRoute
-  '/users/$userId/edit': typeof DashboardUsersUserIdEditRoute
-  '/admins/$adminId/': typeof DashboardAdminsAdminIdIndexRoute
-  '/hosts/$hostId/': typeof DashboardHostsHostIdIndexRoute
-  '/nodes/$nodeId/': typeof DashboardNodesNodeIdIndexRoute
-  '/services/$serviceId/': typeof DashboardServicesServiceIdIndexRoute
-  '/users/$userId/': typeof DashboardUsersUserIdIndexRoute
-}
-
-export interface FileRoutesByTo {
-  '': typeof AuthRouteWithChildren
-  '/login': typeof AuthLoginRoute
-  '/admins': typeof DashboardAdminsLazyRouteWithChildren
-  '/hosts': typeof DashboardHostsLazyRouteWithChildren
-  '/nodes': typeof DashboardNodesLazyRouteWithChildren
-  '/services': typeof DashboardServicesLazyRouteWithChildren
-  '/settings': typeof DashboardSettingsLazyRoute
-  '/users': typeof DashboardUsersLazyRouteWithChildren
-  '/': typeof DashboardIndexLazyRoute
-  '/admins/create': typeof DashboardAdminsCreateRoute
-  '/nodes/create': typeof DashboardNodesCreateRoute
-  '/services/create': typeof DashboardServicesCreateRoute
-  '/users/create': typeof DashboardUsersCreateRoute
-  '/admins/$adminId/delete': typeof DashboardAdminsAdminIdDeleteRoute
-  '/admins/$adminId/edit': typeof DashboardAdminsAdminIdEditRoute
-  '/hosts/$hostId/delete': typeof DashboardHostsHostIdDeleteRoute
-  '/hosts/$hostId/edit': typeof DashboardHostsHostIdEditRoute
-  '/hosts/$inboundId/create': typeof DashboardHostsInboundIdCreateRoute
-  '/nodes/$nodeId/delete': typeof DashboardNodesNodeIdDeleteRoute
-  '/nodes/$nodeId/edit': typeof DashboardNodesNodeIdEditRoute
-  '/services/$serviceId/delete': typeof DashboardServicesServiceIdDeleteRoute
-  '/services/$serviceId/edit': typeof DashboardServicesServiceIdEditRoute
-  '/users/$userId/delete': typeof DashboardUsersUserIdDeleteRoute
-  '/users/$userId/edit': typeof DashboardUsersUserIdEditRoute
-  '/admins/$adminId': typeof DashboardAdminsAdminIdIndexRoute
-  '/hosts/$hostId': typeof DashboardHostsHostIdIndexRoute
-  '/nodes/$nodeId': typeof DashboardNodesNodeIdIndexRoute
-  '/services/$serviceId': typeof DashboardServicesServiceIdIndexRoute
-  '/users/$userId': typeof DashboardUsersUserIdIndexRoute
-}
-
-export interface FileRoutesById {
-  __root__: typeof rootRoute
-  '/_auth': typeof AuthRouteWithChildren
-  '/_dashboard': typeof DashboardRouteWithChildren
-  '/_auth/login': typeof AuthLoginRoute
-  '/_dashboard/admins': typeof DashboardAdminsLazyRouteWithChildren
-  '/_dashboard/hosts': typeof DashboardHostsLazyRouteWithChildren
-  '/_dashboard/nodes': typeof DashboardNodesLazyRouteWithChildren
-  '/_dashboard/services': typeof DashboardServicesLazyRouteWithChildren
-  '/_dashboard/settings': typeof DashboardSettingsLazyRoute
-  '/_dashboard/users': typeof DashboardUsersLazyRouteWithChildren
-  '/_dashboard/': typeof DashboardIndexLazyRoute
-  '/_dashboard/admins/$adminId': typeof DashboardAdminsAdminIdRouteWithChildren
-  '/_dashboard/admins/create': typeof DashboardAdminsCreateRoute
-  '/_dashboard/hosts/$hostId': typeof DashboardHostsHostIdRouteWithChildren
-  '/_dashboard/nodes/$nodeId': typeof DashboardNodesNodeIdRouteWithChildren
-  '/_dashboard/nodes/create': typeof DashboardNodesCreateRoute
-  '/_dashboard/services/$serviceId': typeof DashboardServicesServiceIdRouteWithChildren
-  '/_dashboard/services/create': typeof DashboardServicesCreateRoute
-  '/_dashboard/users/$userId': typeof DashboardUsersUserIdRouteWithChildren
-  '/_dashboard/users/create': typeof DashboardUsersCreateRoute
-  '/_dashboard/admins/$adminId/delete': typeof DashboardAdminsAdminIdDeleteRoute
-  '/_dashboard/admins/$adminId/edit': typeof DashboardAdminsAdminIdEditRoute
-  '/_dashboard/hosts/$hostId/delete': typeof DashboardHostsHostIdDeleteRoute
-  '/_dashboard/hosts/$hostId/edit': typeof DashboardHostsHostIdEditRoute
-  '/_dashboard/hosts/$inboundId/create': typeof DashboardHostsInboundIdCreateRoute
-  '/_dashboard/nodes/$nodeId/delete': typeof DashboardNodesNodeIdDeleteRoute
-  '/_dashboard/nodes/$nodeId/edit': typeof DashboardNodesNodeIdEditRoute
-  '/_dashboard/services/$serviceId/delete': typeof DashboardServicesServiceIdDeleteRoute
-  '/_dashboard/services/$serviceId/edit': typeof DashboardServicesServiceIdEditRoute
-  '/_dashboard/users/$userId/delete': typeof DashboardUsersUserIdDeleteRoute
-  '/_dashboard/users/$userId/edit': typeof DashboardUsersUserIdEditRoute
-  '/_dashboard/admins/$adminId/': typeof DashboardAdminsAdminIdIndexRoute
-  '/_dashboard/hosts/$hostId/': typeof DashboardHostsHostIdIndexRoute
-  '/_dashboard/nodes/$nodeId/': typeof DashboardNodesNodeIdIndexRoute
-  '/_dashboard/services/$serviceId/': typeof DashboardServicesServiceIdIndexRoute
-  '/_dashboard/users/$userId/': typeof DashboardUsersUserIdIndexRoute
-}
-
-export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | ''
-    | '/login'
-    | '/admins'
-    | '/hosts'
-    | '/nodes'
-    | '/services'
-    | '/settings'
-    | '/users'
-    | '/'
-    | '/admins/$adminId'
-    | '/admins/create'
-    | '/hosts/$hostId'
-    | '/nodes/$nodeId'
-    | '/nodes/create'
-    | '/services/$serviceId'
-    | '/services/create'
-    | '/users/$userId'
-    | '/users/create'
-    | '/admins/$adminId/delete'
-    | '/admins/$adminId/edit'
-    | '/hosts/$hostId/delete'
-    | '/hosts/$hostId/edit'
-    | '/hosts/$inboundId/create'
-    | '/nodes/$nodeId/delete'
-    | '/nodes/$nodeId/edit'
-    | '/services/$serviceId/delete'
-    | '/services/$serviceId/edit'
-    | '/users/$userId/delete'
-    | '/users/$userId/edit'
-    | '/admins/$adminId/'
-    | '/hosts/$hostId/'
-    | '/nodes/$nodeId/'
-    | '/services/$serviceId/'
-    | '/users/$userId/'
-  fileRoutesByTo: FileRoutesByTo
-  to:
-    | ''
-    | '/login'
-    | '/admins'
-    | '/hosts'
-    | '/nodes'
-    | '/services'
-    | '/settings'
-    | '/users'
-    | '/'
-    | '/admins/create'
-    | '/nodes/create'
-    | '/services/create'
-    | '/users/create'
-    | '/admins/$adminId/delete'
-    | '/admins/$adminId/edit'
-    | '/hosts/$hostId/delete'
-    | '/hosts/$hostId/edit'
-    | '/hosts/$inboundId/create'
-    | '/nodes/$nodeId/delete'
-    | '/nodes/$nodeId/edit'
-    | '/services/$serviceId/delete'
-    | '/services/$serviceId/edit'
-    | '/users/$userId/delete'
-    | '/users/$userId/edit'
-    | '/admins/$adminId'
-    | '/hosts/$hostId'
-    | '/nodes/$nodeId'
-    | '/services/$serviceId'
-    | '/users/$userId'
-  id:
-    | '__root__'
-    | '/_auth'
-    | '/_dashboard'
-    | '/_auth/login'
-    | '/_dashboard/admins'
-    | '/_dashboard/hosts'
-    | '/_dashboard/nodes'
-    | '/_dashboard/services'
-    | '/_dashboard/settings'
-    | '/_dashboard/users'
-    | '/_dashboard/'
-    | '/_dashboard/admins/$adminId'
-    | '/_dashboard/admins/create'
-    | '/_dashboard/hosts/$hostId'
-    | '/_dashboard/nodes/$nodeId'
-    | '/_dashboard/nodes/create'
-    | '/_dashboard/services/$serviceId'
-    | '/_dashboard/services/create'
-    | '/_dashboard/users/$userId'
-    | '/_dashboard/users/create'
-    | '/_dashboard/admins/$adminId/delete'
-    | '/_dashboard/admins/$adminId/edit'
-    | '/_dashboard/hosts/$hostId/delete'
-    | '/_dashboard/hosts/$hostId/edit'
-    | '/_dashboard/hosts/$inboundId/create'
-    | '/_dashboard/nodes/$nodeId/delete'
-    | '/_dashboard/nodes/$nodeId/edit'
-    | '/_dashboard/services/$serviceId/delete'
-    | '/_dashboard/services/$serviceId/edit'
-    | '/_dashboard/users/$userId/delete'
-    | '/_dashboard/users/$userId/edit'
-    | '/_dashboard/admins/$adminId/'
-    | '/_dashboard/hosts/$hostId/'
-    | '/_dashboard/nodes/$nodeId/'
-    | '/_dashboard/services/$serviceId/'
-    | '/_dashboard/users/$userId/'
-  fileRoutesById: FileRoutesById
-}
-
-export interface RootRouteChildren {
-  AuthRoute: typeof AuthRouteWithChildren
-  DashboardRoute: typeof DashboardRouteWithChildren
-}
-
 const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRouteWithChildren,
   DashboardRoute: DashboardRouteWithChildren,
 }
-
-export const routeTree = rootRoute
+export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-/* ROUTE_MANIFEST_START
-{
-  "routes": {
-    "__root__": {
-      "filePath": "__root.tsx",
-      "children": [
-        "/_auth",
-        "/_dashboard"
-      ]
-    },
-    "/_auth": {
-      "filePath": "_auth.tsx",
-      "children": [
-        "/_auth/login"
-      ]
-    },
-    "/_dashboard": {
-      "filePath": "_dashboard.tsx",
-      "children": [
-        "/_dashboard/admins",
-        "/_dashboard/hosts",
-        "/_dashboard/nodes",
-        "/_dashboard/services",
-        "/_dashboard/settings",
-        "/_dashboard/users",
-        "/_dashboard/"
-      ]
-    },
-    "/_auth/login": {
-      "filePath": "_auth/login.tsx",
-      "parent": "/_auth"
-    },
-    "/_dashboard/admins": {
-      "filePath": "_dashboard/admins.lazy.tsx",
-      "parent": "/_dashboard",
-      "children": [
-        "/_dashboard/admins/$adminId",
-        "/_dashboard/admins/create"
-      ]
-    },
-    "/_dashboard/hosts": {
-      "filePath": "_dashboard/hosts.lazy.tsx",
-      "parent": "/_dashboard",
-      "children": [
-        "/_dashboard/hosts/$hostId",
-        "/_dashboard/hosts/$inboundId/create"
-      ]
-    },
-    "/_dashboard/nodes": {
-      "filePath": "_dashboard/nodes.lazy.tsx",
-      "parent": "/_dashboard",
-      "children": [
-        "/_dashboard/nodes/$nodeId",
-        "/_dashboard/nodes/create"
-      ]
-    },
-    "/_dashboard/services": {
-      "filePath": "_dashboard/services.lazy.tsx",
-      "parent": "/_dashboard",
-      "children": [
-        "/_dashboard/services/$serviceId",
-        "/_dashboard/services/create"
-      ]
-    },
-    "/_dashboard/settings": {
-      "filePath": "_dashboard/settings.lazy.tsx",
-      "parent": "/_dashboard"
-    },
-    "/_dashboard/users": {
-      "filePath": "_dashboard/users.lazy.tsx",
-      "parent": "/_dashboard",
-      "children": [
-        "/_dashboard/users/$userId",
-        "/_dashboard/users/create"
-      ]
-    },
-    "/_dashboard/": {
-      "filePath": "_dashboard/index.lazy.tsx",
-      "parent": "/_dashboard"
-    },
-    "/_dashboard/admins/$adminId": {
-      "filePath": "_dashboard/admins/$adminId.tsx",
-      "parent": "/_dashboard/admins",
-      "children": [
-        "/_dashboard/admins/$adminId/delete",
-        "/_dashboard/admins/$adminId/edit",
-        "/_dashboard/admins/$adminId/"
-      ]
-    },
-    "/_dashboard/admins/create": {
-      "filePath": "_dashboard/admins/create.tsx",
-      "parent": "/_dashboard/admins"
-    },
-    "/_dashboard/hosts/$hostId": {
-      "filePath": "_dashboard/hosts/$hostId.tsx",
-      "parent": "/_dashboard/hosts",
-      "children": [
-        "/_dashboard/hosts/$hostId/delete",
-        "/_dashboard/hosts/$hostId/edit",
-        "/_dashboard/hosts/$hostId/"
-      ]
-    },
-    "/_dashboard/nodes/$nodeId": {
-      "filePath": "_dashboard/nodes/$nodeId.tsx",
-      "parent": "/_dashboard/nodes",
-      "children": [
-        "/_dashboard/nodes/$nodeId/delete",
-        "/_dashboard/nodes/$nodeId/edit",
-        "/_dashboard/nodes/$nodeId/"
-      ]
-    },
-    "/_dashboard/nodes/create": {
-      "filePath": "_dashboard/nodes/create.tsx",
-      "parent": "/_dashboard/nodes"
-    },
-    "/_dashboard/services/$serviceId": {
-      "filePath": "_dashboard/services/$serviceId.tsx",
-      "parent": "/_dashboard/services",
-      "children": [
-        "/_dashboard/services/$serviceId/delete",
-        "/_dashboard/services/$serviceId/edit",
-        "/_dashboard/services/$serviceId/"
-      ]
-    },
-    "/_dashboard/services/create": {
-      "filePath": "_dashboard/services/create.tsx",
-      "parent": "/_dashboard/services"
-    },
-    "/_dashboard/users/$userId": {
-      "filePath": "_dashboard/users/$userId.tsx",
-      "parent": "/_dashboard/users",
-      "children": [
-        "/_dashboard/users/$userId/delete",
-        "/_dashboard/users/$userId/edit",
-        "/_dashboard/users/$userId/"
-      ]
-    },
-    "/_dashboard/users/create": {
-      "filePath": "_dashboard/users/create.tsx",
-      "parent": "/_dashboard/users"
-    },
-    "/_dashboard/admins/$adminId/delete": {
-      "filePath": "_dashboard/admins/$adminId/delete.tsx",
-      "parent": "/_dashboard/admins/$adminId"
-    },
-    "/_dashboard/admins/$adminId/edit": {
-      "filePath": "_dashboard/admins/$adminId/edit.tsx",
-      "parent": "/_dashboard/admins/$adminId"
-    },
-    "/_dashboard/hosts/$hostId/delete": {
-      "filePath": "_dashboard/hosts/$hostId/delete.tsx",
-      "parent": "/_dashboard/hosts/$hostId"
-    },
-    "/_dashboard/hosts/$hostId/edit": {
-      "filePath": "_dashboard/hosts/$hostId/edit.tsx",
-      "parent": "/_dashboard/hosts/$hostId"
-    },
-    "/_dashboard/hosts/$inboundId/create": {
-      "filePath": "_dashboard/hosts/$inboundId/create.tsx",
-      "parent": "/_dashboard/hosts"
-    },
-    "/_dashboard/nodes/$nodeId/delete": {
-      "filePath": "_dashboard/nodes/$nodeId/delete.tsx",
-      "parent": "/_dashboard/nodes/$nodeId"
-    },
-    "/_dashboard/nodes/$nodeId/edit": {
-      "filePath": "_dashboard/nodes/$nodeId/edit.tsx",
-      "parent": "/_dashboard/nodes/$nodeId"
-    },
-    "/_dashboard/services/$serviceId/delete": {
-      "filePath": "_dashboard/services/$serviceId/delete.tsx",
-      "parent": "/_dashboard/services/$serviceId"
-    },
-    "/_dashboard/services/$serviceId/edit": {
-      "filePath": "_dashboard/services/$serviceId/edit.tsx",
-      "parent": "/_dashboard/services/$serviceId"
-    },
-    "/_dashboard/users/$userId/delete": {
-      "filePath": "_dashboard/users/$userId/delete.tsx",
-      "parent": "/_dashboard/users/$userId"
-    },
-    "/_dashboard/users/$userId/edit": {
-      "filePath": "_dashboard/users/$userId/edit.tsx",
-      "parent": "/_dashboard/users/$userId"
-    },
-    "/_dashboard/admins/$adminId/": {
-      "filePath": "_dashboard/admins/$adminId/index.tsx",
-      "parent": "/_dashboard/admins/$adminId"
-    },
-    "/_dashboard/hosts/$hostId/": {
-      "filePath": "_dashboard/hosts/$hostId/index.tsx",
-      "parent": "/_dashboard/hosts/$hostId"
-    },
-    "/_dashboard/nodes/$nodeId/": {
-      "filePath": "_dashboard/nodes/$nodeId/index.tsx",
-      "parent": "/_dashboard/nodes/$nodeId"
-    },
-    "/_dashboard/services/$serviceId/": {
-      "filePath": "_dashboard/services/$serviceId/index.tsx",
-      "parent": "/_dashboard/services/$serviceId"
-    },
-    "/_dashboard/users/$userId/": {
-      "filePath": "_dashboard/users/$userId/index.tsx",
-      "parent": "/_dashboard/users/$userId"
-    }
-  }
-}
-ROUTE_MANIFEST_END */
