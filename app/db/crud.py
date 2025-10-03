@@ -340,6 +340,15 @@ def get_user(db: Session, username: str):
     return db.query(User).filter(User.username == username).first()
 
 
+def get_sub_user(db: Session, key: str, username: Optional[str] = None):
+    query = (
+        db.query(User).filter(User.key == key).filter(User.removed == False)
+    )
+    if username:
+        query = query.filter(User.username == username)
+    return query.first()
+
+
 def get_user_by_id(db: Session, user_id: int):
     return db.query(User).filter(User.id == user_id).first()
 

@@ -48,6 +48,7 @@ def get_subscription_user_info(user: UserResponse) -> dict:
     }
 
 
+@router.get("/{key}")
 @router.get("/{username}/{key}")
 def user_subscription(
     db_user: SubUserDep,
@@ -120,11 +121,13 @@ def user_subscription(
             )
 
 
+@router.get("/{key}/info", response_model=UserResponse)
 @router.get("/{username}/{key}/info", response_model=UserResponse)
 def user_subscription_info(db_user: SubUserDep):
     return db_user
 
 
+@router.get("/{key}/usage", response_model=TrafficUsageSeries)
 @router.get("/{username}/{key}/usage", response_model=TrafficUsageSeries)
 def user_get_usage(
     db_user: SubUserDep,
@@ -149,6 +152,7 @@ client_type_mime_type = {
 }
 
 
+@router.get("/{key}/{client_type}")
 @router.get("/{username}/{key}/{client_type}")
 def user_subscription_with_client_type(
     db: DBDep,
