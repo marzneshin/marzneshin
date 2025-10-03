@@ -1,6 +1,11 @@
 import { UsageMetric, ChartData } from "../types";
 
-export function useTransformDateUsageData(usages: Array<UsageMetric>): ChartData {
+export function useTransformDateUsageData(usages: Array<UsageMetric> | undefined): ChartData {
+    // Handle undefined or null usages array
+    if (!usages || !Array.isArray(usages)) {
+        return [];
+    }
+    
     return usages.map(usageData => {
         const [timestamp, usage] = usageData;
         const date = new Date(timestamp * 1000);
