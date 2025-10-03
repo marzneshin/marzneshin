@@ -7,4 +7,4 @@ export type ChartDataEntry = {
 };
 
 export type ChartData = ChartDataEntry[];
-export type ChartDateInterval = '90d' | '30d' | '7d' | '1d';
+export type ChartDateInterval = 'total' | '90d' | '30d' | '7d' | '1d';
