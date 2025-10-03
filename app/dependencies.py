@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Annotated
+from typing import Annotated, Optional
 
 from fastapi import Depends, HTTPException, status
 from sqlalchemy.orm import Session
@@ -59,18 +59,19 @@ def sudo_admin(admin: Annotated[Admin, Depends(get_current_admin)]):
 
 
 def get_subscription_user(
-    username: str, key: str, db: Annotated[Session, Depends(get_db)]
+    key: str,
+    db: Annotated[Session, Depends(get_db)],
+    username: Optional[str] = None,
 ):
     try:
         int(key, 16)
     except ValueError:
         raise HTTPException(status_code=404)
 
-    db_user = crud.get_user(db, username)
-    if db_user and db_user.key == key:
-        return db_user
-    else:
+    db_user = crud.get_sub_user(db, key, username)
+    if not db_user:
         raise HTTPException(status_code=404)
+    return db_user
 
 
 def get_user(
