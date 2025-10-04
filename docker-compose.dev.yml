@@ -7,7 +7,7 @@ services:
       - /var/lib/marzneshin:/var/lib/marzneshin
 
   marznode:
-    image: dawsh/marznode:latest
+    image: mojtaba211/marznode:latest
     restart: always
     environment:
       SERVICE_ADDRESS: "127.0.0.1"
