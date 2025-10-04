@@ -97,18 +97,18 @@ Marzneshin documentation may be found [here](https://docs.marzneshin.org).
 Run the following command to install Marzneshin with SQLite database:
 
 ```bash
-sudo bash -c "$(curl -sL https://github.com/mojtaba211/Marzneshin/raw/master/script.sh)" @ install
+sudo bash -c "$(curl -sL https://github.com/mojtaba211/Marzneshin/raw/v0.7.4-my-changes/script.sh)" @ install
 ```
 
 Run the following command to install Marzneshin with MySQL database:
 
 ```bash
-sudo bash -c "$(curl -sL https://github.com/mojtaba211/Marzneshin/raw/master/script.sh)" @ install --database mysql
+sudo bash -c "$(curl -sL https://github.com/mojtaba211/Marzneshin/raw/v0.7.4-my-changes/script.sh)" @ install --database mysql
 ```
 
 Run the following command to install Marzneshin with MariaDB database:
 ```bash
-sudo bash -c "$(curl -sL https://github.com/mojtaba211/Marzneshin/raw/master/script.sh)" @ install --database mariadb
+sudo bash -c "$(curl -sL https://github.com/mojtaba211/Marzneshin/raw/v0.7.4-my-changes/script.sh)" @ install --database mariadb
 ```
 
 Once the installation is complete:
