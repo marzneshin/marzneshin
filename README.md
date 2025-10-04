@@ -42,6 +42,7 @@
   - [Docs](#docs)
   - [Features](#features)
   - [Supported Languages](#supported-languages)
+- [Installation guide](#installation-guide)
 - [Marznode](#marznode)
 - [Donation](#donation)
 - [License](#license)
@@ -88,10 +89,47 @@ Marzneshin documentation may be found [here](https://docs.marzneshin.org).
 - English
 - Kurdish (Soranî, Kurmancî)
 - Persian
+- Arabic
+- Simplified Chinese
 
+# Installation guide
+
+Run the following command to install Marzneshin with SQLite database:
+
+```bash
+sudo bash -c "$(curl -sL https://github.com/mojtaba211/Marzneshin/raw/master/script.sh)" @ install
+```
+
+Run the following command to install Marzneshin with MySQL database:
+
+```bash
+sudo bash -c "$(curl -sL https://github.com/mojtaba211/Marzneshin/raw/master/script.sh)" @ install --database mysql
+```
+
+Run the following command to install Marzneshin with MariaDB database:
+```bash
+sudo bash -c "$(curl -sL https://github.com/mojtaba211/Marzneshin/raw/master/script.sh)" @ install --database mariadb
+```
+
+Once the installation is complete:
+
+You’d notice the logs, which you could stop watching by pressing Ctrl+C; The process will continue running normally.
+the configuration file can be found at /etc/opt/marzneshin/.env (refer to configuration page)
+Data files will be placed at /var/lib/marzneshin; e.g. the sqlite database.
+You can access the Marzneshin dashboard by opening a web browser and navigating to http://<SERVER_IP>:8000/dashboard/
+Next, you need to create a sudo admin for logging into the Marzneshin dashboard using the following command
+```bash
+marzneshin cli admin create --sudo
+```
+That’s it! You can login to your dashboard using these credentials
+
+To see the help message of the Marzneshin script, run the following command
+```bash
+marzneshin --help
+```
 # marznode
 
-[marznode](https://github.com/marzneshin/marznode) is the backend needed to run proxy servers.
+[marznode](https://github.com/mojtaba211/marznode) is the backend needed to run proxy servers.
 
 # Donation
 
@@ -122,8 +160,8 @@ Check [open issues](https://github.com/marzneshin/marzneshin/issues) to help the
 Thanks to all contributors who have helped Marzneshin:
 </p>
 <p align="center">
-<a href="https://github.com/marzneshin/marzneshin/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=marzneshin/marzneshin" />
+<a href="https://github.com/mojtaba211/marzneshin/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=mojtaba211/marzneshin" />
 </a>
 </p>
 <p align="center">
