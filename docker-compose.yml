@@ -1,6 +1,6 @@
 services:
   marzneshin:
-    image: dawsh/marzneshin:latest
+    image: mojtaba211/marzneshin:latest
     restart: always
     env_file: .env
     network_mode: host
@@ -8,7 +8,7 @@ services:
       - /var/lib/marzneshin:/var/lib/marzneshin
 
   marznode:
-    image: dawsh/marznode:latest
+    image: mojtaba211/marznode:latest
     restart: always
     network_mode: host
     environment:
