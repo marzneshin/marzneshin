@@ -645,6 +645,7 @@ def remove_user(db: Session, dbuser: User):
     dbuser.username = None
     dbuser.removed = True
     dbuser.activated = False
+    dbuser.removed_at = datetime.utcnow()
     # db.query(User).filter_by(id=user_id).delete()
     db.commit()
 

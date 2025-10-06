@@ -166,6 +166,7 @@ class User(Base):
         default=False,
         server_default=sqlalchemy.sql.false(),
     )
+    removed_at = Column(DateTime, nullable=True)
     services = relationship(
         "Service",
         secondary=users_services,
