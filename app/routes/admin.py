@@ -1,7 +1,8 @@
 from typing import Optional, Annotated
+from datetime import timedelta
 
 import sqlalchemy
-from fastapi import APIRouter
+from fastapi import APIRouter, Response
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi_pagination import Page
@@ -9,7 +10,7 @@ from fastapi_pagination.ext.sqlalchemy import paginate
 
 from app.db import Session, crud
 from app.db.models import Admin as DBAdmin, Service, User
-from app.dependencies import AdminDep, SudoAdminDep, DBDep
+from app.dependencies import AdminDep, SudoAdminDep, DBDep, get_current_admin
 from app.marznode.operations import update_user
 from app.models.admin import (
     Admin,
@@ -18,26 +19,131 @@ from app.models.admin import (
     Token,
     AdminPartialModify,
     AdminResponse,
+    OTPTokenData,
 )
 from app.models.service import ServiceResponse
 from app.models.user import UserResponse
 from app.utils.auth import create_admin_token
+from app.services import otp as otp_service
 
 router = APIRouter(tags=["Admin"], prefix="/admins")
 
 
 def authenticate_admin(
     db: Session, username: str, password: str
-) -> Optional[Admin]:
+) -> Optional[DBAdmin]: # Changed type hint back to DBAdmin for clarity
     dbadmin = crud.get_admin(db, username)
     if not dbadmin:
         return None
 
-    return (
-        dbadmin
-        if AdminInDB.model_validate(dbadmin).verify_password(password)
-        else None
+    # This part remains the same
+    if not AdminInDB.model_validate(dbadmin).verify_password(password):
+        return None
+
+    # Return the verified database object
+    return dbadmin
+
+
+@router.post("/token", response_model=Token)
+def admin_token(
+    form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: DBDep
+):
+    dbadmin = authenticate_admin(db, form_data.username, form_data.password)
+    if not dbadmin:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect username or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    if dbadmin.is_otp_enabled:
+        otp_token = form_data.client_secret
+        if not otp_token:
+            raise HTTPException(
+                status_code=401,
+                detail={"otp_required": True},
+            )
+
+        if not otp_service.verify_otp(dbadmin.otp_secret, otp_token):
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid OTP token",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+
+    return Token(
+        is_sudo=dbadmin.is_sudo,
+        access_token=create_admin_token(
+            form_data.username, is_sudo=dbadmin.is_sudo
+        ),
     )
+
+
+@router.post("/current/otp/enable", status_code=200)
+async def enable_admin_otp_setup(
+    db: DBDep,
+    current_admin: DBAdmin = Depends(get_current_admin),
+):
+
+    if current_admin.is_otp_enabled:
+        raise HTTPException(status_code=400, detail="2FA is already enabled.")
+
+    secret = otp_service.generate_otp_secret()
+
+    db_admin = db.query(DBAdmin).filter(DBAdmin.id == current_admin.id).first()
+    db_admin.otp_secret = secret
+
+    db.commit()
+
+    uri = otp_service.get_otp_provisioning_uri(current_admin.username, secret)
+    qr_code_bytes = otp_service.generate_qr_code(uri)
+
+    return Response(content=qr_code_bytes.read(), media_type="image/png")
+
+
+@router.post("/current/otp/verify", status_code=200)
+async def verify_admin_otp_setup(
+    data: OTPTokenData,
+    db: DBDep,
+    current_admin: DBAdmin = Depends(get_current_admin),
+):
+
+    db_admin = db.query(DBAdmin).filter(DBAdmin.id == current_admin.id).first()
+
+    if not db_admin.otp_secret:
+        raise HTTPException(
+            status_code=400, detail="2FA setup has not been initiated."
+        )
+
+    if not otp_service.verify_otp(db_admin.otp_secret, data.token):
+        raise HTTPException(status_code=400, detail="Invalid OTP token.")
+
+    db_admin.is_otp_enabled = True
+    db.commit()
+
+    return {"message": "2FA for admin has been enabled successfully."}
+
+
+@router.post("/current/otp/disable", status_code=200)
+async def disable_admin_otp(
+    data: OTPTokenData,
+    db: DBDep,
+    current_admin: DBAdmin = Depends(get_current_admin),
+):
+
+    db_admin = db.query(DBAdmin).filter(DBAdmin.id == current_admin.id).first()
+
+    if not db_admin.is_otp_enabled:
+        raise HTTPException(status_code=400, detail="2FA is not enabled.")
+
+    if not otp_service.verify_otp(db_admin.otp_secret, data.token):
+        raise HTTPException(status_code=400, detail="Invalid OTP token.")
+
+    db_admin.is_otp_enabled = False
+    db_admin.otp_secret = None
+    db.commit()
+
+    return {"message": "2FA for admin has been disabled successfully."}
 
 
 @router.get("", response_model=Page[AdminResponse])

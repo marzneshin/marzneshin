@@ -43,6 +43,12 @@ export const sidebarItems: SidebarObject = {
             icon: <ShieldCheck />,
             isParent: false,
         },
+                {
+            title: 'Security',
+            to: '/security',
+            icon: <ShieldCheck />,
+            isParent: false,
+        },
         {
             title: 'Settings',
             to: '/settings',
