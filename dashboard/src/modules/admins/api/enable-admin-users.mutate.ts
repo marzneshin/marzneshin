@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { fetch, queryClient } from "@marzneshin/common/utils";
+import { fetch, queryClient, handleApiErrorWithContext, type ApiError } from "@marzneshin/common/utils";
 import { toast } from "sonner";
 import i18n from "@marzneshin/features/i18n";
 import { AdminType } from "../types";
@@ -14,12 +14,12 @@ export async function adminUsersStatusEnable({ admin }: AdminUsersStatusEnableQu
     });
 }
 
-const handleError = (error: Error, value: AdminUsersStatusEnableQuery) => {
-    toast.error(
-        i18n.t('events.user_status.error', { name: value.admin.username }),
-        {
-            description: error.message
-        })
+const handleError = (error: ApiError, value: AdminUsersStatusEnableQuery) => {
+    handleApiErrorWithContext(error, {
+        action: 'user_status',
+        entityName: 'admin',
+        entityValue: value.admin.username
+    });
 }
 
 const handleSuccess = (value: AdminType) => {
