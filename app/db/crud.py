@@ -447,7 +447,7 @@ def get_user_total_usage(
     ).filter(
         and_(
             NodeUserUsage.user_id == user.id,
-            NodeUserUsage.created_at >= start,
+            (not start or NodeUserUsage.created_at >= start),
             NodeUserUsage.created_at <= end,
         )
     )
@@ -467,8 +467,9 @@ def get_user_total_usage(
                 used_traffic
             )
 
+    date, _ = query[0]
     result = TrafficUsageSeries(usages=[])
-    current = start.astimezone(timezone.utc).replace(
+    current = (start or datetime(date.year, date.month, date.day)).astimezone(timezone.utc).replace(
         minute=0, second=0, microsecond=0
     )
     if per_day:
@@ -497,7 +498,7 @@ def get_total_usages(
         .group_by(NodeUserUsage.created_at)
         .filter(
             and_(
-                NodeUserUsage.created_at >= start,
+                (not start or NodeUserUsage.created_at >= start),
                 NodeUserUsage.created_at <= end,
             )
         )
@@ -512,12 +513,14 @@ def get_total_usages(
             .join(Admin, User.admin_id == Admin.id)
         )
 
-    for created_at, used_traffic in query.all():
+    query_all = query.all()
+
+    for created_at, used_traffic in query_all:
         timestamp = created_at.replace(tzinfo=timezone.utc).timestamp()
         usages[timestamp] += int(used_traffic)
 
     result = TrafficUsageSeries(usages=[], total=0)
-    current = start.astimezone(timezone.utc).replace(
+    current = (start or query_all[0].created_at).astimezone(timezone.utc).replace(
         minute=0, second=0, microsecond=0
     )
 
@@ -540,11 +543,13 @@ def get_user_usages(
 
     cond = and_(
         NodeUserUsage.user_id == db_user.id,
-        NodeUserUsage.created_at >= start,
+        (not start or NodeUserUsage.created_at >= start),
         NodeUserUsage.created_at <= end,
     )
 
-    for v in db.query(NodeUserUsage).filter(cond):
+    node_user_usages = db.query(NodeUserUsage).filter(cond)
+
+    for v in node_user_usages:
         timestamp = v.created_at.replace(tzinfo=timezone.utc).timestamp()
         usages[v.node_id][timestamp] = v.used_traffic
 
@@ -558,9 +563,9 @@ def get_user_usages(
 
     for node_id, rows in usages.items():
         node_usages = UserNodeUsageSeries(
-            node_id=node_id, node_name=node_id_names[node_id], usages=[]
+            node_id=node_id, node_name=node_id and node_id_names[node_id] or 'Unknown Node', usages=[]
         )
-        current = start.astimezone(timezone.utc).replace(
+        current = (start or node_user_usages[0].created_at).astimezone(timezone.utc).replace(
             minute=0, second=0, microsecond=0
         )
 
@@ -948,19 +953,21 @@ def get_node_usage(
         .filter(
             and_(
                 NodeUserUsage.node_id == node.id,
-                NodeUserUsage.created_at >= start,
+                (not start or NodeUserUsage.created_at >= start),
                 NodeUserUsage.created_at <= end,
             )
         )
     )
 
-    for created_at, used_traffic in query.all():
+    query_all = query.all()
+
+    for created_at, used_traffic in query_all:
         usages[created_at.replace(tzinfo=timezone.utc).timestamp()] += int(
             used_traffic
         )
 
     result = TrafficUsageSeries(usages=[], total=0)
-    current = start.astimezone(timezone.utc).replace(
+    current = (start or query_all[0].created_at).astimezone(timezone.utc).replace(
         minute=0, second=0, microsecond=0
     )
 
